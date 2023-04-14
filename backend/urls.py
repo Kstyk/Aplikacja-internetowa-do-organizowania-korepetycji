@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include("auth_user.urls")),
     path('api/check-user-in-conversation/', include("chat.api.urls")),
     path("api/", include("backend.api_router")),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
