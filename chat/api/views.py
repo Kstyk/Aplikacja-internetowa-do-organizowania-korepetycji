@@ -5,7 +5,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from django.http import HttpResponse
 from rest_framework import status
 import json
@@ -13,6 +13,7 @@ from django.contrib.auth import get_user_model
 from chat.models import Conversation, Message
 from .paginaters import MessagePagination
 from .serializers import ConversationSerializer, MessageSerializer
+from auth_user.serializer import UserSerializer
 
 User = get_user_model()
 
@@ -95,3 +96,11 @@ class MessageViewSet(ListModelMixin, GenericViewSet):
             .order_by("-timestamp")
         )
         return queryset
+
+
+@api_view(['GET'])
+def conversation_users(request, conversation_name):
+    conversation = get_object_or_404(Conversation, name=conversation_name)
+    users = conversation.users.all()
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)

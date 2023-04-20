@@ -116,7 +116,10 @@ class ChatConsumer(JsonWebsocketConsumer):
 
     def received_peer(self, event):
         if self.channel_name != event['sender_channel_name']:
+            print("Hej")
             print(self.channel_name)
             print(event['sender_channel_name'])
             print(event)
             self.send_json(event)
+        else:
+            print("didnt get it")
