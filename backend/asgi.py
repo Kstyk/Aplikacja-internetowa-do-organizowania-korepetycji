@@ -5,14 +5,26 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.1/howto/deployment/asgi/
 """
 
-from django.core.asgi import get_asgi_application
-from pathlib import Path
-import sys
 import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
-from channels.routing import ProtocolTypeRouter, URLRouter  # noqa isort:skip
+import sys
+from pathlib import Path
+from chat.middleware import TokenAuthMiddleware
+
+from django.core.asgi import get_asgi_application
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent
 sys.path.append(str(ROOT_DIR / "backend"))
 
-application = get_asgi_application()
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
+
+django_asgi_app = get_asgi_application()
+
+from . import routing  # noqa isort:skip
+from channels.routing import ProtocolTypeRouter, URLRouter  # noqa isort:skip
+
+application = ProtocolTypeRouter(
+    {
+        "http": django_asgi_app,
+        "websocket": TokenAuthMiddleware(URLRouter(routing.websocket_urlpatterns)),
+    }
+)
