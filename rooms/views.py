@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from .paginaters import MessagePagination
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.viewsets import GenericViewSet
-
+from .exceptions import AccessDeniedForRoom
 from .models import Room, Message
 
 
@@ -54,7 +54,7 @@ def get_room(request, room_id):
         room = Room.objects.get(room_id=room_id)
         # sprawdź, czy bieżący użytkownik ma dostęp do pokoju
         if request.user not in room.users.all():
-            return Response({'error': 'Nie masz dostępu do tego pokoju.'}, status=403)
+            raise AccessDeniedForRoom()
         # zwróć dane pokoju
         return Response({
             'room_id': room.room_id,
@@ -95,6 +95,10 @@ class MessageViewSet(ListModelMixin, GenericViewSet):
     def get_queryset(self):
         room_id = self.request.query_params.get('room_id')
         room = get_object_or_404(Room, room_id=room_id)
+
+        if self.request.user not in room.users.all():
+            raise AccessDeniedForRoom()
+
         queryset = (
             Message.objects.filter(room=room)
             .order_by("-timestamp")

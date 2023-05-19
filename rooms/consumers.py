@@ -1,11 +1,14 @@
 from django.contrib.auth import get_user_model
 import json
 from uuid import UUID
+from django.db import models
 from .models import Room, Message
 from .serializers import MessageSerializer
 from asgiref.sync import async_to_sync
 from urllib.parse import parse_qs
 from backend.settings import SECRET_KEY
+from .exceptions import AccessDeniedForRoom
+from rest_framework.exceptions import AuthenticationFailed
 
 from channels.generic.websocket import JsonWebsocketConsumer
 
@@ -25,7 +28,6 @@ class ChatConsumer(JsonWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(args, kwargs)
         self.user = None
-        self.room_id = None
         self.room = None
 
     @classmethod
@@ -35,21 +37,22 @@ class ChatConsumer(JsonWebsocketConsumer):
     def connect(self):
         query_string = parse_qs(self.scope["query_string"].decode())
         user_id = query_string.get("userId")[-1]
+        room_id = query_string.get("roomId")[0]
 
         self.user = User.objects.get(id=user_id)
+        self.room = Room.objects.get(room_id=room_id)
+
+        users_list = self.room.users.all()
+
+        if self.user not in users_list:
+            raise AccessDeniedForRoom()
+        else:
+            print("all good")
 
         self.accept()
-        self.room_id = f"{self.scope['url_route']['kwargs']['room_id']}"
-
-        room, created = Room.objects.get_or_create(
-            room_id=self.room_id)
-        self.room, created = room, created
-
-        users_list = [user.email for user in room.users.all()]
-        print(users_list)
 
         async_to_sync(self.channel_layer.group_add)(
-            self.room_id,
+            self.room.room_id,
             self.channel_name,
         )
 
@@ -69,10 +72,7 @@ class ChatConsumer(JsonWebsocketConsumer):
         return super().disconnect(code)
 
     def get_receiver(self):
-        room = Room.objects.get(
-            room_id=self.room_id)
-
-        users_list = [user.email for user in room.users.all()]
+        users_list = [user.email for user in self.room.users.all()]
 
         for username in users_list:
             if username != self.user.email:
@@ -86,7 +86,7 @@ class ChatConsumer(JsonWebsocketConsumer):
             print(content["peer"])
 
             async_to_sync(self.channel_layer.group_send)(
-                self.room_id,
+                self.room.room_id,
                 {
                     "type": "received_peer",
                     "peer": content["peer"],
@@ -102,10 +102,10 @@ class ChatConsumer(JsonWebsocketConsumer):
                 room=self.room
             )
             async_to_sync(self.channel_layer.group_send)(
-                self.room_id,
+                self.room.room_id,
                 {
                     "type": "chat_message_echo",
-                    "name": self.user.username,
+                    "name": self.user.email,
                     "message": MessageSerializer(message).data
                 }
             )
@@ -121,10 +121,4 @@ class ChatConsumer(JsonWebsocketConsumer):
 
     def received_peer(self, event):
         if self.channel_name != event['sender_channel_name']:
-            print("Hej")
-            print(self.channel_name)
-            print(event['sender_channel_name'])
-            print(event)
             self.send_json(event)
-        else:
-            print("didnt get it")
