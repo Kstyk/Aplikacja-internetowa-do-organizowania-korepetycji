@@ -35,12 +35,14 @@ class ChatConsumer(JsonWebsocketConsumer):
         return json.dumps(content, cls=UUIDEncoder)
 
     def connect(self):
+        room_id = self.scope['url_route']['kwargs']['room_id']
+
+        self.room = Room.objects.get(room_id=room_id)
+
         query_string = parse_qs(self.scope["query_string"].decode())
         user_id = query_string.get("userId")[-1]
-        room_id = query_string.get("roomId")[0]
 
         self.user = User.objects.get(id=user_id)
-        self.room = Room.objects.get(room_id=room_id)
 
         users_list = self.room.users.all()
 
