@@ -9,7 +9,6 @@ User = get_user_model()
 
 
 class RoleSerializer(serializers.ModelSerializer):
-
     value = serializers.IntegerField(source='id')
     label = serializers.CharField(source='name')
 

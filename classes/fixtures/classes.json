@@ -1,0 +1,50 @@
+[
+    {
+      "model": "classes.class",
+      "pk": 1,
+      "fields": {
+        "teacher": 5,
+        "language": 1,
+        "name": "Zajęcia z mówionego angielskiego",
+        "type_of_classes": 1,
+        "difficulty_level": "liceum",
+        "max_number_of_lessons": null,
+        "active": true,
+        "price_for_lesson": "25.00",
+        "stationary": false,
+        "description": "Join our English conversation class to improve your speaking skills."
+      }
+    },
+    {
+      "model": "classes.class",
+      "pk": 2,
+      "fields": {
+        "teacher": 6,
+        "language": 3,
+        "name": "Zajęcia z gramatyki języka hiszpańskiego",
+        "type_of_classes": 2,
+        "difficulty_level": "początkujący",
+        "max_number_of_lessons": 11,
+        "active": true,
+        "price_for_lesson": "20.00",
+        "stationary": true,
+        "description": "Learn the basics of Spanish grammar in our interactive class."
+      }
+    },
+    {
+      "model": "classes.class",
+      "pk": 3,
+      "fields": {
+        "teacher": 7,
+        "language": 4,
+        "name": "Zajęcia z wymowy francuskiego",
+        "type_of_classes": 2,
+        "difficulty_level": "Advanced",
+        "max_number_of_lessons": 6,
+        "active": true,
+        "price_for_lesson": "30.00",
+        "stationary": false,
+        "description": "Improve your French pronunciation with our experienced teachers."
+      }
+    }
+  ]

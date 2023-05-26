@@ -37,9 +37,6 @@ def create_room(request):
     # utwórz nowy pokój z losowym identyfikatorem
     room = Room.objects.create(room_id=room_id)
     # przypisz bieżącego użytkownika do pokoju
-    print(request.user)
-    print(second_user)
-
     room.users.add(request.user)
     room.users.add(second_user)
     # zwróć odpowiedź z danymi pokoju
@@ -67,11 +64,9 @@ def get_room(request, room_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_rooms(request):
-    print(request)
-    print("Test")
     rooms = Room.objects.filter(users=request.user)
-    seriaalizer = RoomSerializer(rooms, many=True)
-    return Response(seriaalizer.data)
+    serializer = RoomSerializer(rooms, many=True)
+    return Response(serializer.data)
 
 
 # @api_view(['GET'])

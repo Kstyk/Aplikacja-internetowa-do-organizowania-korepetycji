@@ -1,0 +1,31 @@
+[
+    {
+      "model": "classes.language",
+      "pk": 1,
+      "fields": {
+        "name": "angielski"
+      }
+    },
+    {
+      "model": "classes.language",
+      "pk": 2,
+      "fields": {
+        "name": "niemiecki"
+      }
+    },
+    {
+        "model": "classes.language",
+        "pk": 3,
+        "fields": {
+          "name": "hiszpański"
+        }
+      },
+      { 
+      "model": "classes.language",
+      "pk": 4,
+      "fields": {
+        "name": "francuski"
+        }
+      }
+  ]
+  

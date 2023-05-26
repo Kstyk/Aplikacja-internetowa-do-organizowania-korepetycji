@@ -1,0 +1,17 @@
+[
+    {
+      "model": "classes.typeofclasses",
+      "pk": 1,
+      "fields": {
+        "type": "jednorazowy"
+      }
+    },
+    {
+      "model": "classes.typeofclasses",
+      "pk": 2,
+      "fields": {
+        "type": "cotygodniowy"
+      }
+    }
+  ]
+  
