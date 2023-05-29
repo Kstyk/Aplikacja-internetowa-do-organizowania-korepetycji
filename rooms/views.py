@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from .serializers import RoomSerializer, MessageSerializer
 from users.models import User
+from users.serializers import UserSerializer
 import uuid
 from django.shortcuts import get_object_or_404
 from .paginaters import MessagePagination
@@ -66,6 +67,23 @@ def get_room(request, room_id):
 def get_user_rooms(request):
     rooms = Room.objects.filter(users=request.user)
     serializer = RoomSerializer(rooms, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_users_without_room_with_requestuser(request):
+    users = User.objects.exclude(id=request.user.id)
+
+    response_data = []
+    for user in users:
+        room_exists = Room.objects.filter(
+            users=user).filter(users=request.user)
+
+        if not room_exists.exists():
+            response_data.append(user)
+
+    serializer = UserSerializer(response_data, many=True)
     return Response(serializer.data)
 
 
