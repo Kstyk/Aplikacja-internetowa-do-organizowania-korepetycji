@@ -85,12 +85,20 @@ class ChatConsumer(JsonWebsocketConsumer):
         message_type = content["type"]
 
         if message_type == "peer":
-            print(content["peer"])
-
             async_to_sync(self.channel_layer.group_send)(
                 self.room.room_id,
                 {
                     "type": "received_peer",
+                    "peer": content["peer"],
+                    'sender_channel_name': self.channel_name
+                }
+            )
+
+        if message_type == "reject_peer":
+            async_to_sync(self.channel_layer.group_send)(
+                self.room.room_id,
+                {
+                    "type": "rejected_call",
                     "peer": content["peer"],
                     'sender_channel_name': self.channel_name
                 }
@@ -122,5 +130,10 @@ class ChatConsumer(JsonWebsocketConsumer):
         self.send_json(event)
 
     def received_peer(self, event):
+        if self.channel_name != event['sender_channel_name']:
+            self.send_json(event)
+
+    def rejected_call(self, event):
+        # wysyłanie informacji o odrzuceniu połączenia tylko do dzwoniącego
         if self.channel_name != event['sender_channel_name']:
             self.send_json(event)
