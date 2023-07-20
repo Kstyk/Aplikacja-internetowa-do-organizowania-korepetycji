@@ -35,10 +35,12 @@ const Chat = () => {
     setCallButton,
     toggleAudio,
     toggleCamera,
+    endVideoCall,
     audioEnabled,
     isCameraOn,
     isScreenSharing,
     toggleScreenSharing,
+    rejectVideoCall,
   } = usePeerJS(roomId);
 
   const { readyState, sendJsonMessage } = useWebSocket(
@@ -50,6 +52,7 @@ const Chat = () => {
       },
       onOpen: (e) => {
         console.log("connected");
+        console.log(roomId);
       },
       onClose: (e) => {
         console.log(e);
@@ -67,7 +70,6 @@ const Chat = () => {
             setHasMoreMessages(data.has_more);
             break;
           default:
-            bash.error("Unknown message type!");
             break;
         }
       },
@@ -122,7 +124,14 @@ const Chat = () => {
     setIsOpen(true);
 
     startVideoCall();
-    call(remotePeerIdValue);
+    if (remotePeerIdValue == "") {
+      console.log("remote storage: " + localStorage.getItem("peerId"));
+      call(localStorage.getItem("peerId"));
+    } else {
+      console.log("remote state: " + remotePeerIdValue);
+
+      call(remotePeerIdValue);
+    }
   }
 
   function afterOpenModal() {
@@ -133,6 +142,8 @@ const Chat = () => {
     setIsOpen(false);
     setCallButton(false);
   }
+
+  Modal.setAppElement("#root");
 
   return (
     <div className="flex flex-col h-full">
@@ -177,7 +188,7 @@ const Chat = () => {
         >
           Zadzwoń
         </button>
-        {callButton == true ? (
+        {callButton == true || localStorage.getItem("callButton") == "true" ? (
           <button
             className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
             onClick={(e) => openModal()}
@@ -187,10 +198,15 @@ const Chat = () => {
         ) : (
           ""
         )}
-        {callButton == true ? (
+        {callButton == true || localStorage.getItem("callButton") == "true" ? (
           <button
             className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
-            onClick={(e) => setCallButton(null)}
+            onClick={(e) => {
+              localStorage.removeItem("callButton");
+              localStorage.removeItem("peerId");
+              setCallButton(null);
+              rejectVideoCall();
+            }}
           >
             Zakończ połączenie
           </button>
@@ -223,7 +239,10 @@ const Chat = () => {
           />
         </div>
         <div className="w-2/12 bg-slate-500 h-full flex flex-col justify-between text-lg uppercase font-semibold">
-          <div className="border-b-2 border-white h-1/4 flex justify-center items-center hover:bg-slate-700">
+          <div
+            onClick={() => endVideoCall()}
+            className="border-b-2 border-white h-1/4 flex justify-center items-center hover:bg-slate-700"
+          >
             Zakończ połączenie
           </div>
           <div

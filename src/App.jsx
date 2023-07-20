@@ -13,7 +13,10 @@ import Chat from "./components/Chat";
 
 function App() {
   return (
-    <div className="flex flex-col bg-slate-300 w-screen h-screen">
+    <div
+      data-theme="light"
+      className="flex flex-col bg-slate-300 w-screen h-screen"
+    >
       <AuthProvider>
         <Navbar />
         <Routes>

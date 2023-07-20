@@ -31,7 +31,12 @@ const usePeerJS = (roomID) => {
           case "received_peer":
             setRemotePeerIdValue(data.peer);
             setCallButton(true);
+            localStorage.setItem("peerId", data.peer);
+            localStorage.setItem("callButton", true);
             break;
+          case "rejected_call":
+            console.log("rejected");
+            endVideoCall();
           default:
             // bash.error("Unknown message type!");
             break;
@@ -120,15 +125,51 @@ const usePeerJS = (roomID) => {
     });
   };
 
-  const toggleAudio = () => {
-    console.log("remote peer: " + remotePeerIdValue);
-    console.log("peer: " + peerId);
+  const rejectVideoCall = () => {
+    sendJsonMessage({
+      type: "reject_peer",
+      peer: peerId,
+      token: user.token,
+    });
+  };
 
-    setAudioEnabled(!audioEnabled);
+  const endVideoCall = () => {
+    // Close the PeerJS connection
+    if (peerInstance.current) {
+      peerInstance.current.destroy();
+      peerInstance.current = null;
+    }
+
+    // Stop the media streams and reset their references
+    const currentUserStream = currentUserVideoRef.current.srcObject;
+    const remoteStream = remoteVideoRef.current.srcObject;
+
+    if (currentUserStream) {
+      currentUserStream.getTracks().forEach((track) => track.stop());
+      currentUserVideoRef.current.srcObject = null;
+    }
+
+    if (remoteStream) {
+      remoteStream.getTracks().forEach((track) => track.stop());
+      remoteVideoRef.current.srcObject = null;
+    }
+
+    // Reset state variables
+    setIsScreenSharing(false);
+    setIsOpen(false);
+    setCallButton(false);
+    setPeerId("");
+    setRemotePeerIdValue("");
+    localStorage.removeItem("callButton");
+    localStorage.removeItem("peerId");
+  };
+
+  const toggleAudio = () => {
     const audioTracks = currentUserVideoRef.current.srcObject.getAudioTracks();
     audioTracks.forEach((track) => {
-      track.enabled = !track.enabled;
+      track.enabled = !audioEnabled;
     });
+    setAudioEnabled(!audioEnabled);
   };
 
   const toggleCamera = () => {
@@ -145,13 +186,26 @@ const usePeerJS = (roomID) => {
     try {
       if (!isScreenSharing) {
         console.log("remote peer id in sharing: " + remotePeerIdValue);
-        const stream = await navigator.mediaDevices.getDisplayMedia({
+        const videoStream = await navigator.mediaDevices.getDisplayMedia({
           video: true,
         });
-        currentUserVideoRef.current.srcObject = stream;
-        currentUserVideoRef.current.play();
 
-        const call = peerInstance.current.call(remotePeerIdValue, stream);
+        const audio = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
+
+        var strean = new MediaStream([
+          audio.getTracks()[0],
+          videoStream.getTracks()[0],
+        ]);
+
+        const currentUserStream = currentUserVideoRef.current.srcObject;
+        if (currentUserStream) {
+          currentUserStream.getTracks().forEach((track) => track.stop());
+        }
+        currentUserVideoRef.current.srcObject = strean;
+
+        const call = peerInstance.current.call(remotePeerIdValue, strean);
 
         call.on("stream", (remoteStream) => {
           remoteVideoRef.current.srcObject = remoteStream;
@@ -160,22 +214,19 @@ const usePeerJS = (roomID) => {
 
         setIsScreenSharing(true);
       } else {
-        const stream = await navigator.mediaDevices.getUserMedia({
+        const stream = navigator.mediaDevices.getUserMedia({
           video: true,
           audio: true,
         });
 
+        const currentUserStream = currentUserVideoRef.current.srcObject;
+        if (currentUserStream) {
+          currentUserStream.getTracks().forEach((track) => track.stop());
+        }
         currentUserVideoRef.current.srcObject = stream;
-        currentUserVideoRef.current.play();
 
         const call = peerInstance.current.call(remotePeerIdValue, stream);
         call.on("stream", (remoteStream) => {
-          tracks = remoteStream.getTracks();
-
-          for (let i = 0; i < tracks.length; i++) {
-            tracks[i].stop();
-          }
-
           remoteVideoRef.current.srcObject = remoteStream;
           remoteVideoRef.current.play();
         });
@@ -203,10 +254,12 @@ const usePeerJS = (roomID) => {
     setCallButton,
     toggleAudio,
     toggleCamera,
+    endVideoCall,
     isCameraOn,
     audioEnabled,
     isScreenSharing,
     toggleScreenSharing,
+    rejectVideoCall,
   };
 };
 
