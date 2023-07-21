@@ -35,7 +35,11 @@ def get_all_classes(request):
 
 @api_view(['POST'])
 def create_class(request):
-    serializer = CreateClassSerializer(data=request.data)
+    # print(request.user.id)
+    # return Response(status=status.HTTP_200_OK)
+    classesData = request.data
+    classesData['teacher'] = request.user.id
+    serializer = CreateClassSerializer(data=classesData)
     if serializer.is_valid():
         serializer.save()
         return Response({'success': 'Klasa została utworzona'}, status=status.HTTP_201_CREATED)

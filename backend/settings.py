@@ -22,6 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-p_3$0tpjdbk%^l@urxw@%xthx0zb)zw)v+0@$(3i+wa#ahlzju'
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -97,9 +98,8 @@ SIMPLE_JWT = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-
     "corsheaders.middleware.CorsMiddleware",
-
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -166,8 +166,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
+LANGUAGES = [
+    ('pl', 'Polish'),
+    # Inne obsługiwane języki
+]
+LANGUAGE_CODE = 'pl'
 
 TIME_ZONE = 'UTC'
 

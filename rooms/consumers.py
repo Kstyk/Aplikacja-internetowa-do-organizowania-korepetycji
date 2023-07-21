@@ -6,7 +6,6 @@ from .models import Room, Message
 from .serializers import MessageSerializer
 from asgiref.sync import async_to_sync
 from urllib.parse import parse_qs
-from backend.settings import SECRET_KEY
 from .exceptions import AccessDeniedForRoom
 from rest_framework.exceptions import AuthenticationFailed
 
@@ -29,6 +28,7 @@ class ChatConsumer(JsonWebsocketConsumer):
         super().__init__(args, kwargs)
         self.user = None
         self.room = None
+        self.peer = None
 
     @classmethod
     def encode_json(cls, content):
@@ -70,7 +70,6 @@ class ChatConsumer(JsonWebsocketConsumer):
         )
 
     def disconnect(self, code):
-        print("Disconnected")
         return super().disconnect(code)
 
     def get_receiver(self):
@@ -80,19 +79,38 @@ class ChatConsumer(JsonWebsocketConsumer):
             if username != self.user.email:
                 return User.objects.get(email=username)
 
+    # funkcja do obsluzenia typu chat_message_echo od group_send
+
+    def chat_message_echo(self, event):
+        self.send_json(event)
+
+    def receivedpeer(self, event):
+        print(f'content in handler: ${event}')
+
+        if self.channel_name != event['sender_channel_name']:
+            self.send_json(event)
+
+    def rejected_call(self, event):
+        # wysyłanie informacji o odrzuceniu połączenia tylko do dzwoniącego
+        if self.channel_name != event['sender_channel_name']:
+            self.send_json(event)
+
     def receive_json(self, content, **kwargs):
 
         message_type = content["type"]
 
         if message_type == "peer":
+            print(f'content: ${content}')
+            print(f'room id: {self.room.room_id}')
             async_to_sync(self.channel_layer.group_send)(
                 self.room.room_id,
                 {
-                    "type": "received_peer",
+                    "type": "receivedpeer",
                     "peer": content["peer"],
                     'sender_channel_name': self.channel_name
                 }
             )
+            print("after send")
 
         if message_type == "reject_peer":
             async_to_sync(self.channel_layer.group_send)(
@@ -123,17 +141,3 @@ class ChatConsumer(JsonWebsocketConsumer):
         return super().receive_json(content, **kwargs)
 
     ##########################
-
-    # funkcja do obsluzenia typu chat_message_echo od group_send
-    def chat_message_echo(self, event):
-        print(event)
-        self.send_json(event)
-
-    def received_peer(self, event):
-        if self.channel_name != event['sender_channel_name']:
-            self.send_json(event)
-
-    def rejected_call(self, event):
-        # wysyłanie informacji o odrzuceniu połączenia tylko do dzwoniącego
-        if self.channel_name != event['sender_channel_name']:
-            self.send_json(event)
