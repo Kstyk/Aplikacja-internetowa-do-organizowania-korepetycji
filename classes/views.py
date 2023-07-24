@@ -5,9 +5,8 @@ from rest_framework.decorators import api_view, permission_classes
 from .serializers import TypeOfClassesSerializer, ClassSerializer, LanguageSerializer, CreateClassSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.views import APIView
-from users.models import User
-
+from django.db.models import Q
+from .paginators import ClassPagination
 # Create your views here.
 
 
@@ -28,9 +27,44 @@ def get_languages(request):
 
 @api_view(['GET'])
 def get_all_classes(request):
-    classes = Class.objects.all()
-    serializer = ClassSerializer(classes, many=True)
-    return Response(serializer.data)
+    search_text = request.GET.get('search_text')
+    difficulty_level = request.GET.get('difficulty_level')
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    stationary = request.GET.get('stationary')
+    language_id = request.GET.get('language')
+    classes = Class.objects.filter(able_to_buy=True)
+
+    if search_text is not None:
+        classes = classes.filter(Q(name__icontains=search_text) | Q(
+            description__icontains=search_text))
+    if difficulty_level is not None:
+        classes = classes.filter(difficulty_level=difficulty_level)
+    if language_id is not None:
+        classes = classes.filter(language_id=language_id)
+    if min_price is not None:
+        classes = classes.filter(price_for_lesson__gte=min_price)
+    if max_price is not None:
+        classes = classes.filter(price_for_lesson__lte=max_price)
+    if stationary is not None:
+        classes = classes.filter(stationary=stationary)
+
+    if len(classes) > 0:
+
+        paginator = ClassPagination()
+        result_page = paginator.paginate_queryset(classes, request=request)
+        serializer = ClassSerializer(result_page, many=True)
+
+        result_dict = {
+            'page_number': paginator.page.number,
+            'total_pages': paginator.page.paginator.num_pages,
+            'total_classes': paginator.page.paginator.count,
+            'classes': serializer.data,
+        }
+
+        return Response(result_dict)
+    else:
+        return Response({}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
