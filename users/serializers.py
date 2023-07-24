@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import Role
+from .models import Role, Address, UserDetails
 from django.contrib.auth import get_user_model
 from rest_framework.validators import UniqueValidator
+from classes.models import Language
 from django.core.exceptions import ValidationError
-
 
 User = get_user_model()
 
@@ -57,3 +57,68 @@ class CreateUserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = '__all__'
+
+
+class CreateOrUpdateUserDetailsSerializer(serializers.ModelSerializer):
+    address = AddressSerializer(required=False)
+
+    class Meta:
+        model = UserDetails
+        fields = '__all__'
+
+    def create(self, validated_data):
+        address_data = validated_data.pop('address', None)
+        known_languages_data = validated_data.pop('known_languages', [])
+
+        userdetails = UserDetails.objects.create(**validated_data)
+
+        for language_data in known_languages_data:
+            language = Language.objects.get(pk=language_data.id)
+            userdetails.known_languages.add(language)
+
+        if validated_data.get('address'):
+            address = Address.objects.create(
+                userdetails=userdetails, **address_data)
+            userdetails.address = address
+
+        userdetails.save()
+
+        return userdetails
+
+    def update(self, instance, validated_data):
+        address_data = validated_data.pop('address', None)
+
+        fields = validated_data.keys()
+        for field in fields:
+            if field != "known_languages":
+                setattr(instance, field, validated_data[field])
+            else:
+                instance.known_languages.set(validated_data[field])
+
+        if address_data is not None:
+            if instance.address is not None:
+                address = instance.address
+                if address_data.get('city', address.city) is not None:
+                    address.city = address_data.get('city', address.city)
+                if address_data.get('voivodeship', address.voivodeship) is not None:
+                    address.voivodeship = address_data.get(
+                        'voivodeship', address.voivodeship)
+                if address_data.get('postal_code', address.postal_code) is not None:
+                    address.postal_code = address_data.get(
+                        'postal_code', address.postal_code)
+                address.save()
+            else:
+                address = Address.objects.create(
+                    userdetails=instance, **address_data)
+                instance.address = address
+                instance.save()
+
+        instance.save()
+
+        return instance

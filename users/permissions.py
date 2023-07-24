@@ -9,3 +9,10 @@ class IsStudent(BasePermission):
             print(request.user.role.name)
             return request.user.role.name == 'Student'
         return False
+
+
+class IsOwnerProfile(BasePermission):
+    message = 'To nie jest twój profil - nie możesz go edytować'
+
+    def has_object_permission(self, request, view, obj):
+        return obj.user == request.user

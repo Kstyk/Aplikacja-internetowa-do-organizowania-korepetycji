@@ -70,9 +70,12 @@ class Address(models.Model):
     street = models.CharField(max_length=50, null=True, blank=True)
     building_number = models.CharField(max_length=10, null=True, blank=True)
 
+    def __str__(self) -> str:
+        return f"{self.voivodeship} - {self.city} - {self.postal_code} {self.street}, {self.building_number}"
+
 
 class UserDetails(models.Model):
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         User, on_delete=models.CASCADE, null=False, blank=False
     )
     profile_image = models.ImageField(
@@ -80,10 +83,17 @@ class UserDetails(models.Model):
     description = models.TextField(blank=True, null=True)
     year_of_birth = models.IntegerField(
         blank=True, null=True)
-    phone_number = models.CharField(blank=True, null=True, max_length=20)
-    known_languages = models.ManyToManyField(Language, blank=True)
+    phone_number = models.CharField(
+        blank=True, null=True, max_length=20, unique=True, error_messages={
+            'unique': 'Użytkownik o podanym numerze telefonu już istnieje.',
+        })
+    known_languages = models.ManyToManyField(
+        Language, blank=True, related_name='known_languages')
     sex = models.CharField(null=True, blank=True, choices={(
-        "mężczyzna", "mężczyzna"), ("kobieta", "kobietas")}, max_length=20)
+        "mężczyzna", "mężczyzna"), ("kobieta", "kobieta")}, max_length=20)
     experience = models.CharField(null=True, blank=True, max_length=10000)
     address = models.ForeignKey(
         Address, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.user.first_name} {self.user.last_name}"

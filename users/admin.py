@@ -42,7 +42,13 @@ class CustomUserDetailsAdmin(admin.ModelAdmin):
     user_email.short_description = "Email użytkownika"
 
 
+class CustomAddressAdmin(admin.ModelAdmin):
+    model = Address
+    list_display = ("voivodeship", "city", "postal_code",
+                    "street", "building_number")
+
+
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Role)
 admin.site.register(UserDetails, CustomUserDetailsAdmin)
-admin.site.register(Address)
+admin.site.register(Address, CustomAddressAdmin)
