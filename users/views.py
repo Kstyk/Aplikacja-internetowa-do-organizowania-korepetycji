@@ -3,8 +3,10 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from users.permissions import IsStudent, IsOwnerProfile
 from .models import Role, User, UserDetails
-from .serializers import CreateUserSerializer, RoleSerializer, UserSerializer, AddressSerializer, CreateOrUpdateUserDetailsSerializer
+from .serializers import CreateUserSerializer, RoleSerializer, UserSerializer, CreateOrUpdateUserDetailsSerializer, UserProfileSerializer
 from django.contrib.auth import get_user_model
+from rest_framework.views import APIView
+
 # Create your views here.
 
 User = get_user_model()
@@ -71,3 +73,16 @@ class UserDetailsUpdateView(generics.UpdateAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserProfileView(generics.RetrieveAPIView):
+    serializer_class = UserProfileSerializer
+    queryset = UserDetails.objects.all()
+
+    def get_object(self):
+        user_id = self.kwargs.get('user_id')
+
+        try:
+            return self.queryset.get(user__id=user_id)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)

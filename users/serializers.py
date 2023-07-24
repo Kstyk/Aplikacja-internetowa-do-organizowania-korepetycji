@@ -122,3 +122,12 @@ class CreateOrUpdateUserDetailsSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    address = AddressSerializer()
+
+    class Meta:
+        model = UserDetails
+        fields = '__all__'
