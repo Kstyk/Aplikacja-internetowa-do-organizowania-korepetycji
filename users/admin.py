@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Role
+from .models import User, Role, UserDetails, Address
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.admin import UserAdmin
 
@@ -32,5 +32,17 @@ class CustomUserAdmin(UserAdmin):
     ordering = ("email",)
 
 
+class CustomUserDetailsAdmin(admin.ModelAdmin):
+    model = UserDetails
+    list_display = ("user_id", "user_email", "description")
+
+    def user_email(self, obj):
+        return obj.user.email
+
+    user_email.short_description = "Email użytkownika"
+
+
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Role)
+admin.site.register(UserDetails, CustomUserDetailsAdmin)
+admin.site.register(Address)

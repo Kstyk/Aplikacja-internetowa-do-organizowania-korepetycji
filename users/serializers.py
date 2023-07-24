@@ -18,6 +18,14 @@ class RoleSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    role = RoleSerializer()
+
+    class Meta:
+        model = get_user_model()
+        fields = ['id', 'email', 'first_name', 'last_name', 'role']
+
+
+class CreateUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     role = serializers.PrimaryKeyRelatedField(
         queryset=Role.objects.all(), required=True)

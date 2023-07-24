@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from users.permissions import IsStudent
 from .models import Role, User
-from .serializers import UserSerializer, RoleSerializer
+from .serializers import CreateUserSerializer, RoleSerializer, UserSerializer
 from django.contrib.auth import get_user_model
 # Create your views here.
 
@@ -36,4 +36,4 @@ class TeachersListView(generics.ListAPIView):
 class UserRegistrationView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = CreateUserSerializer
