@@ -25,23 +25,32 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'first_name', 'last_name', 'role']
 
 
+class UpdateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ['email', 'first_name', 'last_name']
+
+
 class CreateUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
     role = serializers.PrimaryKeyRelatedField(
         queryset=Role.objects.all(), required=True)
 
     class Meta:
         model = get_user_model()
-        fields = ['email', 'password', 'first_name', 'last_name', 'role']
-        extra_kwargs = {
-            'email': {'error_messages': {'invalid': 'Podaj poprawny adres e-mail.',
-                                         'blank': 'Pole "e-mail" nie może być puste.',
-                                         'max_length': 'Adres e-mail może mieć maksymalnie 50 znaków.'}},
-            'first_name': {'error_messages': {'blank': 'Pole "Imię" nie może być puste.',
-                                              'max_length': 'Imię może mieć maksymalnie 50 znaków.'}},
-            'last_name': {'error_messages': {'blank': 'Pole "Nazwisko" nie może być puste.',
-                                             'max_length': 'Nazwisko może mieć maksymalnie 50 znaków.'}}
-        }
+        fields = ['email', 'password', 'confirm_password',
+                  'first_name', 'last_name', 'role']
+
+    def validate(self, data):
+        password = data.get('password')
+        confirm_password = data.get('confirm_password')
+
+        if password and confirm_password and password != confirm_password:
+            raise ValidationError(
+                {"confirm_password": "Hasła nie są identyczne."})
+
+        return data
 
     def create(self, validated_data):
         user = User.objects.create_user(
