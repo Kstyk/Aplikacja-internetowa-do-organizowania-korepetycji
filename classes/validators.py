@@ -1,11 +1,30 @@
 from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
+from datetime import date
 
 
 def validate_teacher_role(value):
-    if value.role is None:
+    User = get_user_model()
+
+    try:
+        if type(value) is int:
+            user = User.objects.get(pk=value)
+        else:
+            user = User.objects.get(pk=value.id)
+    except User.DoesNotExist:
+        raise ValidationError("Użytkownik o podanym ID nie istnieje.")
+
+    if user.role is None:
         raise ValidationError(
             "Tylko rola 'nauczyciel' może być przypisana do zajęć.")
     else:
-        if value.role.name != "Teacher":
+        if user.role.name != "Teacher":
             raise ValidationError(
                 "Tylko rola 'nauczyciel' może być przypisana do zajęć.")
+
+
+def validate_future_date(value):
+    if value <= date.today():
+        raise ValidationError(
+            "Możesz planować swój harmonogram od daty jutrzejszej."
+        )
