@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'rooms',
     'classes',
+    'multiselectfield',
+    'cities_light'
 ]
 
 REST_FRAMEWORK = {
@@ -208,3 +210,8 @@ CHANNEL_LAYERS = {
 
 MEDIA_ROOT = BASE_DIR/'media'
 MEDIA_URL = '/media/'
+
+CITIES_LIGHT_TRANSLATION_LANGUAGES = ['pl']
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['PL']
+CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3',
+                                   'PPLA4', 'PPLC', 'PPLF', 'PPLG', 'PPLL', 'PPLR', 'PPLS', 'STLMT']

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from classes.models import Language
+from multiselectfield import MultiSelectField
+from cities_light.models import City
 # Create your models here.
 
 
@@ -65,16 +67,33 @@ class User(AbstractUser):
 
 class Address(models.Model):
     voivodeship = models.CharField(max_length=50)
+    # city = models.ForeignKey(
+    #     City,
+    #     on_delete=models.CASCADE,
+    #     limit_choices_to={'country__name': 'Poland'},  # Dodaj tę linię
+    # )
     city = models.CharField(max_length=150)
     postal_code = models.CharField(max_length=6)
     street = models.CharField(max_length=50, null=True, blank=True)
     building_number = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f"{self.voivodeship} - {self.city} - {self.postal_code} {self.street}, {self.building_number}"
+        return f"{self.voivodeship} -  {self.postal_code} {self.street}, {self.building_number}"
+
+
+TEACHER_HOME = 'teacher_home'
+STUDENT_HOME = 'student_home'
+ONLINE = 'online'
+
+LOCATION_CHOICES = [
+    (TEACHER_HOME, 'U nauczyciela'),
+    (STUDENT_HOME, 'U ucznia'),
+    (ONLINE, 'Online'),
+]
 
 
 class UserDetails(models.Model):
+
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, null=False, blank=False
     )
@@ -91,6 +110,8 @@ class UserDetails(models.Model):
         Language, blank=True, related_name='known_languages')
     sex = models.CharField(null=True, blank=True, choices={(
         "mężczyzna", "mężczyzna"), ("kobieta", "kobieta")}, max_length=20)
+    place_of_classes = MultiSelectField(
+        choices=LOCATION_CHOICES, null=True, blank=True, max_choices=3, max_length=150)
     experience = models.CharField(null=True, blank=True, max_length=10000)
     address = models.ForeignKey(
         Address, on_delete=models.CASCADE, null=True, blank=True)

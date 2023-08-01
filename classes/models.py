@@ -28,11 +28,8 @@ class Class(models.Model):
     type_of_classes = models.ForeignKey(
         TypeOfClasses, on_delete=models.PROTECT)
     difficulty_level = models.CharField(null=False, blank=False, max_length=50)
-    max_number_of_lessons = models.IntegerField(
-        null=True, blank=True, validators=[MinValueValidator(1)])  # jeśli cotygodniowo
     active = models.BooleanField(default=True)
     price_for_lesson = models.DecimalField(max_digits=6, decimal_places=2)
-    stationary = models.BooleanField(default=False)
     description = models.TextField()
     able_to_buy = models.BooleanField(default=True, null=True, blank=True)
 
@@ -46,14 +43,15 @@ class Schedule(models.Model):
 
     TIMESLOT_LIST = (
         (0, '09:00 – 10:00'),
-        (1, '11:00 – 12:00'),
-        (2, '12:00 – 13:00'),
-        (3, '13:00 – 14:00'),
-        (4, '14:00 – 15:00'),
-        (5, '15:00 – 16:00'),
-        (6, '16:00 – 17:00'),
-        (7, '17:00 – 18:00'),
-        (8, '18:00 – 19:00'),
+        (1, '10:00 – 11:00'),
+        (2, '11:00 – 12:00'),
+        (3, '12:00 – 13:00'),
+        (4, '13:00 – 14:00'),
+        (5, '14:00 – 15:00'),
+        (6, '15:00 – 16:00'),
+        (7, '16:00 – 17:00'),
+        (8, '17:00 – 18:00'),
+        (9, '18:00 – 19:00'),
     )
 
     teacher = models.ForeignKey(

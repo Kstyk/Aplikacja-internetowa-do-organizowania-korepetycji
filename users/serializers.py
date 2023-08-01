@@ -1,9 +1,10 @@
-from rest_framework import serializers
+from rest_framework import serializers, fields
 from .models import Role, Address, UserDetails
 from django.contrib.auth import get_user_model
 from rest_framework.validators import UniqueValidator
 from classes.models import Language
 from django.core.exceptions import ValidationError
+from .models import LOCATION_CHOICES
 
 User = get_user_model()
 
@@ -76,6 +77,7 @@ class AddressSerializer(serializers.ModelSerializer):
 
 class CreateOrUpdateUserDetailsSerializer(serializers.ModelSerializer):
     address = AddressSerializer(required=False)
+    place_of_classes = fields.MultipleChoiceField(choices=LOCATION_CHOICES)
 
     class Meta:
         model = UserDetails
