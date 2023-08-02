@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from .serializers import TypeOfClassesSerializer, ClassSerializer, LanguageSerializer, CreateClassSerializer, CreateScheduleSerializer, ScheduleSerializer, MostPopularLanguages
 from rest_framework.response import Response
 from rest_framework import status, generics
-from django.db.models import Q
+from django.db.models import Q, F
 from django.db import IntegrityError, transaction
 from .paginators import ClassPagination
 from users.permissions import IsTeacher
@@ -31,6 +31,7 @@ def get_languages(request):
 
 @api_view(['GET'])
 def get_all_classes(request):
+    # filtrowanie
     search_text = request.GET.get('search_text')
     difficulty_level = request.GET.get('difficulty_level')
     min_price = request.GET.get('min_price')
@@ -39,6 +40,10 @@ def get_all_classes(request):
     city_id = request.GET.get('city')
     voivodeship_id = request.GET.get('voivodeship')
     classes = Class.objects.filter(able_to_buy=True)
+
+    # sortowanie
+    sort_by = request.GET.get('sort_by')  # Column name for sorting
+    sort_direction = request.GET.get('sort_direction', 'DESC')
 
     if search_text is not None:
         classes = classes.filter(Q(name__icontains=search_text) | Q(
@@ -60,6 +65,14 @@ def get_all_classes(request):
         classes = classes.filter(price_for_lesson__gte=min_price)
     if max_price is not None:
         classes = classes.filter(price_for_lesson__lte=max_price)
+
+    if sort_by is not None:
+        if sort_direction == 'DESC':
+            classes = classes.order_by(F(sort_by).desc())
+        elif sort_direction == 'ASC':
+            classes = classes.order_by(F(sort_by).asc())
+        else:
+            pass
 
     if len(classes) > 0:
 
