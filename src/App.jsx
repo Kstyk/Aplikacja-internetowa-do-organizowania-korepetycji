@@ -9,18 +9,15 @@ import RegistrationPage from "./pages/RegistrationPage";
 import CreateRoomPage from "./pages/CreateRoomPage";
 import StartedRoomsPage from "./pages/StartedRoomsPage";
 import Room from "./components/Room";
-import Chat from "./components/Chat";
 
 function App() {
   return (
-    <div
-      data-theme="light"
-      className="flex flex-col bg-slate-300 w-screen h-screen"
-    >
+    <div data-theme="mytheme" className="flex flex-col w-8/12 mx-auto">
       <AuthProvider>
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
+
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationPage />} />
           <Route
@@ -55,7 +52,7 @@ function App() {
               </PrivateRoute>
             }
           />
-        </Routes>
+        </Routes>{" "}
       </AuthProvider>
     </div>
   );

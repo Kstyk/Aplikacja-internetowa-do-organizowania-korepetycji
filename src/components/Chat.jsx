@@ -5,9 +5,10 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate, useParams } from "react-router-dom";
 import Message from "./Message";
 import ChatLoader from "./ChatLoader";
-import usePeerJS from "../utils/usePeerJS";
 import useAxios from "../utils/useAxios";
 import Modal from "react-modal";
+import { useRef } from "react";
+import Peer from "peerjs";
 
 const Chat = () => {
   const [message, setMessage] = useState("");
@@ -21,34 +22,23 @@ const Chat = () => {
 
   let api = useAxios();
   // videocall
-  const {
-    peerId,
-    call,
-    startVideoCall,
-    remotePeerIdValue,
-    setRemotePeerIdValue,
-    remoteVideoRef,
-    currentUserVideoRef,
-    modalIsOpen,
-    setIsOpen,
-    callButton,
-    setCallButton,
-    toggleAudio,
-    toggleCamera,
-    endVideoCall,
-    audioEnabled,
-    isCameraOn,
-    isScreenSharing,
-    toggleScreenSharing,
-    rejectVideoCall,
-  } = usePeerJS(roomId);
+  const [peerId, setPeerId] = useState("");
+  const [remotePeerIdValue, setRemotePeerIdValue] = useState("");
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [callButton, setCallButton] = useState(null);
 
+  const remoteVideoRef = useRef(null);
+  const currentUserVideoRef = useRef(null);
+  const peerInstance = useRef(null);
+
+  const [audioEnabled, setAudioEnabled] = useState(true);
+  const [isCameraOn, setIsCameraOn] = useState(true);
+  const [isScreenSharing, setIsScreenSharing] = useState(false);
   const { readyState, sendJsonMessage } = useWebSocket(
     user ? `ws://127.0.0.1:8000/${roomId}/` : null,
     {
       queryParams: {
         userId: user ? user.user_id : "",
-        roomId: roomId,
       },
       onOpen: (e) => {
         console.log("connected");
@@ -69,6 +59,15 @@ const Chat = () => {
             setMessageHistory(data.messages);
             setHasMoreMessages(data.has_more);
             break;
+          case "receivedpeer":
+            // django potrzebuje 2-3 sekund by odeslac wiadomosc
+            setRemotePeerIdValue(data.peer);
+            setCallButton(true);
+            localStorage.setItem("remotePeerId", data.peer);
+            localStorage.setItem("callButton", true);
+            break;
+          case "rejected_call":
+            endVideoCall();
           default:
             break;
         }
@@ -94,9 +93,6 @@ const Chat = () => {
         setMessageHistory((prev) => prev.concat(res.data.results));
       })
       .catch((err) => {
-        console.log(err);
-        console.log(err.response.data.detail);
-        console.log(err.response.data);
         nav("/");
       });
   };
@@ -125,18 +121,13 @@ const Chat = () => {
 
     startVideoCall();
     if (remotePeerIdValue == "") {
-      console.log("remote storage: " + localStorage.getItem("peerId"));
-      call(localStorage.getItem("peerId"));
+      call(localStorage.getItem("remotePeerId"));
     } else {
-      console.log("remote state: " + remotePeerIdValue);
-
       call(remotePeerIdValue);
     }
   }
 
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-  }
+  function afterOpenModal() {}
 
   function closeModal() {
     setIsOpen(false);
@@ -144,6 +135,210 @@ const Chat = () => {
   }
 
   Modal.setAppElement("#root");
+
+  useEffect(() => {
+    console.log("rendered");
+
+    if (peerId != "") {
+      sendJsonMessage({
+        type: "peer",
+        peer: peerId,
+        token: user.token,
+      });
+    } else {
+      console.log("ale gowno");
+    }
+  }, [peerId]);
+
+  const startVideoCall = () => {
+    console.log("stan ws: " + connectionStatus);
+
+    const peer = new Peer();
+
+    peer.on("open", (id) => {
+      setPeerId(id);
+      setIsOpen(true);
+    });
+
+    peer.on("call", (call) => {
+      var getUserMedia =
+        navigator.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia;
+
+      getUserMedia({ video: true, audio: true }, (mediaStream) => {
+        currentUserVideoRef.current.srcObject = mediaStream;
+        currentUserVideoRef.current.onloadedmetadata = () => {
+          currentUserVideoRef.current.play();
+        };
+        call.answer(mediaStream);
+        call.on("stream", function (remoteStream) {
+          remoteVideoRef.current.srcObject = remoteStream;
+          remoteVideoRef.current.onloadedmetadata = () => {
+            remoteVideoRef.current.play();
+          };
+        });
+      });
+    });
+
+    peer.on("close", () => {
+      console.log("Zakończono połączenie");
+    });
+
+    peerInstance.current = peer;
+  };
+
+  const call = async (remotePeerId) => {
+    var getUserMedia =
+      navigator.getUserMedia ||
+      navigator.webkitGetUserMedia ||
+      navigator.mozGetUserMedia;
+
+    getUserMedia({ video: true, audio: true }, (mediaStream) => {
+      currentUserVideoRef.current.srcObject = mediaStream;
+      currentUserVideoRef.current.onloadedmetadata = () => {
+        currentUserVideoRef.current.play();
+      };
+
+      const call = peerInstance.current.call(remotePeerId, mediaStream, {
+        metadata: {
+          callerPeerId: peerId,
+        },
+      });
+
+      call.on(
+        "stream",
+        (remoteStream) => {
+          remoteVideoRef.current.srcObject = remoteStream;
+          remoteVideoRef.current.onloadedmetadata = () => {
+            remoteVideoRef.current.play();
+          };
+        },
+        function (err) {
+          console.log("Failed to get local stream", err);
+        }
+      );
+    });
+  };
+
+  const rejectVideoCall = async () => {
+    sendJsonMessage({
+      type: "reject_peer",
+      peer: peerId,
+      token: user.token,
+    });
+  };
+
+  const endVideoCall = async () => {
+    stopScreenSharing();
+    // Close the PeerJS connection
+    if (peerInstance.current) {
+      peerInstance.current.destroy();
+      peerInstance.current = null;
+    }
+
+    // Stop the media streams and reset their references
+    const currentUserStream = currentUserVideoRef.current.srcObject;
+    const remoteStream = remoteVideoRef.current.srcObject;
+
+    if (currentUserStream) {
+      currentUserStream.getTracks().forEach((track) => track.stop());
+      currentUserVideoRef.current.srcObject = null;
+    }
+    if (remoteStream) {
+      remoteStream.getTracks().forEach((track) => track.stop());
+      remoteVideoRef.current.srcObject = null;
+    }
+
+    // Reset state variables
+    setIsOpen(false);
+    setCallButton(false);
+    setPeerId("");
+    setRemotePeerIdValue("");
+    localStorage.removeItem("callButton");
+    localStorage.removeItem("peerId");
+  };
+
+  const toggleAudio = async () => {
+    const audioTracks = currentUserVideoRef.current.srcObject.getAudioTracks();
+    audioTracks.forEach((track) => {
+      track.enabled = !audioEnabled;
+    });
+    setAudioEnabled(!audioEnabled);
+  };
+
+  const toggleCamera = async () => {
+    const tracks = currentUserVideoRef.current.srcObject.getTracks();
+    tracks.forEach((track) => {
+      if (track.kind === "video") {
+        track.enabled = !isCameraOn;
+        setIsCameraOn(!isCameraOn);
+      }
+    });
+  };
+
+  async function getScreenshareWithMicrophone() {
+    const stream = await navigator.mediaDevices.getDisplayMedia({
+      video: true,
+    });
+    const audio = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+    return new MediaStream([audio.getTracks()[0], stream.getTracks()[0]]);
+  }
+
+  const toggleScreenSharing = async () => {
+    if (isScreenSharing) {
+      stopScreenSharing();
+    } else {
+      console.log(peerId);
+
+      const stream = await getScreenshareWithMicrophone();
+      setAudioEnabled(true);
+
+      currentUserVideoRef.current.srcObject = stream;
+      let videoTrack = currentUserVideoRef.current.srcObject.getTracks()[0];
+
+      videoTrack.onended = () => {
+        stopScreenSharing();
+      };
+
+      const call = peerInstance.current.call(remotePeerIdValue, stream);
+      call.on("stream", (remoteStream) => {
+        remoteVideoRef.current.srcObject = remoteStream;
+        remoteVideoRef.current.play();
+      });
+
+      setIsScreenSharing(true);
+    }
+  };
+
+  const stopScreenSharing = () => {
+    if (!isScreenSharing) return;
+    setIsScreenSharing(false);
+    const currentUserStream = currentUserVideoRef.current.srcObject;
+    if (currentUserStream) {
+      currentUserStream.getTracks().forEach((track) => track.stop());
+    }
+    navigator.mediaDevices
+      .getUserMedia({
+        video: true,
+        audio: true,
+      })
+      .then((stream) => {
+        currentUserVideoRef.current.srcObject = stream;
+
+        const call = peerInstance.current.call(remotePeerIdValue, stream);
+
+        call.on("stream", (remoteStream) => {
+          remoteVideoRef.current.srcObject = remoteStream;
+          remoteVideoRef.current.play();
+        });
+      })
+      .catch((error) => {
+        // Handle any errors with revoking media permissions (optional)
+        console.error("Error revoking media permissions:", error);
+      });
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -184,36 +379,42 @@ const Chat = () => {
         </button>
         <button
           className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px] "
-          onClick={startVideoCall}
+          onClick={() => startVideoCall()}
         >
           Zadzwoń
         </button>
-        {callButton == true || localStorage.getItem("callButton") == "true" ? (
-          <button
-            className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
-            onClick={(e) => openModal()}
-          >
-            Odbierz połączenie
-          </button>
-        ) : (
-          ""
-        )}
-        {callButton == true || localStorage.getItem("callButton") == "true" ? (
-          <button
-            className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
-            onClick={(e) => {
-              localStorage.removeItem("callButton");
-              localStorage.removeItem("peerId");
-              setCallButton(null);
-              rejectVideoCall();
-            }}
-          >
-            Zakończ połączenie
-          </button>
-        ) : (
-          ""
-        )}
+
+        <>
+          {callButton == true ||
+          localStorage.getItem("callButton") == "true" ? (
+            <button
+              className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
+              onClick={(e) => openModal()}
+            >
+              Odbierz połączenie
+            </button>
+          ) : (
+            ""
+          )}
+          {callButton == true ||
+          localStorage.getItem("callButton") == "true" ? (
+            <button
+              className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
+              onClick={(e) => {
+                localStorage.removeItem("callButton");
+                localStorage.removeItem("peerId");
+                setCallButton(null);
+                rejectVideoCall();
+              }}
+            >
+              Zakończ połączenie
+            </button>
+          ) : (
+            ""
+          )}
+        </>
       </div>
+
       <Modal
         isOpen={modalIsOpen}
         onAfterOpen={afterOpenModal}
@@ -240,7 +441,10 @@ const Chat = () => {
         </div>
         <div className="w-2/12 bg-slate-500 h-full flex flex-col justify-between text-lg uppercase font-semibold">
           <div
-            onClick={() => endVideoCall()}
+            onClick={() => {
+              rejectVideoCall();
+              endVideoCall();
+            }}
             className="border-b-2 border-white h-1/4 flex justify-center items-center hover:bg-slate-700"
           >
             Zakończ połączenie

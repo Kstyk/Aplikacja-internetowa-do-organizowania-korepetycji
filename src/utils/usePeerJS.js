@@ -29,13 +29,13 @@ const usePeerJS = (roomID) => {
         const data = JSON.parse(e.data);
         switch (data.type) {
           case "received_peer":
+            console.log("Received");
             setRemotePeerIdValue(data.peer);
             setCallButton(true);
-            localStorage.setItem("peerId", data.peer);
+            localStorage.setItem("remotePeerId", data.peer);
             localStorage.setItem("callButton", true);
             break;
           case "rejected_call":
-            console.log("rejected");
             endVideoCall();
           default:
             // bash.error("Unknown message type!");
@@ -52,15 +52,11 @@ const usePeerJS = (roomID) => {
       setPeerId(id);
       setIsOpen(true);
 
-      console.log("before send");
-
       sendJsonMessage({
         type: "peer",
         peer: id,
         token: user.token,
       });
-
-      console.log("after send");
     });
 
     peer.on("call", (call) => {
@@ -91,7 +87,7 @@ const usePeerJS = (roomID) => {
     peerInstance.current = peer;
   }
 
-  const call = (remotePeerId) => {
+  const call = async (remotePeerId) => {
     var getUserMedia =
       navigator.getUserMedia ||
       navigator.webkitGetUserMedia ||
@@ -116,7 +112,6 @@ const usePeerJS = (roomID) => {
           remoteVideoRef.current.onloadedmetadata = () => {
             remoteVideoRef.current.play();
           };
-          console.log("metadata:", call.metadata); // wyświetlenie obiektu metadata w konsoli
         },
         function (err) {
           console.log("Failed to get local stream", err);
@@ -125,7 +120,7 @@ const usePeerJS = (roomID) => {
     });
   };
 
-  const rejectVideoCall = () => {
+  const rejectVideoCall = async () => {
     sendJsonMessage({
       type: "reject_peer",
       peer: peerId,
@@ -133,7 +128,8 @@ const usePeerJS = (roomID) => {
     });
   };
 
-  const endVideoCall = () => {
+  const endVideoCall = async () => {
+    stopScreenSharing();
     // Close the PeerJS connection
     if (peerInstance.current) {
       peerInstance.current.destroy();
@@ -148,14 +144,12 @@ const usePeerJS = (roomID) => {
       currentUserStream.getTracks().forEach((track) => track.stop());
       currentUserVideoRef.current.srcObject = null;
     }
-
     if (remoteStream) {
       remoteStream.getTracks().forEach((track) => track.stop());
       remoteVideoRef.current.srcObject = null;
     }
 
     // Reset state variables
-    setIsScreenSharing(false);
     setIsOpen(false);
     setCallButton(false);
     setPeerId("");
@@ -164,7 +158,7 @@ const usePeerJS = (roomID) => {
     localStorage.removeItem("peerId");
   };
 
-  const toggleAudio = () => {
+  const toggleAudio = async () => {
     const audioTracks = currentUserVideoRef.current.srcObject.getAudioTracks();
     audioTracks.forEach((track) => {
       track.enabled = !audioEnabled;
@@ -172,7 +166,7 @@ const usePeerJS = (roomID) => {
     setAudioEnabled(!audioEnabled);
   };
 
-  const toggleCamera = () => {
+  const toggleCamera = async () => {
     const tracks = currentUserVideoRef.current.srcObject.getTracks();
     tracks.forEach((track) => {
       if (track.kind === "video") {
@@ -182,60 +176,67 @@ const usePeerJS = (roomID) => {
     });
   };
 
+  async function getScreenshareWithMicrophone() {
+    const stream = await navigator.mediaDevices.getDisplayMedia({
+      video: true,
+    });
+    const audio = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+    return new MediaStream([audio.getTracks()[0], stream.getTracks()[0]]);
+  }
+
   const toggleScreenSharing = async () => {
-    try {
-      if (!isScreenSharing) {
-        console.log("remote peer id in sharing: " + remotePeerIdValue);
-        const videoStream = await navigator.mediaDevices.getDisplayMedia({
-          video: true,
-        });
+    if (isScreenSharing) {
+      stopScreenSharing();
+    } else {
+      console.log(peerId);
 
-        const audio = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-        });
+      const stream = await getScreenshareWithMicrophone();
+      setAudioEnabled(true);
 
-        var strean = new MediaStream([
-          audio.getTracks()[0],
-          videoStream.getTracks()[0],
-        ]);
+      currentUserVideoRef.current.srcObject = stream;
+      let videoTrack = currentUserVideoRef.current.srcObject.getTracks()[0];
 
-        const currentUserStream = currentUserVideoRef.current.srcObject;
-        if (currentUserStream) {
-          currentUserStream.getTracks().forEach((track) => track.stop());
-        }
-        currentUserVideoRef.current.srcObject = strean;
+      videoTrack.onended = () => {
+        stopScreenSharing();
+      };
 
-        const call = peerInstance.current.call(remotePeerIdValue, strean);
+      const call = peerInstance.current.call(remotePeerIdValue, stream);
+      call.on("stream", (remoteStream) => {
+        remoteVideoRef.current.srcObject = remoteStream;
+        remoteVideoRef.current.play();
+      });
 
-        call.on("stream", (remoteStream) => {
-          remoteVideoRef.current.srcObject = remoteStream;
-          remoteVideoRef.current.play();
-        });
+      setIsScreenSharing(true);
+    }
+  };
 
-        setIsScreenSharing(true);
-      } else {
-        const stream = navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
-
-        const currentUserStream = currentUserVideoRef.current.srcObject;
-        if (currentUserStream) {
-          currentUserStream.getTracks().forEach((track) => track.stop());
-        }
+  const stopScreenSharing = () => {
+    if (!isScreenSharing) return;
+    setIsScreenSharing(false);
+    const currentUserStream = currentUserVideoRef.current.srcObject;
+    if (currentUserStream) {
+      currentUserStream.getTracks().forEach((track) => track.stop());
+    }
+    navigator.mediaDevices
+      .getUserMedia({
+        video: true,
+        audio: true,
+      })
+      .then((stream) => {
         currentUserVideoRef.current.srcObject = stream;
 
         const call = peerInstance.current.call(remotePeerIdValue, stream);
+
         call.on("stream", (remoteStream) => {
           remoteVideoRef.current.srcObject = remoteStream;
           remoteVideoRef.current.play();
         });
-
-        setIsScreenSharing(false);
-      }
-    } catch (err) {
-      console.error("Error sharing screen:", err);
-    }
+      })
+      .catch((error) => {
+        // Handle any errors with revoking media permissions (optional)
+        console.error("Error revoking media permissions:", error);
+      });
   };
 
   return {
