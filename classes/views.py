@@ -2,13 +2,15 @@ from django.shortcuts import render
 from .models import TypeOfClasses, Class, Language, Schedule
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
-from .serializers import TypeOfClassesSerializer, ClassSerializer, LanguageSerializer, CreateClassSerializer, CreateScheduleSerializer, ScheduleSerializer
+from .serializers import TypeOfClassesSerializer, ClassSerializer, LanguageSerializer, CreateClassSerializer, CreateScheduleSerializer, ScheduleSerializer, MostPopularLanguages
 from rest_framework.response import Response
 from rest_framework import status, generics
 from django.db.models import Q
 from django.db import IntegrityError, transaction
 from .paginators import ClassPagination
 from users.permissions import IsTeacher
+from django.db.models import Count
+from cities_light.models import City
 # Create your views here.
 
 
@@ -33,8 +35,8 @@ def get_all_classes(request):
     difficulty_level = request.GET.get('difficulty_level')
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
-    stationary = request.GET.get('stationary')
     language_id = request.GET.get('language')
+    city_id = request.GET.get('city')
     classes = Class.objects.filter(able_to_buy=True)
 
     if search_text is not None:
@@ -44,17 +46,20 @@ def get_all_classes(request):
         classes = classes.filter(difficulty_level=difficulty_level)
     if language_id is not None:
         classes = classes.filter(language_id=language_id)
+    if city_id is not None:
+        city = City.objects.get(pk=city_id)
+        classes = classes.filter(Q(teacher__userdetails__cities_of_work=city) | Q(
+            teacher__userdetails__address__city=city))
     if min_price is not None:
         classes = classes.filter(price_for_lesson__gte=min_price)
     if max_price is not None:
         classes = classes.filter(price_for_lesson__lte=max_price)
-    if stationary is not None:
-        classes = classes.filter(stationary=stationary)
 
     if len(classes) > 0:
 
         paginator = ClassPagination()
-        result_page = paginator.paginate_queryset(classes, request=request)
+        result_page = paginator.paginate_queryset(
+            classes.distinct(), request=request)
         serializer = ClassSerializer(result_page, many=True)
 
         result_dict = {
@@ -68,19 +73,6 @@ def get_all_classes(request):
     else:
         return Response({}, status=status.HTTP_200_OK)
 
-
-# @api_view(['POST'])
-# def create_class(request):
-#     print(request.user.id)
-#     # return Response(status=status.HTTP_200_OK)
-#     classesData = request.data
-#     classesData['teacher'] = request.user.id
-#     serializer = CreateClassSerializer(data=classesData)
-#     if serializer.is_valid():
-#         serializer.save()
-#         return Response({'success': 'Klasa została utworzona'}, status=status.HTTP_201_CREATED)
-#     else:
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ClassCreateView(generics.CreateAPIView):
     serializer_class = CreateClassSerializer
@@ -128,3 +120,13 @@ class ScheduleTeacherView(generics.ListAPIView):
     def get_queryset(self):
         teacher_id = self.kwargs.get('teacher_id')
         return Schedule.objects.filter(teacher_id=teacher_id)
+
+
+@api_view(['GET'])
+def get_top_languages(request):
+    top_languages = Language.objects.annotate(num_classes=Count(
+        'class_language')).order_by('-num_classes')[:20]
+
+    language_serializer = MostPopularLanguages(top_languages, many=True)
+
+    return Response(language_serializer.data)

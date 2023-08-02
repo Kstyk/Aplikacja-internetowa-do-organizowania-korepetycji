@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from .validators import validate_teacher_role, validate_future_date
+from autoslug import AutoSlugField
 # Create your models here.
 
 
@@ -13,6 +14,7 @@ class TypeOfClasses(models.Model):
 
 class Language(models.Model):
     name = models.CharField(null=False, blank=False, max_length=255)
+    slug = AutoSlugField(populate_from='name', null=True)
 
     def __str__(self):
         return self.name
@@ -22,7 +24,7 @@ class Class(models.Model):
     teacher = models.ForeignKey(
         'users.User', on_delete=models.CASCADE, validators=[validate_teacher_role])
     language = models.ForeignKey(
-        Language, on_delete=models.PROTECT, null=True
+        Language, on_delete=models.PROTECT, null=True, related_name="class_language"
     )
     name = models.CharField(max_length=255, null=False, blank=False)
     type_of_classes = models.ForeignKey(

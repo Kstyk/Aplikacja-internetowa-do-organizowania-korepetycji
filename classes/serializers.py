@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import TypeOfClasses, Class, Language, Schedule
-from users.serializers import UserSerializer
+from users.serializers import UserSerializer, AddressSerializer, UserProfileSerializer
 from .validators import validate_teacher_role
 from django.core.validators import MinValueValidator
 from users.models import User
@@ -19,10 +19,10 @@ class LanguageSerializer(serializers.ModelSerializer):
 
 
 class ClassSerializer(serializers.ModelSerializer):
-    teacher = UserSerializer()  # Zaimportowany gotowy serializer dla modelu User
     # Zaimportowany gotowy serializer dla modelu TypeOfClasses
     type_of_classes = TypeOfClassesSerializer()
     language = LanguageSerializer()
+    teacher = UserProfileSerializer(source='teacher.userdetails')
 
     class Meta:
         model = Class
@@ -55,3 +55,14 @@ class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
         fields = '__all__'
+
+
+class MostPopularLanguages(serializers.ModelSerializer):
+    num_classes = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Language
+        fields = ['id', 'name', 'slug', 'num_classes']
+
+    def get_num_classes(self, language):
+        return language.class_language.count()
