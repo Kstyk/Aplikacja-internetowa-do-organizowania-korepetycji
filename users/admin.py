@@ -2,7 +2,8 @@ from django.contrib import admin
 from .models import User, Role, UserDetails, Address
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.admin import UserAdmin
-
+from django import forms
+from cities_light.models import City, Region
 # Register your models here.
 
 
@@ -42,10 +43,33 @@ class CustomUserDetailsAdmin(admin.ModelAdmin):
     user_email.short_description = "Email użytkownika"
 
 
+def city_name():
+    return [(city, city.name) for city in City.objects.all()]
+
+
+def voivodeship_name():
+    return [(voivodeship, voivodeship.name) for voivodeship in Region.objects.all()]
+
+
+class AddressForm(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = '__all__'
+
+    city = forms.ChoiceField(choices=city_name)
+    voivodeship = forms.ChoiceField(choices=voivodeship_name)
+
+
 class CustomAddressAdmin(admin.ModelAdmin):
     model = Address
-    list_display = ("voivodeship", "city", "postal_code",
+    list_display = ("get_voivodeship_name", "postal_code",
                     "street", "building_number")
+    form = AddressForm
+
+    def get_voivodeship_name(self, obj):
+        return obj.voivodeship.name
+
+    get_voivodeship_name.short_description = "Województwo"
 
 
 admin.site.register(User, CustomUserAdmin)

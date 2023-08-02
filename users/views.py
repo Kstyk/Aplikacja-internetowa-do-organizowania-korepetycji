@@ -3,10 +3,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from users.permissions import IsStudent, IsOwnerProfile
 from .models import Role, User, UserDetails
-from .serializers import CreateUserSerializer, RoleSerializer, UserSerializer, CreateOrUpdateUserDetailsSerializer, UserProfileSerializer, UpdateUserSerializer
+from .serializers import CreateUserSerializer, RoleSerializer, UserSerializer, CreateOrUpdateUserDetailsSerializer, UserProfileSerializer, UpdateUserSerializer, VoivodeshipSerializer, CitySerializer, MostPopularCitySerializer
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from cities_light.models import City, Region
+from django.db.models import Count
+from rest_framework.decorators import api_view
 
 # Create your views here.
 
@@ -95,3 +98,23 @@ class UserProfileView(generics.RetrieveAPIView):
             return self.queryset.get(user__id=user_id)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class VoivodeshipListView(generics.ListAPIView):
+    serializer_class = VoivodeshipSerializer
+    queryset = Region.objects.all()
+
+
+class CityListView(generics.ListAPIView):
+    serializer_class = CitySerializer
+    queryset = City.objects.all()
+
+
+@api_view(['GET'])
+def get_top_cities(request):
+    top_cities = City.objects.annotate(num_tutors=Count(
+        'cities_of_work')).order_by('-num_tutors')[:20]
+
+    city_serializer = MostPopularCitySerializer(top_cities, many=True)
+
+    return Response(city_serializer.data)

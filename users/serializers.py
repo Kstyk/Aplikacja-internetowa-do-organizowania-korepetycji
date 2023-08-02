@@ -5,6 +5,7 @@ from rest_framework.validators import UniqueValidator
 from classes.models import Language
 from django.core.exceptions import ValidationError
 from .models import LOCATION_CHOICES
+from cities_light.models import City, Region
 
 User = get_user_model()
 
@@ -86,12 +87,17 @@ class CreateOrUpdateUserDetailsSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         address_data = validated_data.pop('address', None)
         known_languages_data = validated_data.pop('known_languages', [])
+        cities_of_work = validated_data.pop('cities_of_work', [])
 
         userdetails = UserDetails.objects.create(**validated_data)
 
         for language_data in known_languages_data:
             language = Language.objects.get(pk=language_data.id)
             userdetails.known_languages.add(language)
+
+        for city_data in cities_of_work:
+            city = City.objects.get(pk=city_data.id)
+            userdetails.cities_of_work.add(city)
 
         if validated_data.get('address'):
             address = Address.objects.create(
@@ -107,10 +113,12 @@ class CreateOrUpdateUserDetailsSerializer(serializers.ModelSerializer):
 
         fields = validated_data.keys()
         for field in fields:
-            if field != "known_languages":
-                setattr(instance, field, validated_data[field])
-            else:
+            if field == "known_languages":
                 instance.known_languages.set(validated_data[field])
+            elif field == "cities_of_work":
+                instance.cities_of_work.set(validated_data[field])
+            else:
+                setattr(instance, field, validated_data[field])
 
         if address_data is not None:
             if instance.address is not None:
@@ -142,3 +150,28 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserDetails
         fields = '__all__'
+
+
+class VoivodeshipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = '__all__'
+
+
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ['id', 'slug', 'name',
+                  'search_names', 'region_id']
+
+
+class MostPopularCitySerializer(serializers.ModelSerializer):
+    num_tutors = serializers.SerializerMethodField()
+
+    class Meta:
+        model = City
+        fields = ['id', 'slug', 'name',
+                  'search_names', 'region_id', 'num_tutors']
+
+    def get_num_tutors(self, city):
+        return city.cities_of_work.count()

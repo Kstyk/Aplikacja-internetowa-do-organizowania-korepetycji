@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from classes.models import Language
 from multiselectfield import MultiSelectField
-from cities_light.models import City
+from cities_light.models import City, Region
 # Create your models here.
 
 
@@ -66,19 +66,22 @@ class User(AbstractUser):
 
 
 class Address(models.Model):
-    voivodeship = models.CharField(max_length=50)
-    # city = models.ForeignKey(
-    #     City,
-    #     on_delete=models.CASCADE,
-    #     limit_choices_to={'country__name': 'Poland'},  # Dodaj tę linię
-    # )
-    city = models.CharField(max_length=150)
+    voivodeship = models.ForeignKey(
+        Region,
+        on_delete=models.CASCADE,
+        limit_choices_to={'country__name': 'Poland'},
+    )
+    city = models.ForeignKey(
+        City,
+        on_delete=models.CASCADE,
+        limit_choices_to={'country__name': 'Poland'},
+    )
     postal_code = models.CharField(max_length=6)
     street = models.CharField(max_length=50, null=True, blank=True)
     building_number = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f"{self.voivodeship} -  {self.postal_code} {self.street}, {self.building_number}"
+        return f"{self.voivodeship.name} - {self.city.name} - {self.postal_code} {self.street}, {self.building_number}"
 
 
 TEACHER_HOME = 'teacher_home'
@@ -93,7 +96,6 @@ LOCATION_CHOICES = [
 
 
 class UserDetails(models.Model):
-
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, null=False, blank=False
     )
@@ -112,6 +114,8 @@ class UserDetails(models.Model):
         "mężczyzna", "mężczyzna"), ("kobieta", "kobieta")}, max_length=20)
     place_of_classes = MultiSelectField(
         choices=LOCATION_CHOICES, null=True, blank=True, max_choices=3, max_length=150)
+    cities_of_work = models.ManyToManyField(
+        City, related_name="cities_of_work")
     experience = models.CharField(null=True, blank=True, max_length=10000)
     address = models.ForeignKey(
         Address, on_delete=models.CASCADE, null=True, blank=True)
