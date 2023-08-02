@@ -10,7 +10,7 @@ from django.db import IntegrityError, transaction
 from .paginators import ClassPagination
 from users.permissions import IsTeacher
 from django.db.models import Count
-from cities_light.models import City
+from cities_light.models import City, Region
 # Create your views here.
 
 
@@ -37,6 +37,7 @@ def get_all_classes(request):
     max_price = request.GET.get('max_price')
     language_id = request.GET.get('language')
     city_id = request.GET.get('city')
+    voivodeship_id = request.GET.get('voivodeship')
     classes = Class.objects.filter(able_to_buy=True)
 
     if search_text is not None:
@@ -46,6 +47,11 @@ def get_all_classes(request):
         classes = classes.filter(difficulty_level=difficulty_level)
     if language_id is not None:
         classes = classes.filter(language_id=language_id)
+    if voivodeship_id is not None:
+        voivodeship = Region.objects.get(pk=voivodeship_id)
+
+        classes = classes.filter(Q(
+            teacher__userdetails__address__voivodeship=voivodeship) | Q(teacher__userdetails__cities_of_work__region=voivodeship))
     if city_id is not None:
         city = City.objects.get(pk=city_id)
         classes = classes.filter(Q(teacher__userdetails__cities_of_work=city) | Q(
