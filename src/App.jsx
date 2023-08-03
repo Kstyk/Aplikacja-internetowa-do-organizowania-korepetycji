@@ -9,10 +9,14 @@ import RegistrationPage from "./pages/RegistrationPage";
 import CreateRoomPage from "./pages/CreateRoomPage";
 import StartedRoomsPage from "./pages/StartedRoomsPage";
 import Room from "./components/Room";
+import SearchClassesPage from "./pages/SearchClassesPage";
 
 function App() {
   return (
-    <div data-theme="mytheme" className="flex flex-col w-8/12 mx-auto">
+    <div
+      data-theme="mytheme"
+      className="flex flex-col w-8/12 mx-auto max-md:w-10/12 max-sm:w-full"
+    >
       <AuthProvider>
         <Navbar />
         <Routes>
@@ -51,6 +55,18 @@ function App() {
                 <Room />
               </PrivateRoute>
             }
+          />
+          <Route
+            path="/search-classes/language/:languageSlug"
+            element={<SearchClassesPage />}
+          />
+          <Route
+            path="/search-classes/city/:citySlug"
+            element={<SearchClassesPage />}
+          />
+          <Route
+            path="/search-classes/text/:searchText"
+            element={<SearchClassesPage />}
           />
         </Routes>{" "}
       </AuthProvider>
