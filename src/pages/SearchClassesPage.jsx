@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import LoadingComponent from "../components/LoadingComponent";
 import Select from "react-select";
+import ClassesCard from "../components/tutors components/ClassesCard";
+import Pagination from "../components/Pagination";
 
 const SearchClassesPage = () => {
   const { languageSlug, citySlug, searchText } = useParams();
@@ -15,11 +17,15 @@ const SearchClassesPage = () => {
 
   const [city, setCity] = useState(null);
   const [voivodeship, setVoivodeship] = useState(null);
+  const [language, setLanguage] = useState(null);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(500);
 
-  const [tutors, setTutors] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState();
   const [totalResults, setTotalResults] = useState();
+  const [languages, setLanguages] = useState([]);
   const [cities, setCities] = useState([]);
   const [voivodeships, setVoivodeships] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -35,7 +41,7 @@ const SearchClassesPage = () => {
   };
 
   const fetchTutors = async () => {
-    let baseurl = `/api/classes/?page_size=10&page=1`;
+    let baseurl = `/api/classes/?page_size=1&page=1`;
     console.log(searchText);
 
     if (searchQuery != null && searchQuery != "") {
@@ -43,7 +49,7 @@ const SearchClassesPage = () => {
     }
 
     if (languageSlug != null) {
-      baseurl += `&language=${languageSlug}`;
+      baseurl += `&language=${language != null ? language.slug : languageSlug}`;
     }
 
     if (citySlug != null) {
@@ -53,10 +59,72 @@ const SearchClassesPage = () => {
     await api
       .get(baseurl)
       .then((res) => {
-        setTutors(res.data.classes);
+        console.log(res.data);
+        setClasses(res.data.classes);
         setTotalPages(res.data.total_pages);
         setTotalResults(res.data.total_classes);
         setCurrentPage(res.data.page_number);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const searchTutors = async (page) => {
+    setCurrentPage(page + 1);
+    setLoading(true);
+
+    let baseurl = `/api/classes/?page_size=1&page=${page}`;
+    console.log(searchText);
+
+    if (searchQuery != null && searchQuery != "") {
+      baseurl += `&search_text=${searchQuery}`;
+    }
+
+    if (language != null) {
+      baseurl += `&language=${language.slug}`;
+    }
+
+    if (language == null && languageSlug != null) {
+      baseurl += `&language=${languageSlug}`;
+    }
+
+    if (voivodeship != null) {
+      baseurl += `&voivodeship=${voivodeship.id}`;
+    }
+
+    if (city != null) {
+      baseurl += `&city=${city.id}`;
+    }
+
+    if (minPrice != null) {
+      baseurl += `&min_price=${minPrice}`;
+    }
+
+    if (maxPrice != null) {
+      baseurl += `&max_price=${maxPrice}`;
+    }
+
+    await api
+      .get(baseurl)
+      .then((res) => {
+        console.log(res.data);
+        setClasses(res.data.classes);
+        setTotalPages(res.data.total_pages);
+        setTotalResults(res.data.total_classes);
+        setCurrentPage(res.data.page_number);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setLoading(false);
+  };
+
+  const fetchLanguages = async () => {
+    await api
+      .get(`/api/classes/languages`)
+      .then((res) => {
+        setLanguages(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -108,7 +176,6 @@ const SearchClassesPage = () => {
   };
 
   const handleCitySelectChange = (e) => {
-    console.log(e);
     setCity(e);
     setVoivodeship(voivodeships.find((voi) => voi.id == e.region_id && voi));
   };
@@ -119,9 +186,21 @@ const SearchClassesPage = () => {
     setCities([]);
   };
 
+  const handleLanguageSelectChange = (e) => {
+    setLanguage(e);
+  };
+
+  const handleMinPrice = (e) => {
+    setMinPrice(e.target.value);
+  };
+  const handleMaxPrice = (e) => {
+    setMaxPrice(e.target.value);
+  };
+
   const fetchingDatas = async () => {
     setLoading(true);
     await fetchVoivodeships();
+    await fetchLanguages();
     await fetchCity(cityId);
     await fetchTutors();
     setLoading(false);
@@ -134,45 +213,42 @@ const SearchClassesPage = () => {
   return (
     <div>
       <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300 "></div>
-      {loading ? (
-        <div className="bg-inherit">
-          <LoadingComponent message="Pobieramy dane..." />
-        </div>
-      ) : (
-        <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto">
-          <div className="input-group">
-            <input
-              type="text"
-              placeholder="Szukaj korepetytora"
-              className="input input-bordered w-full !rounded-none focus:outline-none bg-white placeholder:text-gray-400"
-              defaultValue={searchText}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button
-              type="submit"
-              className="btn btn-square bg-base-300 border-none !rounded-none"
-              onClick={(e) => fetchTutors()}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="white"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </button>
-          </div>
 
-          <div className="selects mt-5">
+      <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto">
+        <div className="input-group">
+          <input
+            type="text"
+            placeholder="Szukaj korepetycji"
+            className="input input-bordered w-full !rounded-none focus:outline-none bg-white placeholder:text-gray-400"
+            defaultValue={searchText}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button
+            type="submit"
+            className="btn btn-square bg-base-300 border-none !rounded-none"
+            onClick={(e) => fetchTutors()}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div className="selects mt-5 flex flex-col">
+          <div className="flex flex-row max-phone:flex-col gap-x-5 justify-start">
             <Select
-              className="px-0 h-10 w-4/12 text-gray-500 border-none shadow-none"
+              className="px-0 h-10 w-4/12 max-md:w-5/12 max-phone:w-full text-gray-500 border-none shadow-none mt-2"
               menuPortalTarget={document.body}
               options={voivodeships}
               getOptionLabel={(option) => option.alternate_names}
@@ -191,7 +267,7 @@ const SearchClassesPage = () => {
               styles={customSelectStyle}
             />
             <Select
-              className="px-0 h-10 w-4/12 text-gray-500 border-none shadow-none"
+              className="px-0 h-10 w-4/12 max-md:w-5/12 text-gray-500 border-none shadow-none mt-2"
               menuPortalTarget={document.body}
               options={cities}
               onInputChange={(e) => {
@@ -211,9 +287,90 @@ const SearchClassesPage = () => {
               }
               styles={customSelectStyle}
             />
+            <Select
+              className="px-0 h-10 w-4/12 max-md:w-5/12 text-gray-500 border-none shadow-none mt-2"
+              menuPortalTarget={document.body}
+              options={languages}
+              value={
+                language != null
+                  ? language
+                  : languageSlug != null
+                  ? languages.find(
+                      (language) => language.slug == languageSlug && language
+                    )
+                  : ""
+              }
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option.slug}
+              placeholder={<span className="text-gray-400">Język</span>}
+              onChange={(e) => handleLanguageSelectChange(e)}
+              noOptionsMessage={({ inputValue }) =>
+                !inputValue ? "Wpisz tekst..." : "Nie znaleziono"
+              }
+              styles={customSelectStyle}
+            />
           </div>
+          <div className="flex flex-row justify-between mt-3 max-[550px]:flex-col">
+            <div className="w-5/12 max-[550px]:w-full">
+              <label htmlFor="" className="text-[15px]">
+                Cena minimalna za lekcję:{" "}
+                {<span className="font-bold">{minPrice}</span>}
+              </label>
+              <input
+                type="range"
+                min={0}
+                defaultValue={minPrice}
+                value={minPrice}
+                max="500"
+                className="range range-xs range-primary"
+                onChange={(e) => {
+                  handleMinPrice(e);
+                }}
+              />
+            </div>
+            <div className="w-5/12 max-[550px]:w-full">
+              <label htmlFor="" className="text-[15px]">
+                Cena maksymalna za lekcję:{" "}
+                {<span className="font-bold">{maxPrice}</span>}
+              </label>
+              <input
+                type="range"
+                min={0}
+                defaultValue={maxPrice}
+                max="500"
+                className="range range-xs range-primary"
+                onChange={(e) => {
+                  handleMaxPrice(e);
+                }}
+              />
+            </div>
+          </div>
+          <button
+            onClick={(e) => searchTutors()}
+            className="btn btn-outline no-animation w-3/12 max-md:w-5/12 h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400"
+          >
+            Filtruj
+          </button>
+        </div>
+      </div>
+      {loading ? (
+        <div className="bg-inherit">
+          <LoadingComponent message="Pobieramy dane..." />
+        </div>
+      ) : (
+        <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto gap-y-3">
+          {classes?.map((classes) => (
+            <ClassesCard key={classes.id} classes={classes} />
+          ))}
         </div>
       )}
+
+      <Pagination
+        totalResults={totalResults}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        search={searchTutors}
+      />
     </div>
   );
 };
