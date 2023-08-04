@@ -11,6 +11,7 @@ from .paginators import ClassPagination
 from users.permissions import IsTeacher
 from django.db.models import Count
 from cities_light.models import City, Region
+from users.models import UserDetails, User
 # Create your views here.
 
 
@@ -36,7 +37,7 @@ def get_all_classes(request):
     difficulty_level = request.GET.get('difficulty_level')
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
-    language_id = request.GET.get('language')
+    language = request.GET.get('language')
     city_id = request.GET.get('city')
     voivodeship_id = request.GET.get('voivodeship')
     classes = Class.objects.filter(able_to_buy=True)
@@ -50,8 +51,8 @@ def get_all_classes(request):
             description__icontains=search_text))
     if difficulty_level is not None:
         classes = classes.filter(difficulty_level=difficulty_level)
-    if language_id is not None:
-        classes = classes.filter(language_id=language_id)
+    if language is not None:
+        classes = classes.filter(language__slug=language)
     if voivodeship_id is not None:
         voivodeship = Region.objects.get(pk=voivodeship_id)
 
@@ -59,8 +60,11 @@ def get_all_classes(request):
             teacher__userdetails__address__voivodeship=voivodeship) | Q(teacher__userdetails__cities_of_work__region=voivodeship))
     if city_id is not None:
         city = City.objects.get(pk=city_id)
-        classes = classes.filter(Q(teacher__userdetails__cities_of_work=city) | Q(
+        tutors = User.objects.filter(userdetails__cities_of_work=city)
+        print(tutors)
+        classes = classes.filter(Q(teacher__in=tutors) | Q(
             teacher__userdetails__address__city=city))
+
     if min_price is not None:
         classes = classes.filter(price_for_lesson__gte=min_price)
     if max_price is not None:
