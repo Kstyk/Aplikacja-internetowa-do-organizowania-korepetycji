@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
-from .validators import validate_teacher_role, validate_future_date
+from .validators import validate_teacher_role, validate_future_date, validate_student_role
+from rooms.models import Room
 from autoslug import AutoSlugField
 # Create your models here.
 
@@ -39,12 +40,27 @@ class Class(models.Model):
         return self.name
 
 
+class PurchaseHistory(models.Model):
+    student = models.ForeignKey(
+        'users.User', on_delete=models.CASCADE, validators=[validate_student_role]
+    )
+    classes = models.ForeignKey(
+        Class, on_delete=models.CASCADE
+    )
+    room = models.ForeignKey(
+        Room, on_delete=models.PROTECT
+    )
+    amount_of_lessons = models.IntegerField(null=False, blank=False)
+    purchase_date = models.DateField(auto_now_add=True)
+
+
 class Schedule(models.Model):
     class Meta:
         unique_together = ('teacher', 'date', 'timeslot')
 
     TIMESLOT_LIST = (
         (0, '09:00 – 10:00'),
+
         (1, '10:00 – 11:00'),
         (2, '11:00 – 12:00'),
         (3, '12:00 – 13:00'),
@@ -63,7 +79,7 @@ class Schedule(models.Model):
                             validators=[validate_future_date])
     timeslot = models.IntegerField(choices=TIMESLOT_LIST)
     student = models.ForeignKey(
-        "users.User", on_delete=models.CASCADE, null=True, blank=True, related_name="student"
+        "users.User", on_delete=models.CASCADE, null=True, blank=True, related_name="student", validators=[validate_student_role]
     )
     classes = models.ForeignKey(
         Class, on_delete=models.CASCADE, related_name="classes", null=True, blank=True
