@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import TypeOfClasses, Class, Language, Schedule
-from users.serializers import UserSerializer, AddressSerializer, UserProfileSerializer
+from users.serializers import UserSerializer, AddressSerializer, UserProfileSerializer, CitySerializer
 from .validators import validate_teacher_role
 from django.core.validators import MinValueValidator
 from users.models import User
