@@ -5,11 +5,10 @@ from users.permissions import IsStudent, IsOwnerProfile
 from .models import Role, User, UserDetails
 from .serializers import CreateUserSerializer, RoleSerializer, UserSerializer, CreateOrUpdateUserDetailsSerializer, UserProfileSerializer, UpdateUserSerializer, VoivodeshipSerializer, CitySerializer, MostPopularCitySerializer
 from django.contrib.auth import get_user_model
-from rest_framework.views import APIView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from cities_light.models import City, Region
-from django.db.models import Count
+from django.db.models import Count,  OuterRef, Exists, Subquery
 from rest_framework.decorators import api_view
+from classes.models import Class
 
 # Create your views here.
 
@@ -109,9 +108,44 @@ class CityListView(generics.ListAPIView):
     serializer_class = CitySerializer
     queryset = City.objects.all()
 
+    def get_queryset(self):
+        queryset = self.queryset
+        name = self.request.query_params.get('name', None)
+
+        if name is not None:
+            queryset = queryset.filter(name__istartswith=name)
+
+        return queryset
+
+
+class CityByIdView(generics.RetrieveAPIView):
+    serializer_class = CitySerializer
+    queryset = City.objects.all()
+    lookup_field = 'pk'
+
 
 @api_view(['GET'])
 def get_top_cities(request):
+    teacher_subquery = Class.objects.filter(
+        teacher__userdetails__cities_of_work=OuterRef('id')
+    ).values('teacher__userdetails__cities_of_work').annotate(count=Count('teacher__userdetails__cities_of_work')).values('count')
+
+    top_cities = City.objects.annotate(
+        has_tutors=Exists(teacher_subquery.filter(
+            teacher__userdetails__cities_of_work=OuterRef('id')))
+    ).filter(has_tutors=True).annotate(
+        num_tutors=Subquery(
+            teacher_subquery.filter(
+                teacher__userdetails__cities_of_work=OuterRef('id')).values('count')
+        )
+    ).values('id', 'num_tutors', 'slug', 'name',
+             'search_names', 'region_id')
+
+    return Response(top_cities)
+
+
+@api_view(['GET'])
+def get_top_cities_in_teacher_address(request):
     top_cities = City.objects.annotate(num_tutors=Count(
         'cities_of_work')).order_by('-num_tutors')[:20]
 

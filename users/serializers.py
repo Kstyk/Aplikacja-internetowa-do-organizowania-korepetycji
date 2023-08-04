@@ -143,9 +143,17 @@ class CreateOrUpdateUserDetailsSerializer(serializers.ModelSerializer):
         return instance
 
 
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ['id', 'slug', 'name',
+                  'region_id']
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     address = AddressSerializer()
+    cities_of_work = CitySerializer(many=True)
 
     class Meta:
         model = UserDetails
@@ -156,13 +164,6 @@ class VoivodeshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Region
         fields = '__all__'
-
-
-class CitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = City
-        fields = ['id', 'slug', 'name',
-                  'search_names', 'region_id']
 
 
 class MostPopularCitySerializer(serializers.ModelSerializer):
