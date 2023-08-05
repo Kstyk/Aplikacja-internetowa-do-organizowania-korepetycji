@@ -51,7 +51,7 @@ const HomePage = () => {
       ) : (
         <>
           <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 "></div>
-          <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto">
+          <div className="bg-base-100 card shadow-xl h-full px-5 pt-5 mt-10 rounded-none mb-10 mx-auto">
             <h1 className="text-center text-4xl max-md:text-3xl">
               Znajdź korepetytora dla siebie lub dla swojego dziecka już dziś!
             </h1>
@@ -87,7 +87,7 @@ const HomePage = () => {
               </div>
             </div>
             <h2 className="text-center text-2xl max-md:text-xl mt-10 mb-2">
-              Wyszukaj korepetytorów po językach:
+              Wyszukaj zajęcia po językach:
             </h2>
             <ul className="list-none flex flex-row justify-center flex-wrap">
               {languages.map((language) => (
@@ -105,7 +105,7 @@ const HomePage = () => {
               ))}
             </ul>
             <h2 className="text-center text-2xl max-md:text-xl mt-10 mb-2">
-              Wyszukaj korepetytorów po najpopularniejszych lokalizacjach:
+              Wyszukaj zajęcia po najpopularniejszych lokalizacjach:
             </h2>
             <ul className="list-none flex flex-row justify-center flex-wrap">
               {cities.map((city) => (
@@ -122,11 +122,11 @@ const HomePage = () => {
                 </Link>
               ))}
             </ul>
-            <div className="bg-base-300 -mx-5 flex flex-col justify-center py-5 mt-10">
+            <div className="bg-gradient-to-b from-base-100 to-base-200 -mx-5 flex flex-col justify-center py-20 mt-10">
               <h1 className="text-center text-3xl mb-2">
                 Załóż darmowe konto już dziś!
               </h1>
-              <button className="btn bg-white mx-auto rounded-none hover:bg-base-100">
+              <button className="btn btn-outline no-animation w-3/12 max-md:w-5/12 max-phone:w-10/12 max-phone:mx-auto h-15 mx-auto py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400">
                 Zarejestruj się
               </button>
             </div>

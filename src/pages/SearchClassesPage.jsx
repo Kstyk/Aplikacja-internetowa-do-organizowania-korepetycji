@@ -40,6 +40,18 @@ const SearchClassesPage = () => {
     }),
   };
 
+  const clearFilters = () => {
+    setLanguages([]);
+    setCities([]);
+    setVoivodeships([]);
+    setSearchQuery([]);
+    setCity(null);
+    setVoivodeship(null);
+    setMinPrice(0);
+    setMaxPrice(500);
+    setLanguages(null);
+  };
+
   const fetchTutors = async () => {
     let baseurl = `/api/classes/?page_size=1&page=1`;
     console.log(searchText);
@@ -59,11 +71,17 @@ const SearchClassesPage = () => {
     await api
       .get(baseurl)
       .then((res) => {
-        console.log(res.data);
-        setClasses(res.data.classes);
-        setTotalPages(res.data.total_pages);
-        setTotalResults(res.data.total_classes);
-        setCurrentPage(res.data.page_number);
+        if (res.data.classes == null) {
+          setClasses(null);
+          setTotalPages(0);
+          setTotalResults(0);
+          setCurrentPage(1);
+        } else {
+          setClasses(res.data.classes);
+          setTotalPages(res.data.total_pages);
+          setTotalResults(res.data.total_classes);
+          setCurrentPage(res.data.page_number);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -75,7 +93,6 @@ const SearchClassesPage = () => {
     setLoading(true);
 
     let baseurl = `/api/classes/?page_size=1&page=${page}`;
-    console.log(searchText);
 
     if (searchQuery != null && searchQuery != "") {
       baseurl += `&search_text=${searchQuery}`;
@@ -108,7 +125,7 @@ const SearchClassesPage = () => {
     await api
       .get(baseurl)
       .then((res) => {
-        console.log(res.data);
+        console.log(res.data.classes);
         setClasses(res.data.classes);
         setTotalPages(res.data.total_pages);
         setTotalResults(res.data.total_classes);
@@ -220,13 +237,13 @@ const SearchClassesPage = () => {
             type="text"
             placeholder="Szukaj korepetycji"
             className="input input-bordered w-full !rounded-none focus:outline-none bg-white placeholder:text-gray-400"
-            defaultValue={searchText}
+            value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button
             type="submit"
             className="btn btn-square bg-base-300 border-none !rounded-none"
-            onClick={(e) => fetchTutors()}
+            onClick={(e) => searchTutors(1)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -295,7 +312,7 @@ const SearchClassesPage = () => {
                 language != null
                   ? language
                   : languageSlug != null
-                  ? languages.find(
+                  ? languages?.find(
                       (language) => language.slug == languageSlug && language
                     )
                   : ""
@@ -319,7 +336,6 @@ const SearchClassesPage = () => {
               <input
                 type="range"
                 min={0}
-                defaultValue={minPrice}
                 value={minPrice}
                 max="500"
                 className="range range-xs range-primary"
@@ -336,7 +352,7 @@ const SearchClassesPage = () => {
               <input
                 type="range"
                 min={0}
-                defaultValue={maxPrice}
+                value={maxPrice}
                 max="500"
                 className="range range-xs range-primary"
                 onChange={(e) => {
@@ -345,12 +361,20 @@ const SearchClassesPage = () => {
               />
             </div>
           </div>
-          <button
-            onClick={(e) => searchTutors()}
-            className="btn btn-outline no-animation w-3/12 max-md:w-5/12 h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400"
-          >
-            Filtruj
-          </button>
+          <div className="flex justify-between">
+            <button
+              onClick={(e) => searchTutors(1)}
+              className="btn btn-outline no-animation w-3/12 max-md:w-5/12 h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400"
+            >
+              Filtruj
+            </button>
+            <button
+              onClick={(e) => clearFilters()}
+              className="btn btn-outline no-animation w-3/12 max-md:w-5/12 h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400"
+            >
+              Wyczyść filtry
+            </button>
+          </div>
         </div>
       </div>
       {loading ? (
@@ -358,19 +382,26 @@ const SearchClassesPage = () => {
           <LoadingComponent message="Pobieramy dane..." />
         </div>
       ) : (
-        <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto gap-y-3">
-          {classes?.map((classes) => (
-            <ClassesCard key={classes.id} classes={classes} />
-          ))}
-        </div>
-      )}
+        <>
+          <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto gap-y-3">
+            {classes?.map((classes) => (
+              <ClassesCard key={classes.id} classes={classes} />
+            ))}
+          </div>
+          <Pagination
+            totalResults={totalResults}
+            totalPages={totalPages}
+            currentPage={currentPage}
+            search={searchTutors}
+          />
 
-      <Pagination
-        totalResults={totalResults}
-        totalPages={totalPages}
-        currentPage={currentPage}
-        search={searchTutors}
-      />
+          {classes == null && (
+            <h1 className="text-2xl">
+              Brak wyników dopasowanych do podanych kryteriów.
+            </h1>
+          )}
+        </>
+      )}
     </div>
   );
 };

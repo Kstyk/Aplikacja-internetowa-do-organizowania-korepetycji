@@ -72,7 +72,7 @@ const Navbar = () => {
                     onClick={logoutUser}
                     className="hover:bg-base-200"
                   >
-                    Logout
+                    Wyloguj
                   </Link>
                 </li>
               </ul>
@@ -135,7 +135,7 @@ const Navbar = () => {
                     onClick={logoutUser}
                     className="hover:bg-base-200"
                   >
-                    Logout
+                    Wyloguj
                   </Link>
                 </li>
               </ul>
@@ -146,7 +146,7 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1 gap-3">
             <li>
               <Link to="/login" className="focus:bg-base-300 hover:bg-base-200">
-                Login
+                Zaloguj
               </Link>
             </li>
             <li>
@@ -154,7 +154,7 @@ const Navbar = () => {
                 to="/register"
                 className="focus:bg-base-300 hover:bg-base-200"
               >
-                Register
+                Zarejestruj
               </Link>
             </li>
           </ul>
