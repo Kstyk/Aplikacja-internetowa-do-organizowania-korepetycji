@@ -16,7 +16,6 @@ User = get_user_model()
 
 
 class RolesListView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
 

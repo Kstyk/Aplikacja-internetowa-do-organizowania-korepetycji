@@ -1,16 +1,9 @@
 from django.db import models
 from django.core.validators import MinValueValidator
-from .validators import validate_teacher_role, validate_future_date, validate_student_role
+from .validators import validate_teacher_role, validate_future_date, validate_student_role, validate_teacher_for_timeslot
 from rooms.models import Room
 from autoslug import AutoSlugField
 # Create your models here.
-
-
-class TypeOfClasses(models.Model):
-    type = models.CharField(null=False, blank=False, max_length=50)
-
-    def __str__(self):
-        return self.type
 
 
 class Language(models.Model):
@@ -28,8 +21,6 @@ class Class(models.Model):
         Language, on_delete=models.PROTECT, null=True, related_name="class_language"
     )
     name = models.CharField(max_length=255, null=False, blank=False)
-    type_of_classes = models.ForeignKey(
-        TypeOfClasses, on_delete=models.PROTECT)
     difficulty_level = models.CharField(null=False, blank=False, max_length=50)
     active = models.BooleanField(default=True)
     price_for_lesson = models.DecimalField(max_digits=6, decimal_places=2)
@@ -48,19 +39,18 @@ class PurchaseHistory(models.Model):
         Class, on_delete=models.CASCADE
     )
     room = models.ForeignKey(
-        Room, on_delete=models.PROTECT
+        Room, on_delete=models.PROTECT, null=True, blank=True
     )
-    amount_of_lessons = models.IntegerField(null=False, blank=False)
+    start_date = models.DateField(blank=True, null=True)
+    amount_of_lessons = models.PositiveIntegerField(null=False, blank=False)
     purchase_date = models.DateField(auto_now_add=True)
 
 
-class Schedule(models.Model):
+class Timeslot(models.Model):
     class Meta:
-        unique_together = ('teacher', 'date', 'timeslot')
-
+        unique_together = ('teacher', 'day_of_week', 'timeslot_index')
     TIMESLOT_LIST = (
         (0, '09:00 – 10:00'),
-
         (1, '10:00 – 11:00'),
         (2, '11:00 – 12:00'),
         (3, '12:00 – 13:00'),
@@ -72,12 +62,30 @@ class Schedule(models.Model):
         (9, '18:00 – 19:00'),
     )
 
-    teacher = models.ForeignKey(
-        'users.User', on_delete=models.CASCADE, related_name="teacher", validators=[validate_teacher_role]
+    DAY_OF_WEEK_LIST = (
+        (1, 'MONDAY'),
+        (2, 'TUESDAY'),
+        (3, 'WEDNESDAY'),
+        (4, 'THURSDAY'),
+        (5, 'FRIDAY'),
+        (6, 'SATURDAY'),
+        (0, 'SUNDAY')
     )
+
+    teacher = models.ForeignKey(
+        'users.User', on_delete=models.CASCADE,  validators=[validate_teacher_role])
+    day_of_week = models.IntegerField(choices=DAY_OF_WEEK_LIST)
+    timeslot_index = models.IntegerField(choices=TIMESLOT_LIST)
+    is_available = models.BooleanField(default=True)
+
+    def __str__(self):
+        return '{} {} {}'.format(self.day_of_week, self.timeslot_index, self.teacher)
+
+
+class Schedule(models.Model):
+    timeslot = models.ForeignKey(Timeslot, on_delete=models.PROTECT)
     date = models.DateField(help_text="YYYY-MM-DD",
                             validators=[validate_future_date])
-    timeslot = models.IntegerField(choices=TIMESLOT_LIST)
     student = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, null=True, blank=True, related_name="student", validators=[validate_student_role]
     )
@@ -86,4 +94,4 @@ class Schedule(models.Model):
     )
 
     def __str__(self):
-        return '{} {} {}'.format(self.date, self.time, self.teacher)
+        return '{} {} {}'.format(self.date, self.timeslot, self.classes.teacher)

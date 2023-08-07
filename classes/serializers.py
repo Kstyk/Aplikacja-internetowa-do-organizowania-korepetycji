@@ -1,15 +1,9 @@
 from rest_framework import serializers
-from .models import TypeOfClasses, Class, Language, Schedule
+from .models import Class, Language, Schedule, Timeslot
 from users.serializers import UserSerializer, AddressSerializer, UserProfileSerializer, CitySerializer
 from .validators import validate_teacher_role
 from django.core.validators import MinValueValidator
 from users.models import User
-
-
-class TypeOfClassesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TypeOfClasses
-        fields = '__all__'
 
 
 class LanguageSerializer(serializers.ModelSerializer):
@@ -18,9 +12,14 @@ class LanguageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class TimeslotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Timeslot
+        fields = '__all__'
+
+
 class ClassSerializer(serializers.ModelSerializer):
     # Zaimportowany gotowy serializer dla modelu TypeOfClasses
-    type_of_classes = TypeOfClassesSerializer()
     language = LanguageSerializer()
     teacher = UserProfileSerializer(source='teacher.userdetails')
 
@@ -51,6 +50,7 @@ class CreateScheduleSerializer(serializers.ModelSerializer):
 
 class ScheduleSerializer(serializers.ModelSerializer):
     classes = ClassSerializer()
+    timeslot = TimeslotSerializer()
 
     class Meta:
         model = Schedule

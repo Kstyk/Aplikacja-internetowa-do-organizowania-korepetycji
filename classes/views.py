@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from .models import TypeOfClasses, Class, Language, Schedule
+from .models import Class, Language, Schedule, Timeslot
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
-from .serializers import TypeOfClassesSerializer, ClassSerializer, LanguageSerializer, CreateClassSerializer, CreateScheduleSerializer, ScheduleSerializer, MostPopularLanguages
+from .serializers import ClassSerializer, LanguageSerializer, CreateClassSerializer, CreateScheduleSerializer, ScheduleSerializer, MostPopularLanguages, TimeslotSerializer
 from rest_framework.response import Response
 from rest_framework import status, generics
 from django.db.models import Q, F
@@ -12,15 +12,9 @@ from users.permissions import IsTeacher
 from django.db.models import Count
 from cities_light.models import City, Region
 from users.models import UserDetails, User
+from django.http import JsonResponse
+
 # Create your views here.
-
-
-@api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-def get_types_of_classes(request):
-    types = TypeOfClasses.objects.all()
-    serializer = TypeOfClassesSerializer(types, many=True)
-    return Response(serializer.data)
 
 
 @api_view(['GET'])
@@ -97,6 +91,12 @@ def get_all_classes(request):
         return Response({}, status=status.HTTP_200_OK)
 
 
+class ClassesByIdView(generics.RetrieveAPIView):
+    serializer_class = ClassSerializer
+    queryset = Class.objects.all()
+    lookup_field = 'pk'
+
+
 class ClassCreateView(generics.CreateAPIView):
     serializer_class = CreateClassSerializer
     queryset = Class.objects.all()
@@ -142,7 +142,15 @@ class ScheduleTeacherView(generics.ListAPIView):
 
     def get_queryset(self):
         teacher_id = self.kwargs.get('teacher_id')
-        return Schedule.objects.filter(teacher_id=teacher_id)
+        return Schedule.objects.filter(classes__teacher_id=teacher_id)
+
+
+class TimeslotsTeacherView(generics.ListAPIView):
+    serializer_class = TimeslotSerializer
+
+    def get_queryset(self):
+        teacher_id = self.kwargs.get('teacher_id')
+        return Timeslot.objects.filter(teacher_id=teacher_id)
 
 
 @api_view(['GET'])

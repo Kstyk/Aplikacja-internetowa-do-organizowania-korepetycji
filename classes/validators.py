@@ -48,3 +48,9 @@ def validate_future_date(value):
         raise ValidationError(
             "Możesz planować swój harmonogram od daty jutrzejszej."
         )
+
+
+def validate_teacher_for_timeslot(teacher, timeslot):
+    if teacher != timeslot.teacher:
+        raise ValidationError(
+            "Selected teacher is not associated with the chosen timeslot.")
