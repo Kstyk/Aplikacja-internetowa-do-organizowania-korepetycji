@@ -2,6 +2,7 @@ import React from "react";
 import { MdOutlineLocationOn } from "react-icons/md";
 import guest from "../../assets/guest.png";
 import { AiOutlinePhone } from "react-icons/ai";
+import { Link, useParams } from "react-router-dom";
 
 const ClassesCard = (props) => {
   const { classes } = props;
@@ -50,9 +51,16 @@ const ClassesCard = (props) => {
           <div className="text-gray-500 text-sm">
             Język {classes.language.name}
           </div>
-          <h1 className="text-xl font-semibold uppercase border-b-[1px] pb-1 mb-1 border-base-200">
-            {classes.name}
-          </h1>
+          <Link
+            to={`/classes/${classes.id}`}
+            params={{
+              classesId: classes.id,
+            }}
+          >
+            <h1 className="text-xl font-semibold uppercase border-b-[1px] pb-1 mb-1 border-base-200">
+              {classes.name}
+            </h1>
+          </Link>
           <div className="flex flex-row align-middle items-center border-b-[1px] border-base-200 pb-1 mb-1">
             <div className="avatar">
               <div className="w-20 rounded-full">

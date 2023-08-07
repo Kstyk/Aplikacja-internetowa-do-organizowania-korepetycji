@@ -125,7 +125,6 @@ const SearchClassesPage = () => {
     await api
       .get(baseurl)
       .then((res) => {
-        console.log(res.data.classes);
         setClasses(res.data.classes);
         setTotalPages(res.data.total_pages);
         setTotalResults(res.data.total_classes);

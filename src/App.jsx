@@ -10,6 +10,7 @@ import CreateRoomPage from "./pages/CreateRoomPage";
 import StartedRoomsPage from "./pages/StartedRoomsPage";
 import Room from "./components/Room";
 import SearchClassesPage from "./pages/SearchClassesPage";
+import ClassesPage from "./pages/ClassesPage";
 
 function App() {
   return (
@@ -68,6 +69,8 @@ function App() {
             path="/search-classes/text/:searchText"
             element={<SearchClassesPage />}
           />
+
+          <Route path="/classes/:classesId" element={<ClassesPage />} />
         </Routes>{" "}
       </AuthProvider>
     </div>

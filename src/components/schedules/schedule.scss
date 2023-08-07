@@ -1,0 +1,74 @@
+.rbc-allday-cell {
+  display: none !important;
+}
+
+.rbc-event-label {
+  display: none;
+}
+
+.rbc-time-view {
+  border-bottom: none !important;
+}
+
+.rbc-time-gutter .rbc-timeslot-group .rbc-time-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rbc-current-time-indicator {
+  display: none;
+}
+
+.rbc-events-container {
+  margin-right: 0 !important;
+}
+
+.rbc-timeslot-group {
+  border-radius: none !important;
+}
+
+.rbc-events-container {
+  z-index: 10;
+}
+
+.rbc-time-header-gutter {
+  min-width: none;
+}
+
+.freeTimeSlot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 0;
+  overflow: hidden;
+  background-color: rgb(250, 250, 250);
+  cursor: pointer;
+  z-index: 20 !important;
+  transition: background-color 0.3s ease;
+}
+
+.freeTimeSlot:hover {
+  background-color: rgb(208, 242, 248);
+  
+}
+
+.freeTimeSlot::after {
+  content: "wolne";
+  color: gray;
+}
+
+.eventCell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 0;
+  overflow: hidden;
+  border-radius: 0;
+  border-width: 0 !important;
+  background-color: rgb(226, 226, 226);
+  color:black;
+  text-align: center;
+  padding-top: 13px;
+}
+
