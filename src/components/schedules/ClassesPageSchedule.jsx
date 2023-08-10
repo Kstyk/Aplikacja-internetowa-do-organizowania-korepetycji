@@ -9,13 +9,18 @@ import LoadingComponent from "../LoadingComponent";
 import useAxios from "../../utils/useAxios";
 import { timeslots } from "../../variables/Timeslots";
 import CustomToolbar from "./CustomToolbar";
+import Swal from "sweetalert2";
 
 const ClassesPageSchedule = ({ classes }) => {
   const [schedule, setSchedule] = useState([]);
   const [loading, setLoading] = useState(false);
   const [timeSlotsTeacher, setTimeSlotsTeacher] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState([]);
   const [eventArray, setEventArray] = useState([]);
+  dayjs.locale("pl");
+  const localizer = dayjsLocalizer(dayjs);
+
+  const today = new Date();
 
   const api = useAxios();
 
@@ -43,11 +48,6 @@ const ClassesPageSchedule = ({ classes }) => {
         setLoading(false);
       });
   };
-
-  dayjs.locale("pl");
-  const localizer = dayjsLocalizer(dayjs);
-
-  const today = new Date();
 
   let formats = {
     dateFormat: "dd",
@@ -80,27 +80,70 @@ const ClassesPageSchedule = ({ classes }) => {
   const onSelectSlot = (slotInfo) => {
     window.clearTimeout(clickRef?.current);
     clickRef.current = window.setTimeout(() => {
-      var find = timeslots.find(
-        (e) => e.start == dayjs(slotInfo.start).format("HH:mm")
-      );
-      let clickedSlot = {
-        day_of_week: dayjs(slotInfo.start).day(),
-        timeslot_index: find.timeslot,
-      };
+      if (slotInfo.start > today) {
+        var find = timeslots.find(
+          (e) => e.start == dayjs(slotInfo.start).format("HH:mm")
+        );
+        let clickedSlot = {
+          day_of_week: dayjs(slotInfo.start).day(),
+          timeslot_index: find.timeslot,
+        };
 
-      let findTeacherSlot = timeSlotsTeacher.find(
-        (slot) =>
-          slot.day_of_week === clickedSlot.day_of_week &&
-          slot.timeslot_index === clickedSlot.timeslot_index
-      );
+        let findTeacherSlot = timeSlotsTeacher.find(
+          (slot) =>
+            slot.day_of_week === clickedSlot.day_of_week &&
+            slot.timeslot_index === clickedSlot.timeslot_index
+        );
 
-      if (findTeacherSlot != null) {
-        if (selected?.id == findTeacherSlot.id) {
-          setSelected(null);
-        } else {
-          setSelected(findTeacherSlot);
-        }
-      } else console.log(false);
+        findTeacherSlot = {
+          ...findTeacherSlot,
+          start: slotInfo.start,
+          end: slotInfo.end,
+        };
+
+        if (findTeacherSlot != null) {
+          if (
+            selected?.find(
+              (el) =>
+                dayjs(el?.start).format("DD-MM-YYYYTHH:mm") ==
+                  dayjs(findTeacherSlot.start).format("DD-MM-YYYYTHH:mm") &&
+                dayjs(el?.end).format("DD-MM-YYYYTHH:mm") ==
+                  dayjs(findTeacherSlot.end).format("DD-MM-YYYYTHH:mm")
+            )
+          ) {
+            setSelected((current) =>
+              current.filter(
+                (element) =>
+                  dayjs(element?.start).format("DD-MM-YYYYTHH:mm") !=
+                    dayjs(findTeacherSlot.start).format("DD-MM-YYYYTHH:mm") &&
+                  dayjs(element?.end).format("DD-MM-YYYYTHH:mm") !=
+                    dayjs(findTeacherSlot.end).format("DD-MM-YYYYTHH:mm")
+              )
+            );
+          } else {
+            console.log(selected);
+            setSelected((selected) => [...selected, findTeacherSlot]);
+          }
+        } else console.log(false);
+      } else {
+        const swalWithTailwindClasses = Swal.mixin({
+          customClass: {
+            confirmButton: "btn btn-success",
+          },
+          buttonsStyling: false,
+        });
+
+        swalWithTailwindClasses.fire({
+          icon: "error",
+          title: "Błąd",
+          text: "Nie możesz wybrać daty dzisiejszej lub wcześniejszej.",
+          customClass: {
+            confirmButton:
+              "btn btn-outline rounded-none outline-none border-[1px] text-black w-full",
+            popup: "rounded-none bg-base-100",
+          },
+        });
+      }
     }, 50);
   };
 
@@ -140,9 +183,14 @@ const ClassesPageSchedule = ({ classes }) => {
               ) {
                 return {
                   className:
-                    selected != null &&
-                    selected?.day_of_week == dayOfWeek &&
-                    selected?.timeslot_index == matchingTime[i].timeslot
+                    selected.length > 0 &&
+                    selected?.find(
+                      (el) =>
+                        el?.day_of_week == dayOfWeek &&
+                        el?.timeslot_index == matchingTime[i].timeslot &&
+                        dayjs(el?.start).format("DD-MM-YYYYTHH:mm") ==
+                          dayjs(date).format("DD-MM-YYYYTHH:mm")
+                    )
                       ? "freeTimeSlot bg-base-200 hover:bg-base-300"
                       : "freeTimeSlot",
                 };

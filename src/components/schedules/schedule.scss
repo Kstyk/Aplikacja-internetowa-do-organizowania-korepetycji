@@ -36,6 +36,23 @@
   min-width: none;
 }
 
+.rbc-time-header-content {
+  height:30px;
+}
+
+.rbc-time-header-cell {
+  border-bottom: none;
+  height: 100%;
+}
+
+.rbc-header {
+  border-bottom: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .freeTimeSlot {
   display: flex;
   justify-content: center;

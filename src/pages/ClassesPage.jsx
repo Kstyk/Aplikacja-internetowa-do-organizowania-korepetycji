@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import ClassesPageSchedule from "../components/schedules/ClassesPageSchedule";
 import LoadingComponent from "../components/LoadingComponent";
+import SelectSlotsTeacherSchedule from "../components/schedules/SelectSlotsTeacherSchedule";
 
 const ClassesPage = () => {
   const api = useAxios();
@@ -33,7 +34,8 @@ const ClassesPage = () => {
     <div>
       {classes?.name}
       <div>
-        <ClassesPageSchedule classes={classes} />
+        {/* <ClassesPageSchedule classes={classes} /> */}
+        <SelectSlotsTeacherSchedule />
       </div>
     </div>
   );
