@@ -83,9 +83,8 @@ class Timeslot(models.Model):
 
 
 class Schedule(models.Model):
-    timeslot = models.ForeignKey(Timeslot, on_delete=models.PROTECT)
-    date = models.DateField(help_text="YYYY-MM-DD",
-                            validators=[validate_future_date])
+    date = models.DateTimeField(null=True, )
+    # blank=True, validators=[validate_future_date])
     student = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, null=True, blank=True, related_name="student", validators=[validate_student_role]
     )
@@ -94,4 +93,4 @@ class Schedule(models.Model):
     )
 
     def __str__(self):
-        return '{} {} {}'.format(self.date, self.timeslot, self.classes.teacher)
+        return '{} {}'.format(self.date, self.classes.teacher)

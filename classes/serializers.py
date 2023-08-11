@@ -50,7 +50,6 @@ class CreateScheduleSerializer(serializers.ModelSerializer):
 
 class ScheduleSerializer(serializers.ModelSerializer):
     classes = ClassSerializer()
-    timeslot = TimeslotSerializer()
 
     class Meta:
         model = Schedule

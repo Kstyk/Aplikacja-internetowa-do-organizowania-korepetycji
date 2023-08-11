@@ -1,6 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
-from datetime import date
+from datetime import datetime
+from django.utils import timezone
+now = timezone.now()
 
 
 def validate_teacher_role(value):
@@ -44,9 +46,9 @@ def validate_student_role(value):
 
 
 def validate_future_date(value):
-    if value <= date.today():
+    if value <= now:
         raise ValidationError(
-            "Możesz planować swój harmonogram od daty jutrzejszej."
+            "Możesz kupować zajęcia o dacie późniejszej niż obecna."
         )
 
 
