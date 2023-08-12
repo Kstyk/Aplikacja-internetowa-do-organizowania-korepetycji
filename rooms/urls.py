@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import create_room, get_room, get_user_rooms, MessageViewSet, get_users_without_room_with_requestuser
+from .views import create_room, get_room, get_user_rooms, MessageViewSet, get_users_without_room_with_requestuser, get_room_users
 
 urlpatterns = [
     path('messages/',
@@ -9,5 +9,6 @@ urlpatterns = [
     path('', create_room, name='create_room'),
     path('all-rooms/', get_user_rooms, name='get_all_rooms'),
     path('<str:room_id>/', get_room, name='get_room'),
+    path('room-users/<str:room_id>/', get_room_users, name='room-users'),
 
 ]

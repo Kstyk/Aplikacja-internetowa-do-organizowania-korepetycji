@@ -3,8 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from .serializers import RoomSerializer, MessageSerializer
-from users.models import User
-from users.serializers import UserSerializer
+from users.models import User, UserDetails
+from users.serializers import UserSerializer, UserProfileSerializer
 import uuid
 from django.shortcuts import get_object_or_404
 from .paginaters import MessagePagination
@@ -87,17 +87,28 @@ def get_users_without_room_with_requestuser(request):
     return Response(serializer.data)
 
 
-# @api_view(['GET'])
-# def messages_list(request):
-#     room_id = request.query_params.get('room_id')
-#     room = get_object_or_404(Room, room_id=room_id)
-#     messages = Message.objects.filter(room=room).order_by('-timestamp')
+@api_view(['GET'])
+def get_room_users(request, room_id):
+    room = Room.objects.get(room_id=room_id)
 
-#     paginator = MessagePagination()
-#     paginated_messages = paginator.paginate_queryset(messages, request)
+    users = room.users.all()
 
-#     serializer = MessageSerializer(paginated_messages, many=True)
-#     return paginator.get_paginated_response(serializer.data)
+    if request.user not in users:
+        raise AccessDeniedForRoom()
+    else:
+        users = users.exclude(id=request.user.id)
+
+        profile = UserDetails.objects.filter(user_id=users[0].id).first()
+
+        if profile is None:
+            user = users.first()
+            serializer = UserSerializer(user)
+
+            return Response(serializer.data)
+        else:
+            serializer = UserProfileSerializer(profile)
+
+            return Response(serializer.data)
 
 
 class MessageViewSet(ListModelMixin, GenericViewSet):
