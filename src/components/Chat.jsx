@@ -19,6 +19,7 @@ const Chat = () => {
 
   const { roomId } = useParams();
   const { user, authTokens } = useContext(AuthContext);
+  const [secondUserProfile, setSecondUserProfile] = useState(null);
 
   let api = useAxios();
   // videocall
@@ -42,10 +43,8 @@ const Chat = () => {
       },
       onOpen: (e) => {
         console.log("connected");
-        console.log(roomId);
       },
       onClose: (e) => {
-        console.log(e);
         console.log("disconnected");
         // nav("/");
       },
@@ -97,6 +96,21 @@ const Chat = () => {
       });
   };
 
+  const fetchSecondUserInRoom = async () => {
+    await api
+      .get(`api/rooms/room-users/${roomId}/`)
+      .then((res) => {
+        setSecondUserProfile(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    fetchSecondUserInRoom();
+  }, []);
+
   useEffect(() => {
     if (readyState == "Open") {
       fetchMessages();
@@ -137,22 +151,16 @@ const Chat = () => {
   Modal.setAppElement("#root");
 
   useEffect(() => {
-    console.log("rendered");
-
     if (peerId != "") {
       sendJsonMessage({
         type: "peer",
         peer: peerId,
         token: user.token,
       });
-    } else {
-      console.log("ale gowno");
     }
   }, [peerId]);
 
   const startVideoCall = () => {
-    console.log("stan ws: " + connectionStatus);
-
     const peer = new Peer();
 
     peer.on("open", (id) => {
@@ -342,10 +350,12 @@ const Chat = () => {
 
   return (
     <div className="flex flex-col h-full">
-      {/* <div>Status: {connectionStatus}</div> */}
+      <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 "></div>
+
+      {/* <div className="chat chat-start w-full"> */}
       <div
         id="scrollableDiv"
-        className="h-[calc(100vh-260px)] mt-3 flex flex-col-reverse relative w-full border border-gray-200 border-t-0 overflow-y-auto p-6"
+        className="h-[calc(100vh-260px)] mt-10 flex flex-col-reverse relative w-full border border-gray-200 border-none overflow-y-auto p-6 bg-white card shadow-xl rounded-sm"
       >
         <InfiniteScroll
           dataLength={messageHistory.length}
@@ -357,10 +367,15 @@ const Chat = () => {
           scrollableTarget="scrollableDiv"
         >
           {messageHistory.map((message) => (
-            <Message key={message.id} message={message} />
+            <Message
+              key={message.id}
+              message={message}
+              secondUser={secondUserProfile}
+            />
           ))}
         </InfiniteScroll>
       </div>
+      {/* </div> */}
       {/* przyciski */}
       <div className="ml-5 mt-10 flex items-center">
         <input

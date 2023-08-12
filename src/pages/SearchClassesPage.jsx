@@ -53,7 +53,7 @@ const SearchClassesPage = () => {
   };
 
   const fetchTutors = async () => {
-    let baseurl = `/api/classes/?page_size=1&page=1`;
+    let baseurl = `/api/classes/?page_size=10&page=1`;
     console.log(searchText);
 
     if (searchQuery != null && searchQuery != "") {
