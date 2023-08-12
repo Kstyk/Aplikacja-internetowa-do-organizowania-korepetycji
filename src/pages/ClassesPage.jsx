@@ -18,6 +18,7 @@ const ClassesPage = () => {
     await api
       .get(`/api/classes/${classesId}`)
       .then((res) => {
+        console.log(res.data);
         setClasses(res.data);
         setLoading(false);
       })
@@ -31,11 +32,14 @@ const ClassesPage = () => {
   }, []);
 
   return (
-    <div>
-      {classes?.name}
-      <div>
+    <div className="mt-3">
+      <h1 className="text-2xl card bg-white rounded-none mb-5 text-center p-4 border-[1px] border-base-200">
+        {classes?.name}
+      </h1>
+      <div className="card border-[1px] border-base-200 p-4 rounded-none bg-white">
         {/* <ClassesPageSchedule classes={classes} /> */}
-        <SelectSlotsTeacherSchedule />
+
+        {/* <SelectSlotsTeacherSchedule /> */}
       </div>
     </div>
   );

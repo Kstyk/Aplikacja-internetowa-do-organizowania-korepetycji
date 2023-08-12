@@ -4,7 +4,7 @@ import "dayjs/locale/pl";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./schedule.scss";
-import "./scheduleslotsteacher.scss";
+// import "./scheduleslotsteacher.scss";
 import { useState } from "react";
 import LoadingComponent from "../LoadingComponent";
 import useAxios from "../../utils/useAxios";

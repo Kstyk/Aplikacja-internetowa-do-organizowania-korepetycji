@@ -217,11 +217,17 @@ const ClassesPageSchedule = ({ classes }) => {
   const setEvents = (schedule) => {
     setEventArray([]);
     schedule?.map((event) => {
+      var findTimeslot = timeslots.find(
+        (timeslot) => timeslot.start == dayjs(event.date).format("HH:mm")
+      );
+
+      console.log(findTimeslot);
+      console.log(dayjs(event.date).format("YYYY-MM-DD"));
       var startDate = new Date(
-        `${event.date}T${timeslots[event.timeslot.timeslot_index].start}`
+        `${dayjs(event.date).format("YYYY-MM-DD")}T${findTimeslot.start}`
       );
       var endDate = new Date(
-        `${event.date}T${timeslots[event.timeslot.timeslot_index].end}`
+        `${dayjs(event.date).format("YYYY-MM-DD")}T${findTimeslot.end}`
       );
 
       let eventRecord = {
@@ -232,6 +238,7 @@ const ClassesPageSchedule = ({ classes }) => {
       };
 
       setEventArray((curr) => [...curr, eventRecord]);
+      console.log(eventArray);
     });
   };
 
