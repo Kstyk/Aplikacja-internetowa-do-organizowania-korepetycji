@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from classes.models import Language
 from multiselectfield import MultiSelectField
 from cities_light.models import City, Region
+
 # Create your models here.
 
 
@@ -115,7 +116,7 @@ class UserDetails(models.Model):
     place_of_classes = MultiSelectField(
         choices=LOCATION_CHOICES, null=True, blank=True, max_choices=3, max_length=150)
     cities_of_work = models.ManyToManyField(
-        City, related_name="cities_of_work")
+        City, related_name="cities_of_work", null=True, blank=True)
     experience = models.CharField(null=True, blank=True, max_length=10000)
     address = models.ForeignKey(
         Address, on_delete=models.CASCADE, null=True, blank=True)
