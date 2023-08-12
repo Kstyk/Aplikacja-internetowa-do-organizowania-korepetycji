@@ -24,6 +24,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         token['email'] = user.email
         token['role'] = user.role.name
+
+        if user.userdetails is not None and user.userdetails.profile_image:
+            token['image'] = user.userdetails.profile_image.url
         # ...
 
         return token
