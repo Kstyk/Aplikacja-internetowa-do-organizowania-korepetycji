@@ -6,7 +6,8 @@ import ClassesPageSchedule from "../components/schedules/ClassesPageSchedule";
 import LoadingComponent from "../components/LoadingComponent";
 import SelectSlotsTeacherSchedule from "../components/schedules/SelectSlotsTeacherSchedule";
 import guest from "../assets/guest.png";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlinePhone, AiOutlineMail } from "react-icons/ai";
+import { MdOutlineLocationOn } from "react-icons/md";
 
 const ClassesPage = () => {
   const api = useAxios();
@@ -42,7 +43,7 @@ const ClassesPage = () => {
       </h1>
       <div className="flex flex-row gap-x-2">
         <div className="card border-[1px] border-base-200 py-4 rounded-none bg-white w-9/12 flex flex-row">
-          <div className="profile ml-3 pr-3 w-3/12 border-r-[1px] border-base-300 flex flex-col justify-center items-center">
+          <div className="profile ml-3 pr-3 w-4/12 border-r-[1px] border-base-300 flex flex-col justify-center items-center">
             <div className="avatar">
               <div className="w-20 rounded-full">
                 <img
@@ -54,49 +55,46 @@ const ClassesPage = () => {
                 />
               </div>
             </div>
-            <label
-              className="btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400"
+            <button
+              className="btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full"
               onClick={() => setIsModalSendMessageOpen((prev) => !prev)}
-              htmlFor="sendMessage"
+              onClickCapture={() =>
+                window.open(
+                  "mailto:email@example.com?subject=Subject&body=Body%20goes%20here"
+                )
+              }
             >
               Wyślij wiadomość
-            </label>
-            <input type="checkbox" id="sendMessage" className="modal-toggle" />
-            <div className="modal ">
-              <div className="modal-box !rounded-none">
-                <h3 className="text-xl  text-center mb-5">
-                  Wyślij wiadomość do:{" "}
-                  <span className="underline">
-                    {classes?.teacher?.user?.first_name}{" "}
-                    {classes?.teacher?.user?.last_name}
+            </button>
+
+            <section className="infos flex flex-col w-full pt-4">
+              <div className="border-b-[1px] border-base-100 mb-4"></div>
+              <ul className="w-full">
+                {classes?.teacher?.phone_number && (
+                  <li className="flex flex-row items-center gap-x-5">
+                    <AiOutlinePhone className="w-6 h-6 text-base-400" />
+                    <span className="text-sm">
+                      {classes?.teacher?.phone_number}
+                    </span>
+                  </li>
+                )}
+                <li className="flex flex-row items-center gap-x-5 flex-wrap">
+                  <AiOutlineMail className="w-6 h-6 text-base-400" />
+                  <span className="text-sm">
+                    {classes?.teacher?.user?.email}
                   </span>
-                </h3>
-                <form action="" className="flex flex-col gap-y-2">
-                  <input
-                    type="email"
-                    placeholder="Twój email"
-                    className="input input-bordered w-full !rounded-none focus:outline-none bg-white"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Temat"
-                    className="input input-bordered w-full !rounded-none focus:outline-none bg-white"
-                  />
-                  <textarea
-                    name=""
-                    id=""
-                    rows="10"
-                    className="w-full border-[1px] border-slate-300 focus:outline-none px-5"
-                  ></textarea>
-                  <button className="btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400">
-                    Wyślij
-                  </button>
-                </form>
-              </div>
-              <label className="modal-backdrop" htmlFor="sendMessage">
-                Close
-              </label>
-            </div>
+                </li>
+              </ul>
+              <div className="border-b-[1px] border-base-100 my-4"></div>
+              <ul className="w-full">
+                {classes?.teacher?.cities_of_work.map((city) => (
+                  <li className="flex flex-row items-center gap-x-5">
+                    <MdOutlineLocationOn className="w-6 h-6 text-base-400" />
+                    <span className="text-sm">{city.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
           </div>
           <div className="content w-9/12"></div>
         </div>

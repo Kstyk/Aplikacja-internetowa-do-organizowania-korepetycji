@@ -603,6 +603,11 @@
     magic-string "^0.27.0"
     react-refresh "^0.14.0"
 
+animate.css@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/animate.css/-/animate.css-4.1.1.tgz#614ec5a81131d7e4dc362a58143f7406abd68075"
+  integrity sha512-+mRmCTv6SbCmtYJCN4faJMNFVNN5EuCTTprDTAo7YzIGji2KADmakjVA3+8mVDkZ2Bf09vayB35lSQIex2+QaQ==
+
 ansi-styles@^3.2.1:
   version "3.2.1"
   resolved "https://registry.npmjs.org/ansi-styles/-/ansi-styles-3.2.1.tgz"
@@ -1384,7 +1389,7 @@ peerjs-js-binarypack@1.0.1:
 
 peerjs@^1.4.7:
   version "1.4.7"
-  resolved "https://registry.npmjs.org/peerjs/-/peerjs-1.4.7.tgz"
+  resolved "https://registry.yarnpkg.com/peerjs/-/peerjs-1.4.7.tgz#37db0cd06fb0c542664bd6b2f62e87c98d38fbad"
   integrity sha512-dWE2HIGvJO0Hm8lYHJiO/5OWl8xYtGcAuU08To1HMIfhh76ULzkCS3NIQO/PZm4noO1RhaGTkQaQ6sbAss6/Tg==
   dependencies:
     "@swc/helpers" "^0.3.13"

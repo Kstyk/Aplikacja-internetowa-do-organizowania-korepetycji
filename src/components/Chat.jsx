@@ -58,7 +58,7 @@ const Chat = () => {
             setMessageHistory(data.messages);
             setHasMoreMessages(data.has_more);
             break;
-          case "receivedpeer":
+          case "received_peer":
             // django potrzebuje 2-3 sekund by odeslac wiadomosc
             setRemotePeerIdValue(data.peer);
             setCallButton(true);
@@ -131,6 +131,7 @@ const Chat = () => {
   }
 
   function openModal() {
+    checkMediaDevices();
     setIsOpen(true);
 
     startVideoCall();
@@ -160,7 +161,34 @@ const Chat = () => {
     }
   }, [peerId]);
 
+  const checkMediaDevices = async () => {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+
+      const hasMicrophone = devices.some(
+        (device) => device.kind === "audioinput"
+      );
+      const hasCamera = devices.some((device) => device.kind === "videoinput");
+
+      console.log("Has Microphone:", hasMicrophone);
+      console.log("Has Camera:", hasCamera);
+
+      // Tutaj możesz podjąć odpowiednie działania w zależności od wyników
+      if (!hasMicrophone) {
+        console.log("brak mikro");
+      }
+
+      if (!hasCamera) {
+        console.log("brak kamery");
+      }
+    } catch (error) {
+      console.error("Error checking media devices:", error);
+    }
+  };
+
   const startVideoCall = () => {
+    checkMediaDevices();
+
     const peer = new Peer();
 
     peer.on("open", (id) => {

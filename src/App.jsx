@@ -16,7 +16,7 @@ function App() {
   return (
     <div
       data-theme="mytheme"
-      className="flex flex-col w-8/12 mx-auto max-md:w-10/12 max-sm:w-full"
+      className="flex flex-col w-8/12 mx-auto max-md:w-11/12 max-lg:w-10/12 max-sm:w-full"
     >
       <AuthProvider>
         <Navbar />

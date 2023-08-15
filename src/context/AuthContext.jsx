@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
 
   let loginUser = async (e) => {
     e.preventDefault();
-
+    setError(null);
     let response = await axios
       .post(
         "http://127.0.0.1:8000/api/auth/token/",
