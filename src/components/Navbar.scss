@@ -1,0 +1,22 @@
+.mobile-menu {
+    top:60px;
+    padding-top: 5px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+  }
+  
+  .menu-visible {
+    top:60px;
+  }
+  .menu-fade-in {
+    opacity: 1;
+    top:60px;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .menu-fade-out {
+    top:60px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  }
