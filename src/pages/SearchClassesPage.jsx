@@ -41,9 +41,7 @@ const SearchClassesPage = () => {
   };
 
   const clearFilters = () => {
-    setLanguages([]);
     setCities([]);
-    setVoivodeships([]);
     setSearchQuery([]);
     setCity(null);
     setVoivodeship(null);
