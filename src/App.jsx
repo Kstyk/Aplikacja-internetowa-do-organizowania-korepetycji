@@ -11,6 +11,8 @@ import StartedRoomsPage from "./pages/StartedRoomsPage";
 import Room from "./components/Room";
 import SearchClassesPage from "./pages/SearchClassesPage";
 import ClassesPage from "./pages/ClassesPage";
+import "animate.css";
+import BuyClassesPage from "./pages/BuyClassesPage";
 
 function App() {
   return (
@@ -71,6 +73,7 @@ function App() {
           />
 
           <Route path="/classes/:classesId" element={<ClassesPage />} />
+          <Route path="/classes/:classesId/buy" element={<BuyClassesPage />} />
         </Routes>{" "}
       </AuthProvider>
     </div>

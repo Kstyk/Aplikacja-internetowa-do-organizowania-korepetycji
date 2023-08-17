@@ -11,11 +11,10 @@ import { timeslots } from "../../variables/Timeslots";
 import CustomToolbar from "./CustomToolbar";
 import Swal from "sweetalert2";
 
-const ClassesPageSchedule = ({ classes }) => {
+const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
   const [schedule, setSchedule] = useState([]);
   const [loading, setLoading] = useState(false);
   const [timeSlotsTeacher, setTimeSlotsTeacher] = useState([]);
-  const [selected, setSelected] = useState([]);
   const [eventArray, setEventArray] = useState([]);
   dayjs.locale("pl");
   const localizer = dayjsLocalizer(dayjs);
@@ -53,7 +52,7 @@ const ClassesPageSchedule = ({ classes }) => {
     dateFormat: "dd",
 
     dayFormat: (date, culture, localizer) =>
-      localizer.format(date, "dddd", culture),
+      localizer.format(date, "dd", culture),
 
     dayRangeHeaderFormat: ({ start, end }, culture, localizer) =>
       localizer.format(start, "DD-MM-YY", culture) +
@@ -221,8 +220,6 @@ const ClassesPageSchedule = ({ classes }) => {
         (timeslot) => timeslot.start == dayjs(event.date).format("HH:mm")
       );
 
-      console.log(findTimeslot);
-      console.log(dayjs(event.date).format("YYYY-MM-DD"));
       var startDate = new Date(
         `${dayjs(event.date).format("YYYY-MM-DD")}T${findTimeslot.start}`
       );
@@ -257,34 +254,30 @@ const ClassesPageSchedule = ({ classes }) => {
 
   return (
     <div>
-      {loading ? (
-        <LoadingComponent message="Ładowanie danych..." />
-      ) : (
-        <Calendar
-          localizer={localizer}
-          events={eventArray}
-          defaultView="week"
-          min={
-            new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9)
-          }
-          max={
-            new Date(today.getFullYear(), today.getMonth(), today.getDate(), 19)
-          }
-          views={{ week: true }}
-          startAccessor="start"
-          endAccessor="end"
-          tooltipAccessor={null}
-          style={{ height: 500 }}
-          timeslots={1}
-          step={60}
-          formats={formats}
-          slotPropGetter={slotPropGetter}
-          eventPropGetter={eventStyleGetter}
-          onSelectSlot={onSelectSlot}
-          selectable="ignoreEvents"
-          components={{ toolbar: CustomToolbar }}
-        />
-      )}
+      <Calendar
+        localizer={localizer}
+        events={eventArray}
+        defaultView="week"
+        min={
+          new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9)
+        }
+        max={
+          new Date(today.getFullYear(), today.getMonth(), today.getDate(), 19)
+        }
+        views={{ week: true }}
+        startAccessor="start"
+        endAccessor="end"
+        tooltipAccessor={null}
+        style={{ height: 500 }}
+        timeslots={1}
+        step={60}
+        formats={formats}
+        slotPropGetter={slotPropGetter}
+        eventPropGetter={eventStyleGetter}
+        onSelectSlot={onSelectSlot}
+        selectable="ignoreEvents"
+        components={{ toolbar: CustomToolbar }}
+      />
     </div>
   );
 };

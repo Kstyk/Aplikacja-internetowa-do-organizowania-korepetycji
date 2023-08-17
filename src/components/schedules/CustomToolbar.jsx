@@ -4,24 +4,24 @@ import Toolbar from "react-big-calendar/lib/Toolbar";
 class CustomToolbar extends Toolbar {
   render() {
     return (
-      <div className="flex justify-between mb-3">
+      <div className="flex justify-between mb-3 z-30">
         <span className="rbc-btn-group">
           <button
-            className="btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400"
+            className="btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400 hover:text-white"
             type="button"
             onClick={() => this.navigate("TODAY")}
           >
             Dzisiaj
           </button>
           <button
-            className="btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400"
+            className="btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400 hover:text-white"
             type="button"
             onClick={() => this.navigate("PREV")}
           >
             Do tyłu
           </button>
           <button
-            className="btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400"
+            className="btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400 hover:text-white"
             type="button"
             onClick={() => this.navigate("NEXT")}
           >

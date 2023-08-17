@@ -1,3 +1,8 @@
+.rbc-calendar {
+  z-index: 30 !important;
+  margin-bottom: 20px;
+}
+
 .rbc-allday-cell {
   display: none !important;
 }
@@ -7,8 +12,11 @@
 }
 
 .rbc-time-view {
-  border-bottom: none !important;
+  border-bottom: none !important;  
+  z-index: 30 !important;
+  background-color: white;
 }
+
 
 .rbc-time-gutter .rbc-timeslot-group .rbc-time-slot {
   display: flex;
@@ -88,4 +96,14 @@
   text-align: center;
   padding-top: 13px;
 }
+
+.rbc-time-gutter > .rbc-timeslot-group > .rbc-time-slot {
+  background-color: transparent !important;
+  cursor: auto;
+  overflow: auto;
+
+  &:after{
+    content: "";
+  }
+  }
 
