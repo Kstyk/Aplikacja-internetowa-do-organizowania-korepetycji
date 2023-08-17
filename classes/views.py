@@ -2,13 +2,13 @@ from django.shortcuts import render
 from .models import Class, Language, Schedule, Timeslot
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
-from .serializers import ClassSerializer, LanguageSerializer, CreateClassSerializer, CreateScheduleSerializer, ScheduleSerializer, MostPopularLanguages, TimeslotSerializer
+from .serializers import ClassSerializer, LanguageSerializer, CreateClassSerializer, ScheduleSerializer, MostPopularLanguages, TimeslotSerializer, CreateTimeSlotsSerializer
 from rest_framework.response import Response
 from rest_framework import status, generics
 from django.db.models import Q, F
 from django.db import IntegrityError, transaction
 from .paginators import ClassPagination
-from users.permissions import IsTeacher
+from users.permissions import IsTeacher, IsStudent
 from django.db.models import Count
 from cities_light.models import City, Region
 from users.models import UserDetails, User
@@ -111,30 +111,19 @@ class ClassCreateView(generics.CreateAPIView):
         return Response({'success': 'Klasa została utworzona'}, status=status.HTTP_201_CREATED)
 
 
-class ScheduleCreateView(generics.ListCreateAPIView):
-    queryset = Schedule.objects.all()
-    serializer_class = CreateScheduleSerializer
+class TimeSlotsCreateView(generics.ListCreateAPIView):
+    serializer_class = CreateTimeSlotsSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return Schedule.objects.filter(teacher=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(teacher=self.request.user)
-
     def create(self, request, *args, **kwargs):
-        with transaction.atomic():
-            if isinstance(request.data, list):
-                serializer = self.get_serializer(data=request.data, many=True)
-            else:
-                serializer = self.get_serializer(data=request.data)
-            try:
-                serializer.is_valid(raise_exception=True)
-                self.perform_create(serializer)
-                headers = self.get_success_headers(serializer.data)
-                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-            except IntegrityError as e:
-                return Response({"error": "Jedna lub więcej dat jest już wpisana do Twojego harmonogramu godzin."}, status=status.HTTP_409_CONFLICT)
+        data = request.data
+        many = isinstance(data, list)
+
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        return Response(serializer.data)
 
 
 class ScheduleTeacherView(generics.ListAPIView):
@@ -161,3 +150,37 @@ def get_top_languages(request):
     language_serializer = MostPopularLanguages(top_languages, many=True)
 
     return Response(language_serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsStudent])
+def purchase_classes(request):
+    selected_slots = request.data.get('selected_slots', [])
+    student = request.user
+    classes_id = request.data.get('classes_id', [])
+    place = request.data.get('place_of_classes')
+
+    try:
+        schedules = []
+        classes = Class.objects.get(pk=classes_id)
+        for slot in selected_slots:
+            try:
+                schedule = Schedule(
+                    date=slot,
+                    student=student,
+                    classes=classes,
+                    place_of_classes=place
+                )
+                schedules.append(schedule)
+            except Exception as e:
+                pass
+
+        Schedule.objects.bulk_create(schedules)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    print(student)
+    print(selected_slots)
+    print(classes_id)
+
+    return Response(status=status.HTTP_201_CREATED)

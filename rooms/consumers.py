@@ -84,9 +84,7 @@ class ChatConsumer(JsonWebsocketConsumer):
     def chat_message_echo(self, event):
         self.send_json(event)
 
-    def receivedpeer(self, event):
-        print(f'content in handler: ${event}')
-
+    def received_peer(self, event):
         if self.channel_name != event['sender_channel_name']:
             self.send_json(event)
 
@@ -100,12 +98,10 @@ class ChatConsumer(JsonWebsocketConsumer):
         message_type = content["type"]
 
         if message_type == "peer":
-            print(f'content: ${content}')
-            print(f'room id: {self.room.room_id}')
             async_to_sync(self.channel_layer.group_send)(
                 self.room.room_id,
                 {
-                    "type": "receivedpeer",
+                    "type": "received_peer",
                     "peer": content["peer"],
                     'sender_channel_name': self.channel_name
                 }

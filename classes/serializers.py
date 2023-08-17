@@ -18,6 +18,12 @@ class TimeslotSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CreateTimeSlotsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Timeslot
+        fields = '__all__'
+
+
 class ClassSerializer(serializers.ModelSerializer):
     # Zaimportowany gotowy serializer dla modelu TypeOfClasses
     language = LanguageSerializer()
@@ -40,12 +46,6 @@ class CreateClassSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # Pobierz przekazanego nauczyciela z kontekstu
         return Class.objects.create(**validated_data)
-
-
-class CreateScheduleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Schedule
-        fields = ['date', 'timeslot']
 
 
 class ScheduleSerializer(serializers.ModelSerializer):

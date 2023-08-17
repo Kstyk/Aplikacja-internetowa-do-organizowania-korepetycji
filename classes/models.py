@@ -3,6 +3,7 @@ from django.core.validators import MinValueValidator
 from .validators import validate_teacher_role, validate_future_date, validate_student_role, validate_teacher_for_timeslot
 from rooms.models import Room
 from autoslug import AutoSlugField
+from multiselectfield import MultiSelectField
 # Create your models here.
 
 
@@ -31,6 +32,16 @@ class Class(models.Model):
         return self.name
 
 
+TEACHER_HOME = 'teacher_home'
+STUDENT_HOME = 'student_home'
+ONLINE = 'online'
+LOCATION_CHOICES = [
+    (TEACHER_HOME, 'U nauczyciela'),
+    (STUDENT_HOME, 'U ucznia'),
+    (ONLINE, 'Online'),
+]
+
+
 class PurchaseHistory(models.Model):
     student = models.ForeignKey(
         'users.User', on_delete=models.CASCADE, validators=[validate_student_role]
@@ -38,6 +49,8 @@ class PurchaseHistory(models.Model):
     classes = models.ForeignKey(
         Class, on_delete=models.CASCADE
     )
+    place_of_classes = models.TextField(
+        choices=LOCATION_CHOICES, null=True, blank=True)
     room = models.ForeignKey(
         Room, on_delete=models.PROTECT, null=True, blank=True
     )
@@ -83,6 +96,9 @@ class Timeslot(models.Model):
 
 
 class Schedule(models.Model):
+    class Meta:
+        unique_together = ('classes', 'date')
+
     date = models.DateTimeField(null=True, )
     # blank=True, validators=[validate_future_date])
     student = models.ForeignKey(
@@ -91,6 +107,8 @@ class Schedule(models.Model):
     classes = models.ForeignKey(
         Class, on_delete=models.CASCADE, related_name="classes", null=True, blank=True
     )
+    place_of_classes = models.TextField(
+        choices=LOCATION_CHOICES, null=True, blank=True)
 
     def __str__(self):
         return '{} {}'.format(self.date, self.classes.teacher)
