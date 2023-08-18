@@ -11,7 +11,9 @@ class Room(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.room_id
+        user_names = ', '.join([user.get_full_name()
+                               for user in self.users.all()])
+        return f"{self.room_id} - {user_names}"
 
 
 class Message(models.Model):

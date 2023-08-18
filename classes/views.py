@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from .models import Class, Language, Schedule, Timeslot
+from .models import Class, Language, Schedule, Timeslot, PurchaseHistory
+from rooms.models import Room
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
-from .serializers import ClassSerializer, LanguageSerializer, CreateClassSerializer, ScheduleSerializer, MostPopularLanguages, TimeslotSerializer, CreateTimeSlotsSerializer
+from .serializers import ClassSerializer, LanguageSerializer, CreateClassSerializer, ScheduleSerializer, MostPopularLanguages, TimeslotSerializer, CreateTimeSlotsSerializer, PurchaseClassesSerializer, PurchaseHistorySerializer
 from rest_framework.response import Response
 from rest_framework import status, generics
 from django.db.models import Q, F
@@ -12,7 +13,9 @@ from users.permissions import IsTeacher, IsStudent
 from django.db.models import Count
 from cities_light.models import City, Region
 from users.models import UserDetails, User
-from django.http import JsonResponse
+from datetime import datetime
+from rest_framework.serializers import ValidationError
+import uuid
 
 # Create your views here.
 
@@ -161,26 +164,60 @@ def purchase_classes(request):
     place = request.data.get('place_of_classes')
 
     try:
-        schedules = []
-        classes = Class.objects.get(pk=classes_id)
-        for slot in selected_slots:
-            try:
-                schedule = Schedule(
-                    date=slot,
-                    student=student,
-                    classes=classes,
-                    place_of_classes=place
-                )
-                schedules.append(schedule)
-            except Exception as e:
-                pass
+        with transaction.atomic():  # Rozpoczęcie transakcji
+            classes = Class.objects.get(pk=classes_id)
+            # Sprawdź, czy istnieje pokój między studentem a nauczycielem w danej klasie
 
-        Schedule.objects.bulk_create(schedules)
+            room = Room.objects.filter(
+                users=request.user).filter(users=classes.teacher)
+
+            if room.count() == 0:
+                room_id = uuid.uuid4().hex[:6].upper()
+                # Tworzenie nowego pokoju
+                new_room = Room.objects.create(
+                    room_id=room_id
+                )
+                new_room.users.add(student, classes.teacher)
+
+            for slot in selected_slots:
+                try:
+                    schedule_data = {
+                        'date': slot,
+                        'student': student.id,
+                        'classes': classes.id,
+                        'place_of_classes': place
+                    }
+                    purchase_classes_serializer = PurchaseClassesSerializer(
+                        data=schedule_data)
+
+                    purchase_classes_serializer.is_valid(raise_exception=True)
+                    purchase_classes_serializer.save()
+
+                except ValidationError as e:
+                    return Response({'error': e.detail}, status=status.HTTP_400_BAD_REQUEST)
+
+                except Exception as e:
+                    pass
+
+            datetime_slots = [datetime.strptime(
+                slot, "%Y-%m-%dT%H:%M:%S") for slot in selected_slots]
+            datetime_slots.sort()
+
+            purchase = PurchaseHistory(
+                student=student,
+                classes=classes,
+                room=new_room if room.first() is None else room.first(),
+                place_of_classes=place,
+                amount_of_lessons=len(selected_slots),
+                start_date=datetime_slots[0],
+                paid_price=len(selected_slots)*classes.price_for_lesson,
+            )
+
+            purchase.save()
+
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    print(student)
-    print(selected_slots)
-    print(classes_id)
+    purchase_serializer = PurchaseHistorySerializer(purchase)
 
-    return Response(status=status.HTTP_201_CREATED)
+    return Response(purchase_serializer.data, status=status.HTTP_201_CREATED)

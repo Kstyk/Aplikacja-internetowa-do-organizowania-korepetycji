@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from .models import Class, Language, Schedule, Timeslot
+from .models import Class, Language, Schedule, Timeslot, PurchaseHistory
 from users.serializers import UserSerializer, AddressSerializer, UserProfileSerializer, CitySerializer
+from rooms.serializers import RoomSerializer
 from .validators import validate_teacher_role
 from django.core.validators import MinValueValidator
 from users.models import User
@@ -53,6 +54,22 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Schedule
+        fields = '__all__'
+
+
+class PurchaseClassesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Schedule
+        fields = '__all__'
+
+
+class PurchaseHistorySerializer(serializers.ModelSerializer):
+    classes = ClassSerializer()
+    room = RoomSerializer()
+    student = UserSerializer()
+
+    class Meta:
+        model = PurchaseHistory
         fields = '__all__'
 
 

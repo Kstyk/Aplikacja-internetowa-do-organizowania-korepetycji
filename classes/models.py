@@ -54,9 +54,14 @@ class PurchaseHistory(models.Model):
     room = models.ForeignKey(
         Room, on_delete=models.PROTECT, null=True, blank=True
     )
-    start_date = models.DateField(blank=True, null=True)
+    start_date = models.DateTimeField(blank=True, null=True)
+    paid_price = models.DecimalField(
+        blank=True, null=True, max_digits=6, decimal_places=2)
     amount_of_lessons = models.PositiveIntegerField(null=False, blank=False)
     purchase_date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.student.first_name} {self.student.last_name} - {self.classes.name}"
 
 
 class Timeslot(models.Model):
