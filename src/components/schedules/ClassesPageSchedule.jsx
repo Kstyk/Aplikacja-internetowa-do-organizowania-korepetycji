@@ -268,7 +268,7 @@ const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
         startAccessor="start"
         endAccessor="end"
         tooltipAccessor={null}
-        style={{ height: 500 }}
+        // style={{ height: 500 }}
         timeslots={1}
         step={60}
         formats={formats}

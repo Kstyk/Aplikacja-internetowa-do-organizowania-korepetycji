@@ -9,6 +9,7 @@ import useAxios from "../utils/useAxios";
 import Modal from "react-modal";
 import { useRef } from "react";
 import Peer from "peerjs";
+import LoadingComponent from "./LoadingComponent";
 
 const Chat = () => {
   const [message, setMessage] = useState("");
@@ -86,7 +87,6 @@ const Chat = () => {
     await api
       .get(`api/rooms/messages/?room_id=${roomId}&page=${page}`)
       .then((res) => {
-        console.log(res.data);
         setHasMoreMessages(res.data.next !== null);
         setPage(page + 1);
         setMessageHistory((prev) => prev.concat(res.data.results));
@@ -385,23 +385,35 @@ const Chat = () => {
         id="scrollableDiv"
         className="h-[calc(100vh-260px)] mt-10 flex flex-col-reverse relative w-full border border-gray-200 border-none overflow-y-auto p-6 bg-white card shadow-xl rounded-sm"
       >
-        <InfiniteScroll
-          dataLength={messageHistory.length}
-          next={fetchMessages}
-          className="flex flex-col-reverse"
-          inverse={true}
-          hasMore={hasMoreMessages}
-          loader={<ChatLoader />}
-          scrollableTarget="scrollableDiv"
-        >
-          {messageHistory.map((message) => (
-            <Message
-              key={message.id}
-              message={message}
-              secondUser={secondUserProfile}
-            />
-          ))}
-        </InfiniteScroll>
+        {readyState === ReadyState.CONNECTING ? (
+          <LoadingComponent message="Ładowanie wiadomości..." />
+        ) : (
+          <>
+            {messageHistory.length != 0 ? (
+              <InfiniteScroll
+                dataLength={messageHistory.length}
+                next={fetchMessages}
+                className="flex flex-col-reverse"
+                inverse={true}
+                hasMore={hasMoreMessages}
+                loader={<ChatLoader />}
+                scrollableTarget="scrollableDiv"
+              >
+                {messageHistory.map((message) => (
+                  <Message
+                    key={message.id}
+                    message={message}
+                    secondUser={secondUserProfile}
+                  />
+                ))}
+              </InfiniteScroll>
+            ) : (
+              <div className="w-full h-full text-center italic">
+                Brak nowych wiadomości.
+              </div>
+            )}
+          </>
+        )}
       </div>
       {/* </div> */}
       {/* przyciski */}
