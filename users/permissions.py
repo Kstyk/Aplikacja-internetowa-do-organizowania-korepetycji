@@ -2,7 +2,7 @@ from rest_framework.permissions import BasePermission
 
 
 class IsStudent(BasePermission):
-    message = 'Nie jesteś uczniem - nie możesz wykonać tej operacji'
+    message = 'Nie jesteś uczniem - nie możesz wykonać tej operacji.'
 
     def has_permission(self, request, view):
         if request.user.is_authenticated:
@@ -12,7 +12,7 @@ class IsStudent(BasePermission):
 
 
 class IsTeacher(BasePermission):
-    message = 'Nie jesteś nauczycielem - nie możesz wykonać tej operacji'
+    message = 'Nie jesteś nauczycielem - nie możesz wykonać tej operacji.'
 
     def has_permission(self, request, view):
         if request.user.is_authenticated:
@@ -22,7 +22,7 @@ class IsTeacher(BasePermission):
 
 
 class IsOwnerProfile(BasePermission):
-    message = 'To nie jest twój profil - nie możesz go edytować'
+    message = 'To nie jest twój profil - nie możesz go edytować.'
 
     def has_object_permission(self, request, view, obj):
         return obj.user == request.user
