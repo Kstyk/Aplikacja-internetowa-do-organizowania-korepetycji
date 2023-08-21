@@ -5,6 +5,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import status
+from django.core.exceptions import ObjectDoesNotExist
 
 
 @api_view(['GET'])
@@ -25,11 +26,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         token['role'] = user.role.name
 
-        if user.userdetails is not None and user.userdetails.profile_image:
+        try:
             token['image'] = user.userdetails.profile_image.url
-        # ...
-
-        return token
+        except ObjectDoesNotExist:
+            token['image'] = None
+            print("Nie ma ten użytkownik userdetails.")
+        finally:
+            return token
 
 
 class MyTokenObtainPairView(TokenObtainPairView):

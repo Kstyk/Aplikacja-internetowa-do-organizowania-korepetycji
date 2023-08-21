@@ -165,6 +165,11 @@ def purchase_classes(request):
 
     try:
         with transaction.atomic():  # Rozpoczęcie transakcji
+            if len(selected_slots) == 0:
+                print("in here")
+                raise ValidationError(
+                    "Nie wybrałeś żadnego terminu zajęć.")
+
             classes = Class.objects.get(pk=classes_id)
             # Sprawdź, czy istnieje pokój między studentem a nauczycielem w danej klasie
 
@@ -179,25 +184,29 @@ def purchase_classes(request):
                 )
                 new_room.users.add(student, classes.teacher)
 
+            valid_schedules = []
+
             for slot in selected_slots:
-                try:
-                    schedule_data = {
-                        'date': slot,
-                        'student': student.id,
-                        'classes': classes.id,
-                        'place_of_classes': place
-                    }
-                    purchase_classes_serializer = PurchaseClassesSerializer(
-                        data=schedule_data)
+                exists_classes = Schedule.objects.filter(
+                    date=slot).filter(student=student)
 
-                    purchase_classes_serializer.is_valid(raise_exception=True)
-                    purchase_classes_serializer.save()
+                if exists_classes.exists():
+                    raise ValidationError(
+                        "W jednym z wybranych terminów już masz zaplanowane inne zajęcia.")
 
-                except ValidationError as e:
-                    return Response({'error': e.detail}, status=status.HTTP_400_BAD_REQUEST)
+                schedule_data = {
+                    'date': slot,
+                    'student': student.id,
+                    'classes': classes.id,
+                    'place_of_classes': place
+                }
+                # Dodaj do listy poprawnych danych
+                valid_schedules.append(schedule_data)
 
-                except Exception as e:
-                    pass
+            purchase_classes_serializer = PurchaseClassesSerializer(
+                data=valid_schedules, many=True)
+            purchase_classes_serializer.is_valid(raise_exception=True)
+            purchase_classes_serializer.save()
 
             datetime_slots = [datetime.strptime(
                 slot, "%Y-%m-%dT%H:%M:%S") for slot in selected_slots]
@@ -215,8 +224,8 @@ def purchase_classes(request):
 
             purchase.save()
 
-    except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    except ValidationError as e:
+        return Response({'error': e.detail}, status=status.HTTP_400_BAD_REQUEST)
 
     purchase_serializer = PurchaseHistorySerializer(purchase)
 
