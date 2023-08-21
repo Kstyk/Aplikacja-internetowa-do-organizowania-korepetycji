@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.views import APIView
 from users.permissions import IsStudent, IsOwnerProfile
 from .models import Role, User, UserDetails
 from .serializers import CreateUserSerializer, RoleSerializer, UserSerializer, CreateOrUpdateUserDetailsSerializer, UserProfileSerializer, UpdateUserSerializer, VoivodeshipSerializer, CitySerializer, MostPopularCitySerializer
@@ -37,10 +38,29 @@ class TeachersListView(generics.ListAPIView):
         return queryset
 
 
-class UserRegistrationView(generics.CreateAPIView):
+class UserRegistrationView(APIView):
     permission_classes = [AllowAny]
-    queryset = User.objects.all()
-    serializer_class = CreateUserSerializer
+
+    def post(self, request, format=None):
+        user_serializer = CreateUserSerializer(data=request.data)
+        if user_serializer.is_valid():
+            user = user_serializer.save()
+
+            # Tworzenie obiektu UserDetails
+            user_details_data = {
+                'user': user.id
+            }
+            user_details_serializer = CreateOrUpdateUserDetailsSerializer(
+                data=user_details_data)
+            if user_details_serializer.is_valid():
+                print("valid")
+                user_details_serializer.save()
+            else:
+                print("UserDetails errors:", user_details_serializer.errors)
+                user.delete()  # Jeśli UserDetails się nie powiedzie, usuń użytkownika
+
+            return Response(user_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserUpdateView(generics.UpdateAPIView):
