@@ -46,7 +46,6 @@ const RegistrationPage = () => {
     let role = data.role.value;
 
     data.role = role;
-    data.confirm_password = null;
 
     console.log(data);
 
@@ -61,6 +60,7 @@ const RegistrationPage = () => {
         nav("/login");
       })
       .catch((err) => {
+        console.log(err);
         setBackendErrors(JSON.parse(err.request.response));
       });
   };

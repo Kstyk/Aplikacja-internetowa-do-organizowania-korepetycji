@@ -13,6 +13,7 @@ import SearchClassesPage from "./pages/SearchClassesPage";
 import ClassesPage from "./pages/ClassesPage";
 import "animate.css";
 import BuyClassesPage from "./pages/BuyClassesPage";
+import TeacherPage from "./pages/TeacherPage";
 
 function App() {
   return (
@@ -74,6 +75,7 @@ function App() {
 
           <Route path="/classes/:classesId" element={<ClassesPage />} />
           <Route path="/classes/:classesId/buy" element={<BuyClassesPage />} />
+          <Route path="/teachers/:teacherId" element={<TeacherPage />} />
         </Routes>{" "}
       </AuthProvider>
     </div>

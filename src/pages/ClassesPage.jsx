@@ -57,7 +57,7 @@ const ClassesPage = () => {
 
           <div className="flex md:flex-row md:gap-x-2 max-md:flex-col">
             <div className="card  border-[1px] border-base-200 py-4 rounded-none bg-white md:w-9/12 max-md:w-full flex phone:flex-row max-phone:flex-col ">
-              <div className="profile max-phone:pr-6 phone:pr-3 ml-3 w-4/12 max-phone:w-full border-r-[1px] border-base-300 flex flex-col justify-center items-center max-phone:order-2">
+              <div className="profile max-phone:pr-6 phone:pr-3 ml-3 w-4/12 max-phone:w-full border-r-[1px] border-base-300 flex flex-col justify-start items-center max-phone:order-2">
                 <div className="avatar">
                   <div className="w-20 rounded-full">
                     <img
@@ -147,8 +147,15 @@ const ClassesPage = () => {
                       Język {classes?.language.name}
                     </Link>
                     <h1 className="text-3xl uppercase">
-                      {classes?.teacher?.user.first_name}{" "}
-                      {classes?.teacher?.user.last_name}
+                      <Link
+                        to={`/teachers/${classes?.teacher?.user?.id}`}
+                        params={{
+                          teacherId: classes?.teacher?.user?.id,
+                        }}
+                      >
+                        {classes?.teacher?.user.first_name}{" "}
+                        {classes?.teacher?.user.last_name}
+                      </Link>
                     </h1>
                   </div>
                   <div className="right w-4/12  flex items-center justify-end">

@@ -47,7 +47,6 @@ const SearchClassesPage = () => {
     setVoivodeship(null);
     setMinPrice(0);
     setMaxPrice(500);
-    setLanguages(null);
   };
 
   const fetchTutors = async () => {
@@ -90,7 +89,7 @@ const SearchClassesPage = () => {
     setCurrentPage(page + 1);
     setLoading(true);
 
-    let baseurl = `/api/classes/?page_size=1&page=${page}`;
+    let baseurl = `/api/classes/?page_size=10&page=${page}`;
 
     if (searchQuery != null && searchQuery != "") {
       baseurl += `&search_text=${searchQuery}`;
@@ -123,10 +122,17 @@ const SearchClassesPage = () => {
     await api
       .get(baseurl)
       .then((res) => {
-        setClasses(res.data.classes);
-        setTotalPages(res.data.total_pages);
-        setTotalResults(res.data.total_classes);
-        setCurrentPage(res.data.page_number);
+        if (res.data.classes == null) {
+          setClasses(null);
+          setTotalPages(0);
+          setTotalResults(0);
+          setCurrentPage(1);
+        } else {
+          setClasses(res.data.classes);
+          setTotalPages(res.data.total_pages);
+          setTotalResults(res.data.total_classes);
+          setCurrentPage(res.data.page_number);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -379,8 +385,14 @@ const SearchClassesPage = () => {
           <LoadingComponent message="Pobieramy dane..." />
         </div>
       ) : (
-        <>
+        <section className="mb-10">
           <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto gap-y-3">
+            {console.log(classes)}
+            {classes == null && (
+              <h1 className="text-lg">
+                Brak wyników dopasowanych do podanych kryteriów.
+              </h1>
+            )}
             {classes?.map((classes) => (
               <ClassesCard key={classes.id} classes={classes} />
             ))}
@@ -391,13 +403,7 @@ const SearchClassesPage = () => {
             currentPage={currentPage}
             search={searchTutors}
           />
-
-          {classes == null && (
-            <h1 className="text-2xl">
-              Brak wyników dopasowanych do podanych kryteriów.
-            </h1>
-          )}
-        </>
+        </section>
       )}
     </div>
   );

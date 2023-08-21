@@ -52,32 +52,39 @@ const ClassesCard = (props) => {
             Język {classes.language.name}
           </div>
           <Link
-            to={`/classes/${classes.id}`}
+            to={`/classes/${classes?.id}`}
             params={{
-              classesId: classes.id,
+              classesId: classes?.id,
             }}
           >
             <h1 className="text-xl font-semibold uppercase border-b-[1px] pb-1 mb-1 border-base-200">
               {classes.name}
             </h1>
           </Link>
-          <div className="flex flex-row align-middle items-center border-b-[1px] border-base-200 pb-1 mb-1">
-            <div className="avatar">
-              <div className="w-20 rounded-full">
-                <img
-                  src={
-                    classes?.teacher?.profile_image == null
-                      ? guest
-                      : `http://localhost:8000${classes?.teacher?.profile_image}`
-                  }
-                />
+          <Link
+            to={`/teachers/${classes?.teacher?.user?.id}`}
+            params={{
+              teacherId: classes?.teacher?.user?.id,
+            }}
+          >
+            <div className="flex flex-row align-middle items-center border-b-[1px] border-base-200 pb-1 mb-1">
+              <div className="avatar">
+                <div className="w-20 rounded-full">
+                  <img
+                    src={
+                      classes?.teacher?.profile_image == null
+                        ? guest
+                        : `http://localhost:8000${classes?.teacher?.profile_image}`
+                    }
+                  />
+                </div>
               </div>
+              <h2 className="text-lg ">
+                {classes.teacher?.user?.first_name}{" "}
+                {classes.teacher?.user?.last_name}
+              </h2>
             </div>
-            <h2 className="text-lg ">
-              {classes.teacher?.user?.first_name}{" "}
-              {classes.teacher?.user?.last_name}
-            </h2>
-          </div>
+          </Link>
           <div className="description text-justify text-sm">
             {classes.description.length > 250
               ? classes.description.substring(0, 250) + "..."

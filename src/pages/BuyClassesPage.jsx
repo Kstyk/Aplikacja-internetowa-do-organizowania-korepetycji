@@ -52,7 +52,6 @@ const BuyClassesPage = () => {
     await api
       .post(`/api/classes/purchase_classes/`, data)
       .then((res) => {
-        console.log(res.data);
         const swalWithTailwindClasses = Swal.mixin({
           customClass: {
             confirmButton: "btn btn-success",
@@ -79,6 +78,46 @@ const BuyClassesPage = () => {
       })
       .catch((err) => {
         console.log(err);
+        if (err.response.status == 400) {
+          const swalWithTailwindClasses = Swal.mixin({
+            customClass: {
+              confirmButton: "btn btn-success",
+            },
+            buttonsStyling: false,
+          });
+
+          swalWithTailwindClasses.fire({
+            icon: "error",
+            title: "Błąd",
+            text: err.response.data.error[0],
+            customClass: {
+              confirmButton:
+                "btn btn-outline rounded-none outline-none border-[1px] text-black w-full",
+              popup: "rounded-none bg-base-100",
+            },
+          });
+        }
+
+        if (err.response.status == 403) {
+          const swalWithTailwindClasses = Swal.mixin({
+            customClass: {
+              confirmButton: "btn btn-success",
+            },
+            buttonsStyling: false,
+          });
+
+          swalWithTailwindClasses.fire({
+            icon: "error",
+            title: "Nieuprawniona akcja",
+            text: err.response.data.detail,
+            customClass: {
+              confirmButton:
+                "btn btn-outline rounded-none outline-none border-[1px] text-black w-full",
+              popup: "rounded-none bg-base-100",
+            },
+          });
+        }
+        setSelected([]);
       });
   };
 
@@ -107,16 +146,13 @@ const BuyClassesPage = () => {
                     </section>
                   )}
                   {selected?.map((date, i) => (
-                    <>
-                      {console.log(date)}
-                      <section
-                        className="flex flex-row items-center gap-x-3"
-                        key={i}
-                      >
-                        <AiOutlineCalendar className="w-6 h-6" />
-                        {dayjs(date.start).format("YYYY-MM-DD HH:mm")}
-                      </section>
-                    </>
+                    <section
+                      className="flex flex-row items-center gap-x-3"
+                      key={i}
+                    >
+                      <AiOutlineCalendar className="w-6 h-6" />
+                      {dayjs(date.start).format("YYYY-MM-DD HH:mm")}
+                    </section>
                   ))}
                 </div>
                 <div className="max-phone:order-1 max-phone:mb-3">
@@ -143,7 +179,7 @@ const BuyClassesPage = () => {
                   ))}
                 </div>
               </div>
-              <div className="card shadow-md rounded-none p-4 flex flex-col max-phone:flex-col w-6/12 max-lg:w-full">
+              <div className="card shadow-md rounded-none p-4 flex flex-col max-phone:flex-col w-6/12 max-lg:w-full ">
                 <h2 className="font-bold text-lg text-right">Podsumowanie</h2>
                 <div className=" w-full text-right">
                   Do zapłaty:
@@ -167,7 +203,7 @@ const BuyClassesPage = () => {
                 </div>
               </div>
             </section>
-            <section className="w-full flex justify-end">
+            <section className="w-full flex justify-end mt-5">
               <button
                 className="btn btn-outline no-animation h-12 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full md:w-6/12 lg:w-4/12 mb-2"
                 onClick={() => {
