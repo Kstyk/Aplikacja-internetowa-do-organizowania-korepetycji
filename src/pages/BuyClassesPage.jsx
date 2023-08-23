@@ -6,6 +6,8 @@ import ClassesPageSchedule from "../components/schedules/ClassesPageSchedule";
 import dayjs from "dayjs";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import showAlertError from "../components/messages/SwalAlertError";
+import showSuccessAlert from "../components/messages/SwalAlertSuccess";
 import Swal from "sweetalert2";
 
 const BuyClassesPage = () => {
@@ -52,70 +54,23 @@ const BuyClassesPage = () => {
     await api
       .post(`/api/classes/purchase_classes/`, data)
       .then((res) => {
-        const swalWithTailwindClasses = Swal.mixin({
-          customClass: {
-            confirmButton: "btn btn-success",
-          },
-          buttonsStyling: false,
-        });
-
-        swalWithTailwindClasses
-          .fire({
-            icon: "success",
-            title: "Udany zakup",
-            text: "Udało ci się zakupić zajęcia! Teraz zostaniesz przekierowany do pokoju zajęć.",
-            customClass: {
-              confirmButton:
-                "btn btn-outline rounded-none outline-none border-[1px] text-black w-full",
-              popup: "rounded-none bg-base-100",
-            },
-          })
-          .then(() => {
+        showSuccessAlert(
+          "Udany zakup",
+          "Udało ci się zakupić zajęcia! Teraz zostaniesz przekierowany do pokoju zajęć.",
+          () => {
             let roomid = res.data.room.room_id;
 
             nav(`/rooms/${roomid}`);
-          });
+          }
+        );
       })
       .catch((err) => {
-        console.log(err);
         if (err.response.status == 400) {
-          const swalWithTailwindClasses = Swal.mixin({
-            customClass: {
-              confirmButton: "btn btn-success",
-            },
-            buttonsStyling: false,
-          });
-
-          swalWithTailwindClasses.fire({
-            icon: "error",
-            title: "Błąd",
-            text: err.response.data.error[0],
-            customClass: {
-              confirmButton:
-                "btn btn-outline rounded-none outline-none border-[1px] text-black w-full",
-              popup: "rounded-none bg-base-100",
-            },
-          });
+          showAlertError("Błąd", err.response.data.error[0]);
         }
 
         if (err.response.status == 403) {
-          const swalWithTailwindClasses = Swal.mixin({
-            customClass: {
-              confirmButton: "btn btn-success",
-            },
-            buttonsStyling: false,
-          });
-
-          swalWithTailwindClasses.fire({
-            icon: "error",
-            title: "Nieuprawniona akcja",
-            text: err.response.data.detail,
-            customClass: {
-              confirmButton:
-                "btn btn-outline rounded-none outline-none border-[1px] text-black w-full",
-              popup: "rounded-none bg-base-100",
-            },
-          });
+          showAlertError("Nieuprawniona akcja", err.response.data.detail);
         }
         setSelected([]);
       });

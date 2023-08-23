@@ -5,8 +5,12 @@ import axios from "axios";
 import Select from "react-select";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import transparent_logo from "../assets/transparent_logo.png";
+import { Link } from "react-router-dom";
+import useAxios from "../utils/useAxios";
 
 const RegistrationPage = () => {
+  const api = useAxios();
   const { loginUser } = useContext(AuthContext);
   const [roles, setRoles] = useState([]);
   const [backendErrors, setBackendErrors] = useState({});
@@ -20,23 +24,26 @@ const RegistrationPage = () => {
   } = useForm();
 
   const registerOptions = {
-    first_name: { required: "Imię jest wymagane" },
-    last_name: { required: "Nazwisko jest wymagane" },
-    // email: { required: "Email jest wymagany" },
+    first_name: { required: "Imię jest wymagane." },
+    last_name: { required: "Nazwisko jest wymagane." },
+    email: { required: "Email jest wymagany." },
     password: {
-      required: "Hasło jest wymagane",
+      required: "Hasło jest wymagane.",
       minLength: {
         value: 8,
-        message: "Hasło musi mieć przynajmniej 8 znaków",
+        message: "Hasło musi mieć przynajmniej 8 znaków.",
       },
     },
     confirm_password: {
-      required: "Musisz powtórzyć hasło",
+      required: "Musisz powtórzyć hasło.",
       validate: (val) => {
         if (watch("password") != val) {
-          return "Hasła nie są identyczne";
+          return "Hasła nie są identyczne.";
         }
       },
+    },
+    role: {
+      required: "Rola jest wymagana.",
     },
   };
 
@@ -47,8 +54,6 @@ const RegistrationPage = () => {
 
     data.role = role;
 
-    console.log(data);
-
     axios
       .post("http://localhost:8000/api/users/register/", data, {
         headers: {
@@ -56,11 +61,9 @@ const RegistrationPage = () => {
         },
       })
       .then((res) => {
-        console.log(data);
         nav("/login");
       })
       .catch((err) => {
-        console.log(err);
         setBackendErrors(JSON.parse(err.request.response));
       });
   };
@@ -72,12 +75,8 @@ const RegistrationPage = () => {
   }, []);
 
   const fetchRoles = async () => {
-    await axios
-      .get("http://localhost:8000/api/users/roles/", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+    await api
+      .get("/api/users/roles/")
       .then((res) => {
         setRoles(res.data);
       })
@@ -90,20 +89,23 @@ const RegistrationPage = () => {
     <div>
       <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300 "></div>
 
-      <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto">
+      <div className="bg-white card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto w-10/12 max-lg:w-full flex flex-row max-md:flex-col max-md:w-8/12 max-phone:w-full">
+        <div className="flex flex-col justify-center w-6/12 max-md:w-full mx-auto py-20 px-5 max-md:py-10">
+          <img src={transparent_logo} alt="logo" />
+          <p className="text-center mt-5 text-lg">
+            Masz już konto?{" "}
+            <Link to="/login" className="hover:underline">
+              Zaloguj się już teraz!
+            </Link>
+          </p>
+        </div>
+        <div className="border-r-2 border-base-200 mr-5"></div>
         <form
           onSubmit={handleSubmit(onSubmit, handleError)}
-          className="flex flex-col space-y-4 w-full m-auto h-full"
+          className="flex flex-col justify-center w-6/12 space-y-4 max-md:w-full mx-auto"
         >
-          <h1 className="font-semibold text-2xl pb-3 border-b-2 border-base-200">
-            Rejestracja
-          </h1>
-
           <div className="items-center">
-            <label className="float-left text-xl" htmlFor="email">
-              Email
-            </label>
-            <div className="flex flex-col float-right w-2/4">
+            <div className="flex flex-col float-right w-full">
               <input
                 type="email"
                 className=" h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none"
@@ -113,7 +115,6 @@ const RegistrationPage = () => {
                 {...register("email", registerOptions.email)}
               />
               <small className="text-red-400 text-right">
-                {console.log(errors)}
                 {errors?.email && errors.email.message}
                 {backendErrors?.email?.map((e, i) => (
                   <span key={i}>
@@ -124,10 +125,7 @@ const RegistrationPage = () => {
             </div>
           </div>
           <div className="items-center">
-            <label className="float-left text-xl" htmlFor="password">
-              Hasło
-            </label>
-            <div className="flex flex-col float-right w-2/4">
+            <div className="flex flex-col float-right w-full">
               <input
                 type="password"
                 className=" h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none"
@@ -147,10 +145,7 @@ const RegistrationPage = () => {
             </div>
           </div>
           <div className="items-center">
-            <label className="float-left text-xl" htmlFor="confirm_password">
-              Powtórz hasło
-            </label>
-            <div className="flex flex-col float-right w-2/4">
+            <div className="flex flex-col float-right w-full">
               <input
                 type="password"
                 className=" h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none"
@@ -167,10 +162,7 @@ const RegistrationPage = () => {
             </div>
           </div>
           <div className="items-center">
-            <label className="float-left text-xl" htmlFor="first_name">
-              Imię
-            </label>
-            <div className="flex flex-col float-right w-2/4">
+            <div className="flex flex-col float-right w-full">
               <input
                 name="first_name"
                 id="first_name"
@@ -190,10 +182,7 @@ const RegistrationPage = () => {
             </div>
           </div>
           <div className="items-center">
-            <label className="float-left text-xl" htmlFor="last_name">
-              Nazwisko
-            </label>
-            <div className="flex flex-col float-right w-2/4">
+            <div className="flex flex-col float-right w-full">
               <input
                 name="last_name"
                 id="last_name"
@@ -213,10 +202,7 @@ const RegistrationPage = () => {
             </div>
           </div>
           <div>
-            <label className="float-left text-xl" htmlFor="role">
-              Rola
-            </label>
-            <div className="flex flex-col float-right w-2/4">
+            <div className="flex flex-col float-right w-full">
               <Controller
                 name="role"
                 control={control}
@@ -242,6 +228,7 @@ const RegistrationPage = () => {
                 )}
               />
               <small className="text-red-400 text-right">
+                {errors?.role && errors.role.message}
                 {backendErrors?.role?.map((e, i) => (
                   <span key={i}>
                     {e} <br />
@@ -251,7 +238,7 @@ const RegistrationPage = () => {
             </div>
           </div>
           <hr />
-          <button className="btn btn-outline no-animation w-3/12 max-md:w-5/12 max-phone:w-10/12 max-phone:mx-auto h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400">
+          <button className="btn btn-outline no-animation w-6/12 max-md:w-5/12 max-phone:w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400">
             Zarejestruj
           </button>
         </form>

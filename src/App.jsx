@@ -14,6 +14,8 @@ import ClassesPage from "./pages/ClassesPage";
 import "animate.css";
 import BuyClassesPage from "./pages/BuyClassesPage";
 import TeacherPage from "./pages/TeacherPage";
+import EditBaseProfile from "./pages/EditBaseProfile";
+import ChangePasswordPage from "./pages/ChangePasswordPage";
 
 function App() {
   return (
@@ -29,13 +31,32 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationPage />} />
           <Route
-            path="/profile"
+            path="/profil"
             element={
               <PrivateRoute>
                 <ProfilePage />
               </PrivateRoute>
             }
           />
+
+          <Route
+            path="/profil/edytuj"
+            element={
+              <PrivateRoute>
+                <EditBaseProfile />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/profil/zmien-haslo"
+            element={
+              <PrivateRoute>
+                <ChangePasswordPage />
+              </PrivateRoute>
+            }
+          />
+
           <Route
             path="/create-room"
             element={

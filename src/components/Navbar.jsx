@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
-import logo_transparent from "../assets/logo_transparent.png";
+import transparent_logo from "../assets/transparent_logo.png";
 import "./Navbar.scss";
 
 const Navbar = () => {
@@ -41,45 +41,60 @@ const Navbar = () => {
                 </label>
                 <ul
                   tabIndex={0}
-                  className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 border-base-300 border-2 rounded-none rounded-box w-52"
+                  className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 border-base-300 border-2 rounded-none w-52"
                 >
                   <li>
                     <Link
-                      to="/profile"
-                      className="focus:bg-base-300 hover:bg-base-200 rounded-none"
+                      to="/profil"
+                      className="focus:bg-base-300  rounded-none"
                     >
                       Profil
                     </Link>
                   </li>
                   <li>
-                    <a
-                      href="#"
-                      className="focus:bg-base-300 hover:bg-base-200 rounded-none"
-                    >
+                    <a href="#" className="focus:bg-base-300 rounded-none">
                       Twoje pokoje
                     </a>
                   </li>
                   <li>
-                    <a
-                      href="#"
-                      className="focus:bg-base-300 hover:bg-base-200 rounded-none"
-                    >
+                    <a href="#" className="focus:bg-base-300 rounded-none">
                       Historia zakupów
                     </a>
                   </li>
                   <li>
-                    <a
-                      href="#"
-                      className="focus:bg-base-300 hover:bg-base-200 rounded-none"
-                    >
-                      Edytuj profil
-                    </a>
+                    <details open>
+                      <summary className="rounded-none">Edytuj profil</summary>
+                      <ul>
+                        <li>
+                          <Link className="rounded-none" to="/profil/edytuj">
+                            Edytuj dane podstawowe
+                          </Link>
+                        </li>
+                        <li>
+                          <Link className="rounded-none">
+                            Edytuj dane dodatkowe
+                          </Link>
+                        </li>
+                        <li>
+                          <Link className="rounded-none">Zmień avatar</Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="rounded-none"
+                            to="/profil/zmien-haslo"
+                          >
+                            Zmień hasło
+                          </Link>
+                        </li>
+                      </ul>
+                    </details>
                   </li>
+
                   <li>
                     <Link
                       to="/login"
                       onClick={logoutUser}
-                      className="hover:bg-base-200 rounded-none"
+                      className="rounded-none"
                     >
                       Wyloguj
                     </Link>
