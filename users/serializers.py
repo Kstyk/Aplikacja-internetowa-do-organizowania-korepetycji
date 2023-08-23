@@ -36,7 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ['email', 'first_name', 'last_name']
+        fields = ['first_name', 'last_name']
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -187,3 +187,15 @@ class MostPopularCitySerializer(serializers.ModelSerializer):
 
     def get_num_tutors(self, city):
         return city.cities_of_work.count()
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    confirm_new_password = serializers.CharField(required=True)
+
+    def validate(self, data):
+        if data['new_password'] != data['confirm_new_password']:
+            raise serializers.ValidationError(
+                {"confirm_new_password": "Nowe hasła nie pasują do siebie."})
+        return data

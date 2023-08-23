@@ -4,12 +4,15 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from users.permissions import IsStudent, IsOwnerProfile
 from .models import Role, User, UserDetails
-from .serializers import CreateUserSerializer, RoleSerializer, UserSerializer, CreateOrUpdateUserDetailsSerializer, UserProfileSerializer, UpdateUserSerializer, VoivodeshipSerializer, CitySerializer, MostPopularCitySerializer
+from .serializers import CreateUserSerializer, RoleSerializer, UserSerializer, CreateOrUpdateUserDetailsSerializer, UserProfileSerializer, UpdateUserSerializer, VoivodeshipSerializer, CitySerializer, MostPopularCitySerializer, ChangePasswordSerializer
 from django.contrib.auth import get_user_model
 from cities_light.models import City, Region
 from django.db.models import Count,  OuterRef, Exists, Subquery
 from rest_framework.decorators import api_view
 from classes.models import Class
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth.password_validation import validate_password
+from rest_framework.serializers import ValidationError
 
 # Create your views here.
 
@@ -64,6 +67,14 @@ class UserRegistrationView(APIView):
 
 class UserUpdateView(generics.UpdateAPIView):
     serializer_class = UpdateUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+
+class BaseUserView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
@@ -170,3 +181,33 @@ def get_top_cities_in_teacher_address(request):
     city_serializer = MostPopularCitySerializer(top_cities, many=True)
 
     return Response(city_serializer.data)
+
+
+class ChangePasswordView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        serializer = ChangePasswordSerializer(data=request.data)
+
+        if serializer.is_valid():
+            old_password = serializer.validated_data['old_password']
+            new_password = serializer.validated_data['new_password']
+
+            try:
+                validate_password(new_password, user=user)
+            except Exception as e:
+                return Response({"new_password": e}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                if not check_password(old_password, user.password):
+                    raise ValidationError(
+                        "Obecne hasło jest niepoprawne.")
+            except ValidationError as ve:
+                return Response({'old_password': ve.detail}, status=status.HTTP_400_BAD_REQUEST)
+
+            user.set_password(new_password)
+            user.save()
+            return Response({"message": "Hasło zostało pomyślnie zmienione."}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

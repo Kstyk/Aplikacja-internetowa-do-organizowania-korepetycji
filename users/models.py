@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from classes.models import Language
 from multiselectfield import MultiSelectField
 from cities_light.models import City, Region
-
+from django.core.validators import MinLengthValidator
 # Create your models here.
 
 
@@ -52,8 +52,10 @@ class User(AbstractUser):
                               null=False, max_length=50, error_messages={
                                   'unique': 'Użytkownik o podanym adresie e-mail już istnieje.',
                               })
-    first_name = models.CharField(max_length=50, blank=False, null=False)
-    last_name = models.CharField(max_length=50, blank=False, null=False)
+    first_name = models.CharField(
+        max_length=50, blank=False, null=False, validators=[MinLengthValidator(2)])
+    last_name = models.CharField(
+        max_length=50, blank=False, null=False, validators=[MinLengthValidator(2)])
     role = models.ForeignKey(
         Role, on_delete=models.CASCADE, null=True, blank=True)
     username = None
