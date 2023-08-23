@@ -53,11 +53,10 @@ class UserRegistrationView(APIView):
             user_details_serializer = CreateOrUpdateUserDetailsSerializer(
                 data=user_details_data)
             if user_details_serializer.is_valid():
-                print("valid")
                 user_details_serializer.save()
             else:
-                print("UserDetails errors:", user_details_serializer.errors)
                 user.delete()  # Jeśli UserDetails się nie powiedzie, usuń użytkownika
+                return Response(user_details_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             return Response(user_serializer.data, status=status.HTTP_201_CREATED)
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

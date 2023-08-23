@@ -10,6 +10,12 @@ from cities_light.models import City, Region
 User = get_user_model()
 
 
+class LanguageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Language
+        fields = '__all__'
+
+
 class RoleSerializer(serializers.ModelSerializer):
     value = serializers.IntegerField(source='id')
     label = serializers.CharField(source='name')
@@ -70,7 +76,23 @@ class CreateUserSerializer(serializers.ModelSerializer):
         return user
 
 
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ['id', 'slug', 'name',
+                  'region_id']
+
+
+class VoivodeshipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = '__all__'
+
+
 class AddressSerializer(serializers.ModelSerializer):
+    city = CitySerializer()
+    voivodeship = VoivodeshipSerializer()
+
     class Meta:
         model = Address
         fields = '__all__'
@@ -144,26 +166,14 @@ class CreateOrUpdateUserDetailsSerializer(serializers.ModelSerializer):
         return instance
 
 
-class CitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = City
-        fields = ['id', 'slug', 'name',
-                  'region_id']
-
-
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     address = AddressSerializer()
     cities_of_work = CitySerializer(many=True)
+    known_languages = LanguageSerializer(many=True)
 
     class Meta:
         model = UserDetails
-        fields = '__all__'
-
-
-class VoivodeshipSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Region
         fields = '__all__'
 
 

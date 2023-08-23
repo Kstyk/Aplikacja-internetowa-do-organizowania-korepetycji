@@ -56,8 +56,8 @@ class AddressForm(forms.ModelForm):
         model = Address
         fields = '__all__'
 
-    city = forms.ChoiceField(choices=city_name)
-    voivodeship = forms.ChoiceField(choices=voivodeship_name)
+    # city = forms.ChoiceField(choices=city_name)
+    # voivodeship = forms.ChoiceField(choices=voivodeship_name)
 
 
 class CustomAddressAdmin(admin.ModelAdmin):

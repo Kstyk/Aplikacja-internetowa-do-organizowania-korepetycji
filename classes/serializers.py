@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Class, Language, Schedule, Timeslot, PurchaseHistory
-from users.serializers import UserSerializer, AddressSerializer, UserProfileSerializer, CitySerializer
+from users.serializers import UserSerializer, UserProfileSerializer
 from rooms.serializers import RoomSerializer
 from .validators import validate_teacher_role
 from django.core.validators import MinValueValidator

@@ -37,12 +37,15 @@ def get_all_classes(request):
     language = request.GET.get('language')
     city_id = request.GET.get('city')
     voivodeship_id = request.GET.get('voivodeship')
+    teacher_id = request.GET.get('teacher')
     classes = Class.objects.filter(able_to_buy=True)
 
     # sortowanie
     sort_by = request.GET.get('sort_by')  # Column name for sorting
     sort_direction = request.GET.get('sort_direction', 'DESC')
 
+    if teacher_id is not None:
+        classes = classes.filter(teacher__id=teacher_id)
     if search_text is not None:
         classes = classes.filter(Q(name__icontains=search_text) | Q(
             description__icontains=search_text))
@@ -58,7 +61,6 @@ def get_all_classes(request):
     if city_id is not None:
         city = City.objects.get(pk=city_id)
         tutors = User.objects.filter(userdetails__cities_of_work=city)
-        print(tutors)
         classes = classes.filter(Q(teacher__in=tutors) | Q(
             teacher__userdetails__address__city=city))
 
