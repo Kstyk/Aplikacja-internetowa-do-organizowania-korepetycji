@@ -71,7 +71,10 @@ const Navbar = () => {
                           </Link>
                         </li>
                         <li>
-                          <Link className="rounded-none">
+                          <Link
+                            className="rounded-none"
+                            to="/profil/edytuj-dodatkowe"
+                          >
                             Edytuj dane dodatkowe
                           </Link>
                         </li>
@@ -104,7 +107,7 @@ const Navbar = () => {
             </ul>
           )}
           {user?.role == "Teacher" && (
-            <ul className="menu menu-horizontal px-1 gap-3">
+            <ul className="menu menu-horizontal !px-0 gap-3">
               <li>
                 <Link
                   to="/my-rooms"
@@ -114,7 +117,7 @@ const Navbar = () => {
                 </Link>
               </li>
 
-              <div className="dropdown dropdown-end">
+              <div className="dropdown dropdown-end z-40">
                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full">
                     <img src="/images/stock/photo-1534528741775-53994a69daeb.jpg" />
@@ -122,11 +125,11 @@ const Navbar = () => {
                 </label>
                 <ul
                   tabIndex={0}
-                  className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
+                  className=" mt-1z-[1] p-2 shadow shadow-base-400  menu menu-sm dropdown-content bg-white rounded-box w-52"
                 >
                   <li>
                     <Link
-                      to="/profile"
+                      to="/profil"
                       className="focus:bg-base-300 hover:bg-base-200"
                     >
                       Profil
@@ -149,9 +152,42 @@ const Navbar = () => {
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="focus:bg-base-300 hover:bg-base-200">
-                      Edytuj profil
-                    </a>
+                    <details open>
+                      <summary className="focus:bg-base-300 hover:bg-base-200">
+                        Edytuj profil
+                      </summary>
+                      <ul>
+                        <li>
+                          <Link
+                            className="focus:bg-base-300 hover:bg-base-200"
+                            to="/profil/edytuj"
+                          >
+                            Edytuj dane podstawowe
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="focus:bg-base-300 hover:bg-base-200"
+                            to="/profil/edytuj-dodatkowe"
+                          >
+                            Edytuj dane dodatkowe
+                          </Link>
+                        </li>
+                        <li>
+                          <Link className="focus:bg-base-300 hover:bg-base-200">
+                            Zmień avatar
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/profil/zmien-haslo"
+                            className="focus:bg-base-300 hover:bg-base-200"
+                          >
+                            Zmień hasło
+                          </Link>
+                        </li>
+                      </ul>
+                    </details>
                   </li>
                   <li>
                     <Link
