@@ -110,75 +110,107 @@ const EditBaseProfile = () => {
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col justify-center w-10/12 space-y-4 max-md:w-full mx-auto"
               >
-                <input
-                  type="email"
-                  className=" h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none"
-                  style={{ color: "#999999" }}
-                  name="email"
-                  value={baseUser?.email}
-                  disabled
-                  placeholder="Wprowadź email..."
-                  id="email"
-                />
-                <div className="flex flex-col float-right w-full">
+                <section>
+                  <label
+                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                    htmlFor="email"
+                  >
+                    Email
+                  </label>
                   <input
-                    name="first_name"
-                    id="first_name"
-                    placeholder="Podaj imię..."
-                    className=" h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none"
-                    type="text"
-                    {...register("first_name", editUserOptions.first_name)}
+                    type="email"
+                    className=" h-10 px-2 border-[1px] border-[#E2E3E4] w-full  bg-transparent outline-none"
+                    style={{ color: "#999999" }}
+                    name="email"
+                    value={baseUser?.email}
+                    disabled
+                    placeholder="Wprowadź email..."
+                    id="email"
                   />
-                  <small className="text-red-400 text-right">
-                    {errors?.first_name && errors.first_name.message}
-                    {backendErrors?.first_name?.map((e, i) => (
-                      <span key={i}>
-                        {e} <br />
-                      </span>
-                    ))}
-                  </small>
-                </div>
-                <div className="flex flex-col float-right w-full">
-                  <input
-                    name="last_name"
-                    id="last_name"
-                    placeholder="Podaj nazwisko..."
-                    className=" h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none"
-                    type="text"
-                    {...register("last_name", editUserOptions.last_name)}
-                  />
-                  <small className="text-red-400 text-right">
-                    {errors?.last_name && errors.last_name.message}
-                    {backendErrors?.last_name?.map((e, i) => (
-                      <span key={i}>
-                        {e} <br />
-                      </span>
-                    ))}
-                  </small>
-                </div>
-                <div className="flex flex-col float-right w-full">
-                  <Select
-                    className="h-10"
-                    placeholder="Wybierz rolę..."
-                    options={roles}
-                    isDisabled={true}
-                    defaultValue=""
-                    value={{
-                      value: baseUser?.role?.value,
-                      label: baseUser?.role?.label,
-                    }}
-                    label="Text field"
-                    styles={{
-                      control: (base) => ({
-                        ...base,
-                        boxShadow: "none",
-                        borderRadius: "none",
-                        borderColor: "#BFEAF5",
-                        backgroundColor: "transparent",
-                      }),
-                    }}
-                  />
-                </div>
+                </section>
+                <section>
+                  <label
+                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                    htmlFor="first_name"
+                  >
+                    Imię
+                  </label>
+                  <div className="flex flex-col float-right w-full">
+                    <input
+                      name="first_name"
+                      id="first_name"
+                      placeholder="Podaj imię..."
+                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
+                      type="text"
+                      {...register("first_name", editUserOptions.first_name)}
+                    />
+                    <small className="text-red-400 text-right">
+                      {errors?.first_name && errors.first_name.message}
+                      {backendErrors?.first_name?.map((e, i) => (
+                        <span key={i}>
+                          {e} <br />
+                        </span>
+                      ))}
+                    </small>
+                  </div>
+                </section>
+                <section>
+                  <label
+                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                    htmlFor="last_name"
+                  >
+                    Nazwisko
+                  </label>
+                  <div className="flex flex-col float-right w-full">
+                    <input
+                      name="last_name"
+                      id="last_name"
+                      placeholder="Podaj nazwisko..."
+                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
+                      type="text"
+                      {...register("last_name", editUserOptions.last_name)}
+                    />
+                    <small className="text-red-400 text-right">
+                      {errors?.last_name && errors.last_name.message}
+                      {backendErrors?.last_name?.map((e, i) => (
+                        <span key={i}>
+                          {e} <br />
+                        </span>
+                      ))}
+                    </small>
+                  </div>
+                </section>
+                <section>
+                  <label
+                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                    htmlFor="role"
+                  >
+                    Rola
+                  </label>
+                  <div className="flex flex-col float-right w-full">
+                    <Select
+                      className="h-10"
+                      name="role"
+                      placeholder="Wybierz rolę..."
+                      options={roles}
+                      isDisabled={true}
+                      defaultValue=""
+                      value={{
+                        value: baseUser?.role?.value,
+                        label: baseUser?.role?.label,
+                      }}
+                      styles={{
+                        control: (base) => ({
+                          ...base,
+                          boxShadow: "none",
+                          borderRadius: "none",
+                          borderColor: "#E2E3E4",
+                          backgroundColor: "transparent",
+                        }),
+                      }}
+                    />
+                  </div>
+                </section>
                 <button className="btn btn-outline no-animation w-6/12 max-md:w-5/12 max-phone:w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400">
                   Edytuj
                 </button>

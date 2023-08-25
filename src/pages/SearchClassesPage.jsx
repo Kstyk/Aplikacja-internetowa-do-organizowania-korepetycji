@@ -17,7 +17,7 @@ const SearchClassesPage = () => {
 
   const [city, setCity] = useState(null);
   const [voivodeship, setVoivodeship] = useState(null);
-  const [language, setLanguage] = useState(null);
+  const [language, setLanguage] = useState(languageSlug);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(500);
 
@@ -51,14 +51,13 @@ const SearchClassesPage = () => {
 
   const fetchTutors = async () => {
     let baseurl = `/api/classes/?page_size=10&page=1`;
-    console.log(searchText);
 
     if (searchQuery != null && searchQuery != "") {
       baseurl += `&search_text=${searchQuery}`;
     }
 
     if (languageSlug != null) {
-      baseurl += `&language=${language != null ? language.slug : languageSlug}`;
+      baseurl += `&language=${language}`;
     }
 
     if (citySlug != null) {
@@ -96,11 +95,9 @@ const SearchClassesPage = () => {
     }
 
     if (language != null) {
-      baseurl += `&language=${language.slug}`;
-    }
-
-    if (language == null && languageSlug != null) {
-      baseurl += `&language=${languageSlug}`;
+      baseurl += `&language=${
+        language.slug != null ? language.slug : language
+      }`;
     }
 
     if (voivodeship != null) {
@@ -197,7 +194,9 @@ const SearchClassesPage = () => {
 
   const handleCitySelectChange = (e) => {
     setCity(e);
-    setVoivodeship(voivodeships.find((voi) => voi.id == e.region_id && voi));
+    if (e != null) {
+      setVoivodeship(voivodeships.find((voi) => voi.id == e.region_id && voi));
+    } else setVoivodeship(null);
   };
 
   const handleVoivodeshipSelectChange = (e) => {
@@ -207,6 +206,7 @@ const SearchClassesPage = () => {
   };
 
   const handleLanguageSelectChange = (e) => {
+    console.log(e);
     setLanguage(e);
   };
 
@@ -270,6 +270,7 @@ const SearchClassesPage = () => {
             <Select
               className="px-0 h-10 w-4/12 max-md:w-5/12 max-phone:w-full text-gray-500 border-none shadow-none mt-2"
               menuPortalTarget={document.body}
+              isClearable
               options={voivodeships}
               getOptionLabel={(option) => option.alternate_names}
               getOptionValue={(option) => option.slug}
@@ -289,6 +290,7 @@ const SearchClassesPage = () => {
             <Select
               className="px-0 h-10 w-4/12 max-md:w-5/12 text-gray-500 border-none shadow-none mt-2"
               menuPortalTarget={document.body}
+              isClearable
               options={cities}
               onInputChange={(e) => {
                 fetchCities(e);
@@ -310,20 +312,16 @@ const SearchClassesPage = () => {
             <Select
               className="px-0 h-10 w-4/12 max-md:w-5/12 text-gray-500 border-none shadow-none mt-2"
               menuPortalTarget={document.body}
+              isClearable
               options={languages}
-              value={
-                language != null
-                  ? language
-                  : languageSlug != null
-                  ? languages?.find(
-                      (language) => language.slug == languageSlug && language
-                    )
-                  : ""
-              }
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.slug}
               placeholder={<span className="text-gray-400">Język</span>}
               onChange={(e) => handleLanguageSelectChange(e)}
+              value={
+                language != null &&
+                languages.find((lang) => lang.slug == language && lang)
+              }
               noOptionsMessage={({ inputValue }) =>
                 !inputValue ? "Wpisz tekst..." : "Nie znaleziono"
               }
@@ -387,7 +385,6 @@ const SearchClassesPage = () => {
       ) : (
         <section className="mb-10">
           <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto gap-y-3">
-            {console.log(classes)}
             {classes == null && (
               <h1 className="text-lg">
                 Brak wyników dopasowanych do podanych kryteriów.

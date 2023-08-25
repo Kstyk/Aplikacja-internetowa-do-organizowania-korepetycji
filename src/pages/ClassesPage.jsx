@@ -175,7 +175,7 @@ const ClassesPage = () => {
             </div>
             <div className="card border-[1px] border-base-200 p-4 rounded-none bg-white md:w-3/12 gap-y-5 max-md:w-full">
               <div>
-                <h2 className="text-lg border-b-2 border-base-200">
+                <h2 className="block uppercase tracking-wide text-gray-700 text-base font-bold border-b-[1px] border-base-100 mb-2">
                   O nuaczycielu
                 </h2>
                 <div className="text-sm pt-2">
@@ -185,7 +185,7 @@ const ClassesPage = () => {
                 </div>
               </div>
               <div>
-                <h2 className="text-lg border-b-2 border-base-200">
+                <h2 className="block uppercase tracking-wide text-gray-700 text-base font-bold border-b-[1px] border-base-100 mb-2">
                   Doświadczenie nauczyciela
                 </h2>
                 <div className="text-sm pt-2">

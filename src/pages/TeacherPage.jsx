@@ -20,7 +20,6 @@ const TeacherPage = () => {
     await api
       .get(`/api/users/profile/${teacherId}`)
       .then((res) => {
-        console.log(res.data);
         setProfile(res.data);
       })
       .catch((err) => {
@@ -175,35 +174,35 @@ const TeacherPage = () => {
                   </div>
                 </div>
                 <div className="border-b-2 border-base-100 my-4"></div>
-                <section className="flex flex-col gap-y-3">
+                <section className="flex flex-col gap-y-5">
                   <article className="describe">
-                    <h2 className="text-xl border-b-[1px] border-base-100">
+                    <h2 className="block uppercase tracking-wide text-gray-700 text-lg font-bold border-b-[1px] border-base-100 mb-2">
                       O mnie
                     </h2>
                     {profile?.description == "" ||
                     profile?.description == null ? (
                       <p className="pl-2">Brak opisu.</p>
                     ) : (
-                      <p className="pl-2">
+                      <div className="pl-2">
                         {parse("" + profile?.description + "")}
-                      </p>
+                      </div>
                     )}
                   </article>
                   <article className="experience">
-                    <h2 className="text-xl border-b-[1px] border-base-100">
+                    <h2 className="block uppercase tracking-wide text-gray-700 text-lg font-bold border-b-[1px] border-base-100 mb-2">
                       Doświadczenie
                     </h2>
                     {profile?.experience == "" ||
                     profile?.experience == null ? (
                       <p className="pl-2">Brak określonego doświadczenia.</p>
                     ) : (
-                      <p className="pl-2">
+                      <div className="pl-2">
                         {parse("" + profile?.experience + "")}
-                      </p>
+                      </div>
                     )}
                   </article>
                   <article className="known-languages">
-                    <h2 className="text-xl border-b-[1px] border-base-100 mb-2">
+                    <h2 className="block uppercase tracking-wide text-gray-700 text-lg font-bold border-b-[1px] border-base-100 mb-2">
                       Znane języki
                     </h2>
                     {profile?.known_languages.length == 0 && (
@@ -226,11 +225,11 @@ const TeacherPage = () => {
                     </ul>
                   </article>
                   <article className="known-languages">
-                    <h2 className="text-xl border-b-[1px] border-base-100 mb-2">
+                    <h2 className="block uppercase tracking-wide text-gray-700 text-lg font-bold border-b-[1px] border-base-100 mb-2">
                       Prowadzone zajęcia
                     </h2>
-                    {profile?.known_languages.length == 0 && (
-                      <p className="pl-2">Brak określonych języków</p>
+                    {profile?.classes?.length == 0 && (
+                      <p className="pl-2">Brak zajęć</p>
                     )}
                     <ul className="pl-2">
                       {classes.map((classTeacher, i) => (

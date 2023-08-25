@@ -16,6 +16,7 @@ import BuyClassesPage from "./pages/BuyClassesPage";
 import TeacherPage from "./pages/TeacherPage";
 import EditBaseProfile from "./pages/EditBaseProfile";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
+import EditMoreInfosPage from "./pages/EditMoreInfosPage";
 
 function App() {
   return (
@@ -53,6 +54,14 @@ function App() {
             element={
               <PrivateRoute>
                 <ChangePasswordPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profil/edytuj-dodatkowe"
+            element={
+              <PrivateRoute>
+                <EditMoreInfosPage />
               </PrivateRoute>
             }
           />
