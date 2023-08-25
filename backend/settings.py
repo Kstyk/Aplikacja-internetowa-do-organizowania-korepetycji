@@ -204,6 +204,7 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [("127.0.0.1", 6379)],
+            # "hosts": [("redis://:EeWd2DciDmI7nsDs4kLJTh9N8tY7qSHjxAzCaIIPxto=@korepetycje-redis.redis.cache.windows.net:6379/0")],
         },
     },
 }

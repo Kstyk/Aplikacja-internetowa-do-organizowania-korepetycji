@@ -128,6 +128,20 @@ class UserProfileView(generics.RetrieveAPIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+class LoggeUserProfileView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserProfileSerializer
+    queryset = UserDetails.objects.all()
+
+    def get_object(self):
+        user = self.request.user
+
+        try:
+            return self.queryset.get(user__id=user.id)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
 class VoivodeshipListView(generics.ListAPIView):
     serializer_class = VoivodeshipSerializer
     queryset = Region.objects.all()
