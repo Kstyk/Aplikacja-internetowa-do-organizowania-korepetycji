@@ -394,12 +394,14 @@ const SearchClassesPage = () => {
               <ClassesCard key={classes.id} classes={classes} />
             ))}
           </div>
-          <Pagination
-            totalResults={totalResults}
-            totalPages={totalPages}
-            currentPage={currentPage}
-            search={searchTutors}
-          />
+          {totalPages > 1 && (
+            <Pagination
+              totalResults={totalResults}
+              totalPages={totalPages}
+              currentPage={currentPage}
+              search={searchTutors}
+            />
+          )}
         </section>
       )}
     </div>

@@ -67,9 +67,9 @@ const ClassesCard = (props) => {
               teacherId: classes?.teacher?.user?.id,
             }}
           >
-            <div className="flex flex-row align-middle items-center border-b-[1px] border-base-200 pb-1 mb-1">
-              <div className="avatar">
-                <div className="w-20 rounded-full">
+            <div className="flex flex-row align-middle items-center border-b-[1px] border-base-200 pb-1 mb-1 gap-x-5">
+              <div className="avatar py-3">
+                <div className="w-20 rounded-full hover:ring ring-primary ring-offset-base-100 ring-offset-2 transition-all duration-200">
                   <img
                     src={
                       classes?.teacher?.profile_image == null
@@ -85,10 +85,12 @@ const ClassesCard = (props) => {
               </h2>
             </div>
           </Link>
-          <div className="description text-justify text-sm">
+          <div className="description text-justify text-sm pt-1">
             {classes.description.length > 250
-              ? classes.description.substring(0, 250) + "..."
-              : classes.description}
+              ? classes.description
+                  .replace(/(<([^>]+)>)/gi, " ")
+                  .substring(0, 250) + "..."
+              : classes.description.replace(/(<([^>]+)>)/gi, " ")}
           </div>
           <div className="phone:hidden border-t-[1px] pt-2 mt-2 border-base-200 flex flex-row items-center">
             <div className="pr-2 border-r-[1px] border-base-200">
