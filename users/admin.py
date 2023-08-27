@@ -43,14 +43,6 @@ class CustomUserDetailsAdmin(admin.ModelAdmin):
     user_email.short_description = "Email użytkownika"
 
 
-def city_name():
-    return [(city, city.name) for city in City.objects.all()]
-
-
-def voivodeship_name():
-    return [(voivodeship, voivodeship.name) for voivodeship in Region.objects.all()]
-
-
 class AddressForm(forms.ModelForm):
     class Meta:
         model = Address
@@ -62,7 +54,7 @@ class AddressForm(forms.ModelForm):
 
 class CustomAddressAdmin(admin.ModelAdmin):
     model = Address
-    list_display = ("get_voivodeship_name", "postal_code",
+    list_display = ("get_voivodeship_name", "get_city_name", "postal_code",
                     "street", "building_number")
     form = AddressForm
 
@@ -70,6 +62,10 @@ class CustomAddressAdmin(admin.ModelAdmin):
         return obj.voivodeship.name
 
     get_voivodeship_name.short_description = "Województwo"
+
+    def get_city_name(self, obj):
+        return obj.city.name
+    get_city_name.short_description = "Miasto"
 
 
 admin.site.register(User, CustomUserAdmin)

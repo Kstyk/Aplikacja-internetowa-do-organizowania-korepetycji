@@ -81,28 +81,18 @@ class BaseUserView(generics.RetrieveAPIView):
         return self.request.user
 
 
-class UserDetailsCreateView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        data = request.data
-        data["user"] = request.user.id
-        serializer = CreateOrUpdateUserDetailsSerializer(data=data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 class UserDetailsUpdateView(generics.UpdateAPIView):
     queryset = UserDetails.objects.all()
     serializer_class = CreateOrUpdateUserDetailsSerializer
     permission_classes = [IsOwnerProfile]
-    lookup_field = 'pk'
+
+    def get_object(self):
+        user = self.request.user
+        userdetails = UserDetails.objects.filter(user=user).first()
+        return userdetails
 
     def put(self, request, *args, **kwargs):
+        print(self.get_object())
         instance = self.get_object()
         serializer = self.get_serializer(
             instance, data=request.data, partial=True)

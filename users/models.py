@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from classes.models import Language
 from multiselectfield import MultiSelectField
 from cities_light.models import City, Region
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, MinValueValidator, MaxValueValidator
 # Create your models here.
 
 
@@ -71,15 +71,15 @@ class User(AbstractUser):
 class Address(models.Model):
     voivodeship = models.ForeignKey(
         Region,
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE, null=True, blank=True,
         limit_choices_to={'country__name': 'Poland'},
     )
     city = models.ForeignKey(
         City,
         on_delete=models.CASCADE,
-        limit_choices_to={'country__name': 'Poland'},
+        limit_choices_to={'country__name': 'Poland'}, null=True, blank=True,
     )
-    postal_code = models.CharField(max_length=6)
+    postal_code = models.CharField(max_length=6, null=True, blank=True)
     street = models.CharField(max_length=50, null=True, blank=True)
     building_number = models.CharField(max_length=10, null=True, blank=True)
 
@@ -106,7 +106,7 @@ class UserDetails(models.Model):
         upload_to='images/profile_images', null=True, blank=True)
     description = models.TextField(blank=True, null=True)
     year_of_birth = models.IntegerField(
-        blank=True, null=True)
+        validators=[MinValueValidator(1900), MaxValueValidator(2023)], null=True, blank=True)
     phone_number = models.CharField(
         blank=True, null=True, max_length=20, unique=True, error_messages={
             'unique': 'Użytkownik o podanym numerze telefonu już istnieje.',

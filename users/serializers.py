@@ -98,10 +98,16 @@ class AddressSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CreateOrUpdateAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = '__all__'
+
+
 class CreateOrUpdateUserDetailsSerializer(serializers.ModelSerializer):
-    address = AddressSerializer(required=False)
     place_of_classes = fields.MultipleChoiceField(
         choices=LOCATION_CHOICES, required=False)
+    address = CreateOrUpdateAddressSerializer(required=False)
 
     class Meta:
         model = UserDetails
