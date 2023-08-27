@@ -2,7 +2,9 @@ import { Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import Navbar from "./components/Navbar";
-import PrivateRoute from "./utils/PrivateRoute";
+import PrivateRoute from "./components/AccessComponents/PrivateRoute";
+import TeacherAllowed from "./components/AccessComponents/TeacherAllowed";
+import StudentAllowed from "./components/AccessComponents/StudentAllowed";
 import ProfilePage from "./pages/ProfilePage";
 import { AuthProvider } from "./context/AuthContext";
 import RegistrationPage from "./pages/RegistrationPage";
@@ -17,6 +19,8 @@ import TeacherPage from "./pages/TeacherPage";
 import EditBaseProfile from "./pages/EditBaseProfile";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 import EditMoreInfosPage from "./pages/EditMoreInfosPage";
+import ChangeAvatarPage from "./pages/ChangeAvatarPage";
+import StudentProfilePage from "./pages/StudentProfilePage";
 
 function App() {
   return (
@@ -31,14 +35,28 @@ function App() {
 
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationPage />} />
-          <Route
-            path="/profil"
-            element={
-              <PrivateRoute>
-                <ProfilePage />
-              </PrivateRoute>
-            }
-          />
+
+          <Route element={<TeacherAllowed />}>
+            <Route
+              path="/profil"
+              element={
+                <PrivateRoute>
+                  <ProfilePage />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+
+          <Route element={<StudentAllowed />}>
+            <Route
+              path="/profil-ucznia"
+              element={
+                <PrivateRoute>
+                  <StudentProfilePage />
+                </PrivateRoute>
+              }
+            />
+          </Route>
 
           <Route
             path="/profil/edytuj"
@@ -66,6 +84,14 @@ function App() {
             }
           />
 
+          <Route
+            path="/profil/edytuj-avatar"
+            element={
+              <PrivateRoute>
+                <ChangeAvatarPage />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/create-room"
             element={

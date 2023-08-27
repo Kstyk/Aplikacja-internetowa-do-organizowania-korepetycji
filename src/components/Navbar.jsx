@@ -45,7 +45,7 @@ const Navbar = () => {
                 >
                   <li>
                     <Link
-                      to="/profil"
+                      to="/profil-ucznia"
                       className="focus:bg-base-300  rounded-none"
                     >
                       Profil
@@ -79,7 +79,12 @@ const Navbar = () => {
                           </Link>
                         </li>
                         <li>
-                          <Link className="rounded-none">Zmień avatar</Link>
+                          <Link
+                            to="/profil/edytuj-avatar"
+                            className="rounded-none"
+                          >
+                            Zmień avatar
+                          </Link>
                         </li>
                         <li>
                           <Link
@@ -174,7 +179,10 @@ const Navbar = () => {
                           </Link>
                         </li>
                         <li>
-                          <Link className="focus:bg-base-300 hover:bg-base-200">
+                          <Link
+                            to="/profil/edytuj-avatar"
+                            className="focus:bg-base-300 hover:bg-base-200"
+                          >
                             Zmień avatar
                           </Link>
                         </li>
