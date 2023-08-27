@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
         setAuthTokens(res.data);
         setUser(jwtDecode(res.data.access));
         localStorage.setItem("authTokens", JSON.stringify(res.data));
-        nav("/profile");
+        nav("/profil");
       })
       .catch((err) => {
         setError(err.response.data.error);
