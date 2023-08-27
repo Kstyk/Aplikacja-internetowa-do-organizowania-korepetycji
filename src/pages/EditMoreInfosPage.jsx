@@ -8,7 +8,7 @@ import Select from "react-select";
 import showSuccessAlert from "../components/messages/SwalAlertSuccess";
 
 const EditMoreInfosPage = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const api = useAxios();
 
   const [backendErrors, setBackendErrors] = useState({});
@@ -525,7 +525,6 @@ const EditMoreInfosPage = () => {
                     <Controller
                       name="address.city"
                       control={control}
-                      // onChange={(e) => handleCitySelectChange(e)}
                       {...register("address.city", editProfile.city)}
                       render={({ field }) => (
                         <Select

@@ -224,7 +224,7 @@ const TeacherPage = () => {
                       ))}
                     </ul>
                   </article>
-                  <article className="known-languages">
+                  <article className="classes">
                     <h2 className="block uppercase tracking-wide text-gray-700 text-lg font-bold border-b-[1px] border-base-100 mb-2">
                       Prowadzone zajęcia
                     </h2>
@@ -232,7 +232,7 @@ const TeacherPage = () => {
                       <p className="pl-2">Brak zajęć</p>
                     )}
                     <ul className="pl-2">
-                      {classes.map((classTeacher, i) => (
+                      {classes?.map((classTeacher, i) => (
                         <li
                           className="hover:bg-base-100 transition-all duration-150 ease-linear p-2 border-b-[1px]  border-base-300 mb-2 flex flex-row items-center gap-x-2"
                           key={i}
