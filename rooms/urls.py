@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import create_room, get_room, get_user_rooms, MessageViewSet, get_users_without_room_with_requestuser, get_room_users
+from .views import create_room, get_room, get_user_rooms, MessageViewSet, get_users_without_room_with_requestuser, get_room_users, get_files_in_room, download_file, show_file, FileUploadView
 
 urlpatterns = [
     path('messages/',
@@ -10,5 +10,10 @@ urlpatterns = [
     path('all-rooms/', get_user_rooms, name='get_all_rooms'),
     path('<str:room_id>/', get_room, name='get_room'),
     path('room-users/<str:room_id>/', get_room_users, name='room-users'),
-
+    path('<str:room_id>/files/', get_files_in_room, name='get_files_in_room'),
+    path('file/<uuid:file_id>/download/',
+         download_file, name='download_file'),
+    path('file/<uuid:file_id>/show/',
+         show_file, name='show_file'),
+    path('<str:room_id>/upload/', FileUploadView.as_view(), name='file-upload'),
 ]

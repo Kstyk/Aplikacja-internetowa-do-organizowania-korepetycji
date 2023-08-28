@@ -2,7 +2,8 @@ from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .serializers import RoomSerializer, MessageSerializer
+from django.http import HttpResponse
+from .serializers import RoomSerializer, MessageSerializer, FileSerializer, FileUploadSerializer
 from users.models import User, UserDetails
 from users.serializers import UserSerializer, UserProfileSerializer
 import uuid
@@ -11,7 +12,11 @@ from .paginaters import MessagePagination
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.viewsets import GenericViewSet
 from .exceptions import AccessDeniedForRoom
-from .models import Room, Message
+from .models import Room, Message, File
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.core.files.storage import default_storage
 
 
 @api_view(['POST'])
@@ -128,3 +133,65 @@ class MessageViewSet(ListModelMixin, GenericViewSet):
             .order_by("-timestamp")
         )
         return queryset
+
+
+@api_view(['GET'])
+def get_files_in_room(request, room_id):
+    try:
+        room = Room.objects.get(room_id=room_id)
+    except Room.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    files = File.objects.filter(room=room)
+
+    serializer = FileSerializer(files, many=True)
+    return Response(serializer.data)
+
+
+def download_file(request, file_id):
+    file_obj = get_object_or_404(File, id=file_id)
+
+    with open(file_obj.file_path.path, 'rb') as file:
+        response = HttpResponse(
+            file.read(), content_type='application/octet-stream')
+        response['Content-Disposition'] = f'attachment; filename="{file_obj.file_name}"'
+
+    return response
+
+
+def show_file(request, file_id):
+    file_obj = get_object_or_404(File, id=file_id)
+
+    with open(file_obj.file_path.path, 'rb') as file:
+        response = HttpResponse(
+            file.read(), content_type='application/octet-stream')
+        response['Content-Disposition'] = f'inline; filename="{file_obj.file_name}"'
+        response['X-Content-Type-Options'] = 'nosniff'
+
+    return response
+
+
+class FileUploadView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, room_id):
+        room = Room.objects.get(room_id=room_id)
+        owner = request.user
+        files_data = request.data.getlist('files[]')
+
+        print(len(files_data))
+        # Tworzenie listy plików do serializacji
+        serialized_data = []
+        for file_data in files_data:
+            serialized_data.append({
+                'room': room.room_id,
+                'owner': owner.id,
+                'file_path': file_data,
+            })
+
+        serializer = FileUploadSerializer(data=serialized_data, many=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

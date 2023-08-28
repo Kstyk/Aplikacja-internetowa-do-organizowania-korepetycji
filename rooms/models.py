@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 import uuid
-# Create your models here.
-# User = get_user_model()
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
 
 
 class Room(models.Model):
@@ -33,3 +33,26 @@ class Message(models.Model):
 
     def __str__(self):
         return f"Od {self.from_user.username} do {self.to_user.get_username}: {self.content} [{self.timestamp}]"
+
+
+def file_upload_path(instance, filename):
+    return f'files/{instance.room.room_id}/{filename}'
+
+
+class File(models.Model):
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    owner = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    file_name = models.CharField(max_length=255, blank=True, null=True)
+    file_path = models.FileField(upload_to=file_upload_path)
+    upload_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.file_name
+
+
+@receiver(pre_save, sender=File)
+def set_file_name(sender, instance, **kwargs):
+    if not instance.file_name:
+        instance.file_name = instance.file_path.name.split('/')[-1]

@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from .models import Room, Message
+from .models import Room, Message, File
 from users.serializers import UserSerializer
+import mimetypes
 
 
 class RoomSerializer(serializers.ModelSerializer):
@@ -36,3 +37,21 @@ class MessageSerializer(serializers.ModelSerializer):
 
     def get_to_user(self, obj):
         return UserSerializer(obj.to_user).data
+
+
+class FileSerializer(serializers.ModelSerializer):
+    mimetype = serializers.SerializerMethodField()
+
+    class Meta:
+        model = File
+        fields = '__all__'
+
+    def get_mimetype(self, obj):
+        content_type, _ = mimetypes.guess_type(obj.file_path.path)
+        return content_type
+
+
+class FileUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = ('room', 'owner', 'file_path')
