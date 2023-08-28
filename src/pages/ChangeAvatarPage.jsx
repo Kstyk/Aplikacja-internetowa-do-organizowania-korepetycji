@@ -49,7 +49,6 @@ const ChangeAvatarPage = () => {
         headers: { "content-type": "multipart/form-data" },
       })
       .then((res) => {
-        console.log(res.data);
         showSuccessAlert(
           "Sukces!",
           "Pomyślnie zaktualizowałeś swój avatar.",

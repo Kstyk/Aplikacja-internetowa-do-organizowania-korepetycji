@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import transparent_logo from "../assets/transparent_logo.png";
 import { Link } from "react-router-dom";
 import useAxios from "../utils/useAxios";
+import { backendUrl } from "../variables/backendUrl";
 
 const RegistrationPage = () => {
   const api = useAxios();
@@ -55,7 +56,7 @@ const RegistrationPage = () => {
     data.role = role;
 
     axios
-      .post("http://localhost:8000/api/users/register/", data, {
+      .post(`${backendUrl}/api/users/register/`, data, {
         headers: {
           "Content-Type": "application/json",
         },

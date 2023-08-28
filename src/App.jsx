@@ -10,7 +10,7 @@ import { AuthProvider } from "./context/AuthContext";
 import RegistrationPage from "./pages/RegistrationPage";
 import CreateRoomPage from "./pages/CreateRoomPage";
 import StartedRoomsPage from "./pages/StartedRoomsPage";
-import Room from "./components/Room";
+import Room from "./components/RoomComponents/Room";
 import SearchClassesPage from "./pages/SearchClassesPage";
 import ClassesPage from "./pages/ClassesPage";
 import "animate.css";

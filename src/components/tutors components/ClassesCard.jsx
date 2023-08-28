@@ -3,6 +3,7 @@ import { MdOutlineLocationOn } from "react-icons/md";
 import guest from "../../assets/guest.png";
 import { AiOutlinePhone } from "react-icons/ai";
 import { Link, useParams } from "react-router-dom";
+import { backendUrl } from "../../variables/backendUrl";
 
 const ClassesCard = (props) => {
   const { classes } = props;
@@ -74,7 +75,7 @@ const ClassesCard = (props) => {
                     src={
                       classes?.teacher?.profile_image == null
                         ? guest
-                        : `http://localhost:8000${classes?.teacher?.profile_image}`
+                        : `${backendUrl}${classes?.teacher?.profile_image}`
                     }
                   />
                 </div>
