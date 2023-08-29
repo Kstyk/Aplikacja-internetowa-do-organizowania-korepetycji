@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import Chat from "./Chat";
 import { useParams } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
+import RoomContext from "../../context/RoomContext";
 import useAxios from "../../utils/useAxios";
 import LoadingComponent from "../LoadingComponent";
 import { useNavigate } from "react-router-dom";
@@ -11,13 +12,14 @@ import Files from "./Files";
 const Room = () => {
   const { roomId } = useParams();
   const { user, authTokens } = useContext(AuthContext);
+  const { selectedTab, setSelectedTab, setRoom } = useContext(RoomContext);
+
   let api = useAxios();
   const nav = useNavigate();
 
   const [value, setValue] = useState("1");
   const [receiver, setReceiver] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState(1);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -51,6 +53,7 @@ const Room = () => {
   };
 
   useEffect(() => {
+    setRoom(roomId);
     fetchReceiver();
   }, []);
 
@@ -63,43 +66,43 @@ const Room = () => {
           <div className="tabs z-50 bg-white mt-10 p-5 shadow-xl">
             <div
               className={`tab tab-bordered uppercase tracking-wide text-lg font-bold  hover:text-[#00000080] ${
-                activeTab == 1
+                selectedTab == 1
                   ? "!text-gray-700 border-b-gray-700 transition-all duration-300"
                   : "text-[#00000080]"
               }`}
               onClick={() => {
-                setActiveTab(1);
+                setSelectedTab(1);
               }}
             >
               Czat
             </div>
             <div
               className={`tab tab-bordered uppercase tracking-wide text-lg font-bold  hover:text-[#00000080] ${
-                activeTab == 2
+                selectedTab == 2
                   ? "!text-gray-700 border-b-gray-700 transition-all duration-300"
                   : "text-[#00000080]"
               }`}
               onClick={() => {
-                setActiveTab(2);
+                setSelectedTab(2);
               }}
             >
               Pliki
             </div>
             <div
               className={`tab tab-bordered uppercase tracking-wide text-lg font-bold  hover:text-[#00000080] ${
-                activeTab == 3
+                selectedTab == 3
                   ? "!text-gray-700 border-b-gray-700 transition-all duration-300"
                   : "text-[#00000080]"
               }`}
               onClick={() => {
-                setActiveTab(3);
+                setSelectedTab(3);
               }}
             >
               Terminarz
             </div>
           </div>
-          {activeTab == 1 && <Chat />}
-          {activeTab == 2 && <Files roomId={roomId} />}
+          {selectedTab == 1 && <Chat />}
+          {selectedTab == 2 && <Files roomId={roomId} />}
         </>
       )}
     </>

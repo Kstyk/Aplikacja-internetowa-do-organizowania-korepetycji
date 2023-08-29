@@ -7,13 +7,13 @@ import TeacherAllowed from "./components/AccessComponents/TeacherAllowed";
 import StudentAllowed from "./components/AccessComponents/StudentAllowed";
 import ProfilePage from "./pages/ProfilePage";
 import { AuthProvider } from "./context/AuthContext";
+import { RoomProvider } from "./context/RoomContext";
 import RegistrationPage from "./pages/RegistrationPage";
 import CreateRoomPage from "./pages/CreateRoomPage";
 import StartedRoomsPage from "./pages/StartedRoomsPage";
 import Room from "./components/RoomComponents/Room";
 import SearchClassesPage from "./pages/SearchClassesPage";
 import ClassesPage from "./pages/ClassesPage";
-import "animate.css";
 import BuyClassesPage from "./pages/BuyClassesPage";
 import TeacherPage from "./pages/TeacherPage";
 import EditBaseProfile from "./pages/EditBaseProfile";
@@ -112,7 +112,9 @@ function App() {
             path="/rooms/:roomId"
             element={
               <PrivateRoute>
-                <Room />
+                <RoomProvider>
+                  <Room />
+                </RoomProvider>
               </PrivateRoute>
             }
           />
@@ -132,7 +134,7 @@ function App() {
           <Route path="/classes/:classesId" element={<ClassesPage />} />
           <Route path="/classes/:classesId/buy" element={<BuyClassesPage />} />
           <Route path="/teachers/:teacherId" element={<TeacherPage />} />
-        </Routes>{" "}
+        </Routes>
       </AuthProvider>
     </div>
   );

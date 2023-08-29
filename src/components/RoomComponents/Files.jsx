@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useAxios from "../../utils/useAxios";
 import LoadingComponent from "../LoadingComponent";
 import { useForm } from "react-hook-form";
+import { ToastContainer, toast } from "react-toastify";
 
 const Files = ({ roomId }) => {
   const api = useAxios();
@@ -30,6 +31,18 @@ const Files = ({ roomId }) => {
         console.log(err);
       });
     setLoading(false);
+  };
+
+  const reloadFiles = async () => {
+    await api
+      .get(`api/rooms/${roomId}/files/`)
+      .then((res) => {
+        setFiles(res.data);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleDownload = async (file) => {
@@ -82,11 +95,30 @@ const Files = ({ roomId }) => {
         headers: { "content-type": "multipart/form-data" },
       })
       .then((res) => {
-        console.log(res);
-        fetchFiles();
+        toast.info("Pomyślnie dodano pliki.", {
+          position: "bottom-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        reloadFiles();
       })
       .catch((err) => {
-        console.log(err);
+        toast.error("Nieudany upload plików.", {
+          position: "bottom-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          className: "bg-base-200",
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
   };
 
@@ -129,6 +161,18 @@ const Files = ({ roomId }) => {
           </ul>
         </div>
       )}
+      <ToastContainer
+        position="bottom-center"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 };

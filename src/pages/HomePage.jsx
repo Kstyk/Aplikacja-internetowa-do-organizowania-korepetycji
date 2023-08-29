@@ -9,7 +9,7 @@ const HomePage = () => {
 
   const [languages, setLanguages] = useState([]);
   const [cities, setCities] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
   const fetchLanguages = async () => {
