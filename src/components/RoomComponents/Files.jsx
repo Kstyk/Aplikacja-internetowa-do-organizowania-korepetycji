@@ -3,12 +3,16 @@ import useAxios from "../../utils/useAxios";
 import LoadingComponent from "../LoadingComponent";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
-
+import dayjs from "dayjs";
+import { BsThreeDots } from "react-icons/bs";
+import FileTable from "./FileTable";
 const Files = ({ roomId }) => {
   const api = useAxios();
 
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   const {
     register,
@@ -45,6 +49,16 @@ const Files = ({ roomId }) => {
       });
   };
 
+  const handleSelectFile = (file, checked) => {
+    checked
+      ? setSelectedFiles((prev) => [...prev, file])
+      : setSelectedFiles((prev) => prev.filter((f) => f.id !== file.id));
+  };
+
+  const deleteSelected = () => {
+    console.log(selectedFiles);
+  };
+
   const handleDownload = async (file) => {
     await api
       .get(`api/rooms/file/${file.id}/download/`, {
@@ -77,9 +91,14 @@ const Files = ({ roomId }) => {
           new Blob([res.data], { type: file.mimetype })
         );
 
-        const newWindow = window.open(fileUrl);
+        const newWindow = window.open(fileUrl, "_blank");
+        newWindow.name = file.file_name;
+        console.log(newWindow);
+        setTimeout(function () {
+          newWindow.document.title = file.file_name;
+        }, 100);
+
         if (newWindow) {
-          newWindow.document.title = "My Custom Title";
         } else {
           console.error("Pop-up window was blocked by the browser.");
         }
@@ -127,7 +146,7 @@ const Files = ({ roomId }) => {
   }, [roomId]);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col">
       <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 "></div>
       {loading ? (
         <LoadingComponent message="Ładowanie informacji o plikach..." />
@@ -151,14 +170,16 @@ const Files = ({ roomId }) => {
             </button>
           </form>
           <h2>Files in the Room</h2>
-          <ul>
-            {files?.map((file) => (
-              <li key={file.id} className="flex justify-between">
-                <span onClick={() => showFile(file)}>{file.file_name}</span>
-                <button onClick={() => handleDownload(file)}>Download</button>
-              </li>
-            ))}
-          </ul>
+
+          <FileTable
+            files={files}
+            handleDownload={handleDownload}
+            showFile={showFile}
+            handleSelectFile={handleSelectFile}
+            setSelectedFiles={setSelectedFiles}
+            deleteSelected={deleteSelected}
+            selectedFiles={selectedFiles}
+          />
         </div>
       )}
       <ToastContainer

@@ -63,7 +63,7 @@ const Room = () => {
         <LoadingComponent />
       ) : (
         <>
-          <div className="tabs z-50 bg-white mt-10 p-5 shadow-xl">
+          <div className="tabs z-50 bg-white mt-10 p-5 shadow-xl h-[100%]">
             <div
               className={`tab tab-bordered uppercase tracking-wide text-lg font-bold  hover:text-[#00000080] ${
                 selectedTab == 1
