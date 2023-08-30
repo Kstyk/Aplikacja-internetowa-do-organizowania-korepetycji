@@ -41,6 +41,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class FileSerializer(serializers.ModelSerializer):
     mimetype = serializers.SerializerMethodField()
+    owner = UserSerializer()
 
     class Meta:
         model = File

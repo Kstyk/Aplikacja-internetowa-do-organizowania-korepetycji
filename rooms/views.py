@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from .serializers import RoomSerializer, MessageSerializer, FileSerializer, FileUploadSerializer
 from users.models import User, UserDetails
 from users.serializers import UserSerializer, UserProfileSerializer
@@ -17,6 +17,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.files.storage import default_storage
+import zipfile
+import io
 
 
 @api_view(['POST'])
@@ -142,7 +144,22 @@ def get_files_in_room(request, room_id):
     except Room.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    sort_by_param = request.query_params.get('sort-by', 'file_name')
+    direction_param = request.query_params.get('direction', 'asc')
+
     files = File.objects.filter(room=room)
+
+    if (sort_by_param == 'owner'):
+        if direction_param == 'desc':
+            files = files.order_by('-owner__last_name', '-owner__first_name')
+        else:
+            files = files.order_by('owner__last_name', 'owner__first_name')
+
+    elif (sort_by_param != ''):
+        if direction_param == 'desc':
+            sort_by_param = '-' + sort_by_param
+
+        files = files.order_by(sort_by_param)
 
     serializer = FileSerializer(files, many=True)
     return Response(serializer.data)
@@ -159,14 +176,36 @@ def download_file(request, file_id):
     return response
 
 
+@api_view(['POST'])
+def download_files(request):
+    try:
+        files = request.data.get('files')
+        in_memory_zip = io.BytesIO()
+
+        with zipfile.ZipFile(in_memory_zip, 'w') as zip:
+            for file in files:
+                file_obj = get_object_or_404(File, id=file['id'])
+
+                with open(file_obj.file_path.path, 'rb') as file_opened:
+                    zip.writestr(file_obj.file_name, file_opened.read())
+
+        response = HttpResponse(
+            in_memory_zip.getvalue(), content_type='application/zip')
+        response['Content-Disposition'] = 'attachment; filename="files.zip"'
+
+        return response
+
+    except Exception as e:
+        return Response(e, status=status.HTTP_400_BAD_REQUEST)
+
+
 def show_file(request, file_id):
     file_obj = get_object_or_404(File, id=file_id)
 
     with open(file_obj.file_path.path, 'rb') as file:
         response = HttpResponse(
             file.read(), content_type='application/octet-stream')
-        response['Content-Disposition'] = f'inline; filename="{file_obj.file_name}"'
-        response['X-Content-Type-Options'] = 'nosniff'
+        response['Content-Disposition'] = f'attachment; filename="{file_obj.file_name}"'
 
     return response
 
@@ -195,3 +234,17 @@ class FileUploadView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FileDeleteView(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            files = request.data.get('files')
+
+            for file in files:
+                file_obj = File.objects.get(id=file['id'])
+                file_obj.delete()
+
+            return Response({'message': 'Files deleted successfully.'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
