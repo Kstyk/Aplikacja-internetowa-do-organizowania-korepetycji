@@ -1,27 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import useAxios from "../../utils/useAxios";
 import LoadingComponent from "../LoadingComponent";
-import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
-import dayjs from "dayjs";
-import { BsThreeDots } from "react-icons/bs";
 import FileTable from "./FileTable";
 const Files = ({ roomId }) => {
   const api = useAxios();
+  const inputFileRef = useRef(null);
 
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sortDirection, setSortDirection] = useState("desc");
 
   const [selectedFiles, setSelectedFiles] = useState([]);
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    mode: "all",
-  });
 
   const fetchFiles = async () => {
     setLoading(true);
@@ -29,7 +19,6 @@ const Files = ({ roomId }) => {
       .get(`api/rooms/${roomId}/files/`)
       .then((res) => {
         setFiles(res.data);
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -37,12 +26,18 @@ const Files = ({ roomId }) => {
     setLoading(false);
   };
 
-  const reloadFiles = async () => {
+  const reloadFiles = async (sortBy = "") => {
+    if (sortBy != "") {
+      if (sortDirection == "asc") setSortDirection("desc");
+      else setSortDirection("asc");
+    }
+
     await api
-      .get(`api/rooms/${roomId}/files/`)
+      .get(
+        `api/rooms/${roomId}/files/?direction=${sortDirection}&sort-by=${sortBy}`
+      )
       .then((res) => {
         setFiles(res.data);
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -55,8 +50,84 @@ const Files = ({ roomId }) => {
       : setSelectedFiles((prev) => prev.filter((f) => f.id !== file.id));
   };
 
-  const deleteSelected = () => {
-    console.log(selectedFiles);
+  const deleteSelected = async () => {
+    if (selectedFiles.length == 0) {
+      return;
+    }
+
+    const data = {
+      files: selectedFiles,
+    };
+
+    await api
+      .post(`api/rooms/file/delete/`, data)
+      .then((res) => {
+        setSelectedFiles([]);
+        if (res.status == 200) {
+          toast.info("Pomyślnie usunięto pliki.", {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          reloadFiles();
+        }
+      })
+      .catch((err) => {
+        toast.error("Nieudane usunięcie plików.", {
+          position: "bottom-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          className: "bg-base-200",
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      });
+  };
+
+  const handleDeleteSingleFile = async (file) => {
+    const data = {
+      files: [file],
+    };
+
+    await api
+      .post(`api/rooms/file/delete/`, data)
+      .then((res) => {
+        setSelectedFiles([]);
+        if (res.status == 200) {
+          toast.info("Pomyślnie usunięto plik.", {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          reloadFiles();
+        }
+      })
+      .catch((err) => {
+        toast.error("Nieudane usunięcie pliku.", {
+          position: "bottom-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          className: "bg-base-200",
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      });
   };
 
   const handleDownload = async (file) => {
@@ -81,6 +152,37 @@ const Files = ({ roomId }) => {
       });
   };
 
+  const handleDownloadFewFiles = async () => {
+    if (selectedFiles.length == 0) {
+      return;
+    }
+
+    const data = {
+      files: selectedFiles,
+    };
+
+    await api
+      .post(`api/rooms/download-files/`, data, {
+        responseType: "blob",
+      })
+      .then((res) => {
+        console.log(res);
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        if (typeof window.navigator.msSaveBlob === "function") {
+          window.navigator.msSaveBlob(res.data, "files.zip");
+        } else {
+          link.setAttribute("download", "files.zip");
+          document.body.appendChild(link);
+          link.click();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const showFile = async (file) => {
     await api
       .get(`api/rooms/file/${file.id}/show/`, {
@@ -92,28 +194,23 @@ const Files = ({ roomId }) => {
         );
 
         const newWindow = window.open(fileUrl, "_blank");
-        newWindow.name = file.file_name;
-        console.log(newWindow);
-        setTimeout(function () {
-          newWindow.document.title = file.file_name;
-        }, 100);
 
         if (newWindow) {
-        } else {
-          console.error("Pop-up window was blocked by the browser.");
+          setTimeout(function () {
+            newWindow.document.title = file.file_name;
+          }, 500);
         }
       })
       .catch((err) => {});
   };
 
   const onSubmit = (data) => {
-    console.log(data);
-
     api
       .post(`api/rooms/${roomId}/upload/`, data, {
         headers: { "content-type": "multipart/form-data" },
       })
       .then((res) => {
+        inputFileRef.current.value = null;
         toast.info("Pomyślnie dodano pliki.", {
           position: "bottom-center",
           autoClose: 3000,
@@ -153,7 +250,7 @@ const Files = ({ roomId }) => {
       ) : (
         <div className="card rounded-none mt-10 bg-white p-6 shadow-xl">
           <form
-            onSubmit={handleSubmit(onSubmit)}
+            // onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col justify-center w-10/12 space-y-4 max-md:w-full mx-auto items-center"
           >
             <input
@@ -162,12 +259,13 @@ const Files = ({ roomId }) => {
               multiple
               className="file-input file-input-bordered w-full rounded-none bg-transparent hover:border-[#aaabac]"
               name="files"
+              ref={inputFileRef}
               required
-              {...register("files")}
+              onChange={(e) => onSubmit({ files: e.target.files })}
             />
-            <button className="btn btn-outline no-animation w-6/12 max-md:w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400">
+            {/* <button className="btn btn-outline no-animation w-6/12 max-md:w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400">
               Zmień avatar
-            </button>
+            </button> */}
           </form>
           <h2>Files in the Room</h2>
 
@@ -178,7 +276,10 @@ const Files = ({ roomId }) => {
             handleSelectFile={handleSelectFile}
             setSelectedFiles={setSelectedFiles}
             deleteSelected={deleteSelected}
+            handleDownloadFewFiles={handleDownloadFewFiles}
             selectedFiles={selectedFiles}
+            handleDeleteSingleFile={handleDeleteSingleFile}
+            reloadFiles={reloadFiles}
           />
         </div>
       )}

@@ -11,28 +11,39 @@ const FileTable = (props) => {
     deleteSelected,
     setSelectedFiles,
     selectedFiles,
+    handleDeleteSingleFile,
+    handleDownloadFewFiles,
+    reloadFiles,
   } = props;
 
   return (
     <div className="container mx-auto text-gray-100 mt-5">
-      <div className="btn-actions flex gap-x-1 border-y-[1px] border-gray-700 border-opacity-20  justify-end">
-        <button
-          onClick={() => deleteSelected()}
-          className="btn bg-transparent rounded-none hover:bg-transparent h-[30px] min-h-0 text-xs border-none hover:text-sm transition-all duration-300"
-        >
-          Usuń wybrane
-        </button>
-        <button className="btn bg-transparent rounded-none hover:bg-transparent h-[30px] min-h-0 text-xs border-none hover:text-sm transition-all duration-300">
-          Pobierz wybrane
-        </button>
+      <div className="btn-actions flex justify-between gap-x-1 border-y-[1px] border-gray-700 border-opacity-20">
+        <div className="hidden md:flex text-black uppercase font-bold text-xs border-none items-center">
+          Co zrobić z zaznaczonymi plikami
+        </div>
+        <section>
+          <button
+            onClick={() => deleteSelected()}
+            className="btn bg-transparent rounded-none hover:bg-transparent h-[30px] min-h-0 text-xs border-none hover:text-sm transition-all duration-300"
+          >
+            Usuń wybrane
+          </button>
+          <button
+            onClick={() => handleDownloadFewFiles()}
+            className="btn bg-transparent rounded-none hover:bg-transparent h-[30px] min-h-0 text-xs border-none hover:text-sm transition-all duration-300"
+          >
+            Pobierz wybrane
+          </button>
+        </section>
       </div>
       <div className="flex flex-col  text-xs">
-        <div className="flex text-left bg-transparent text-gray-700 border-b border-opacity-60 border-gray-700">
+        <div className="flex items-center justify-center text-left bg-transparent text-gray-700 border-b border-opacity-60 border-gray-700">
           <div className="flex items-center justify-center w-8 px-2 py-3 sm:p-3">
             <input
               type="checkbox"
               name="All"
-              className="w-3 h-3 rounded-sm accent-violet-400"
+              className="checkbox checkbox-sm"
               onChange={(e) =>
                 e.target.checked
                   ? setSelectedFiles(files)
@@ -40,15 +51,34 @@ const FileTable = (props) => {
               }
             />
           </div>
-          <div className="flex-1 px-2 py-3 sm:p-3">Plik</div>
-          <div className="hidden w-32 px-2 py-3 text-left sm:p-3 sm:block">
+          <div
+            className="flex-1 px-2 py-3 sm:p-3 cursor-pointer hover:font-bold transition-all duration-300"
+            onClick={() => reloadFiles("file_name")}
+            title="Sortuj po nazwie pliku"
+          >
+            Plik
+          </div>
+          <div
+            className="hidden w-32 px-2 py-3 text-left sm:p-3 sm:block cursor-pointer hover:font-bold transition-all duration-300"
+            title="Sortuj po autorze"
+            onClick={() => reloadFiles("owner")}
+          >
             Autor
           </div>
-          <div className="hidden w-24 px-2 py-3 text-left sm:p-3 sm:block">
+          <div
+            className="hidden w-24 px-2 py-3 text-left sm:p-3 sm:block cursor-pointer hover:font-bold transition-all duration-300"
+            onClick={() => reloadFiles("upload_date")}
+            title="Sortuj po dacie dodanie"
+          >
             Wysłane
           </div>
           <div className="w-12 sm:w-24 px-2 py-3 text-center sm:p-3">Akcje</div>
         </div>
+        {files.length == 0 && (
+          <span className="text-black italic text-center mt-3">
+            Brak plików.
+          </span>
+        )}
         {files?.map((file) => (
           <div
             key={file.id}
@@ -57,7 +87,7 @@ const FileTable = (props) => {
             <div className="flex items-center justify-center w-8 px-2 py-3 sm:p-3">
               <input
                 type="checkbox"
-                className="w-3 h-3 rounded-sm accent-violet-400"
+                className="checkbox checkbox-sm"
                 name="selectedFiles"
                 onChange={(e) => {
                   handleSelectFile(file, e.target.checked);
@@ -91,7 +121,7 @@ const FileTable = (props) => {
                   <li onClick={() => handleDownload(file)}>
                     <button className="rounded-none">Pobierz</button>
                   </li>
-                  <li>
+                  <li onClick={() => handleDeleteSingleFile(file)}>
                     <button className="rounded-none">Usuń</button>
                   </li>
                 </ul>
