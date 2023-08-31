@@ -114,3 +114,37 @@
 .rbc-events-container{
   width: 100%;
 }
+
+.classes-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 0;
+    border-width: 1px !important;
+    border-color: white !important;
+    background-color: rgb(211, 211, 211);
+    color:black;
+    text-align: center;
+    // padding-top: 0;
+
+  
+    &:hover {
+      background-color: rgb(168, 200, 221);
+    }
+
+    .rbc-event-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 0;
+        margin-top: 0;
+    }
+
+    // .rbc-event-label {
+    //   height: 0;
+    //   min-height: 0;
+    //   display: none;
+    // }
+}
+

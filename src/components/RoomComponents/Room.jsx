@@ -8,6 +8,7 @@ import LoadingComponent from "../LoadingComponent";
 import { useNavigate } from "react-router-dom";
 import showAlertError from "../messages/SwalAlertError";
 import Files from "./Files";
+import RoomPageSchedule from "./RoomPageSchedule";
 
 const Room = () => {
   const { roomId } = useParams();
@@ -103,6 +104,7 @@ const Room = () => {
           </div>
           {selectedTab == 1 && <Chat />}
           {selectedTab == 2 && <Files roomId={roomId} />}
+          {selectedTab == 3 && <RoomPageSchedule roomId={roomId} />}
         </>
       )}
     </>
