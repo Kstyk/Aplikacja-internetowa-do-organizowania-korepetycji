@@ -17,7 +17,7 @@ const FileTable = (props) => {
   } = props;
 
   return (
-    <div className="container mx-auto text-gray-100 mt-5">
+    <div className="container mx-auto text-gray-100">
       <div className="btn-actions flex justify-between gap-x-1 border-y-[1px] border-gray-700 border-opacity-20">
         <div className="hidden md:flex text-black uppercase font-bold text-xs border-none items-center">
           Co zrobić z zaznaczonymi plikami

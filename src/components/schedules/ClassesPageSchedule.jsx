@@ -12,7 +12,6 @@ import CustomToolbar from "./CustomToolbar";
 import Swal from "sweetalert2";
 
 const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
-  const [schedule, setSchedule] = useState([]);
   const [loading, setLoading] = useState(false);
   const [timeSlotsTeacher, setTimeSlotsTeacher] = useState([]);
   const [eventArray, setEventArray] = useState([]);
@@ -27,7 +26,6 @@ const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
     await api
       .get(`/api/classes/${classes?.teacher?.user?.id}/schedule`)
       .then((res) => {
-        setSchedule(res.data);
         setEvents(res.data);
       })
       .catch((err) => {

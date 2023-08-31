@@ -3,12 +3,16 @@ import useAxios from "../../utils/useAxios";
 import LoadingComponent from "../LoadingComponent";
 import { ToastContainer, toast } from "react-toastify";
 import FileTable from "./FileTable";
+import "./input.scss";
+
 const Files = ({ roomId }) => {
   const api = useAxios();
   const inputFileRef = useRef(null);
 
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [uploadingFile, setUploadingFile] = useState(false);
+
   const [sortDirection, setSortDirection] = useState("desc");
 
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -21,7 +25,19 @@ const Files = ({ roomId }) => {
         setFiles(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        if (err.response.status == 403) {
+          toast.error("Nie masz dostępu do tego pokoju.", {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            className: "bg-base-200",
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       });
     setLoading(false);
   };
@@ -40,7 +56,19 @@ const Files = ({ roomId }) => {
         setFiles(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        if (err.response.status == 403) {
+          toast.error("Nie masz dostępu do tego pokoju.", {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            className: "bg-base-200",
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       });
   };
 
@@ -78,17 +106,31 @@ const Files = ({ roomId }) => {
         }
       })
       .catch((err) => {
-        toast.error("Nieudane usunięcie plików.", {
-          position: "bottom-center",
-          autoClose: 3000,
-          hideProgressBar: true,
-          className: "bg-base-200",
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+        if (err.response.status == 403) {
+          toast.error("Nie masz dostępu do tego pokoju.", {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            className: "bg-base-200",
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        } else {
+          toast.error("Nieudane usunięcie pliku.", {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            className: "bg-base-200",
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       });
   };
 
@@ -116,17 +158,31 @@ const Files = ({ roomId }) => {
         }
       })
       .catch((err) => {
-        toast.error("Nieudane usunięcie pliku.", {
-          position: "bottom-center",
-          autoClose: 3000,
-          hideProgressBar: true,
-          className: "bg-base-200",
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+        if (err.response.status == 403) {
+          toast.error("Nie masz dostępu do tego pokoju.", {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            className: "bg-base-200",
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        } else {
+          toast.error("Nieudane usunięcie pliku.", {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            className: "bg-base-200",
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       });
   };
 
@@ -148,7 +204,19 @@ const Files = ({ roomId }) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        if (err.response.status == 403) {
+          toast.error("Nie masz dostępu do tego pokoju.", {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            className: "bg-base-200",
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       });
   };
 
@@ -179,7 +247,19 @@ const Files = ({ roomId }) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        if (err.response.status == 403) {
+          toast.error("Nie masz dostępu do tego pokoju.", {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            className: "bg-base-200",
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       });
   };
 
@@ -201,16 +281,31 @@ const Files = ({ roomId }) => {
           }, 500);
         }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        if (err.response.status == 403) {
+          toast.error("Nie masz dostępu do tego pokoju.", {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            className: "bg-base-200",
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+      });
   };
 
   const onSubmit = (data) => {
+    setUploadingFile(true);
     api
       .post(`api/rooms/${roomId}/upload/`, data, {
         headers: { "content-type": "multipart/form-data" },
       })
       .then((res) => {
-        inputFileRef.current.value = null;
+        setUploadingFile(false);
         toast.info("Pomyślnie dodano pliki.", {
           position: "bottom-center",
           autoClose: 3000,
@@ -224,17 +319,35 @@ const Files = ({ roomId }) => {
         reloadFiles();
       })
       .catch((err) => {
-        toast.error("Nieudany upload plików.", {
-          position: "bottom-center",
-          autoClose: 3000,
-          hideProgressBar: true,
-          className: "bg-base-200",
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+        setUploadingFile(false);
+        if (err.response.status == 403) {
+          toast.error("Nie masz dostępu do tego pokoju.", {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            className: "bg-base-200",
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        } else {
+          toast.error(
+            "Nieudany upload plików. Prawdopodobnie jeden z plików jest pusty.",
+            {
+              position: "bottom-center",
+              autoClose: 3000,
+              hideProgressBar: true,
+              className: "bg-base-200",
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            }
+          );
+        }
       });
   };
 
@@ -251,36 +364,55 @@ const Files = ({ roomId }) => {
         <div className="card rounded-none mt-10 bg-white p-6 shadow-xl">
           <form
             // onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col justify-center w-10/12 space-y-4 max-md:w-full mx-auto items-center"
+            className="flex flex-col justify-center w-full space-y-4 max-md:w-full mx-auto items-center"
           >
-            <input
-              type="file"
-              id="files"
-              multiple
-              className="file-input file-input-bordered w-full rounded-none bg-transparent hover:border-[#aaabac]"
-              name="files"
-              ref={inputFileRef}
-              required
-              onChange={(e) => onSubmit({ files: e.target.files })}
-            />
-            {/* <button className="btn btn-outline no-animation w-6/12 max-md:w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400">
-              Zmień avatar
-            </button> */}
-          </form>
-          <h2>Files in the Room</h2>
+            <div className="file-input-container">
+              <input
+                type="file"
+                id="files"
+                multiple
+                name="files"
+                ref={inputFileRef}
+                required
+                onChange={(e) => onSubmit({ files: e.target.files })}
+              />
 
-          <FileTable
-            files={files}
-            handleDownload={handleDownload}
-            showFile={showFile}
-            handleSelectFile={handleSelectFile}
-            setSelectedFiles={setSelectedFiles}
-            deleteSelected={deleteSelected}
-            handleDownloadFewFiles={handleDownloadFewFiles}
-            selectedFiles={selectedFiles}
-            handleDeleteSingleFile={handleDeleteSingleFile}
-            reloadFiles={reloadFiles}
-          />
+              <label htmlFor="files" className="custom-file-button">
+                <span className="uppercase text-xl phone:text-2xl font-bold tracking-wide">
+                  Wybierz pliki
+                </span>
+                <span className="uppercase text-sm text-slate-700">lub</span>
+                <span className="uppercase text-lg phone:text-xl font-bold tracking-wide">
+                  Przeciągnij je tutaj
+                </span>
+              </label>
+            </div>
+          </form>
+          <div className="my-5 border-b-2 border-gray-300"></div>
+          <h2 className="uppercase tracking-wide text-black text-lg font-bold">
+            Dodane pliki
+          </h2>
+          <section className="relative mt-2">
+            {uploadingFile && (
+              <div className="absolute left-[50%] right-[50%] top-[20%]">
+                <LoadingComponent message="Przesyłanie plików..." />
+              </div>
+            )}
+            <div className={`${uploadingFile ? "opacity-50" : "opacity-1"}`}>
+              <FileTable
+                files={files}
+                handleDownload={handleDownload}
+                showFile={showFile}
+                handleSelectFile={handleSelectFile}
+                setSelectedFiles={setSelectedFiles}
+                deleteSelected={deleteSelected}
+                handleDownloadFewFiles={handleDownloadFewFiles}
+                selectedFiles={selectedFiles}
+                handleDeleteSingleFile={handleDeleteSingleFile}
+                reloadFiles={reloadFiles}
+              />
+            </div>
+          </section>
         </div>
       )}
       <ToastContainer
