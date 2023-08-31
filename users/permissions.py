@@ -6,7 +6,6 @@ class IsStudent(BasePermission):
 
     def has_permission(self, request, view):
         if request.user.is_authenticated:
-            print(request.user.role.name)
             return request.user.role.name == 'Student'
         return False
 
@@ -16,7 +15,6 @@ class IsTeacher(BasePermission):
 
     def has_permission(self, request, view):
         if request.user.is_authenticated:
-            print(request.user.role.name)
             return request.user.role.name == 'Teacher'
         return False
 

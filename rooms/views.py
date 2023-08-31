@@ -17,6 +17,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.files.storage import default_storage
+from .permissions import IsInRoom
 import zipfile
 import io
 
@@ -138,9 +139,11 @@ class MessageViewSet(ListModelMixin, GenericViewSet):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated, IsInRoom])
 def get_files_in_room(request, room_id):
     try:
         room = Room.objects.get(room_id=room_id)
+
     except Room.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -165,6 +168,7 @@ def get_files_in_room(request, room_id):
     return Response(serializer.data)
 
 
+@permission_classes([IsAuthenticated, IsInRoom])
 def download_file(request, file_id):
     file_obj = get_object_or_404(File, id=file_id)
 
@@ -177,6 +181,7 @@ def download_file(request, file_id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated, IsInRoom])
 def download_files(request):
     try:
         files = request.data.get('files')
@@ -199,6 +204,7 @@ def download_files(request):
         return Response(e, status=status.HTTP_400_BAD_REQUEST)
 
 
+@permission_classes([IsAuthenticated, IsInRoom])
 def show_file(request, file_id):
     file_obj = get_object_or_404(File, id=file_id)
 
@@ -211,6 +217,7 @@ def show_file(request, file_id):
 
 
 class FileUploadView(APIView):
+    permission_classes = [IsAuthenticated, IsInRoom]
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, room_id):
@@ -218,7 +225,6 @@ class FileUploadView(APIView):
         owner = request.user
         files_data = request.data.getlist('files[]')
 
-        print(len(files_data))
         # Tworzenie listy plików do serializacji
         serialized_data = []
         for file_data in files_data:
@@ -237,6 +243,8 @@ class FileUploadView(APIView):
 
 
 class FileDeleteView(APIView):
+    permission_classes = [IsAuthenticated, IsInRoom]
+
     def post(self, request, *args, **kwargs):
         try:
             files = request.data.get('files')

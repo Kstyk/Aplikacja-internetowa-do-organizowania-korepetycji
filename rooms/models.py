@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 import uuid
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
+from django.core.exceptions import ValidationError
 
 
 class Room(models.Model):
@@ -45,7 +46,8 @@ class File(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     owner = models.ForeignKey('users.User', on_delete=models.CASCADE)
     file_name = models.CharField(max_length=255, blank=True, null=True)
-    file_path = models.FileField(upload_to=file_upload_path)
+    file_path = models.FileField(
+        upload_to=file_upload_path)
     upload_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -56,3 +56,8 @@ class FileUploadSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = ('room', 'owner', 'file_path')
+
+    def validate_file_path(self, value):
+        if value.size == 0:
+            raise serializers.ValidationError("Plik nie może być pustymmm.")
+        return value
