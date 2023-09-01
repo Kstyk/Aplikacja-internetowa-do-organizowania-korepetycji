@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import LoadingComponent from "../components/LoadingComponent";
 import Select from "react-select";
-import ClassesCard from "../components/tutors components/ClassesCard";
+import ClassesCard from "../components/ClassesComponents/ClassesCard";
 import Pagination from "../components/Pagination";
 
 const SearchClassesPage = () => {
@@ -25,6 +25,7 @@ const SearchClassesPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState();
   const [totalResults, setTotalResults] = useState();
+
   const [languages, setLanguages] = useState([]);
   const [cities, setCities] = useState([]);
   const [voivodeships, setVoivodeships] = useState([]);
@@ -85,7 +86,6 @@ const SearchClassesPage = () => {
   };
 
   const searchTutors = async (page) => {
-    setCurrentPage(page + 1);
     setLoading(true);
 
     let baseurl = `/api/classes/?page_size=10&page=${page}`;

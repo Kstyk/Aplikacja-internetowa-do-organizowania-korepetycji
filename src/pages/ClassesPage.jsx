@@ -14,7 +14,7 @@ const ClassesPage = () => {
   const api = useAxios();
 
   const [classes, setClasses] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { classesId } = useParams();
 
   const fetchClasses = async () => {
@@ -43,10 +43,10 @@ const ClassesPage = () => {
         <section className="mt-10 w-full max-phone:px-3 mb-10">
           <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300"></div>
 
-          <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-none mb-5 text-center p-4 border-[1px] border-base-200 flex flex-row justify-between items-center z-30">
+          <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-none mb-5 text-center p-4 border-[1px] border-base-200 flex flex-col phone:flex-row justify-between items-center z-30">
             <h1 className="text-center w-full">{classes?.name}</h1>
             <Link
-              className={`btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-2/12 ${
+              className={`btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full phone:w-4/12 ${
                 classes?.able_to_buy ? "" : "btn-disabled"
               }`}
               to={`/classes/${classes?.id}/buy`}

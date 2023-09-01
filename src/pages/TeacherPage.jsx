@@ -59,13 +59,13 @@ const TeacherPage = () => {
       ) : (
         <section className="mt-10 w-full max-phone:px-3 mb-10">
           <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300"></div>
-          <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-none mb-5 text-center p-4 border-[1px] border-base-200 flex flex-row justify-between items-center z-30">
+          <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-none mb-5 text-center p-4 border-[1px] border-base-200 flex flex-row justify-between items-center z-30 shadow-xl">
             <h1 className="text-center w-full">
               {profile?.user?.first_name} {profile?.user?.last_name}
             </h1>
           </div>
-          <div className="flex md:flex-row md:gap-x-2 max-md:flex-col">
-            <div className="card  border-[1px] border-base-200 py-4 rounded-none bg-white md:w-full max-md:w-full flex phone:flex-row max-phone:flex-col ">
+          <div className="flex md:flex-row md:gap-x-2 max-md:flex-col ">
+            <div className="card  border-[1px] border-base-200 py-4 rounded-none shadow-xl bg-white md:w-full max-md:w-full flex phone:flex-row max-phone:flex-col ">
               <div className="profile max-phone:pr-6 phone:pr-3 ml-3 w-4/12 max-phone:w-full border-r-[1px] border-base-300 flex flex-col justify-start items-center max-phone:order-1">
                 <div className="avatar">
                   <div className="w-20 rounded-full">
