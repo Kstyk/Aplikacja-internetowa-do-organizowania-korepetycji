@@ -362,10 +362,7 @@ const Files = ({ roomId }) => {
         <LoadingComponent message="Ładowanie informacji o plikach..." />
       ) : (
         <div className="card rounded-none mt-10 bg-white p-6 shadow-xl">
-          <form
-            // onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col justify-center w-full space-y-4 max-md:w-full mx-auto items-center"
-          >
+          <form className="flex flex-col justify-center w-full space-y-4 max-md:w-full mx-auto items-center">
             <div className="file-input-container">
               <input
                 type="file"
