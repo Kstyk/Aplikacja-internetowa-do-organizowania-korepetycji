@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status, generics
 from django.db.models import Q, F
 from django.db import IntegrityError, transaction
-from .paginators import ClassPagination
+from .paginators import ClassPagination, PurchaseHistoryPagination
 from users.permissions import IsTeacher, IsStudent
 from django.db.models import Count
 from cities_light.models import City, Region
@@ -88,6 +88,8 @@ def get_all_classes(request):
             'page_number': paginator.page.number,
             'total_pages': paginator.page.paginator.num_pages,
             'total_classes': paginator.page.paginator.count,
+            'prev': paginator.get_previous_link(),
+            'next': paginator.get_next_link(),
             'classes': serializer.data,
         }
 
@@ -232,3 +234,15 @@ def purchase_classes(request):
     purchase_serializer = PurchaseHistorySerializer(purchase)
 
     return Response(purchase_serializer.data, status=status.HTTP_201_CREATED)
+
+
+class PurchaseHistoryList(generics.ListAPIView):
+    serializer_class = PurchaseHistorySerializer
+    pagination_class = PurchaseHistoryPagination
+    permission_classes = [IsAuthenticated, IsStudent]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        queryset = PurchaseHistory.objects.filter(student=user)
+        return queryset
