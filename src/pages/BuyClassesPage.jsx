@@ -15,7 +15,7 @@ const BuyClassesPage = () => {
   const nav = useNavigate();
 
   const [classes, setClasses] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState([]);
   const [showSchedule, setShowSchedule] = useState(true);
   const [placeOfClasses, setPlaceOfClasses] = useState("online");
@@ -60,7 +60,7 @@ const BuyClassesPage = () => {
           () => {
             let roomid = res.data.room.room_id;
 
-            nav(`/rooms/${roomid}`);
+            nav(`/pokoj/${roomid}`);
           }
         );
       })

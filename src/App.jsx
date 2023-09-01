@@ -9,7 +9,6 @@ import ProfilePage from "./pages/ProfilePage";
 import { AuthProvider } from "./context/AuthContext";
 import { RoomProvider } from "./context/RoomContext";
 import RegistrationPage from "./pages/RegistrationPage";
-import CreateRoomPage from "./pages/CreateRoomPage";
 import StartedRoomsPage from "./pages/StartedRoomsPage";
 import Room from "./components/RoomComponents/Room";
 import SearchClassesPage from "./pages/SearchClassesPage";
@@ -21,6 +20,7 @@ import ChangePasswordPage from "./pages/ChangePasswordPage";
 import EditMoreInfosPage from "./pages/EditMoreInfosPage";
 import ChangeAvatarPage from "./pages/ChangeAvatarPage";
 import StudentProfilePage from "./pages/StudentProfilePage";
+import PurchaseHistoryPage from "./pages/PurchaseHistoryPage";
 
 function App() {
   return (
@@ -53,6 +53,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <StudentProfilePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profil/historia-zakupow"
+              element={
+                <PrivateRoute>
+                  <PurchaseHistoryPage />
                 </PrivateRoute>
               }
             />
@@ -92,14 +100,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/create-room"
-            element={
-              <PrivateRoute>
-                <CreateRoomPage />
-              </PrivateRoute>
-            }
-          />
+
           <Route
             path="/my-rooms"
             element={
@@ -109,7 +110,7 @@ function App() {
             }
           />
           <Route
-            path="/rooms/:roomId"
+            path="/pokoj/:roomId"
             element={
               <PrivateRoute>
                 <RoomProvider>

@@ -38,7 +38,7 @@ const StartedRoomsPage = () => {
               {room.users.map((u) =>
                 u.email != user.email ? (
                   <div key={user.email}>
-                    <Link to={`/rooms/${room.room_id}/`}>
+                    <Link to={`/pokoj/${room.room_id}/`}>
                       {u.first_name} {u.last_name} - {u.email}
                     </Link>
                   </div>
