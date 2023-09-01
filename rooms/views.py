@@ -18,6 +18,9 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.files.storage import default_storage
 from .permissions import IsInRoom
+from classes.models import Schedule
+from classes.serializers import ScheduleSerializer
+from datetime import datetime
 import zipfile
 import io
 
@@ -256,3 +259,30 @@ class FileDeleteView(APIView):
             return Response({'message': 'Files deleted successfully.'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class SchedulesInRoomAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsInRoom]
+
+    def get(self, request, room_id):
+        try:
+            room = Room.objects.get(room_id=room_id)
+            schedules = Schedule.objects.filter(classes__teacher__rooms=room)
+            now = datetime.now()
+
+            next_schedule = schedules.filter(
+                date__gt=now).order_by('date').first()
+            serializer = ScheduleSerializer(schedules, many=True)
+            data = serializer.data
+
+            if next_schedule:
+                next_schedule_data = ScheduleSerializer(next_schedule).data
+                response = {
+                    'schedules': data,
+                    'next_schedule': next_schedule_data
+                }
+                return Response(response)
+
+            return Response(data)
+        except Room.DoesNotExist:
+            return Response({"error": "Pokój nie istnieje."}, status=status.HTTP_404_NOT_FOUND)

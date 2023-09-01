@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import create_room, get_room, get_user_rooms, MessageViewSet, get_users_without_room_with_requestuser, get_room_users, get_files_in_room, download_file, show_file, FileUploadView, FileDeleteView, download_files
+from .views import create_room, get_room, get_user_rooms, MessageViewSet, get_users_without_room_with_requestuser, get_room_users, get_files_in_room, download_file, show_file, FileUploadView, FileDeleteView, download_files, SchedulesInRoomAPIView
 
 urlpatterns = [
     path('messages/',
@@ -9,6 +9,8 @@ urlpatterns = [
     path('', create_room, name='create_room'),
     path('all-rooms/', get_user_rooms, name='get_all_rooms'),
     path('download-files/', download_files, name='download-files-as-zip'),
+    path('<str:room_id>/schedules/',
+         SchedulesInRoomAPIView.as_view(), name='schedules-in-room'),
     path('<str:room_id>/', get_room, name='get_room'),
     path('room-users/<str:room_id>/', get_room_users, name='room-users'),
     path('<str:room_id>/files/', get_files_in_room, name='get_files_in_room'),
