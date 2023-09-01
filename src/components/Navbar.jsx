@@ -57,9 +57,12 @@ const Navbar = () => {
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="focus:bg-base-300 rounded-none">
+                    <Link
+                      to="/profil/historia-zakupow"
+                      className="focus:bg-base-300 rounded-none"
+                    >
                       Historia zakupów
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <details open>
