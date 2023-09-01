@@ -58,7 +58,7 @@ class PurchaseHistory(models.Model):
     paid_price = models.DecimalField(
         blank=True, null=True, max_digits=6, decimal_places=2)
     amount_of_lessons = models.PositiveIntegerField(null=False, blank=False)
-    purchase_date = models.DateField(auto_now_add=True)
+    purchase_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.student.first_name} {self.student.last_name} - {self.classes.name}"
@@ -104,8 +104,8 @@ class Schedule(models.Model):
     class Meta:
         unique_together = ('classes', 'date')
 
-    date = models.DateTimeField(null=True, )
-    # blank=True, validators=[validate_future_date])
+    date = models.DateTimeField(null=True,
+                                blank=True, validators=[validate_future_date])
     student = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, null=True, blank=True, related_name="student", validators=[validate_student_role]
     )
