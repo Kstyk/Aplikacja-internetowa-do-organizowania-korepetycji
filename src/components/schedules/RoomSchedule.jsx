@@ -104,9 +104,20 @@ const RoomSchedule = ({ schedule }) => {
           <h3 className="font-bold text-lg">
             {slotInfo?.resource?.classes?.name}
           </h3>
-          <p className="py-4">Zajęcia {slotInfo?.resource?.place_of_classes}</p>
+          <p>
+            Język <span>{slotInfo?.resource?.classes?.language?.name}</span>
+          </p>
+          <p c>Zajęcia {slotInfo?.resource?.place_of_classes}</p>
+          <p>
+            Data:{" "}
+            {dayjs(slotInfo?.resource?.date).format(
+              "dddd, DD-MM-YYYY, g. HH:mm"
+            )}
+          </p>
           <div className="modal-action">
-            <button className="btn">Zamknij</button>
+            <button className="btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400 hover:text-white">
+              Zamknij
+            </button>
           </div>
         </form>
       </dialog>
