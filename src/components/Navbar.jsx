@@ -306,12 +306,12 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
-                  <a
-                    href="#"
+                  <Link
+                    to="/my-rooms"
                     className="pl-5 w-full hover:bg-slate-100 h-10 flex items-center"
                   >
                     Twoje pokoje
-                  </a>
+                  </Link>
                 </li>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <a
