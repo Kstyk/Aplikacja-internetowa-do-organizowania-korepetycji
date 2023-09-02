@@ -5,7 +5,7 @@ from .models import Class, Language, Schedule, Timeslot, PurchaseHistory
 
 class ScheduleAdmin(admin.ModelAdmin):
     model = Schedule
-    list_display = ('id', 'date', 'student', 'classes')
+    list_display = ('id', 'date', 'student', 'classes', 'room')
 
 
 admin.site.register(Class)

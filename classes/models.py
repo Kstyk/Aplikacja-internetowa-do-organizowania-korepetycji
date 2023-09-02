@@ -104,16 +104,18 @@ class Schedule(models.Model):
     class Meta:
         unique_together = ('classes', 'date')
 
-    date = models.DateTimeField(null=True,
-                                blank=True, validators=[validate_future_date])
+    date = models.DateTimeField(validators=[validate_future_date])
     student = models.ForeignKey(
-        "users.User", on_delete=models.CASCADE, null=True, blank=True, related_name="student", validators=[validate_student_role]
+        "users.User", on_delete=models.CASCADE, null=True, related_name="student", validators=[validate_student_role]
     )
     classes = models.ForeignKey(
-        Class, on_delete=models.CASCADE, related_name="classes", null=True, blank=True
+        Class, on_delete=models.CASCADE, related_name="classes"
     )
     place_of_classes = models.TextField(
         choices=LOCATION_CHOICES, null=True, blank=True)
+    room = models.ForeignKey(
+        Room, on_delete=models.PROTECT, null=True, blank=True
+    )
 
     def __str__(self):
         return '{} {}'.format(self.date, self.classes.teacher)
