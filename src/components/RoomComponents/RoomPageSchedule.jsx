@@ -14,7 +14,6 @@ const RoomPageSchedule = ({ roomId }) => {
     await api
       .get(`api/rooms/${roomId}/schedules/`)
       .then((res) => {
-        console.log(res);
         setSchedule(res.data.schedules);
         setNextSchedule(res.data.next_schedule);
       })

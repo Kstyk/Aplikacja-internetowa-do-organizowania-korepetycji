@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import dayjs from "dayjs";
-import "dayjs/locale/pl";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./schedule.scss";
@@ -92,11 +91,13 @@ const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
             slot.timeslot_index === clickedSlot.timeslot_index
         );
 
-        findTeacherSlot = {
-          ...findTeacherSlot,
-          start: slotInfo.start,
-          end: slotInfo.end,
-        };
+        if (findTeacherSlot) {
+          findTeacherSlot = {
+            ...findTeacherSlot,
+            start: slotInfo.start,
+            end: slotInfo.end,
+          };
+        }
 
         if (findTeacherSlot != null) {
           if (
@@ -118,7 +119,6 @@ const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
               )
             );
           } else {
-            console.log(selected);
             setSelected((selected) => [...selected, findTeacherSlot]);
           }
         } else console.log(false);
@@ -233,7 +233,6 @@ const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
       };
 
       setEventArray((curr) => [...curr, eventRecord]);
-      console.log(eventArray);
     });
   };
 

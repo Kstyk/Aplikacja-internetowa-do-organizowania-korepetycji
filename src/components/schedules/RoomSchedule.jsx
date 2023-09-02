@@ -12,7 +12,7 @@ import Swal from "sweetalert2";
 import { timeslots } from "../../variables/Timeslots";
 
 const RoomSchedule = ({ schedule }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [eventArray, setEventArray] = useState([]);
   const [slotInfo, setSlotInfo] = useState(null);
 
@@ -79,7 +79,6 @@ const RoomSchedule = ({ schedule }) => {
   const onSelectEvent = (slotInfo) => {
     window.clearTimeout(clickRef?.current);
     setSlotInfo(slotInfo);
-    console.log(slotInfo);
     clickRef.current = window.setTimeout(() => {
       window.my_modal_5.showModal(slotInfo);
     });
@@ -107,7 +106,7 @@ const RoomSchedule = ({ schedule }) => {
           <p>
             Język <span>{slotInfo?.resource?.classes?.language?.name}</span>
           </p>
-          <p c>Zajęcia {slotInfo?.resource?.place_of_classes}</p>
+          <p>Zajęcia {slotInfo?.resource?.place_of_classes}</p>
           <p>
             Data:{" "}
             {dayjs(slotInfo?.resource?.date).format(
