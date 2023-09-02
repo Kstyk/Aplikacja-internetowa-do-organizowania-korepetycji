@@ -202,7 +202,8 @@ def purchase_classes(request):
                     'date': slot,
                     'student': student.id,
                     'classes': classes.id,
-                    'place_of_classes': place
+                    'place_of_classes': place,
+                    'room': new_room.room_id if room.first() is None else room.first().room_id,
                 }
                 # Dodaj do listy poprawnych danych
                 valid_schedules.append(schedule_data)
