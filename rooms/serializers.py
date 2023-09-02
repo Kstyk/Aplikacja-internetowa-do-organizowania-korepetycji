@@ -1,15 +1,42 @@
 from rest_framework import serializers
 from .models import Room, Message, File
-from users.serializers import UserSerializer
+from classes.models import Schedule
+from users.serializers import UserSerializer, UserProfileSerializer
+from django.utils import timezone
 import mimetypes
 
 
 class RoomSerializer(serializers.ModelSerializer):
-    users = UserSerializer(many=True)
+    users = serializers.SerializerMethodField()
+    next_classes = serializers.SerializerMethodField()
 
     class Meta:
         model = Room
-        fields = ('room_id', 'users')
+        fields = ('room_id', 'users', 'next_classes')
+
+    def get_users(self, obj):
+        users_queryset = obj.users.all()
+
+        user_profiles = []
+        for user in users_queryset:
+            user_profile = UserProfileSerializer(user.userdetails).data
+            user_profiles.append(user_profile)
+
+        return user_profiles
+
+    def get_next_classes(self, obj):
+        from classes.serializers import ScheduleSerializer
+
+        next_classes_queryset = Schedule.objects.filter(
+            room=obj, date__gte=timezone.now()).order_by('date').first()
+
+        if next_classes_queryset is not None:
+            next_classes_data = ScheduleSerializer(
+                next_classes_queryset).data
+        else:
+            next_classes_data = None
+
+        return next_classes_data
 
 
 class MessageSerializer(serializers.ModelSerializer):

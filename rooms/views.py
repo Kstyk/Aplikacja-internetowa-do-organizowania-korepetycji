@@ -13,6 +13,7 @@ from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.viewsets import GenericViewSet
 from .exceptions import AccessDeniedForRoom
 from .models import Room, Message, File
+from classes.models import Class
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -21,6 +22,8 @@ from .permissions import IsInRoom
 from classes.models import Schedule
 from classes.serializers import ScheduleSerializer
 from datetime import datetime
+from django.utils import timezone
+
 import zipfile
 import io
 
@@ -40,18 +43,14 @@ def create_room(request):
         print("Pokój już istnieje")
         return Response({'error': 'Pokój już istnieje'}, status=400)
 
-    # generuj losowy identyfikator
     room_id = uuid.uuid4().hex[:6].upper()
-    # sprawdź, czy pokój już istnieje w bazie danych
     while Room.objects.filter(room_id=room_id).exists():
         room_id = uuid.uuid4().hex[:6].upper()
 
-    # utwórz nowy pokój z losowym identyfikatorem
     room = Room.objects.create(room_id=room_id)
-    # przypisz bieżącego użytkownika do pokoju
     room.users.add(request.user)
     room.users.add(second_user)
-    # zwróć odpowiedź z danymi pokoju
+
     return Response({'room_id': room.room_id})
 
 
@@ -77,8 +76,11 @@ def get_room(request, room_id):
 @permission_classes([IsAuthenticated])
 def get_user_rooms(request):
     rooms = Room.objects.filter(users=request.user)
-    serializer = RoomSerializer(rooms, many=True)
-    return Response(serializer.data)
+    room_list = RoomSerializer(rooms, many=True).data
+    room_list.sort(key=lambda room: (
+        room['next_classes']['date'] if room['next_classes'] else '9999-12-31T23:59:59+00:00', room['room_id']))
+
+    return Response(room_list)
 
 
 @api_view(['GET'])
@@ -286,3 +288,27 @@ class SchedulesInRoomAPIView(APIView):
             return Response(data)
         except Room.DoesNotExist:
             return Response({"error": "Pokój nie istnieje."}, status=status.HTTP_404_NOT_FOUND)
+
+
+# class LeavePrivateRoomView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def post(self, request, room_id):
+#         try:
+#             user = request.user
+
+#             room = get_object_or_404(Room, room_id=room_id)
+
+#             future_classes = Schedule.objects.filter(
+#                 classes__in=room_classes, date__gt=timezone.now())
+
+#             if future_classes.exists():
+#                 return Response({'detail': 'You cannot leave the room with future classes scheduled.'}, status=status.HTTP_400_BAD_REQUEST)
+
+#             room.users.remove(user)
+
+#             serializer = RoomSerializer(room)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+
+#         except Exception as e:
+#             return Response({'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
