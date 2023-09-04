@@ -9,6 +9,7 @@ from django.core.exceptions import ValidationError
 class Room(models.Model):
     room_id = models.CharField(max_length=10, unique=True, primary_key=True)
     users = models.ManyToManyField('users.User', related_name='rooms')
+    archivized = models.BooleanField(default=False)
     name = models.CharField(max_length=50)
 
     def __str__(self):
