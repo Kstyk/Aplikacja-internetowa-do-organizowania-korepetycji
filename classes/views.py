@@ -183,8 +183,11 @@ def purchase_classes(request):
             if room.count() == 0:
                 room_id = uuid.uuid4().hex[:6].upper()
                 # Tworzenie nowego pokoju
+                name = request.user.first_name + " " + request.user.last_name + \
+                    " - " + classes.teacher.first_name + " " + classes.teacher.last_name
+
                 new_room = Room.objects.create(
-                    room_id=room_id
+                    room_id=room_id, name=name
                 )
                 new_room.users.add(student, classes.teacher)
 
