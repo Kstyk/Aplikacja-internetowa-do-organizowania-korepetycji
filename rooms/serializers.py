@@ -12,7 +12,7 @@ class RoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('room_id', 'users', 'next_classes')
+        fields = ('room_id', 'users', 'name', 'archivized', 'next_classes')
 
     def get_users(self, obj):
         users_queryset = obj.users.all()
