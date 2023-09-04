@@ -7,8 +7,11 @@ import useAxios from "../../utils/useAxios";
 import LoadingComponent from "../LoadingComponent";
 import { useNavigate } from "react-router-dom";
 import showAlertError from "../messages/SwalAlertError";
+import showSuccessAlert from "../messages/SwalAlertSuccess";
+
 import Files from "./Files";
 import RoomPageSchedule from "./RoomPageSchedule";
+import Swal from "sweetalert2";
 
 const Room = () => {
   const { roomId } = useParams();
@@ -20,6 +23,7 @@ const Room = () => {
 
   const [value, setValue] = useState("1");
   const [receiver, setReceiver] = useState(null);
+  const [name, setName] = useState();
   const [loading, setLoading] = useState(true);
 
   const handleChange = (event, newValue) => {
@@ -31,8 +35,10 @@ const Room = () => {
     await api
       .get(`api/rooms/${roomId}`)
       .then((res) => {
+        console.log(res.data);
+        setName(res.data.name);
         const users = res.data.users;
-        users.map((u) => (u != user.email ? setReceiver(u) : ""));
+        users.map((u) => (u.email != user.email ? setReceiver(u) : ""));
         setLoading(false);
       })
       .catch((err) => {
@@ -53,6 +59,44 @@ const Room = () => {
       });
   };
 
+  const leaveTheRoom = async () => {
+    Swal.fire({
+      title: "Jesteś pewien?",
+      text: "Nie będziesz mógł cofnąć tej operacji!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Opuść pokój",
+      cancelButtonText: "Zamknij okno",
+      customClass: {
+        confirmButton:
+          "btn  rounded-none outline-none border-[1px] text-black w-full",
+        cancelButton:
+          "btn  rounded-none outline-none border-[1px] text-black w-full",
+        popup: "rounded-none bg-base-100",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        api
+          .post(`api/rooms/${roomId}/leave/`)
+          .then((res) => {
+            showSuccessAlert(
+              "Opuściłeś pokój",
+              "Zostaniesz przekierowany do strony głównej",
+              () => {
+                nav("/");
+              }
+            );
+          })
+          .catch((err) => {
+            console.log(err);
+            showAlertError("Niedozwolona akcja", err.response.data.error);
+          });
+      }
+    });
+  };
+
   useEffect(() => {
     setRoom(roomId);
     fetchReceiver();
@@ -64,9 +108,20 @@ const Room = () => {
         <LoadingComponent />
       ) : (
         <>
-          <div className="tabs z-30 bg-white mt-10 p-5 shadow-xl h-[100%]">
+          <div className="z-30 flex flex-row bg-white mt-10 p-5 pb-0 w-full tab-bordered justify-between gap-x-5">
+            <h1 className="text-base phone:text-lg sm:text-xl uppercase tracking-wide font-bold ">
+              {name}
+            </h1>
+            <button
+              onClick={() => leaveTheRoom()}
+              className="hover:underline uppercase text-gray-500 text-xs phone:text-sm"
+            >
+              Opuść pokój
+            </button>
+          </div>
+          <div className="tabs z-30 bg-white p-5 shadow-xl h-[100%]">
             <div
-              className={`tab tab-bordered uppercase tracking-wide text-lg font-bold  hover:text-[#00000080] ${
+              className={`tab tab-bordered uppercase tracking-wide text-sm phone:text-base font-bold  hover:text-[#00000080] ${
                 selectedTab == 1
                   ? "!text-gray-700 border-b-gray-700 transition-all duration-300"
                   : "text-[#00000080]"
@@ -78,7 +133,7 @@ const Room = () => {
               Czat
             </div>
             <div
-              className={`tab tab-bordered uppercase tracking-wide text-lg font-bold  hover:text-[#00000080] ${
+              className={`tab tab-bordered uppercase tracking-wide text-sm phone:text-base font-bold  hover:text-[#00000080] ${
                 selectedTab == 2
                   ? "!text-gray-700 border-b-gray-700 transition-all duration-300"
                   : "text-[#00000080]"
@@ -90,7 +145,7 @@ const Room = () => {
               Pliki
             </div>
             <div
-              className={`tab tab-bordered uppercase tracking-wide text-lg font-bold  hover:text-[#00000080] ${
+              className={`tab tab-bordered uppercase tracking-wide text-sm phone:text-base font-bold  hover:text-[#00000080] ${
                 selectedTab == 3
                   ? "!text-gray-700 border-b-gray-700 transition-all duration-300"
                   : "text-[#00000080]"
@@ -102,7 +157,11 @@ const Room = () => {
               Terminarz
             </div>
           </div>
-          {selectedTab == 1 && <Chat />}
+          {selectedTab == 1 && (
+            <div className="bg-white">
+              <Chat />
+            </div>
+          )}
           {selectedTab == 2 && <Files roomId={roomId} />}
           {selectedTab == 3 && <RoomPageSchedule roomId={roomId} />}
         </>

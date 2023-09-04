@@ -26,12 +26,12 @@ const Chat = () => {
   // videocall
   const [peerId, setPeerId] = useState("");
   const [remotePeerIdValue, setRemotePeerIdValue] = useState("");
-  const [modalIsOpen, setIsOpen] = useState(false);
   const [callButton, setCallButton] = useState(null);
 
   const remoteVideoRef = useRef(null);
   const currentUserVideoRef = useRef(null);
   const peerInstance = useRef(null);
+  const scrollableDivRef = useRef(null);
 
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [isCameraOn, setIsCameraOn] = useState(true);
@@ -114,6 +114,11 @@ const Chat = () => {
   useEffect(() => {
     if (readyState == "Open") {
       fetchMessages();
+      if (scrollableDivRef.current) {
+        console.log("here");
+        scrollableDivRef.current.scrollTop =
+          scrollableDivRef.current.scrollHeight;
+      }
     }
   }, [messageHistory]);
 
@@ -132,7 +137,7 @@ const Chat = () => {
 
   function openModal() {
     checkMediaDevices();
-    setIsOpen(true);
+    window.videocall.showModal();
 
     startVideoCall();
     if (remotePeerIdValue == "") {
@@ -140,13 +145,6 @@ const Chat = () => {
     } else {
       call(remotePeerIdValue);
     }
-  }
-
-  function afterOpenModal() {}
-
-  function closeModal() {
-    setIsOpen(false);
-    setCallButton(false);
   }
 
   Modal.setAppElement("#root");
@@ -188,12 +186,12 @@ const Chat = () => {
 
   const startVideoCall = () => {
     checkMediaDevices();
+    window.videocall.showModal();
 
     const peer = new Peer();
 
     peer.on("open", (id) => {
       setPeerId(id);
-      setIsOpen(true);
     });
 
     peer.on("call", (call) => {
@@ -266,6 +264,13 @@ const Chat = () => {
   };
 
   const endVideoCall = async () => {
+    // Reset state variables
+    setCallButton(false);
+    setPeerId("");
+    setRemotePeerIdValue("");
+    localStorage.removeItem("callButton");
+    localStorage.removeItem("peerId");
+
     stopScreenSharing();
     // Close the PeerJS connection
     if (peerInstance.current) {
@@ -285,14 +290,6 @@ const Chat = () => {
       remoteStream.getTracks().forEach((track) => track.stop());
       remoteVideoRef.current.srcObject = null;
     }
-
-    // Reset state variables
-    setIsOpen(false);
-    setCallButton(false);
-    setPeerId("");
-    setRemotePeerIdValue("");
-    localStorage.removeItem("callButton");
-    localStorage.removeItem("peerId");
   };
 
   const toggleAudio = async () => {
@@ -370,140 +367,136 @@ const Chat = () => {
           remoteVideoRef.current.play();
         });
       })
-      .catch((error) => {
-        // Handle any errors with revoking media permissions (optional)
-        console.error("Error revoking media permissions:", error);
-      });
+      .catch((error) => {});
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 "></div>
+    <div className="flex flex-col h-full bg-white">
+      <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 z-20"></div>
 
       {/* <div className="chat chat-start w-full"> */}
       <div
-        id="scrollableDiv"
-        className="h-[calc(100vh-260px)] mt-10 flex flex-col-reverse relative w-full border border-gray-200 border-none overflow-y-auto p-6 bg-white card shadow-xl rounded-none"
+        id="scrollableDivFirst"
+        className="h-full flex flex-col justify-between z-30 bg-white"
       >
-        {readyState === ReadyState.CONNECTING ? (
-          <LoadingComponent message="Ładowanie wiadomości..." />
-        ) : (
-          <>
-            {messageHistory.length != 0 ? (
-              <InfiniteScroll
-                dataLength={messageHistory.length}
-                next={fetchMessages}
-                className="flex flex-col-reverse"
-                inverse={true}
-                hasMore={hasMoreMessages}
-                loader={<ChatLoader />}
-                scrollableTarget="scrollableDiv"
-              >
-                {messageHistory.map((message) => (
-                  <Message
-                    key={message.id}
-                    message={message}
-                    secondUser={secondUserProfile}
-                  />
-                ))}
-              </InfiniteScroll>
-            ) : (
-              <div className="w-full h-full text-center italic">
-                Brak nowych wiadomości.
-              </div>
-            )}
-          </>
-        )}
-      </div>
-      {/* </div> */}
-      {/* przyciski */}
-      <div className="ml-5 mt-10 flex items-center">
-        <input
-          type="text"
-          name="message"
-          placeholder="Napisz wiadomość..."
-          onChange={handleChangeMessage}
-          value={message}
-          className="shadow-sm sm:text-sm border-black border-[1px] bg-gray-100 rounded-none h-10 w-6/12 pl-5"
-        />
-        <button
-          className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
-          onClick={handleSubmit}
+        <div
+          id="scrollableDiv"
+          className="flex flex-col-reverse w-8/12 mx-auto max-md:w-11/12 max-lg:w-10/12 max-sm:w-full fixed bottom-20 top-[14rem] mt-10 overflow-y-auto shadow-xl p-5 pl-0 bg-white"
         >
-          Wyślij
-        </button>
-        <button
-          className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px] "
-          onClick={() => startVideoCall()}
-        >
-          Zadzwoń
-        </button>
+          {readyState === ReadyState.CONNECTING ? (
+            <LoadingComponent message="Ładowanie wiadomości..." />
+          ) : (
+            <>
+              {messageHistory.length != 0 ? (
+                <>
+                  <InfiniteScroll
+                    dataLength={messageHistory.length}
+                    next={fetchMessages}
+                    className="flex flex-col-reverse"
+                    inverse={true}
+                    hasMore={hasMoreMessages}
+                    loader={<ChatLoader />}
+                    scrollableTarget="scrollableDiv"
+                    // ref={scrollableDivRef}
+                  >
+                    {messageHistory.map((message) => (
+                      <Message
+                        key={message.id}
+                        message={message}
+                        secondUser={secondUserProfile}
+                      />
+                    ))}
+                  </InfiniteScroll>
+                  <div className="fixed bottom-0 pb-5 pt-5 border-t-2 w-8/12 mx-auto max-md:w-11/12 max-lg:w-10/12 max-sm:w-full bg-white flex flex-row items-center">
+                    <input
+                      type="text"
+                      name="message"
+                      placeholder="Napisz wiadomość..."
+                      onChange={handleChangeMessage}
+                      value={message}
+                      className="shadow-sm sm:text-sm border-black border-[1px] bg-gray-100 rounded-none h-10 w-6/12 pl-5"
+                    />
+                    <button
+                      className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
+                      onClick={handleSubmit}
+                    >
+                      Wyślij
+                    </button>
+                    <button
+                      className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px] "
+                      onClick={() => startVideoCall()}
+                    >
+                      Zadzwoń
+                    </button>
 
-        <>
-          {callButton == true ||
-          localStorage.getItem("callButton") == "true" ? (
-            <button
-              className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
-              onClick={(e) => openModal()}
-            >
-              Odbierz połączenie
-            </button>
-          ) : (
-            ""
+                    <>
+                      {callButton == true ||
+                      localStorage.getItem("callButton") == "true" ? (
+                        <button
+                          className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
+                          onClick={(e) => openModal()}
+                        >
+                          Odbierz połączenie
+                        </button>
+                      ) : (
+                        ""
+                      )}
+                      {callButton == true ||
+                      localStorage.getItem("callButton") == "true" ? (
+                        <button
+                          className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
+                          onClick={(e) => {
+                            localStorage.removeItem("callButton");
+                            localStorage.removeItem("peerId");
+                            setCallButton(null);
+                            rejectVideoCall();
+                          }}
+                        >
+                          Zakończ połączenie
+                        </button>
+                      ) : (
+                        ""
+                      )}
+                    </>
+                  </div>
+                </>
+              ) : (
+                <div className="w-full h-full text-center italic">
+                  Brak nowych wiadomości.
+                </div>
+              )}
+            </>
           )}
-          {callButton == true ||
-          localStorage.getItem("callButton") == "true" ? (
-            <button
-              className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
-              onClick={(e) => {
-                localStorage.removeItem("callButton");
-                localStorage.removeItem("peerId");
-                setCallButton(null);
-                rejectVideoCall();
-              }}
-            >
-              Zakończ połączenie
-            </button>
-          ) : (
-            ""
-          )}
-        </>
+        </div>
+        {/* </div> */}
       </div>
 
-      <Modal
-        isOpen={modalIsOpen}
-        onAfterOpen={afterOpenModal}
-        onRequestClose={closeModal}
-        contentLabel="Example Modal"
-        className="bg-black flex flex-row relative"
-        style={{
-          content: {
-            height: "94vh",
-            marginTop: "3vh",
-            marginBottom: "3vh",
-            width: "94%",
-            marginLeft: "3%",
-            marginRight: "3%",
-          },
-        }}
+      {/* modal videocall */}
+      <dialog
+        id="videocall"
+        className="modal bg-black flex flex-row !z-[999] relative"
       >
-        <div className="h-full w-10/12 ">
+        <div className="h-full w-full">
           <video
             preload="none"
             ref={remoteVideoRef}
             className="w-full h-full"
           />
         </div>
-        <div className="w-2/12 bg-slate-500 h-full flex flex-col justify-between text-lg uppercase font-semibold">
-          <div
-            onClick={() => {
-              rejectVideoCall();
-              endVideoCall();
-            }}
-            className="border-b-2 border-white h-1/4 flex justify-center items-center hover:bg-slate-700"
-          >
-            Zakończ połączenie
-          </div>
+        <div className="absolute top-0 w-full flex flex-row justify-center bg-black text-white gap-x-4">
+          <form method="dialog m-0 p-0 min-h-0">
+            <div className="modal-action m-0 p-0">
+              <button
+                onClick={(e) => {
+                  rejectVideoCall();
+                  endVideoCall();
+                }}
+                className="modal-action border-b-2 border-white h-1/4 flex justify-center items-center hover:bg-slate-700 m-0 p-0"
+              >
+                Zakończ połączenie
+              </button>
+            </div>
+          </form>
           <div
             onClick={() => toggleCamera()}
             className="border-b-2 border-white h-1/4 flex justify-center items-center hover:bg-slate-700"
@@ -528,7 +521,7 @@ const Chat = () => {
           ref={currentUserVideoRef}
           className="absolute bottom-0 left-0 w-2/12"
         />
-      </Modal>
+      </dialog>
     </div>
   );
 };

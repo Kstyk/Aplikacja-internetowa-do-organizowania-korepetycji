@@ -9,12 +9,12 @@ const RoomCard = ({ room, user }) => {
   return (
     <Link
       to={`/pokoj/${room.room_id}/`}
-      className="card rounded-none bg-white hover:bg-slate-100 transition-all duration-200 border-[1px] flex flex-col items-center justify-center w-full sm:w-[48%] md:w-[32%] grow-0 py-5"
+      className="card rounded-none bg-white hover:bg-slate-100 transition-all duration-200 border-[1px] flex flex-col items-center justify-center w-full sm:w-[48%] md:w-[32%] grow py-5"
     >
       {room.users.map((u) =>
         u?.user?.email != user.email ? (
           <React.Fragment key={u?.user?.id}>
-            <figure className="w-4/12">
+            <figure className="w-4/12 aspect-square">
               <img
                 src={
                   u?.profile_image == null
@@ -27,12 +27,16 @@ const RoomCard = ({ room, user }) => {
             </figure>
             <div className="card-body text-center pb-0 flex flex-col justify-between">
               <h2>
-                <div key={user.email}>
-                  <span>
-                    {u?.user?.first_name} {u?.user?.last_name} -{" "}
-                    {u?.user?.email}
-                  </span>
-                </div>
+                {room.archivized ? (
+                  <div>{room.name}</div>
+                ) : (
+                  <div>
+                    <span>
+                      {u?.user?.first_name} {u?.user?.last_name} -{" "}
+                      {u?.user?.email}
+                    </span>
+                  </div>
+                )}
               </h2>
               <div className="closer-classes text-center flex flex-col">
                 <span className="text-gray-500 text-sm">

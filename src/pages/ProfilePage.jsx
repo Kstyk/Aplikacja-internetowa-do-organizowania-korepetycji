@@ -15,7 +15,7 @@ const ProfilePage = () => {
 
   const [profile, setProfile] = useState(null);
   const [classes, setClasses] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const fetchProfile = async () => {
     await api
@@ -29,7 +29,6 @@ const ProfilePage = () => {
   };
 
   const fetchClassesTeacher = async () => {
-    //teacher
     let baseurl = `/api/classes/?page_size=10&page=1&teacher=${user?.user_id}`;
 
     await api
@@ -58,7 +57,7 @@ const ProfilePage = () => {
       {loading ? (
         <LoadingComponent message="Ładowanie informacji o nauczycielu..." />
       ) : (
-        <section className="mt-10 w-full max-phone:px-3 mb-10">
+        <section className="mt-10 w-full max-phone:px-3 mb-10 shadow-xl">
           <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300"></div>
           <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-none mb-5 text-center p-4 border-[1px] border-base-200 flex flex-row justify-between items-center z-30">
             <h1 className="text-center w-full">
@@ -66,7 +65,7 @@ const ProfilePage = () => {
             </h1>
           </div>
           <div className="flex md:flex-row md:gap-x-2 max-md:flex-col">
-            <div className="card  border-[1px] border-base-200 py-4 rounded-none bg-white md:w-full max-md:w-full flex phone:flex-row max-phone:flex-col ">
+            <div className="card  border-[1px] border-base-200 pt-5 pb-5 phone:pb-10 rounded-none bg-white md:w-full max-md:w-full flex phone:flex-row max-phone:flex-col ">
               <div className="profile max-phone:pr-6 phone:pr-3 ml-3 w-4/12 max-phone:w-full border-r-[1px] border-base-300 flex flex-col justify-start items-center max-phone:order-1">
                 <div className="avatar">
                   <div className="w-20 rounded-full">
@@ -111,7 +110,11 @@ const ProfilePage = () => {
                         Sposób prowadzenia zajęć:
                       </h3>
                       <ul className="w-full">
-                        {profile?.place_of_classes.map((place, i) => (
+                        {profile?.place_of_classes == null ||
+                          (profile?.place_of_classes?.length == 0 && (
+                            <span className="text-xs">Nie określono.</span>
+                          ))}
+                        {profile?.place_of_classes?.map((place, i) => (
                           <li
                             key={i}
                             className="flex flex-row items-center gap-x-5"
@@ -127,41 +130,49 @@ const ProfilePage = () => {
                       </ul>
                     </>
                   )}
-                  <div className="border-b-[1px] border-base-100 my-4"></div>
-                  <ul className="w-full">
-                    {profile?.cities_of_work.map((city, i) => (
-                      <li
-                        key={i}
-                        className="flex flex-row items-center gap-x-5"
-                      >
-                        <MdOutlineLocationOn className="w-6 h-6 text-base-400" />
-                        <span className="text-sm">{city.name}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="border-b-[1px] border-base-100 my-4"></div>
+                  {profile?.cities_of_work?.length > 0 && (
+                    <>
+                      <div className="border-b-[1px] border-base-100 my-4"></div>
+                      <ul className="w-full">
+                        {profile?.cities_of_work?.map((city, i) => (
+                          <li
+                            key={i}
+                            className="flex flex-row items-center gap-x-5"
+                          >
+                            <MdOutlineLocationOn className="w-6 h-6 text-base-400" />
+                            <span className="text-sm">{city.name}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
                   {profile?.address != null && (
-                    <div className="text-sm">
-                      <h4 className="flex flex-row items-center gap-x-5">
-                        <AiOutlineHome className="w-6 h-6 text-base-400" />
-                        <span>Adres zamieszkania:</span>
-                      </h4>
-                      <div className="border-b-[1px] border-base-100 my-2"></div>
+                    <>
+                      <div className="border-b-[1px] border-base-100 my-4"></div>
+                      {profile?.address != null && (
+                        <div className="text-sm">
+                          <h4 className="flex flex-row items-center gap-x-5">
+                            <AiOutlineHome className="w-6 h-6 text-base-400" />
+                            <span>Adres zamieszkania:</span>
+                          </h4>
+                          <div className="border-b-[1px] border-base-100 my-2"></div>
 
-                      <section className="pl-5 gap-y-2 flex flex-col">
-                        <div>
-                          {profile?.address?.postal_code},{" "}
-                          {profile?.address?.city?.name}
+                          <section className="pl-5 gap-y-2 flex flex-col">
+                            <div>
+                              {profile?.address?.postal_code},{" "}
+                              {profile?.address?.city?.name}
+                            </div>
+                            <div>
+                              ul. {profile?.address?.street},{" "}
+                              {profile?.address?.building_number}
+                            </div>
+                            <div>
+                              {profile?.address?.voivodeship?.alternate_names}
+                            </div>
+                          </section>
                         </div>
-                        <div>
-                          ul. {profile?.address?.street},{" "}
-                          {profile?.address?.building_number}
-                        </div>
-                        <div>
-                          {profile?.address?.voivodeship?.alternate_names}
-                        </div>
-                      </section>
-                    </div>
+                      )}
+                    </>
                   )}
                   <div className="phone:hidden border-b-[1px] border-base-100 my-4"></div>
                 </section>
@@ -229,11 +240,12 @@ const ProfilePage = () => {
                     <h2 className="block uppercase tracking-wide text-gray-700 text-lg font-bold border-b-[1px] border-base-100 mb-2">
                       Prowadzone zajęcia
                     </h2>
-                    {profile?.classes?.length == 0 && (
-                      <p className="pl-2">Brak zajęć</p>
-                    )}
+                    {profile?.classes?.length == 0 ||
+                      (profile?.classes == null && (
+                        <p className="pl-2">Brak zajęć</p>
+                      ))}
                     <ul className="pl-2">
-                      {classes.map((classTeacher, i) => (
+                      {profile?.classes?.map((classTeacher, i) => (
                         <li
                           className="hover:bg-base-100 transition-all duration-150 ease-linear p-2 border-b-[1px]  border-base-300 mb-2 flex flex-row items-center gap-x-2"
                           key={i}

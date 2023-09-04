@@ -95,7 +95,7 @@ const ChangeAvatarPage = () => {
             <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300 "></div>
             <div className="bg-white card shadow-xl px-5 py-5 mt-10 rounded-none mb-10 mx-auto w-8/12 max-lg:w-full max-md:w-8/12 max-phone:w-full">
               <h1 className="text-2xl text-center">Zmień swój avatar</h1>
-              <div className="border-b-[1px] border-base-100 mb-2"></div>
+              <div className="border-b-[1px] border-base-100 my-4"></div>
               <label
                 htmlFor="actualAvatar"
                 className="block uppercase tracking-wide text-gray-700 text-lg font-bold text-center"

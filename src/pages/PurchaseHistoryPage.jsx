@@ -77,6 +77,8 @@ const PurchaseHistoryPage = () => {
           <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-none mb-5 text-center p-4 border-[1px] border-base-200 flex flex-row justify-between items-center z-30  mt-10 shadow-xl">
             <h1 className="text-center w-full">Historia zakuów</h1>
           </div>
+          <div className="border-b-[1px] border-base-100 my-4"></div>
+
           <div className="card rounded-none bg-white p-6 shadow-xl">
             <PurchaseHistoryTable purchases={purchases} />
             {totalPages > 1 && (

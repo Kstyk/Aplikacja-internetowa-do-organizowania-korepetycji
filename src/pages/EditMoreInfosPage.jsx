@@ -163,11 +163,11 @@ const EditMoreInfosPage = () => {
         setValue("place_of_classes", places);
         setValue("cities_of_work", res.data.cities_of_work);
         setValue("experience", res.data.experience);
-        setValue("address.voivodeship", res.data.address.voivodeship);
-        setValue("address.city", res.data.address.city);
-        setValue("address.postal_code", res.data.address.postal_code);
-        setValue("address.street", res.data.address.street);
-        setValue("address.building_number", res.data.address.building_number);
+        setValue("address.voivodeship", res.data.address?.voivodeship);
+        setValue("address.city", res.data.address?.city);
+        setValue("address.postal_code", res.data.address?.postal_code);
+        setValue("address.street", res.data.address?.street);
+        setValue("address.building_number", res.data.address?.building_number);
       })
       .catch((err) => {
         console.log(err);

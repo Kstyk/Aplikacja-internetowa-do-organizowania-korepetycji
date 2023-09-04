@@ -188,7 +188,7 @@ const Files = ({ roomId }) => {
 
   const handleDownload = async (file) => {
     await api
-      .get(`api/rooms/file/${file.id}/download/`, {
+      .get(`api/rooms/${roomId}/file/${file.id}/download/`, {
         responseType: "blob",
       })
       .then((res) => {
@@ -230,7 +230,7 @@ const Files = ({ roomId }) => {
     };
 
     await api
-      .post(`api/rooms/download-files/`, data, {
+      .post(`api/rooms/${roomId}/download-files/`, data, {
         responseType: "blob",
       })
       .then((res) => {

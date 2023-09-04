@@ -119,6 +119,7 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route path="/search-classes" element={<SearchClassesPage />} />
           <Route
             path="/search-classes/language/:languageSlug"
             element={<SearchClassesPage />}

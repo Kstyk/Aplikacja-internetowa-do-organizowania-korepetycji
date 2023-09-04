@@ -9,6 +9,7 @@ import transparent_logo from "../assets/transparent_logo.png";
 import { Link } from "react-router-dom";
 import useAxios from "../utils/useAxios";
 import { backendUrl } from "../variables/backendUrl";
+import showSuccessAlert from "../components/messages/SwalAlertSuccess";
 
 const RegistrationPage = () => {
   const api = useAxios();
@@ -62,7 +63,13 @@ const RegistrationPage = () => {
         },
       })
       .then((res) => {
-        nav("/login");
+        showSuccessAlert(
+          "Sukces",
+          "Poprawnie zarejestrowano. Teraz możesz się zalogować.",
+          () => {
+            nav("/login");
+          }
+        );
       })
       .catch((err) => {
         setBackendErrors(JSON.parse(err.request.response));
