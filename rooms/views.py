@@ -23,35 +23,10 @@ from classes.models import Schedule
 from classes.serializers import ScheduleSerializer
 from datetime import datetime
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
 import zipfile
 import io
-
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def create_room(request):
-    user_email = request.data.get('user_email')
-    second_user = User.objects.get(email=user_email)
-
-    if request.user == second_user:
-        print("Nie mozesz stworzyć pokoju sam ze sobą")
-        return Response({'error': 'Nie możesz stworzyć pokoju sam ze sobą'}, status=400)
-
-    room = Room.objects.filter(users=request.user).filter(users=second_user)
-    if room.count() > 0:
-        print("Pokój już istnieje")
-        return Response({'error': 'Pokój już istnieje'}, status=400)
-
-    room_id = uuid.uuid4().hex[:6].upper()
-    while Room.objects.filter(room_id=room_id).exists():
-        room_id = uuid.uuid4().hex[:6].upper()
-
-    room = Room.objects.create(room_id=room_id)
-    room.users.add(request.user)
-    room.users.add(second_user)
-
-    return Response({'room_id': room.room_id})
 
 
 @api_view(['GET'])
@@ -64,9 +39,13 @@ def get_room(request, room_id):
         if request.user not in room.users.all():
             raise AccessDeniedForRoom()
         # zwróć dane pokoju
+
+        users = UserSerializer(room.users.all(), many=True).data
+
         return Response({
             'room_id': room.room_id,
-            'users': [user.email for user in room.users.all()]
+            'users': users,
+            'name': room.name
         })
     except Room.DoesNotExist:
         return Response({'error': 'Pokój nie istnieje.'}, status=404)
@@ -84,23 +63,6 @@ def get_user_rooms(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_users_without_room_with_requestuser(request):
-    users = User.objects.exclude(id=request.user.id)
-
-    response_data = []
-    for user in users:
-        room_exists = Room.objects.filter(
-            users=user).filter(users=request.user)
-
-        if not room_exists.exists():
-            response_data.append(user)
-
-    serializer = UserSerializer(response_data, many=True)
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
 def get_room_users(request, room_id):
     room = Room.objects.get(room_id=room_id)
 
@@ -111,7 +73,10 @@ def get_room_users(request, room_id):
     else:
         users = users.exclude(id=request.user.id)
 
-        profile = UserDetails.objects.filter(user_id=users[0].id).first()
+        if len(users) > 0:
+            profile = UserDetails.objects.filter(user_id=users[0].id).first()
+        else:
+            profile = None
 
         if profile is None:
             user = users.first()
@@ -173,8 +138,9 @@ def get_files_in_room(request, room_id):
     return Response(serializer.data)
 
 
+@api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated, IsInRoom])
-def download_file(request, file_id):
+def download_file(request, file_id, room_id):
     file_obj = get_object_or_404(File, id=file_id)
 
     with open(file_obj.file_path.path, 'rb') as file:
@@ -185,9 +151,9 @@ def download_file(request, file_id):
     return response
 
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated, IsInRoom])
-def download_files(request):
+def download_files(request, room_id):
     try:
         files = request.data.get('files')
         in_memory_zip = io.BytesIO()
@@ -248,7 +214,7 @@ class FileUploadView(APIView):
 
 
 class FileDeleteView(APIView):
-    permission_classes = [IsAuthenticated, IsInRoom]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         try:
@@ -258,7 +224,7 @@ class FileDeleteView(APIView):
                 file_obj = File.objects.get(id=file['id'])
                 file_obj.delete()
 
-            return Response({'message': 'Files deleted successfully.'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Pliki usunięte.'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -290,25 +256,29 @@ class SchedulesInRoomAPIView(APIView):
             return Response({"error": "Pokój nie istnieje."}, status=status.HTTP_404_NOT_FOUND)
 
 
-# class LeavePrivateRoomView(APIView):
-#     permission_classes = [IsAuthenticated]
+class LeavePrivateRoomView(APIView):
+    permission_classes = [IsAuthenticated, IsInRoom]
 
-#     def post(self, request, room_id):
-#         try:
-#             user = request.user
+    def post(self, request, room_id):
+        try:
+            user = request.user
 
-#             room = get_object_or_404(Room, room_id=room_id)
+            room = get_object_or_404(Room, room_id=room_id)
 
-#             future_classes = Schedule.objects.filter(
-#                 classes__in=room_classes, date__gt=timezone.now())
+            future_classes = Schedule.objects.filter(
+                room=room, date__gte=timezone.now())
 
-#             if future_classes.exists():
-#                 return Response({'detail': 'You cannot leave the room with future classes scheduled.'}, status=status.HTTP_400_BAD_REQUEST)
+            if future_classes.exists():
+                return Response({'error': 'Nie możesz opuścić pokoju, ponieważ masz zaplanowane zajęcia.'}, status=status.HTTP_400_BAD_REQUEST)
+            room.users.remove(user)
+            if room.users.count() == 0:
+                room.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            else:
+                room.archivized = True
+                room.save()
+                serializer = RoomSerializer(room)
+                return Response(serializer.data, status=status.HTTP_200_OK)
 
-#             room.users.remove(user)
-
-#             serializer = RoomSerializer(room)
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-
-#         except Exception as e:
-#             return Response({'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            return Response({'error': e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
