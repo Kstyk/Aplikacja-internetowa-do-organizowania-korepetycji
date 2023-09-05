@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import useAxios from "../utils/useAxios";
 import { useState } from "react";
 import LoadingComponent from "../components/LoadingComponent";
+import books from "../assets/books.jpg";
 
 const HomePage = () => {
   const api = useAxios();
@@ -51,11 +52,32 @@ const HomePage = () => {
       ) : (
         <>
           <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 "></div>
+
           <div className="bg-base-100 card shadow-xl h-full px-5 pt-5 mt-10 rounded-none mb-10 mx-auto">
-            <h1 className="text-center text-4xl max-md:text-3xl">
+            <div
+              className="hero h-[300px] mb-10"
+              style={{
+                backgroundImage: `url(${books})`,
+              }}
+            >
+              <div className="hero-overlay bg-opacity-60"></div>
+              <div className="hero-content text-center text-neutral-content">
+                <div className="max-w-md">
+                  <h1 className="mb-5 text-5xl font-bold">Korki.PL</h1>
+                  <p className="mb-5">
+                    Wyszukaj zajęcia lub sam zostań korepetytorem!
+                  </p>
+                </div>
+              </div>
+            </div>
+            <h1 className="text-center text-4xl max-md:text-3xl bg-base-200 hover:bg-opacity-80 transition-all duration-200 border-y-2 border-base-100 py-5 -mx-5 mb-10 text-gray-700 relative px-10 ">
+              <div className="absolute border-8 border-base-100 h-full left-5 top-0 bg-transparent"></div>
+              <div className="absolute border-2 border-base-100 h-full left-2 top-0 bg-transparent"></div>
+              <div className="absolute border-8 border-base-100 h-full right-5 top-0 bg-transparent"></div>
+              <div className="absolute border-2 border-base-100 h-full right-2 top-0 bg-transparent"></div>
               Znajdź korepetytora dla siebie lub dla swojego dziecka już dziś!
             </h1>
-            <div className="form form-control mt-5 w-10/12 mx-auto">
+            <div className="form form-control w-10/12 mx-auto">
               <div className="input-group">
                 <input
                   type="text"
