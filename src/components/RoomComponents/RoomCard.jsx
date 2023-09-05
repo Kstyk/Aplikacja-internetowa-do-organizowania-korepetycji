@@ -9,7 +9,7 @@ const RoomCard = ({ room, user }) => {
   return (
     <Link
       to={`/pokoj/${room.room_id}/`}
-      className="card rounded-none bg-white hover:bg-slate-100 transition-all duration-200 border-[1px] flex flex-col items-center justify-center w-full sm:w-[48%] md:w-[32%] grow py-5"
+      className="card rounded-none bg-white hover:bg-slate-100 transition-all duration-200 border-[1px] flex flex-col items-center justify-center w-full p-5"
     >
       {room.users.map((u) =>
         u?.user?.email != user.email ? (

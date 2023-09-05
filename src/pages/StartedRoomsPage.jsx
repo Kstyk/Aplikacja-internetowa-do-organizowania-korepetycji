@@ -4,10 +4,13 @@ import AuthContext from "../context/AuthContext";
 import { Link } from "react-router-dom";
 import LoadingComponent from "../components/LoadingComponent";
 import RoomCard from "../components/RoomComponents/RoomCard";
+import { AiOutlineQuestion, AiOutlineQuestionCircle } from "react-icons/ai";
+import ArchivizedRoomCard from "../components/RoomComponents/ArchivizedRoomCard";
 
 const StartedRoomsPage = () => {
   const api = useAxios();
   const [rooms, setRooms] = useState([]);
+  const [archivizedRooms, setArchivizedRooms] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const { user } = useContext(AuthContext);
@@ -18,7 +21,18 @@ const StartedRoomsPage = () => {
       .get("/api/rooms/all-rooms/")
       .then((res) => {
         console.log(res.data);
+
         setRooms(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    await api
+      .get("/api/rooms/all-archivized-rooms/")
+      .then((res) => {
+        console.log(res.data);
+        setArchivizedRooms(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -43,7 +57,7 @@ const StartedRoomsPage = () => {
               <h1 className="text-2xl text-center">Twoje pokoje</h1>
 
               <div className="border-b-[1px] border-base-100 my-4"></div>
-              <div className="min-h-[200px] flex items-center w-full justify-center">
+              <div className="min-h-[200px] flex items-center w-full justify-center mb-10">
                 {rooms.length == 0 && (
                   <div className="h-full">
                     {user?.role == "Student" ? (
@@ -57,13 +71,47 @@ const StartedRoomsPage = () => {
                         </Link>
                       </div>
                     ) : (
-                      "Teacher"
+                      <div className="flex flex-col justify-center  w-full h-full">
+                        <h2>Nie masz żadnych aktywnych pokoi.</h2>
+                      </div>
                     )}
                   </div>
                 )}
-                <div className="flex flex-row flex-wrap gap-y-5 justify-between items-stretch">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {rooms?.map((room, i) => (
                     <RoomCard room={room} user={user} key={room.room_id} />
+                  ))}
+                </div>
+              </div>
+
+              <h1 className="text-2xl text-center flex flex-row justify-center items-center gap-x-3">
+                <div
+                  className="tooltip"
+                  data-tip="Pokoje, w których zostałeś sam - druga osoba opuściła pokój."
+                >
+                  <AiOutlineQuestionCircle />
+                </div>
+                <span>Zarchiwizowane pokoje</span>
+              </h1>
+
+              <div className="border-b-[1px] border-base-100 my-4"></div>
+              <div className="flex w-full justify-center mb-10">
+                {archivizedRooms?.length == 0 && (
+                  <div className="h-full">
+                    {user?.role == "Student" ? (
+                      <div className="flex flex-col justify-center  w-full h-full">
+                        <h2>Nie masz żadnych zarchiwizowanych pokoi.</h2>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col justify-center  w-full h-full">
+                        <h2>Nie masz żadnych zarchiwizowanych pokoi.</h2>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {archivizedRooms?.map((room, i) => (
+                    <ArchivizedRoomCard room={room} key={room.room_id} />
                   ))}
                 </div>
               </div>
