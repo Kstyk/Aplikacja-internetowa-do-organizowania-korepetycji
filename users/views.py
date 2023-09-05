@@ -172,7 +172,7 @@ def get_top_cities(request):
                 teacher__userdetails__cities_of_work=OuterRef('id')).values('count')
         )
     ).values('id', 'num_tutors', 'slug', 'name',
-             'search_names', 'region_id')
+             'search_names', 'region_id').order_by('-num_tutors')[:20]
 
     return Response(top_cities)
 
