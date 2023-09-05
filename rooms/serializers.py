@@ -8,11 +8,13 @@ import mimetypes
 
 class RoomSerializer(serializers.ModelSerializer):
     users = serializers.SerializerMethodField()
+    deleted_user = serializers.SerializerMethodField()
     next_classes = serializers.SerializerMethodField()
 
     class Meta:
         model = Room
-        fields = ('room_id', 'users', 'name', 'archivized', 'next_classes')
+        fields = ('room_id', 'users', 'name', 'archivized',
+                  'next_classes', 'deleted_user')
 
     def get_users(self, obj):
         users_queryset = obj.users.all()
@@ -23,6 +25,16 @@ class RoomSerializer(serializers.ModelSerializer):
             user_profiles.append(user_profile)
 
         return user_profiles
+
+    def get_deleted_user(self, obj):
+        deleted_user = obj.deleted_user
+
+        if deleted_user is not None:
+            user_profile = UserProfileSerializer(deleted_user.userdetails).data
+        else:
+            user_profile = None
+
+        return user_profile
 
     def get_next_classes(self, obj):
         from classes.serializers import ScheduleSerializer

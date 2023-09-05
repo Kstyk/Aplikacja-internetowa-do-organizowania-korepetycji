@@ -42,10 +42,17 @@ def get_room(request, room_id):
 
         users = UserSerializer(room.users.all(), many=True).data
 
+        if room.deleted_user is not None:
+            deleted_user = UserSerializer(room.deleted_user).data
+        else:
+            deleted_user = None
+
         return Response({
             'room_id': room.room_id,
             'users': users,
-            'name': room.name
+            'name': room.name,
+            'archivized': room.archivized,
+            'deleted_user': deleted_user
         })
     except Room.DoesNotExist:
         return Response({'error': 'Pokój nie istnieje.'}, status=404)
@@ -54,10 +61,19 @@ def get_room(request, room_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_rooms(request):
-    rooms = Room.objects.filter(users=request.user)
+    rooms = Room.objects.filter(users=request.user, archivized=False)
     room_list = RoomSerializer(rooms, many=True).data
     room_list.sort(key=lambda room: (
         room['next_classes']['date'] if room['next_classes'] else '9999-12-31T23:59:59+00:00', room['room_id']))
+
+    return Response(room_list)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_archivized_user_rooms(request):
+    rooms = Room.objects.filter(users=request.user, archivized=True)
+    room_list = RoomSerializer(rooms, many=True).data
 
     return Response(room_list)
 
@@ -275,6 +291,7 @@ class LeavePrivateRoomView(APIView):
                 room.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
             else:
+                room.deleted_user = user
                 room.archivized = True
                 room.save()
                 serializer = RoomSerializer(room)
