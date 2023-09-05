@@ -31,7 +31,7 @@ const LoginPage = () => {
             <ErrorMessage error={error} setError={setError} />
             <input
               type="email"
-              className="float-right w-full h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none"
+              className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
               name="email"
               placeholder="Wprowadź email"
               required
@@ -40,7 +40,7 @@ const LoginPage = () => {
           <div className="items-center mb-4">
             <input
               type="password"
-              className="float-right w-full h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none"
+              className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
               name="password"
               placeholder="Wprowadź hasło"
               required

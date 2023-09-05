@@ -116,7 +116,7 @@ const RegistrationPage = () => {
             <div className="flex flex-col float-right w-full">
               <input
                 type="email"
-                className=" h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none"
+                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
                 name="email"
                 placeholder="Wprowadź email..."
                 id="email"
@@ -136,7 +136,7 @@ const RegistrationPage = () => {
             <div className="flex flex-col float-right w-full">
               <input
                 type="password"
-                className=" h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none"
+                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
                 name="password"
                 placeholder="Podaj hasło..."
                 id="password"
@@ -156,7 +156,7 @@ const RegistrationPage = () => {
             <div className="flex flex-col float-right w-full">
               <input
                 type="password"
-                className=" h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none"
+                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
                 id="confirm_password"
                 placeholder="Powtórz hasło..."
                 {...register(
@@ -175,7 +175,7 @@ const RegistrationPage = () => {
                 name="first_name"
                 id="first_name"
                 placeholder="Podaj imię..."
-                className=" h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none"
+                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
                 type="text"
                 {...register("first_name", registerOptions.first_name)}
               />
@@ -195,7 +195,7 @@ const RegistrationPage = () => {
                 name="last_name"
                 id="last_name"
                 placeholder="Podaj nazwisko..."
-                className=" h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none"
+                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
                 type="text"
                 {...register("last_name", registerOptions.last_name)}
               />

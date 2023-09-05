@@ -112,7 +112,7 @@ const ChangePasswordPage = () => {
                 <div className="w-full relative">
                   <input
                     type="password"
-                    className=" h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none w-full relative"
+                    className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
                     name="old_password"
                     placeholder="Podaj obecne hasło..."
                     id="old_password"
@@ -141,7 +141,7 @@ const ChangePasswordPage = () => {
                 <div className="w-full relative">
                   <input
                     type="password"
-                    className=" h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none w-full relative"
+                    className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
                     name="new_password"
                     placeholder="Podaj nowe hasło..."
                     id="new_password"
@@ -170,7 +170,7 @@ const ChangePasswordPage = () => {
                 <div className="w-full relative">
                   <input
                     type="password"
-                    className=" h-10 px-2 border-b-[1px] border-l-[1px] border-base-200 bg-transparent outline-none w-full relative"
+                    className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
                     id="confirm_new_password"
                     placeholder="Powtórz nowe hasło..."
                     {...register(
