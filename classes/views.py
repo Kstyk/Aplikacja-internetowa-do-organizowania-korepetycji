@@ -170,7 +170,6 @@ def purchase_classes(request):
     try:
         with transaction.atomic():  # Rozpoczęcie transakcji
             if len(selected_slots) == 0:
-                print("in here")
                 raise ValidationError(
                     "Nie wybrałeś żadnego terminu zajęć.")
 
