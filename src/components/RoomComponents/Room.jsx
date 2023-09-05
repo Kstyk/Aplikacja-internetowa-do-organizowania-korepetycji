@@ -21,24 +21,17 @@ const Room = () => {
   let api = useAxios();
   const nav = useNavigate();
 
-  const [value, setValue] = useState("1");
-  const [receiver, setReceiver] = useState(null);
   const [name, setName] = useState();
+  const [isArchivized, setIsArchivized] = useState();
   const [loading, setLoading] = useState(true);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   const fetchReceiver = async () => {
     setLoading(true);
     await api
       .get(`api/rooms/${roomId}`)
       .then((res) => {
-        console.log(res.data);
+        setIsArchivized(res.data.archivized);
         setName(res.data.name);
-        const users = res.data.users;
-        users.map((u) => (u.email != user.email ? setReceiver(u) : ""));
         setLoading(false);
       })
       .catch((err) => {
@@ -159,7 +152,7 @@ const Room = () => {
           </div>
           {selectedTab == 1 && (
             <div className="bg-white">
-              <Chat />
+              <Chat archivized={isArchivized} />
             </div>
           )}
           {selectedTab == 2 && <Files roomId={roomId} />}

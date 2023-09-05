@@ -11,7 +11,7 @@ import { useRef } from "react";
 import Peer from "peerjs";
 import LoadingComponent from "../LoadingComponent";
 
-const Chat = () => {
+const Chat = ({ archivized }) => {
   const [message, setMessage] = useState("");
   const [messageHistory, setMessageHistory] = useState([]);
   const [page, setPage] = useState(2);
@@ -75,14 +75,6 @@ const Chat = () => {
     }
   );
 
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: "Connecting",
-    [ReadyState.OPEN]: "Open",
-    [ReadyState.CLOSING]: "Closing",
-    [ReadyState.CLOSED]: "Closed",
-    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
-  }[readyState];
-
   const fetchMessages = async () => {
     await api
       .get(`api/rooms/messages/?room_id=${roomId}&page=${page}`)
@@ -114,11 +106,6 @@ const Chat = () => {
   useEffect(() => {
     if (readyState == "Open") {
       fetchMessages();
-      if (scrollableDivRef.current) {
-        console.log("here");
-        scrollableDivRef.current.scrollTop =
-          scrollableDivRef.current.scrollHeight;
-      }
     }
   }, [messageHistory]);
 
@@ -387,8 +374,8 @@ const Chat = () => {
             <LoadingComponent message="Ładowanie wiadomości..." />
           ) : (
             <>
-              {messageHistory.length != 0 ? (
-                <>
+              <>
+                {messageHistory.length != 0 ? (
                   <InfiniteScroll
                     dataLength={messageHistory.length}
                     next={fetchMessages}
@@ -407,7 +394,19 @@ const Chat = () => {
                       />
                     ))}
                   </InfiniteScroll>
-                  <div className="fixed bottom-0 pb-5 pt-5 border-t-2 w-8/12 mx-auto max-md:w-11/12 max-lg:w-10/12 max-sm:w-full bg-white flex flex-row items-center">
+                ) : (
+                  <div className="w-full h-full text-center italic">
+                    Brak nowych wiadomości.
+                  </div>
+                )}
+                {archivized ? (
+                  <div className="fixed bottom-0 p-5 border-t-2 w-8/12 mx-auto max-md:w-11/12 max-lg:w-10/12 max-sm:w-full bg-white flex flex-row items-center">
+                    <div className="italic text-gray-600 h-10 flex items-center justify-center w-full">
+                      <span>Historia czatu</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="fixed bottom-0 p-5 border-t-2 w-8/12 mx-auto max-md:w-11/12 max-lg:w-10/12 max-sm:w-full bg-white flex flex-row items-center">
                     <input
                       type="text"
                       name="message"
@@ -459,12 +458,8 @@ const Chat = () => {
                       )}
                     </>
                   </div>
-                </>
-              ) : (
-                <div className="w-full h-full text-center italic">
-                  Brak nowych wiadomości.
-                </div>
-              )}
+                )}
+              </>
             </>
           )}
         </div>

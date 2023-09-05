@@ -362,7 +362,7 @@ const Files = ({ roomId }) => {
         <LoadingComponent message="Ładowanie informacji o plikach..." />
       ) : (
         <div className="card rounded-none mt-10 bg-white p-6 shadow-xl">
-          <form className="flex flex-col justify-center w-full space-y-4 max-md:w-full mx-auto items-center">
+          <form className="flex flex-col justify-center w-full space-y-4 max-md:w-full mx-auto items-center h-[100px] phone:h-full">
             <div className="file-input-container">
               <input
                 type="file"
@@ -378,9 +378,11 @@ const Files = ({ roomId }) => {
                 <span className="uppercase text-xl phone:text-2xl font-bold tracking-wide">
                   Wybierz pliki
                 </span>
-                <span className="uppercase text-sm text-slate-700">lub</span>
-                <span className="uppercase text-lg phone:text-xl font-bold tracking-wide">
-                  Przeciągnij je tutaj
+                <span className="hidden phone:flex phone:flex-col phone:items-center">
+                  <span className="uppercase text-sm text-slate-700">lub</span>
+                  <span className="uppercase text-lg phone:text-xl font-bold tracking-wide">
+                    Przeciągnij je tutaj
+                  </span>
                 </span>
               </label>
             </div>

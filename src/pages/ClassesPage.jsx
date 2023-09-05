@@ -43,7 +43,7 @@ const ClassesPage = () => {
         <section className="mt-10 w-full max-phone:px-3 mb-10">
           <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300"></div>
 
-          <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-none mb-5 text-center p-4 border-[1px] border-base-200 flex flex-col phone:flex-row justify-between items-center z-30">
+          <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-none mb-5 text-center p-4 border-[1px] border-base-200 flex flex-col phone:flex-row justify-between items-center z-30 shadow-xl">
             <h1 className="text-center w-full">{classes?.name}</h1>
             <Link
               className={`btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full phone:w-4/12 ${
@@ -55,8 +55,8 @@ const ClassesPage = () => {
             </Link>
           </div>
 
-          <div className="flex md:flex-row md:gap-x-2 max-md:flex-col">
-            <div className="card  border-[1px] border-base-200 py-4 rounded-none bg-white md:w-9/12 max-md:w-full flex phone:flex-row max-phone:flex-col ">
+          <div className="flex md:flex-row md:gap-x-2 max-md:flex-col ">
+            <div className="card  border-[1px] border-base-200 py-4 rounded-none bg-white md:w-9/12 max-md:w-full flex phone:flex-row max-phone:flex-col shadow-xl">
               <div className="profile max-phone:pr-6 phone:pr-3 ml-3 w-4/12 max-phone:w-full border-r-[1px] border-base-300 flex flex-col justify-start items-center max-phone:order-2">
                 <div className="avatar">
                   <div className="w-20 rounded-full">
@@ -173,7 +173,7 @@ const ClassesPage = () => {
                 </article>
               </div>
             </div>
-            <div className="card border-[1px] border-base-200 p-4 rounded-none bg-white md:w-3/12 gap-y-5 max-md:w-full">
+            <div className="card border-[1px] border-base-200 p-4 rounded-none bg-white md:w-3/12 gap-y-5 max-md:w-full shadow-xl">
               <div>
                 <h2 className="block uppercase tracking-wide text-gray-700 text-base font-bold border-b-[1px] border-base-100 mb-2">
                   O nuaczycielu

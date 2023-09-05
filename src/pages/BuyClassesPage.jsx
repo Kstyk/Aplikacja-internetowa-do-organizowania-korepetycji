@@ -43,7 +43,7 @@ const BuyClassesPage = () => {
   const purchaseClasses = async () => {
     let selected_slots = [];
     selected.map((selected) =>
-      selected_slots.push(dayjs(selected.start).format("YYYY-MM-DDThh:mm:ss"))
+      selected_slots.push(dayjs(selected.start).format("YYYY-MM-DDTHH:mm:ss"))
     );
     const data = {
       selected_slots: selected_slots,
