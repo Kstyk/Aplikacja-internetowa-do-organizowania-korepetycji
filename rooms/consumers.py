@@ -8,7 +8,8 @@ from asgiref.sync import async_to_sync
 from urllib.parse import parse_qs
 from .exceptions import AccessDeniedForRoom
 from rest_framework.exceptions import AuthenticationFailed
-
+from rest_framework_simplejwt.tokens import TokenError, AccessToken
+from users.serializers import UserSerializer
 from channels.generic.websocket import JsonWebsocketConsumer
 
 
@@ -48,8 +49,6 @@ class ChatConsumer(JsonWebsocketConsumer):
 
         if self.user not in users_list:
             raise AccessDeniedForRoom()
-        else:
-            print("all good")
 
         self.accept()
 
@@ -106,7 +105,6 @@ class ChatConsumer(JsonWebsocketConsumer):
                     'sender_channel_name': self.channel_name
                 }
             )
-            print("after send")
 
         if message_type == "reject_peer":
             async_to_sync(self.channel_layer.group_send)(
@@ -137,3 +135,62 @@ class ChatConsumer(JsonWebsocketConsumer):
         return super().receive_json(content, **kwargs)
 
     ##########################
+
+
+class NotificationConsumer(JsonWebsocketConsumer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.user = None
+
+    def connect(self):
+        token = self.scope['query_string'].decode("utf-8").split('=')[1]
+
+        # sprawdzenie poprawności tokenu jwt
+        try:
+            access_token = AccessToken(token)
+            user = User.objects.get(pk=access_token.payload.get("user_id"))
+
+            # Jeśli token jest poprawny, akceptuj połączenie WebSocket
+            self.user = user
+            print(user)
+            self.accept()
+
+            self.notification_group_name = f"{self.user.id}__notifications"
+            async_to_sync(self.channel_layer.group_add)(
+                self.notification_group_name,
+                self.channel_name,
+            )
+
+        except TokenError as e:
+            # Zamknij połączenie, jeśli token jest niepoprawny
+            self.close()
+
+    def get_receiver(self, room):
+        users_list = [user.email for user in room.users.all()]
+
+        for username in users_list:
+            if username != self.user.email:
+                return User.objects.get(email=username)
+
+    def receive_json(self, content, **kwargs):
+        message_type = content["type"]
+        if message_type == "call_incoming":
+            room = Room.objects.get(room_id=content['roomId'])
+
+            if room is not None:
+                notification_group_name = f"{self.get_receiver(room).id}__notifications"
+                async_to_sync(self.channel_layer.group_send)(
+                    notification_group_name,
+                    {
+                        "type": "incomingcall",
+                        "peer": content["peer"],
+                        'sender_channel_name': self.channel_name,
+                        'room_id': room.room_id,
+                        'caller': UserSerializer(self.user).data
+                    }
+                )
+
+            return super().receive_json(content, **kwargs)
+
+    def incomingcall(self, event):
+        self.send_json(event)
