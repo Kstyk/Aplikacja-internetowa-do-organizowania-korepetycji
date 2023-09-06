@@ -10,6 +10,8 @@ import Modal from "react-modal";
 import { useRef } from "react";
 import Peer from "peerjs";
 import LoadingComponent from "../LoadingComponent";
+import { NotificationContext } from "../../context/NotificationContext";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 const Chat = ({ archivized }) => {
   const [message, setMessage] = useState("");
@@ -20,6 +22,7 @@ const Chat = ({ archivized }) => {
 
   const { roomId } = useParams();
   const { user, authTokens } = useContext(AuthContext);
+  const { sendNotification } = useContext(NotificationContext);
   const [secondUserProfile, setSecondUserProfile] = useState(null);
 
   let api = useAxios();
@@ -31,22 +34,18 @@ const Chat = ({ archivized }) => {
   const remoteVideoRef = useRef(null);
   const currentUserVideoRef = useRef(null);
   const peerInstance = useRef(null);
-  const scrollableDivRef = useRef(null);
 
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const { readyState, sendJsonMessage } = useWebSocket(
-    user ? `ws://127.0.0.1:8000/${roomId}/` : null,
+    user ? `ws://127.0.0.1:8000/chats/${roomId}/` : null,
     {
       queryParams: {
         userId: user ? user.user_id : "",
       },
-      onOpen: (e) => {
-        console.log("connected");
-      },
+      onOpen: (e) => {},
       onClose: (e) => {
-        console.log("disconnected");
         // nav("/");
       },
       onMessage: (e) => {
@@ -62,9 +61,7 @@ const Chat = ({ archivized }) => {
           case "received_peer":
             // django potrzebuje 2-3 sekund by odeslac wiadomosc
             setRemotePeerIdValue(data.peer);
-            setCallButton(true);
-            localStorage.setItem("remotePeerId", data.peer);
-            localStorage.setItem("callButton", true);
+
             break;
           case "rejected_call":
             endVideoCall();
@@ -142,6 +139,13 @@ const Chat = ({ archivized }) => {
         type: "peer",
         peer: peerId,
         token: user.token,
+      });
+
+      sendNotification({
+        type: "call_incoming",
+        peer: peerId,
+        token: user.token,
+        roomId: roomId,
       });
     }
   }, [peerId]);
@@ -310,8 +314,6 @@ const Chat = ({ archivized }) => {
     if (isScreenSharing) {
       stopScreenSharing();
     } else {
-      console.log(peerId);
-
       const stream = await getScreenshareWithMicrophone();
       setAudioEnabled(true);
 
@@ -324,8 +326,12 @@ const Chat = ({ archivized }) => {
 
       const call = peerInstance.current.call(remotePeerIdValue, stream);
       call.on("stream", (remoteStream) => {
+        remoteVideoRef.current.pause();
         remoteVideoRef.current.srcObject = remoteStream;
-        remoteVideoRef.current.play();
+
+        remoteVideoRef.current.addEventListener("loadedmetadata", () => {
+          remoteVideoRef.current.play();
+        });
       });
 
       setIsScreenSharing(true);
@@ -350,8 +356,12 @@ const Chat = ({ archivized }) => {
         const call = peerInstance.current.call(remotePeerIdValue, stream);
 
         call.on("stream", (remoteStream) => {
+          remoteVideoRef.current.pause();
           remoteVideoRef.current.srcObject = remoteStream;
-          remoteVideoRef.current.play();
+
+          remoteVideoRef.current.addEventListener("loadedmetadata", () => {
+            remoteVideoRef.current.play();
+          });
         });
       })
       .catch((error) => {});
@@ -469,15 +479,19 @@ const Chat = ({ archivized }) => {
       {/* modal videocall */}
       <dialog
         id="videocall"
-        className="modal bg-black flex flex-row !z-[999] relative"
+        className="modal bg-black flex flex-row justify-center items-center !z-[999] relative"
       >
-        <div className="h-full w-full">
-          <video
-            preload="none"
-            ref={remoteVideoRef}
-            className="w-full h-full"
-          />
-        </div>
+        <TransformWrapper minScale={0.5} initialScale={1}>
+          <TransformComponent>
+            <div className="h-[100vh] w-[100%] mx-auto">
+              <video
+                preload="none"
+                ref={remoteVideoRef}
+                className="w-full h-full"
+              />
+            </div>
+          </TransformComponent>
+        </TransformWrapper>
         <div className="absolute top-0 w-full flex flex-row justify-center bg-black text-white gap-x-4">
           <form method="dialog m-0 p-0 min-h-0">
             <div className="modal-action m-0 p-0">

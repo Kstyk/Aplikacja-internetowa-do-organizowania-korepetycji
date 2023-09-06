@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
-import transparent_logo from "../assets/transparent_logo.png";
 import "./Navbar.scss";
 
 const Navbar = () => {

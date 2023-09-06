@@ -11,6 +11,8 @@ export function classNames(...classes) {
 const Message = ({ message, secondUser }) => {
   const { user } = useContext(AuthContext);
   dayjs.locale("pl");
+  const URL_REGEX =
+    /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
 
   return (
     <li
@@ -49,7 +51,19 @@ const Message = ({ message, secondUser }) => {
           user?.email === message.to_user.email ? `bg-base-300` : `bg-base-200`
         }`}
       >
-        {message.content}
+        {message.content.match(URL_REGEX) ? (
+          <>
+            <a
+              target="_blank"
+              href={message.content}
+              className="text-blue-700 hover:underline"
+            >
+              {message.content}
+            </a>{" "}
+          </>
+        ) : (
+          message.content
+        )}
       </div>
     </li>
   );
