@@ -1,9 +1,8 @@
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from .validators import validate_teacher_role, validate_future_date, validate_student_role, validate_teacher_for_timeslot
 from rooms.models import Room
 from autoslug import AutoSlugField
-from multiselectfield import MultiSelectField
 # Create your models here.
 
 
@@ -22,7 +21,6 @@ class Class(models.Model):
         Language, on_delete=models.PROTECT, null=True, related_name="class_language"
     )
     name = models.CharField(max_length=255, null=False, blank=False)
-    difficulty_level = models.CharField(null=False, blank=False, max_length=50)
     active = models.BooleanField(default=True)
     price_for_lesson = models.DecimalField(max_digits=6, decimal_places=2)
     description = models.TextField()
@@ -119,3 +117,14 @@ class Schedule(models.Model):
 
     def __str__(self):
         return '{} {}'.format(self.date, self.classes.teacher)
+
+
+class Opinion(models.Model):
+    student = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, validators=[validate_student_role])
+    teacher = models.ForeignKey("users.User", on_delete=models.CASCADE,
+                                related_name="teacher", validators=[validate_teacher_role])
+    published_date = models.DateTimeField(auto_now_add=True)
+    rate = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)])
+    content = models.TextField()
