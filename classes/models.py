@@ -120,11 +120,15 @@ class Schedule(models.Model):
 
 
 class Opinion(models.Model):
+    class Meta:
+        # unique_together = ('student', 'teacher')
+        ordering = ["-published_date"]
+
     student = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, validators=[validate_student_role])
-    teacher = models.ForeignKey("users.User", on_delete=models.CASCADE,
-                                related_name="teacher", validators=[validate_teacher_role])
+    teacher = models.ForeignKey("users.User", on_delete=models.CASCADE, related_name='rated_teacher',
+                                validators=[validate_teacher_role])
     published_date = models.DateTimeField(auto_now_add=True)
     rate = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)])
-    content = models.TextField()
+    content = models.TextField(null=True, blank=True)

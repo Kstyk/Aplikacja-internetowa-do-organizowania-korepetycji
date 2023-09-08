@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Class, Language, Schedule, Timeslot, PurchaseHistory
+from .models import Class, Language, Schedule, Timeslot, PurchaseHistory, Opinion
 from users.serializers import UserSerializer, UserProfileSerializer
 from rooms.serializers import RoomSerializer
 from .validators import validate_teacher_role
 from django.core.validators import MinValueValidator
-from users.models import User
+from users.models import User, UserDetails
 
 
 class LanguageSerializer(serializers.ModelSerializer):
@@ -82,3 +82,40 @@ class MostPopularLanguages(serializers.ModelSerializer):
 
     def get_num_classes(self, language):
         return language.class_language.count()
+
+
+class OpinionSerializer(serializers.ModelSerializer):
+    student = UserSerializer()
+    teacher = UserSerializer()
+    student_profile_image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Opinion
+        fields = '__all__'
+
+    def get_student_profile_image(self, obj):
+        user_profile = UserDetails.objects.get(user=obj.student)
+
+        if user_profile:
+            if user_profile.profile_image:
+                return user_profile.profile_image.url
+            else:
+                return None
+        else:
+            return None
+
+
+class CreateOpinionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Opinion
+        fields = ['student', 'teacher', 'content', 'rate']
+
+    def validate(self, data):
+        student = data.get('student')
+        teacher = data.get('teacher')
+
+        if Opinion.objects.filter(student=student, teacher=teacher).exists():
+            raise serializers.ValidationError({"teacher":
+                                               "Możesz dodać tylko jedną opinię dla tego nauczyciela."})
+
+        return data

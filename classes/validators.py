@@ -18,11 +18,11 @@ def validate_teacher_role(value):
 
     if user.role is None:
         raise ValidationError(
-            "Tylko rola 'nauczyciel' może być przypisana do zajęć.")
+            "Użytkownik nie posiada roli 'nauczyciel'.")
     else:
         if user.role.name != "Teacher":
             raise ValidationError(
-                "Tylko rola 'nauczyciel' może być przypisana do zajęć.")
+                "Użytkownik nie posiada roli 'nauczyciel'.")
 
 
 def validate_student_role(value):

@@ -1,14 +1,14 @@
 from django.shortcuts import render
-from .models import Class, Language, Schedule, Timeslot, PurchaseHistory
+from .models import Class, Language, Schedule, Timeslot, PurchaseHistory, Opinion
 from rooms.models import Room
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
-from .serializers import ClassSerializer, LanguageSerializer, CreateClassSerializer, ScheduleSerializer, MostPopularLanguages, TimeslotSerializer, CreateTimeSlotsSerializer, PurchaseClassesSerializer, PurchaseHistorySerializer
+from .serializers import ClassSerializer, LanguageSerializer, CreateClassSerializer, ScheduleSerializer, MostPopularLanguages, TimeslotSerializer, CreateTimeSlotsSerializer, PurchaseClassesSerializer, PurchaseHistorySerializer, OpinionSerializer, CreateOpinionSerializer
 from rest_framework.response import Response
 from rest_framework import status, generics
 from django.db.models import Q, F
 from django.db import IntegrityError, transaction
-from .paginators import ClassPagination, PurchaseHistoryPagination
+from .paginators import ClassPagination, PurchaseHistoryPagination, OpinionPagination
 from users.permissions import IsTeacher, IsStudent
 from django.db.models import Count
 from cities_light.models import City, Region
@@ -16,6 +16,7 @@ from users.models import UserDetails, User
 from datetime import datetime
 from rest_framework.serializers import ValidationError
 import uuid
+from django.db import IntegrityError
 
 # Create your views here.
 
@@ -249,3 +250,32 @@ class PurchaseHistoryList(generics.ListAPIView):
 
         queryset = PurchaseHistory.objects.filter(student=user)
         return queryset
+
+
+class TeacherOpinionsList(generics.ListAPIView):
+    serializer_class = OpinionSerializer
+    queryset = Opinion.objects.all()
+    pagination_class = OpinionPagination
+    lookup_field = 'teacher_id'
+
+
+class ReceivedOpinionsList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = OpinionSerializer
+    pagination_class = OpinionPagination
+
+    def get_queryset(self):
+        user = self.request.user
+
+        queryset = Opinion.objects.filter(teacher=user)
+
+        return queryset
+
+
+class CreateOpinionView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CreateOpinionSerializer
+
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            serializer.save()
