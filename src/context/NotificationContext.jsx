@@ -2,6 +2,7 @@ import React, { createContext, ReactNode, useContext, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { FiPhoneCall } from "react-icons/fi";
 
 import AuthContext from "./AuthContext";
 
@@ -20,7 +21,7 @@ export const NotificationContextProvider = ({ children }) => {
         {fisrt_name} {last_name} dzwoni do Ciebie
       </span>
       <Link
-        className="btn text-sm min-h-0 h-10 px-3 bg-transparent rounded-none border-2 w-full border-base-100 capitalize hover:bg-transparent hover:border-base-200 hover:text-base transition-all duration-300"
+        className="btn text-sm min-h-0 h-10 px-3 border-2 hover:border-4 bg-slate-50 rounded-md w-full border-base-100 capitalize hover:bg-transparent hover:border-base-200 hover:text-base "
         to={`/pokoj/${room_id}`}
       >
         Przejdź do pokoju
@@ -49,6 +50,9 @@ export const NotificationContextProvider = ({ children }) => {
               ),
               {
                 draggable: true,
+                icon: ({ theme, type }) => (
+                  <FiPhoneCall className="!w-10  rounded-full text-red-800 shadow-red-200 shadow-xl aspect-square" />
+                ),
               }
             );
             break;
