@@ -66,9 +66,9 @@ const TeacherPage = () => {
           </div>
           <div className="flex md:flex-row md:gap-x-2 max-md:flex-col ">
             <div className="card  border-[1px] border-base-200 py-4 rounded-none shadow-xl bg-white md:w-full max-md:w-full flex phone:flex-row max-phone:flex-col ">
-              <div className="profile max-phone:pr-6 phone:pr-3 ml-3 w-4/12 max-phone:w-full border-r-[1px] border-base-300 flex flex-col justify-start items-center max-phone:order-1">
+              <div className="profile max-phone:pr-6 phone:pr-3 ml-3 w-4/12 sm:w-3/12 max-phone:w-full border-r-[1px] border-base-300 flex flex-col justify-start items-center max-phone:order-1">
                 <div className="avatar">
-                  <div className="w-20 rounded-full">
+                  <div className="w-20 rounded-full hover:ring ring-primary ring-offset-base-100 ring-offset-2 transition-all duration-200">
                     <img
                       src={
                         profile?.profile_image == null
@@ -165,7 +165,7 @@ const TeacherPage = () => {
                   <div className="phone:hidden border-b-[1px] border-base-100 my-4"></div>
                 </section>
               </div>
-              <div className="content w-full max-phone:w-full px-4 max-phone:order-2 max-phone:pb-3 max-phone:mb-3">
+              <div className="content w-8/12 sm:w-9/12 max-phone:w-full px-4 max-phone:order-2 max-phone:pb-3 max-phone:mb-3">
                 <div className="header flex flex-row">
                   <div className="left w-8/12">
                     <h1 className="text-3xl uppercase">
@@ -175,7 +175,7 @@ const TeacherPage = () => {
                 </div>
                 <div className="border-b-2 border-base-100 my-4"></div>
                 <section className="flex flex-col gap-y-5">
-                  <article className="describe">
+                  <article className="describe !break-words">
                     <h2 className="block uppercase tracking-wide text-gray-700 text-lg font-bold border-b-[1px] border-base-100 mb-2">
                       O mnie
                     </h2>

@@ -66,7 +66,7 @@ const ProfilePage = () => {
           </div>
           <div className="flex md:flex-row md:gap-x-2 max-md:flex-col">
             <div className="card  border-[1px] border-base-200 pt-5 pb-5 phone:pb-10 rounded-none bg-white md:w-full max-md:w-full flex phone:flex-row max-phone:flex-col ">
-              <div className="profile max-phone:pr-6 phone:pr-3 ml-3 w-4/12 max-phone:w-full border-r-[1px] border-base-300 flex flex-col justify-start items-center max-phone:order-1">
+              <div className="profile max-phone:pr-6 phone:pr-3 ml-3 w-4/12 sm:w-3/12 max-phone:w-full border-r-[1px] border-base-300 flex flex-col justify-start items-center max-phone:order-1">
                 <div className="avatar">
                   <div className="w-20 rounded-full">
                     <img
@@ -177,7 +177,7 @@ const ProfilePage = () => {
                   <div className="phone:hidden border-b-[1px] border-base-100 my-4"></div>
                 </section>
               </div>
-              <div className="content w-full max-phone:w-full px-4 max-phone:order-2 max-phone:pb-3 max-phone:mb-3">
+              <div className="content w-8/12 sm:w-9/12 max-phone:w-full px-4 max-phone:order-2 max-phone:pb-3 max-phone:mb-3">
                 <div className="header flex flex-row">
                   <div className="left w-8/12">
                     <h1 className="text-3xl uppercase">

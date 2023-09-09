@@ -2,19 +2,25 @@ import React, { useEffect } from "react";
 import useAxios from "../utils/useAxios";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import ClassesPageSchedule from "../components/schedules/ClassesPageSchedule";
 import LoadingComponent from "../components/LoadingComponent";
-import SelectSlotsTeacherSchedule from "../components/schedules/SelectSlotsTeacherSchedule";
 import guest from "../assets/guest.png";
 import { AiOutlinePhone, AiOutlineMail } from "react-icons/ai";
 import { MdOutlineLocationOn } from "react-icons/md";
 import parse from "html-react-parser";
+import showAlertError from "../components/messages/SwalAlertError";
+import OpinionCard from "../components/ClassesComponents/OpinionCard";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const ClassesPage = () => {
   const api = useAxios();
 
   const [classes, setClasses] = useState(null);
+  const [opinions, setOpinions] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [hasMoreOpinions, setHasMoreOpinions] = useState(false);
+  const [opinionPage, setOpinionPage] = useState(1);
+
   const { classesId } = useParams();
 
   const fetchClasses = async () => {
@@ -22,11 +28,53 @@ const ClassesPage = () => {
     await api
       .get(`/api/classes/${classesId}`)
       .then((res) => {
-        console.log(res.data);
         setClasses(res.data);
-        setLoading(false);
       })
       .catch((err) => {
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
+        setLoading(false);
+      });
+  };
+
+  const fetchOpinions = async () => {
+    await api
+      .get(`/api/classes/${classes?.teacher?.user?.id}/opinions?page_size=1`)
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+        setOpinions(res.data.results);
+        setHasMoreOpinions(res.data.next !== null);
+        setOpinionPage(opinionPage + 1);
+      })
+      .catch((err) => {
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
+        setLoading(false);
+      });
+  };
+
+  const loadMoreOpinions = async () => {
+    await api
+      .get(
+        `/api/classes/${classes?.teacher?.user?.id}/opinions?page=${opinionPage}&page_size=1`
+      )
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+        setOpinions((prev) => prev.concat(res.data.results));
+        setHasMoreOpinions(res.data.next !== null);
+        setOpinionPage(opinionPage + 1);
+      })
+      .catch((err) => {
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
         setLoading(false);
       });
   };
@@ -34,6 +82,12 @@ const ClassesPage = () => {
   useEffect(() => {
     fetchClasses();
   }, []);
+
+  useEffect(() => {
+    if (classes != null) {
+      fetchOpinions();
+    }
+  }, [classes]);
 
   return (
     <>
@@ -59,7 +113,7 @@ const ClassesPage = () => {
             <div className="card  border-[1px] border-base-200 py-4 rounded-none bg-white md:w-9/12 max-md:w-full flex phone:flex-row max-phone:flex-col shadow-xl">
               <div className="profile max-phone:pr-6 phone:pr-3 ml-3 w-4/12 max-phone:w-full border-r-[1px] border-base-300 flex flex-col justify-start items-center max-phone:order-2">
                 <div className="avatar">
-                  <div className="w-20 rounded-full">
+                  <div className="w-20 rounded-full hover:ring ring-primary ring-offset-base-100 ring-offset-2 transition-all duration-200">
                     <img
                       src={
                         classes?.teacher?.profile_image == null
@@ -195,6 +249,30 @@ const ClassesPage = () => {
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="card border-[1px] border-base-200 p-5 rounded-none shadow-xl bg-white md:w-full max-md:w-full flex flex-col mt-2">
+            <h1 className="block uppercase tracking-wide text-gray-700 text-xl font-bold border-b-[1px] border-base-100 mb-2 w-full">
+              Opinie o nauczycielu
+            </h1>
+
+            {opinions?.map((opinion) => (
+              <OpinionCard
+                opinion={opinion}
+                key={opinion.id}
+                page={opinionPage}
+              />
+            ))}
+            {hasMoreOpinions && (
+              <div className="px-5 max-phone:px-0">
+                <button
+                  className={`btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full md:w-4/12`}
+                  onClick={() => loadMoreOpinions()}
+                >
+                  Załaduj więcej...
+                </button>
+              </div>
+            )}
           </div>
         </section>
       )}
