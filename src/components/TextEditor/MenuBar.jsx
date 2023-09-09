@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 const MenuBar = ({ editorComponent }) => {
   if (!editorComponent) {
     return null;
   }
+  const setLink = useCallback(() => {
+    const previousUrl = editorComponent.getAttributes("link").href;
+    const url = window.prompt("URL", previousUrl);
+
+    if (url === null) {
+      return;
+    }
+
+    if (url === "") {
+      editorComponent.chain().focus().extendMarkRange("link").unsetLink().run();
+
+      return;
+    }
+
+    editorComponent
+      .chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({ href: url })
+      .run();
+  }, [editorComponent]);
 
   const buttonClassActive =
     "w-[12.5%] max-[300px]:w-1/6 bg-base-400 text-white active:bg-custom-darkgreen font-bold uppercase text-xs px-2 py-2 shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150";
@@ -250,6 +271,16 @@ const MenuBar = ({ editorComponent }) => {
             d="M760-160v-80q0-17 11.5-28.5T800-280h80v-40H760v-40h120q17 0 28.5 11.5T920-320v40q0 17-11.5 28.5T880-240h-80v40h120v40H760Zm-525-80 185-291-172-269h106l124 200h4l123-200h107L539-531l186 291H618L482-457h-4L342-240H235Z"
           />
         </svg>
+      </button>
+      <button
+        type="button"
+        title="Link"
+        onClick={() => setLink()}
+        className={
+          editorComponent.isActive("link") ? buttonClassActive : buttonClass
+        }
+      >
+        Link
       </button>
       <button
         type="button"

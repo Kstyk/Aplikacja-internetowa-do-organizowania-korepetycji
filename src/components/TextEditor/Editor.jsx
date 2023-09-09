@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef } from "react";
+import React, { useEffect, useState, forwardRef, useCallback } from "react";
 import ListItem from "@tiptap/extension-list-item";
 import TextStyle from "@tiptap/extension-text-style";
 import TextAlign from "@tiptap/extension-text-align";
@@ -6,6 +6,7 @@ import Underline from "@tiptap/extension-underline";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import Heading from "@tiptap/extension-heading";
+import Link from "@tiptap/extension-link";
 import { mergeAttributes } from "@tiptap/core";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -32,7 +33,18 @@ const Editor = forwardRef((props, ref) => {
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
+      Link.configure({
+        openOnClick: false,
+        HTMLAttributes: {
+          class: "text-blue-400 underline !break-words",
+        },
+      }),
       StarterKit.configure({
+        paragraph: {
+          HTMLAttributes: {
+            class: "w-full !break-words",
+          },
+        },
         bulletList: {
           HTMLAttributes: {
             class: "list-[square] pl-6",
@@ -55,9 +67,9 @@ const Editor = forwardRef((props, ref) => {
             ? node.attrs.level
             : this.options.levels[0];
           const classes = {
-            1: "text-3xl",
-            2: "text-2xl",
-            3: "text-xl",
+            1: "text-3xl !break-words",
+            2: "text-2xl !break-words",
+            3: "text-xl !break-words",
           };
           return [
             `h${level}`,
