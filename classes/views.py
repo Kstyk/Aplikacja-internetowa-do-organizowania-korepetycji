@@ -17,6 +17,7 @@ from datetime import datetime
 from rest_framework.serializers import ValidationError
 import uuid
 from django.db import IntegrityError
+from django.db.models import Avg
 
 # Create your views here.
 
@@ -254,9 +255,28 @@ class PurchaseHistoryList(generics.ListAPIView):
 
 class TeacherOpinionsList(generics.ListAPIView):
     serializer_class = OpinionSerializer
-    queryset = Opinion.objects.all()
     pagination_class = OpinionPagination
     lookup_field = 'teacher_id'
+
+    def get_queryset(self):
+        teacher_id = self.kwargs['teacher_id']
+        queryset = Opinion.objects.filter(teacher_id=teacher_id)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        average_rating = queryset.aggregate(Avg('rate'))['rate__avg']
+
+        response_data = {
+            "count": len(serializer.data),
+            "next": None,
+            "previous": None,
+            "results": serializer.data,
+            "average_rating": average_rating,
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class ReceivedOpinionsList(generics.ListAPIView):
@@ -270,6 +290,21 @@ class ReceivedOpinionsList(generics.ListAPIView):
         queryset = Opinion.objects.filter(teacher=user)
 
         return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        average_rating = queryset.aggregate(Avg('rate'))['rate__avg']
+
+        response_data = {
+            "count": len(serializer.data),
+            "next": None,
+            "previous": None,
+            "results": serializer.data,
+            "average_rating": average_rating,
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class CreateOpinionView(generics.CreateAPIView):
