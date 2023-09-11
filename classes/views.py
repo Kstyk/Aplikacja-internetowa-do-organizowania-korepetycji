@@ -265,14 +265,17 @@ class TeacherOpinionsList(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
+        page = self.paginate_queryset(queryset)
+
+        serializer = self.get_serializer(page, many=True)
+        paginated = self.get_paginated_response(serializer.data)
 
         average_rating = queryset.aggregate(Avg('rate'))['rate__avg']
 
         response_data = {
-            "count": len(serializer.data),
-            "next": None,
-            "previous": None,
+            "count": len(queryset),
+            "next": paginated.data['next'],
+            "previous": paginated.data['previous'],
             "results": serializer.data,
             "average_rating": average_rating,
         }
@@ -293,14 +296,17 @@ class ReceivedOpinionsList(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
+        page = self.paginate_queryset(queryset)
+
+        serializer = self.get_serializer(page, many=True)
+        paginated = self.get_paginated_response(serializer.data)
 
         average_rating = queryset.aggregate(Avg('rate'))['rate__avg']
 
         response_data = {
-            "count": len(serializer.data),
-            "next": None,
-            "previous": None,
+            "count": len(queryset),
+            "next": paginated.data['next'],
+            "previous": paginated.data['previous'],
             "results": serializer.data,
             "average_rating": average_rating,
         }
