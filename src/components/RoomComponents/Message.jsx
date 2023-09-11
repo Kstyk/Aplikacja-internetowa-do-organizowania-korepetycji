@@ -22,7 +22,7 @@ const Message = ({ message, secondUser }) => {
       )}
     >
       <div className="chat-image avatar">
-        <div className="w-10 rounded-full">
+        <div className="w-10 rounded-full hover:ring ring-primary ring-offset-base-100 ring-offset-2">
           <img
             title={
               user?.email != message.to_user.email

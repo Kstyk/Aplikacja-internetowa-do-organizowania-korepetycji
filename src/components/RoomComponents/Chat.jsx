@@ -373,9 +373,9 @@ const Chat = ({ archivized }) => {
 
   return (
     <div className="flex flex-col h-full bg-white">
-      <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 z-20"></div>
+      <div className="absolute z-5 top-[70px] left-0 right-0 h-[300px] bg-base-300"></div>
 
-      <div className="h-full flex flex-col justify-between z-30 bg-white">
+      <div className="h-full flex flex-col justify-between bg-white !z-10">
         <div
           id="scrollableDiv"
           className="flex flex-col-reverse w-8/12 mx-auto max-md:w-11/12 max-lg:w-10/12 max-sm:w-full fixed bottom-20 top-[14rem] mt-10 overflow-y-auto shadow-xl p-5 pl-0 bg-white"
@@ -482,7 +482,7 @@ const Chat = ({ archivized }) => {
       >
         <TransformWrapper minScale={0.5} initialScale={1}>
           <TransformComponent>
-            <div className="h-[100vh] w-[100%] mx-auto">
+            <div className="w-[100%] mx-auto">
               <video
                 preload="none"
                 ref={remoteVideoRef}

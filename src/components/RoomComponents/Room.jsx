@@ -12,6 +12,7 @@ import showSuccessAlert from "../messages/SwalAlertSuccess";
 import Files from "./Files";
 import RoomPageSchedule from "./RoomPageSchedule";
 import Swal from "sweetalert2";
+import RateTeacher from "../ClassesComponents/RateTeacher";
 
 const Room = () => {
   const { roomId } = useParams();
@@ -22,6 +23,7 @@ const Room = () => {
   const nav = useNavigate();
 
   const [name, setName] = useState();
+  const [teacher, setTeacher] = useState();
   const [isArchivized, setIsArchivized] = useState();
   const [loading, setLoading] = useState(true);
 
@@ -30,6 +32,7 @@ const Room = () => {
     await api
       .get(`api/rooms/${roomId}`)
       .then((res) => {
+        setTeacher(res.data.users.find((u) => u.email != user.email));
         setIsArchivized(res.data.archivized);
         setName(res.data.name);
         setLoading(false);
@@ -101,18 +104,33 @@ const Room = () => {
         <LoadingComponent />
       ) : (
         <>
-          <div className="z-30 flex flex-row bg-white mt-10 p-5 pb-0 w-full tab-bordered justify-between gap-x-5">
+          <div className="z-10 flex flex-row bg-white mt-10 p-5 pb-0 w-full tab-bordered justify-between gap-x-5">
             <h1 className="text-base phone:text-lg sm:text-xl uppercase tracking-wide font-bold ">
               {name}
             </h1>
-            <button
-              onClick={() => leaveTheRoom()}
-              className="hover:underline uppercase text-gray-500 text-xs phone:text-sm"
-            >
-              Opuść pokój
-            </button>
+            <section className="flex justify-end gap-x-5">
+              {user?.role == "Student" && (
+                <>
+                  <button
+                    onClick={() =>
+                      document.getElementById("rate_teacher").showModal()
+                    }
+                    className="hover:underline uppercase text-gray-500 text-xs phone:text-sm"
+                  >
+                    Oceń nauczyciela
+                  </button>
+                  <RateTeacher teacher={teacher} student={user} />
+                </>
+              )}
+              <button
+                onClick={() => leaveTheRoom()}
+                className="hover:underline uppercase text-gray-500 text-xs phone:text-sm"
+              >
+                Opuść pokój
+              </button>
+            </section>
           </div>
-          <div className="tabs z-30 bg-white p-5 shadow-xl h-[100%]">
+          <div className="tabs z-10 bg-white p-5 shadow-xl h-[100%] max-sm:pl-0">
             <div
               className={`tab tab-bordered uppercase tracking-wide text-sm phone:text-base font-bold  hover:text-[#00000080] ${
                 selectedTab == 1

@@ -153,7 +153,6 @@ function App() {
             <Route path="/teachers/:teacherId" element={<TeacherPage />} />
           </Routes>
           <ToastContainer
-            toastClassName={"!border-red-400  !border-2"}
             position="bottom-right"
             autoClose={false}
             newestOnTop={false}

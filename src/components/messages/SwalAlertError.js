@@ -16,7 +16,7 @@ const showAlertError = (title, text, onClose) => {
       customClass: {
         confirmButton:
           "btn btn-outline rounded-none outline-none border-[1px] text-black w-full",
-        popup: "rounded-none bg-base-100",
+        popup: "rounded-none bg-base-100 !z-[9999]",
       },
     })
     .then(() => {
