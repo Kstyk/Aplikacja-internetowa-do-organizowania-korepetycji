@@ -15,11 +15,13 @@ const ClassesPage = () => {
   const api = useAxios();
 
   const [classes, setClasses] = useState(null);
-  const [opinions, setOpinions] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [opinions, setOpinions] = useState([]);
   const [hasMoreOpinions, setHasMoreOpinions] = useState(false);
   const [opinionPage, setOpinionPage] = useState(1);
+  const [averageRating, setAverageRating] = useState(null);
+  const [amountOfOpinions, setAmountOfOpinions] = useState(0);
 
   const { classesId } = useParams();
 
@@ -43,11 +45,12 @@ const ClassesPage = () => {
     await api
       .get(`/api/classes/${classes?.teacher?.user?.id}/opinions?page_size=1`)
       .then((res) => {
-        console.log(res);
         setLoading(false);
         setOpinions(res.data.results);
         setHasMoreOpinions(res.data.next !== null);
         setOpinionPage(opinionPage + 1);
+        setAverageRating(res.data.average_rating);
+        setAmountOfOpinions(res.data.count);
       })
       .catch((err) => {
         showAlertError(
@@ -64,7 +67,6 @@ const ClassesPage = () => {
         `/api/classes/${classes?.teacher?.user?.id}/opinions?page=${opinionPage}&page_size=1`
       )
       .then((res) => {
-        console.log(res);
         setLoading(false);
         setOpinions((prev) => prev.concat(res.data.results));
         setHasMoreOpinions(res.data.next !== null);
@@ -220,8 +222,39 @@ const ClassesPage = () => {
                       <br /> za godzinę
                     </span>
                   </div>
+                </div>{" "}
+                <div className="border-b-[1px] border-base-100 my-2"></div>
+                <div className="text-gray-700 flex flex-row items-center gap-x-3">
+                  {averageRating != null ? (
+                    <>
+                      <div className="rating rating-sm phone:rating-md">
+                        {Array.from({ length: 5 }, (_, index) => (
+                          <input
+                            key={index}
+                            type="radio"
+                            name={`average__rate`}
+                            className="mask mask-star-2 bg-base-300"
+                            checked={
+                              Math.floor(averageRating) == index + 1
+                                ? true
+                                : false
+                            }
+                            readOnly
+                          />
+                        ))}
+                      </div>
+                      <span className="phone:text-xl sm:text-2xl">
+                        {averageRating}/5
+                      </span>
+                      <span className="flex flex-row items-center">
+                        ({amountOfOpinions} opinii)
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-sm">Brak wystawionych opinii</span>
+                  )}
                 </div>
-                <div className="border-b-[1px] border-base-100 my-4"></div>
+                <div className="border-b-[1px] border-base-100 my-2"></div>
                 <article className="describe">
                   {parse("" + classes?.description + "")}
                 </article>
@@ -251,29 +284,31 @@ const ClassesPage = () => {
             </div>
           </div>
 
-          <div className="card border-[1px] border-base-200 p-5 rounded-none shadow-xl bg-white md:w-full max-md:w-full flex flex-col mt-2">
-            <h1 className="block uppercase tracking-wide text-gray-700 text-xl font-bold border-b-[1px] border-base-100 mb-2 w-full">
-              Opinie o nauczycielu
-            </h1>
+          {opinions?.length > 0 && (
+            <div className="card border-[1px] border-base-200 p-5 rounded-none shadow-xl bg-white md:w-full max-md:w-full flex flex-col mt-2">
+              <h1 className="block uppercase tracking-wide text-gray-700 text-xl font-bold border-b-[1px] border-base-100 mb-2 w-full">
+                Opinie o nauczycielu
+              </h1>
 
-            {opinions?.map((opinion) => (
-              <OpinionCard
-                opinion={opinion}
-                key={opinion.id}
-                page={opinionPage}
-              />
-            ))}
-            {hasMoreOpinions && (
-              <div className="px-5 max-phone:px-0">
-                <button
-                  className={`btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full md:w-4/12`}
-                  onClick={() => loadMoreOpinions()}
-                >
-                  Załaduj więcej...
-                </button>
-              </div>
-            )}
-          </div>
+              {opinions?.map((opinion) => (
+                <OpinionCard
+                  opinion={opinion}
+                  key={opinion.id}
+                  page={opinionPage}
+                />
+              ))}
+              {hasMoreOpinions && (
+                <div className="px-5 max-phone:px-0">
+                  <button
+                    className={`btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full md:w-4/12`}
+                    onClick={() => loadMoreOpinions()}
+                  >
+                    Załaduj więcej...
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </section>
       )}
     </>

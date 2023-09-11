@@ -34,7 +34,7 @@ const OpinionCard = ({ opinion, page }) => {
                     key={index}
                     type="radio"
                     name={`${opinion?.id}__rate`}
-                    className="mask mask-star-2 bg-gray-800-400"
+                    className="mask mask-star-2 bg-base-300"
                     checked={opinion?.rate == index + 1 ? true : false}
                     readOnly
                   />

@@ -179,7 +179,11 @@ const Chat = ({ archivized }) => {
     checkMediaDevices();
     window.videocall.showModal();
 
-    const peer = new Peer();
+    const peer = new Peer({
+      host: "localhost",
+      port: 9000,
+      path: "/myapp",
+    });
 
     peer.on("open", (id) => {
       setPeerId(id);
@@ -371,11 +375,7 @@ const Chat = ({ archivized }) => {
     <div className="flex flex-col h-full bg-white">
       <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 z-20"></div>
 
-      {/* <div className="chat chat-start w-full"> */}
-      <div
-        id="scrollableDivFirst"
-        className="h-full flex flex-col justify-between z-30 bg-white"
-      >
+      <div className="h-full flex flex-col justify-between z-30 bg-white">
         <div
           id="scrollableDiv"
           className="flex flex-col-reverse w-8/12 mx-auto max-md:w-11/12 max-lg:w-10/12 max-sm:w-full fixed bottom-20 top-[14rem] mt-10 overflow-y-auto shadow-xl p-5 pl-0 bg-white"
@@ -394,7 +394,6 @@ const Chat = ({ archivized }) => {
                     hasMore={hasMoreMessages}
                     loader={<ChatLoader />}
                     scrollableTarget="scrollableDiv"
-                    // ref={scrollableDivRef}
                   >
                     {messageHistory.map((message) => (
                       <Message

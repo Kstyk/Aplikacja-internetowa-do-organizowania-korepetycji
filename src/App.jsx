@@ -23,6 +23,7 @@ import ChangeAvatarPage from "./pages/ChangeAvatarPage";
 import StudentProfilePage from "./pages/StudentProfilePage";
 import PurchaseHistoryPage from "./pages/PurchaseHistoryPage";
 import { ToastContainer } from "react-toastify";
+import ReceivedOpinions from "./pages/ReceivedOpinions";
 
 function App() {
   return (
@@ -45,6 +46,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <ProfilePage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/profil/otrzymane-opinie"
+                element={
+                  <PrivateRoute>
+                    <ReceivedOpinions />
                   </PrivateRoute>
                 }
               />

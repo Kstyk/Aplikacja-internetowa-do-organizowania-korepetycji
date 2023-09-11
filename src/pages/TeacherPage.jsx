@@ -7,6 +7,8 @@ import { AiOutlinePhone, AiOutlineMail, AiOutlineHome } from "react-icons/ai";
 import { MdOutlineLocationOn } from "react-icons/md";
 import parse from "html-react-parser";
 import { Link } from "react-router-dom";
+import OpinionCard from "../components/ClassesComponents/OpinionCard";
+import showAlertError from "../components/messages/SwalAlertError";
 
 const TeacherPage = () => {
   const { teacherId } = useParams();
@@ -15,6 +17,12 @@ const TeacherPage = () => {
   const [profile, setProfile] = useState(null);
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const [opinions, setOpinions] = useState([]);
+  const [hasMoreOpinions, setHasMoreOpinions] = useState(false);
+  const [opinionPage, setOpinionPage] = useState(1);
+  const [averageRating, setAverageRating] = useState(null);
+  const [amountOfOpinions, setAmountOfOpinions] = useState(0);
 
   const fetchProfile = async () => {
     await api
@@ -41,12 +49,58 @@ const TeacherPage = () => {
       });
   };
 
+  const fetchOpinions = async () => {
+    await api
+      .get(`/api/classes/${profile?.user?.id}/opinions?page_size=10`)
+      .then((res) => {
+        setLoading(false);
+        setOpinions(res.data.results);
+        setHasMoreOpinions(res.data.next !== null);
+        setOpinionPage(opinionPage + 1);
+        setAverageRating(res.data.average_rating);
+        setAmountOfOpinions(res.data.count);
+      })
+      .catch((err) => {
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
+        setLoading(false);
+      });
+  };
+
+  const loadMoreOpinions = async () => {
+    await api
+      .get(
+        `/api/classes/${profile?.user?.id}/opinions?page=${opinionPage}&page_size=10`
+      )
+      .then((res) => {
+        setLoading(false);
+        setOpinions((prev) => prev.concat(res.data.results));
+        setHasMoreOpinions(res.data.next !== null);
+        setOpinionPage(opinionPage + 1);
+      })
+      .catch((err) => {
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
+        setLoading(false);
+      });
+  };
+
   const fetchAll = async () => {
     setLoading(true);
     await fetchClassesTeacher();
     await fetchProfile();
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (profile != null) {
+      fetchOpinions();
+    }
+  }, [profile]);
 
   useEffect(() => {
     fetchAll();
@@ -166,11 +220,41 @@ const TeacherPage = () => {
                 </section>
               </div>
               <div className="content w-8/12 sm:w-9/12 max-phone:w-full px-4 max-phone:order-2 max-phone:pb-3 max-phone:mb-3">
-                <div className="header flex flex-row">
-                  <div className="left w-8/12">
+                <div className="header flex flex-col">
+                  <div className="flex flex-row w-full justify-between items-center">
                     <h1 className="text-3xl uppercase">
                       {profile?.user.first_name} {profile?.user.last_name}
                     </h1>
+                  </div>
+                  <div className="text-gray-700 flex flex-row items-center gap-x-3">
+                    {averageRating != null ? (
+                      <>
+                        <div className="rating rating-sm phone:rating-md">
+                          {Array.from({ length: 5 }, (_, index) => (
+                            <input
+                              key={index}
+                              type="radio"
+                              name={`average__rate`}
+                              className="mask mask-star-2 bg-base-300"
+                              checked={
+                                Math.floor(averageRating) == index + 1
+                                  ? true
+                                  : false
+                              }
+                              readOnly
+                            />
+                          ))}
+                        </div>
+                        <span className="phone:text-xl sm:text-2xl">
+                          {averageRating}/5
+                        </span>
+                        <span className="flex flex-row items-center">
+                          ({amountOfOpinions} opinii)
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-sm">Brak wystawionych opinii</span>
+                    )}
                   </div>
                 </div>
                 <div className="border-b-2 border-base-100 my-4"></div>
@@ -267,6 +351,32 @@ const TeacherPage = () => {
               </div>
             </div>
           </div>
+
+          {opinions?.length > 0 && (
+            <div className="card border-[1px] border-base-200 p-5 rounded-none shadow-xl bg-white md:w-full max-md:w-full flex flex-col mt-2">
+              <h1 className="block uppercase tracking-wide text-gray-700 text-xl font-bold border-b-[1px] border-base-100 mb-2 w-full">
+                Opinie o nauczycielu
+              </h1>
+
+              {opinions?.map((opinion) => (
+                <OpinionCard
+                  opinion={opinion}
+                  key={opinion.id}
+                  page={opinionPage}
+                />
+              ))}
+              {hasMoreOpinions && (
+                <div className="px-5 max-phone:px-0">
+                  <button
+                    className={`btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full md:w-4/12`}
+                    onClick={() => loadMoreOpinions()}
+                  >
+                    Załaduj więcej...
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </section>
       )}
     </>

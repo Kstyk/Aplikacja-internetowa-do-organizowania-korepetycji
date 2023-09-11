@@ -148,6 +148,14 @@ const Navbar = () => {
                     </a>
                   </li>
                   <li>
+                    <Link
+                      to="/profil/otrzymane-opinie"
+                      className="focus:bg-base-300 hover:bg-base-200"
+                    >
+                      Otrzymane opinie
+                    </Link>
+                  </li>
+                  <li>
                     <a href="#" className="focus:bg-base-300 hover:bg-base-200">
                       Ustal harmonogram
                     </a>
