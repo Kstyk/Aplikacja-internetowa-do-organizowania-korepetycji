@@ -2,8 +2,33 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import useAxios from "../../utils/useAxios";
 import showAlertError from "../messages/SwalAlertError";
+import showSuccessAlert from "../messages/SwalAlertSuccess";
+import Modal from "react-modal";
+import { AiOutlineClose } from "react-icons/ai";
 
 const RateTeacher = ({ teacher, student }) => {
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function afterOpenModal() {}
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  const customStyles = {
+    overlay: {
+      zIndex: 1000,
+      background: "rgb(80,80,80, 0.5)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  };
+
   const {
     register,
     handleSubmit,
@@ -15,34 +40,71 @@ const RateTeacher = ({ teacher, student }) => {
   const api = useAxios();
 
   const onSubmit = (data) => {
-    console.log(data);
+    if (data.rate == null) {
+      data.rate = 5;
+    }
 
     data.teacher = teacher.id;
     data.student = student.user_id;
-    console.log(data);
 
     api
       .post(`api/classes/add-opinion/`, data)
       .then((res) => {
-        console.log(res);
+        closeModal();
+        showSuccessAlert("Sukces!", "Pomyślnie dodałeś ocenę nauczycielowi.");
       })
       .catch((err) => {
-        document.getElementById("rate_teacher").remove();
-        if (err.response.data.teacher) {
-          showAlertError(
-            "Błąd",
-            err.response.data.teacher.map((error) => error)
-          );
+        closeModal();
+        if (err.response.status == 400) {
+          if (err.response.data.exist_opinion) {
+            showAlertError(
+              "Błąd",
+              err.response.data.exist_opinion.map((error) => error)
+            );
+          }
+          if (err.response.data.student) {
+            showAlertError(
+              "Błąd",
+              err.response.data.student.map((error) => error)
+            );
+          }
+          if (err.response.data.teacher) {
+            showAlertError(
+              "Błąd",
+              err.response.data.teacher.map((error) => error)
+            );
+          }
+          if (err.response.data.rate) {
+            showAlertError(
+              "Błąd",
+              err.response.data.rate.map((error) => error)
+            );
+          }
         } else {
           showAlertError("Błąd", "Nieudane dodanie opinii.");
         }
-        console.log(err);
       });
   };
 
   return (
-    <dialog id="rate_teacher" className={`modal modal-middle`}>
-      <div className="modal-box bg-white rounded-sm w-11/12 md:w-8/12 xl:w-6/12 max-w-5xl !z-20">
+    <div className="flex items-center">
+      <button
+        className="hover:underline uppercase text-gray-500 text-xs phone:text-sm"
+        onClick={openModal}
+      >
+        Oceń nauczyciela
+      </button>
+      <Modal
+        isOpen={modalIsOpen}
+        onAfterOpen={afterOpenModal}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Oceń nauczyciela"
+        className={`w-full rounded-sm phone:w-10/12 sm:w-8/12 md:w-6/12 bg-base-100 my-auto p-10 animate__animated animate__zoomIn`}
+      >
+        <button onClick={closeModal} className="float-right rounded-full">
+          <AiOutlineClose className="h-6 w-6" />
+        </button>
         <h3 className="font-bold text-lg text-gray-800 text-center">
           Wystaw ocenę dla:{" "}
           <span className="uppercase">
@@ -111,16 +173,8 @@ const RateTeacher = ({ teacher, student }) => {
             Dodaj opinię
           </button>
         </form>
-        <div className="modal-action">
-          <form method="dialog">
-            {/* if there is a button in form, it will close the modal */}
-            <button className="btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full mb-2">
-              Zamknij
-            </button>
-          </form>
-        </div>
-      </div>
-    </dialog>
+      </Modal>
+    </div>
   );
 };
 

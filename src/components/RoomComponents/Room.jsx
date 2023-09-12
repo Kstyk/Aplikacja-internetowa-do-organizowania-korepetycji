@@ -72,6 +72,12 @@ const Room = () => {
           "btn  rounded-none outline-none border-[1px] text-black w-full",
         popup: "rounded-none bg-base-100",
       },
+      showClass: {
+        popup: "animate__animated animate__zoomIn",
+      },
+      hideClass: {
+        popup: "animate__animated animate__zoomOut",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         api
@@ -86,7 +92,6 @@ const Room = () => {
             );
           })
           .catch((err) => {
-            console.log(err);
             showAlertError("Niedozwolona akcja", err.response.data.error);
           });
       }
@@ -111,14 +116,6 @@ const Room = () => {
             <section className="flex justify-end gap-x-5">
               {user?.role == "Student" && (
                 <>
-                  <button
-                    onClick={() =>
-                      document.getElementById("rate_teacher").showModal()
-                    }
-                    className="hover:underline uppercase text-gray-500 text-xs phone:text-sm"
-                  >
-                    Oceń nauczyciela
-                  </button>
                   <RateTeacher teacher={teacher} student={user} />
                 </>
               )}
