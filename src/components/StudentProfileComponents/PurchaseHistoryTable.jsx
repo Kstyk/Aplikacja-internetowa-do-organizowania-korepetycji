@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
+import AuthContext from "../../context/AuthContext";
+
 const PurchaseHistoryTable = (props) => {
   const { purchases } = props;
-
+  const { user } = useContext(AuthContext);
   return (
     <div className="container mx-auto text-gray-100 mb-10">
       <div className="flex flex-col  text-xs">
@@ -47,12 +49,24 @@ const PurchaseHistoryTable = (props) => {
               </Link>
             </div>
             <div className="hidden w-24 px-2 py-3 sm:p-3 sm:flex justify-center items-center text-center">
-              <Link
-                className="underline"
-                to={`/pokoj/${purchase?.room?.room_id}`}
-              >
-                Link
-              </Link>
+              {purchase?.room != null ? (
+                purchase?.room?.users.some((u) => {
+                  if (u?.user?.id == user?.user_id) {
+                    return true;
+                  }
+                }) ? (
+                  <Link
+                    className="underline"
+                    to={`/pokoj/${purchase?.room?.room_id}`}
+                  >
+                    Link
+                  </Link>
+                ) : (
+                  "Brak pokoju."
+                )
+              ) : (
+                "Brak pokoju."
+              )}
             </div>
             <div className="w-20 sm:w-24 px-2 py-3 sm:p-3 flex justify-center items-center text-center">
               {purchase?.amount_of_lessons}
