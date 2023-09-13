@@ -24,6 +24,7 @@ import StudentProfilePage from "./pages/StudentProfilePage";
 import PurchaseHistoryPage from "./pages/PurchaseHistoryPage";
 import { ToastContainer } from "react-toastify";
 import ReceivedOpinions from "./pages/ReceivedOpinions";
+import StudentPage from "./pages/StudentPage";
 
 function App() {
   return (
@@ -36,10 +37,8 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<HomePage />} />
-
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegistrationPage />} />
-
             <Route element={<TeacherAllowed />}>
               <Route
                 path="/profil"
@@ -58,7 +57,6 @@ function App() {
                 }
               />
             </Route>
-
             <Route element={<StudentAllowed />}>
               <Route
                 path="/profil-ucznia"
@@ -77,7 +75,6 @@ function App() {
                 }
               />
             </Route>
-
             <Route
               path="/profil/edytuj"
               element={
@@ -86,7 +83,6 @@ function App() {
                 </PrivateRoute>
               }
             />
-
             <Route
               path="/profil/zmien-haslo"
               element={
@@ -103,7 +99,6 @@ function App() {
                 </PrivateRoute>
               }
             />
-
             <Route
               path="/profil/edytuj-avatar"
               element={
@@ -112,7 +107,6 @@ function App() {
                 </PrivateRoute>
               }
             />
-
             <Route
               path="/my-rooms"
               element={
@@ -144,13 +138,14 @@ function App() {
               path="/search-classes/text/:searchText"
               element={<SearchClassesPage />}
             />
-
             <Route path="/classes/:classesId" element={<ClassesPage />} />
             <Route
               path="/classes/:classesId/buy"
               element={<BuyClassesPage />}
             />
-            <Route path="/teachers/:teacherId" element={<TeacherPage />} />
+            <Route path="/nauczyciel/:teacherId" element={<TeacherPage />} />
+            <Route path="/student/:studentId" element={<StudentPage />} />
+            <Route path="*" element={<HomePage />} /> // dla nieistniejących url
           </Routes>
           <ToastContainer
             position="bottom-right"
