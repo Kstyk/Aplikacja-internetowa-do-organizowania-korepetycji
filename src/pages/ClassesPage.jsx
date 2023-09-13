@@ -204,7 +204,7 @@ const ClassesPage = () => {
                     </Link>
                     <h1 className="text-3xl uppercase">
                       <Link
-                        to={`/teachers/${classes?.teacher?.user?.id}`}
+                        to={`/nauczyciel/${classes?.teacher?.user?.id}`}
                         params={{
                           teacherId: classes?.teacher?.user?.id,
                         }}

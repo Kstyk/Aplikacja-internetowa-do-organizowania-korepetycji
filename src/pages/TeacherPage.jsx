@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import useAxios from "../utils/useAxios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import LoadingComponent from "../components/LoadingComponent";
 import guest from "../assets/guest.png";
 import { AiOutlinePhone, AiOutlineMail, AiOutlineHome } from "react-icons/ai";
@@ -13,10 +13,11 @@ import showAlertError from "../components/messages/SwalAlertError";
 const TeacherPage = () => {
   const { teacherId } = useParams();
   const api = useAxios();
+  const nav = useNavigate();
 
   const [profile, setProfile] = useState(null);
   const [classes, setClasses] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [opinions, setOpinions] = useState([]);
   const [hasMoreOpinions, setHasMoreOpinions] = useState(false);
@@ -28,15 +29,22 @@ const TeacherPage = () => {
     await api
       .get(`/api/users/profile/${teacherId}`)
       .then((res) => {
-        setProfile(res.data);
+        if (res.data.user.role.label != "Teacher") {
+          nav(-1);
+          return;
+        } else {
+          setProfile(res.data);
+        }
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
   };
 
   const fetchClassesTeacher = async () => {
-    //teacher
     let baseurl = `/api/classes/?page_size=10&page=1&teacher=${teacherId}`;
 
     await api
@@ -45,7 +53,10 @@ const TeacherPage = () => {
         setClasses(res.data.classes);
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
   };
 
@@ -91,9 +102,8 @@ const TeacherPage = () => {
 
   const fetchAll = async () => {
     setLoading(true);
-    await fetchClassesTeacher();
     await fetchProfile();
-    setLoading(false);
+    await fetchClassesTeacher();
   };
 
   useEffect(() => {

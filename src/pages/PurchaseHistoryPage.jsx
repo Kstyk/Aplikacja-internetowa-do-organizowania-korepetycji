@@ -31,7 +31,10 @@ const PurchaseHistoryPage = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
     setLoading(false);
   };
@@ -43,13 +46,13 @@ const PurchaseHistoryPage = () => {
     await api
       .get(baseurl)
       .then((res) => {
-        console.log(res);
         if (res.data.results == null) {
           setPurchases(null);
           setTotalPages(0);
           setTotalResults(0);
           setCurrentPage(1);
         } else {
+          console.log(res.data);
           setPurchases(res.data.results);
           setTotalPages(res.data.num_pages);
           setTotalResults(res.data.count);
@@ -57,7 +60,10 @@ const PurchaseHistoryPage = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
 
     setLoading(false);

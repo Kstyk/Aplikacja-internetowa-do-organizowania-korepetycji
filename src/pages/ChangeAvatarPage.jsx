@@ -7,7 +7,6 @@ import showSuccessAlert from "../components/messages/SwalAlertSuccess";
 import { useNavigate } from "react-router-dom";
 
 const ChangeAvatarPage = () => {
-  const [imageUrl, setImageUrl] = useState();
   const [loading, setLoading] = useState(true);
 
   const [currentAvatar, setCurrentAvatar] = useState();
@@ -25,8 +24,11 @@ const ChangeAvatarPage = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
         setLoading(false);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
   };
 
@@ -58,7 +60,10 @@ const ChangeAvatarPage = () => {
         );
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy zmianie avataru. Sprawdź, czy typ przesyłanego pliku przez Ciebie jest typu graficznego."
+        );
       });
   };
 
@@ -77,7 +82,10 @@ const ChangeAvatarPage = () => {
         });
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy usuwaniu Twojego avatara. Przepraszamy za utrudnienia."
+        );
       });
   };
 

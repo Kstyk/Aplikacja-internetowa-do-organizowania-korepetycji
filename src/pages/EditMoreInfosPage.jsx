@@ -103,17 +103,13 @@ const EditMoreInfosPage = () => {
           setLoadingCity(false);
         })
         .catch((err) => {
-          console.log(err);
           setLoadingCity(false);
+          showAlertError("Błąd", "Nie udało się znaleźć żądanej miejscowości.");
         });
     } else {
       setCities([]);
       setLoadingCity(false);
     }
-  };
-
-  const handleCitySelectChange = (e) => {
-    setVoivodeship(voivodeships.find((voi) => voi.id == e.region_id && voi));
   };
 
   const fetchLanguages = async () => {
@@ -123,7 +119,10 @@ const EditMoreInfosPage = () => {
         setLanguages(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
   };
 
@@ -134,7 +133,10 @@ const EditMoreInfosPage = () => {
         setVoivodeships(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
   };
 
@@ -170,7 +172,10 @@ const EditMoreInfosPage = () => {
         setValue("address.building_number", res.data.address?.building_number);
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych profilu z serwera."
+        );
       });
   };
 

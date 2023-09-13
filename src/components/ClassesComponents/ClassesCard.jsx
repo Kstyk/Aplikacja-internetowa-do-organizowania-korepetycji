@@ -63,7 +63,7 @@ const ClassesCard = (props) => {
             </h1>
           </Link>
           <Link
-            to={`/teachers/${classes?.teacher?.user?.id}`}
+            to={`/nauczyciel/${classes?.teacher?.user?.id}`}
             params={{
               teacherId: classes?.teacher?.user?.id,
             }}

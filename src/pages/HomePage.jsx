@@ -21,7 +21,10 @@ const HomePage = () => {
         setLanguages(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
   };
 
@@ -33,8 +36,11 @@ const HomePage = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
         setLoading(false);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
   };
 

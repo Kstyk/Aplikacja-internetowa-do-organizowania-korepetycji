@@ -26,6 +26,7 @@ const Room = () => {
   const [teacher, setTeacher] = useState();
   const [isArchivized, setIsArchivized] = useState();
   const [loading, setLoading] = useState(true);
+  const [isOpened, setIsOpened] = useState(false); // modal oceny nauczyciela
 
   const fetchReceiver = async () => {
     setLoading(true);
@@ -116,7 +117,18 @@ const Room = () => {
             <section className="flex justify-end gap-x-5">
               {user?.role == "Student" && (
                 <>
-                  <RateTeacher teacher={teacher} student={user} />
+                  <button
+                    className="hover:underline uppercase text-gray-500 text-xs phone:text-sm"
+                    onClick={() => setIsOpened(!isOpened)}
+                  >
+                    Oceń nauczyciela
+                  </button>
+                  <RateTeacher
+                    teacher={teacher}
+                    student={user}
+                    opened={isOpened}
+                    setIsOpened={setIsOpened}
+                  />
                 </>
               )}
               <button

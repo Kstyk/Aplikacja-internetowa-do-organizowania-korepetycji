@@ -121,7 +121,7 @@ const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
           } else {
             setSelected((selected) => [...selected, findTeacherSlot]);
           }
-        } else console.log(false);
+        }
       } else {
         const swalWithTailwindClasses = Swal.mixin({
           customClass: {

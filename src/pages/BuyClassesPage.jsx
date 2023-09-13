@@ -33,6 +33,10 @@ const BuyClassesPage = () => {
       })
       .catch((err) => {
         setLoading(false);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
   };
 
@@ -67,10 +71,13 @@ const BuyClassesPage = () => {
       .catch((err) => {
         if (err.response.status == 400) {
           showAlertError("Błąd", err.response.data.error[0]);
-        }
-
-        if (err.response.status == 403) {
+        } else if (err.response.status == 403) {
           showAlertError("Nieuprawniona akcja", err.response.data.detail);
+        } else {
+          showAlertError(
+            "Błąd",
+            "Wystąpił błąd przy zakupie zajęć. Przperaszamy za utrudnienia."
+          );
         }
         setSelected([]);
       });

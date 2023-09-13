@@ -5,18 +5,23 @@ import showAlertError from "../messages/SwalAlertError";
 import showSuccessAlert from "../messages/SwalAlertSuccess";
 import Modal from "react-modal";
 import { AiOutlineClose } from "react-icons/ai";
+import { useEffect } from "react";
 
-const RateTeacher = ({ teacher, student }) => {
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
+  useEffect(() => {
+    if (opened) {
+      openModal();
+    }
+  }, [opened]);
 
   function openModal() {
-    setIsOpen(true);
+    setIsOpened(true);
   }
 
   function afterOpenModal() {}
 
   function closeModal() {
-    setIsOpen(false);
+    setIsOpened(false);
   }
 
   const customStyles = {
@@ -88,14 +93,8 @@ const RateTeacher = ({ teacher, student }) => {
 
   return (
     <div className="flex items-center">
-      <button
-        className="hover:underline uppercase text-gray-500 text-xs phone:text-sm"
-        onClick={openModal}
-      >
-        Oceń nauczyciela
-      </button>
       <Modal
-        isOpen={modalIsOpen}
+        isOpen={opened}
         onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
         style={customStyles}
