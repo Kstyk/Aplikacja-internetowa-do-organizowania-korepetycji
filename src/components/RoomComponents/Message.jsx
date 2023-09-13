@@ -3,6 +3,7 @@ import AuthContext from "../../context/AuthContext";
 import dayjs from "dayjs";
 import guest from "../../assets/guest.png";
 import { backendUrl } from "../../variables/backendUrl";
+import { Link } from "react-router-dom";
 
 export function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -21,7 +22,15 @@ const Message = ({ message, secondUser }) => {
         user?.email === message.to_user.email ? "chat-start" : "chat-end"
       )}
     >
-      <div className="chat-image avatar">
+      {console.log(message)}
+      <Link
+        to={
+          message?.from_user?.role?.label == "Teacher"
+            ? `/nauczyciel/${message?.from_user?.id}`
+            : `/student/${message?.from_user?.id}`
+        }
+        className="chat-image avatar"
+      >
         <div className="w-10 rounded-full hover:ring ring-primary ring-offset-base-100 ring-offset-2">
           <img
             title={
@@ -40,7 +49,7 @@ const Message = ({ message, secondUser }) => {
             }
           />
         </div>
-      </div>
+      </Link>
       <div className="chat-header flex gap-x-3">
         <time className="text-xs opacity-50">
           {dayjs(message.timestamp).format("dddd, HH:mm")}
