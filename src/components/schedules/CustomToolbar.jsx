@@ -9,21 +9,23 @@ class CustomToolbar extends Toolbar {
           <button
             className="btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400 hover:text-white"
             type="button"
-            onClick={() => this.navigate("TODAY")}
+            onClick={() => this.props.onNavigate("TODAY")}
           >
             Dzisiaj
           </button>
           <button
-            className="btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400 hover:text-white"
+            className={`btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400 hover:text-white`}
             type="button"
-            onClick={() => this.navigate("PREV")}
+            onClick={() => this.props.onNavigate("PREV")}
+            disabled={this.props.isMinDateReached}
           >
             Do tyłu
           </button>
           <button
-            className="btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400 hover:text-white"
+            className={`btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400 hover:text-white`}
             type="button"
-            onClick={() => this.navigate("NEXT")}
+            onClick={() => this.props.onNavigate("NEXT")}
+            disabled={this.props.isMaxDateReached}
           >
             Do przodu
           </button>

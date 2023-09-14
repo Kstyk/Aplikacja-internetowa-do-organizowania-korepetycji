@@ -9,6 +9,7 @@ import useAxios from "../../utils/useAxios";
 import { timeslots } from "../../variables/Timeslots";
 import CustomToolbar from "./CustomToolbar";
 import Swal from "sweetalert2";
+import { set } from "react-hook-form";
 
 const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
   const [loading, setLoading] = useState(false);
@@ -17,7 +18,13 @@ const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
   dayjs.locale("pl");
   const localizer = dayjsLocalizer(dayjs);
 
-  const today = new Date();
+  const [today, setToday] = useState(new Date());
+  const [date, setDate] = useState(new Date());
+  const [maxDate, setMaxDate] = useState(
+    new Date().setMonth(today.getMonth() + 1)
+  );
+  const [maxDateReached, setMaxDateReached] = useState(false);
+  const [minDateReached, setMinDateReached] = useState(true);
 
   const api = useAxios();
 
@@ -28,7 +35,10 @@ const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
         setEvents(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
   };
 
@@ -40,8 +50,11 @@ const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
         setTimeSlotsTeacher(res.data);
       })
       .catch((err) => {
-        console.log(err);
         setLoading(false);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
   };
 
@@ -249,23 +262,48 @@ const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
     }
   }, [classes]);
 
+  const minTime = new Date();
+  minTime.setHours(9, 0, 0);
+  const maxTime = new Date();
+  maxTime.setHours(19, 0, 0);
+
+  const onNavigate = useCallback(
+    (newDate) => {
+      if (newDate < maxDate && newDate > today) {
+        setDate(newDate);
+      }
+
+      const newDatePlus7Days = new Date(newDate);
+      newDatePlus7Days.setDate(newDatePlus7Days.getDate() + 7);
+      if (newDatePlus7Days > maxDate) {
+        setMaxDateReached(true);
+      } else {
+        setMaxDateReached(false);
+      }
+      const newDateMinus7Days = new Date(newDate);
+      newDateMinus7Days.setDate(newDateMinus7Days.getDate() - 7);
+      if (newDateMinus7Days < today) {
+        setMinDateReached(true);
+      } else {
+        setMinDateReached(false);
+      }
+    },
+    [setDate]
+  );
+
   return (
     <div>
       <Calendar
+        date={date}
         localizer={localizer}
         events={eventArray}
         defaultView="week"
-        min={
-          new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9)
-        }
-        max={
-          new Date(today.getFullYear(), today.getMonth(), today.getDate(), 19)
-        }
+        min={minTime}
+        max={maxTime}
         views={{ week: true }}
         startAccessor="start"
         endAccessor="end"
         tooltipAccessor={null}
-        // style={{ height: 500 }}
         timeslots={1}
         step={60}
         formats={formats}
@@ -273,7 +311,16 @@ const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
         eventPropGetter={eventStyleGetter}
         onSelectSlot={onSelectSlot}
         selectable="ignoreEvents"
-        components={{ toolbar: CustomToolbar }}
+        onNavigate={onNavigate}
+        components={{
+          toolbar: (props) => (
+            <CustomToolbar
+              {...props}
+              isMaxDateReached={maxDateReached}
+              isMinDateReached={minDateReached}
+            />
+          ),
+        }}
       />
     </div>
   );

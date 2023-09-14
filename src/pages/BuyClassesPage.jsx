@@ -27,7 +27,6 @@ const BuyClassesPage = () => {
     await api
       .get(`/api/classes/${classesId}`)
       .then((res) => {
-        console.log(res.data);
         setClasses(res.data);
         setLoading(false);
       })
