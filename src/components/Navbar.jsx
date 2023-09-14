@@ -156,9 +156,12 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <a href="#" className="focus:bg-base-300 hover:bg-base-200">
+                    <Link
+                      to="/plan/edytuj"
+                      className="focus:bg-base-300 hover:bg-base-200"
+                    >
                       Ustal harmonogram
-                    </a>
+                    </Link>
                   </li>
 
                   <li>

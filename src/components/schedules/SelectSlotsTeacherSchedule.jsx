@@ -4,24 +4,18 @@ import "dayjs/locale/pl";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./schedule.scss";
-// import "./scheduleslotsteacher.scss";
 import { useState } from "react";
-import LoadingComponent from "../LoadingComponent";
 import useAxios from "../../utils/useAxios";
 import { timeslots } from "../../variables/Timeslots";
-import CustomToolbar from "./CustomToolbar";
-import Swal from "sweetalert2";
 import CustomToolbarNoButtons from "./CustomToolbarNoButtons";
 import AuthContext from "../../context/AuthContext";
 
 const SelectSlotsTeacherSchedule = () => {
   const { user } = useContext(AuthContext);
-  const [schedule, setSchedule] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [timeSlotsTeacher, setTimeSlotsTeacher] = useState([]);
-  const [selected, setSelected] = useState([]);
-  const [eventArray, setEventArray] = useState([]);
   dayjs.locale("pl");
+
+  const [timeSlotsTeacher, setTimeSlotsTeacher] = useState([]);
+  const [eventArray, setEventArray] = useState([]);
   const localizer = dayjsLocalizer(dayjs);
 
   const today = new Date();
@@ -31,9 +25,7 @@ const SelectSlotsTeacherSchedule = () => {
   const clickRef = useRef(null);
 
   const allFunctions = async () => {
-    setLoading(true);
     await fetchTeacherTimeslots();
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -46,12 +38,10 @@ const SelectSlotsTeacherSchedule = () => {
     await api
       .get(`/api/classes/${user?.user_id}/timeslots/`)
       .then((res) => {
-        setLoading(false);
         setTimeSlotsTeacher(res.data);
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
       });
   };
 
@@ -59,7 +49,7 @@ const SelectSlotsTeacherSchedule = () => {
     dateFormat: "dd",
 
     dayFormat: (date, culture, localizer) =>
-      localizer.format(date, "dddd", culture),
+      localizer.format(date, "dd", culture),
 
     dayRangeHeaderFormat: ({ start, end }, culture, localizer) =>
       localizer.format(start, "dddd", culture) +
@@ -108,17 +98,7 @@ const SelectSlotsTeacherSchedule = () => {
                 hour < parseInt(matchingTime[i].end.split(":")[0])
               ) {
                 return {
-                  className:
-                    selected.length > 0 &&
-                    selected?.find(
-                      (el) =>
-                        el?.day_of_week == dayOfWeek &&
-                        el?.timeslot_index == matchingTime[i].timeslot &&
-                        dayjs(el?.start).format("DD-MM-YYYYTHH:mm") ==
-                          dayjs(date).format("DD-MM-YYYYTHH:mm")
-                    )
-                      ? "freeTimeSlot bg-base-200 hover:bg-base-300"
-                      : "freeTimeSlot",
+                  className: "freeTimeSlot bg-base-200 hover:bg-base-300",
                 };
               }
             }
@@ -130,7 +110,7 @@ const SelectSlotsTeacherSchedule = () => {
         };
       }
     },
-    [timeSlotsTeacher, selected]
+    [timeSlotsTeacher]
   );
 
   const onSelectSlot = (slotInfo) => {
@@ -142,6 +122,8 @@ const SelectSlotsTeacherSchedule = () => {
       let clickedSlot = {
         day_of_week: dayjs(slotInfo.start).day(),
         timeslot_index: find.timeslot,
+        teacher: user?.user_id,
+        is_available: true,
       };
 
       let findTeacherSlot = timeSlotsTeacher.find(
@@ -159,6 +141,10 @@ const SelectSlotsTeacherSchedule = () => {
       }
     }, 50);
   };
+
+  useEffect(() => {
+    console.log(timeSlotsTeacher);
+  }, [timeSlotsTeacher]);
 
   return (
     <Calendar

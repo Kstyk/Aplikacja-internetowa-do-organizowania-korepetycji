@@ -25,6 +25,7 @@ import PurchaseHistoryPage from "./pages/PurchaseHistoryPage";
 import { ToastContainer } from "react-toastify";
 import ReceivedOpinions from "./pages/ReceivedOpinions";
 import StudentPage from "./pages/StudentPage";
+import ModifyTimeslotsPage from "./pages/ModifyTimeslotsPage";
 
 function App() {
   return (
@@ -53,6 +54,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <ReceivedOpinions />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/plan/edytuj"
+                element={
+                  <PrivateRoute>
+                    <ModifyTimeslotsPage />
                   </PrivateRoute>
                 }
               />
