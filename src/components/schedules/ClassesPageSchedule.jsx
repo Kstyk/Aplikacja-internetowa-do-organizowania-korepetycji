@@ -4,12 +4,10 @@ import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./schedule.scss";
 import { useState } from "react";
-import LoadingComponent from "../LoadingComponent";
 import useAxios from "../../utils/useAxios";
 import { timeslots } from "../../variables/Timeslots";
 import CustomToolbar from "./CustomToolbar";
 import Swal from "sweetalert2";
-import { set } from "react-hook-form";
 
 const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
   const [loading, setLoading] = useState(false);

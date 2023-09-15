@@ -5,10 +5,8 @@ import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./schedule.scss";
 import { useState } from "react";
-import LoadingComponent from "../LoadingComponent";
 import useAxios from "../../utils/useAxios";
 import CustomToolbar from "./CustomToolbar";
-import Swal from "sweetalert2";
 import { timeslots } from "../../variables/Timeslots";
 
 const RoomSchedule = ({ schedule }) => {

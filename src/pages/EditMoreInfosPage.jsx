@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import LoadingComponent from "../components/LoadingComponent";
 import { useForm, Controller } from "react-hook-form";
 import useAxios from "../utils/useAxios";
@@ -6,8 +6,10 @@ import { useNavigate } from "react-router-dom";
 import Editor from "../components/TextEditor/Editor";
 import Select from "react-select";
 import showSuccessAlert from "../components/messages/SwalAlertSuccess";
+import AuthContext from "../context/AuthContext";
 
 const EditMoreInfosPage = () => {
+  const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const api = useAxios();
 
@@ -16,10 +18,8 @@ const EditMoreInfosPage = () => {
   const [experienceHtml, setExperienceHtml] = useState(null);
 
   const [cities, setCities] = useState([]);
-  const [city, setCity] = useState(null);
   const [loadingCity, setLoadingCity] = useState(false);
   const [voivodeships, setVoivodeships] = useState([]);
-  const [voivodeship, setVoivodeship] = useState(null);
   const [languages, setLanguages] = useState([]);
 
   const nav = useNavigate();
@@ -55,9 +55,7 @@ const EditMoreInfosPage = () => {
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
-    setValues,
     control,
     getValues,
     formState: { errors },
@@ -247,7 +245,7 @@ const EditMoreInfosPage = () => {
           "Sukces!",
           "Pomyślnie zedytowałeś dane swojego konta.",
           () => {
-            nav("/profil");
+            user?.role == "Teacher" ? nav("/profil") : nav("/profil-ucznia");
           }
         );
       })
@@ -271,8 +269,9 @@ const EditMoreInfosPage = () => {
               </h1>
               <div className="border-b-[1px] border-base-100 my-4"></div>
               <p className="text-center text-sm">
-                Dodaj więcej informacji o sobie tak, by uczniowie mogli Cię
-                łatwiej wyszukać.
+                {user?.role == "Teacher"
+                  ? "Dodaj więcej informacji o sobie tak, by uczniowie mogli Cię łatwiej wyszukać."
+                  : "Dodaj więcej informacji o sobie dla nauczyciela."}
               </p>
               <div className="border-b-[1px] border-base-100 my-4"></div>
               <form
@@ -369,149 +368,152 @@ const EditMoreInfosPage = () => {
                     </small>
                   </div>
                 </div>
-
-                <div className="items-center">
-                  <div className="flex flex-col float-right w-full">
-                    <label
-                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                      htmlFor="place_of_classes"
-                    >
-                      Miejsca udzielania zajęć
-                    </label>
-                    <Controller
-                      name="place_of_classes"
-                      control={control}
-                      rules={editProfile.place_of_classes}
-                      render={({ field }) => (
-                        <Select
-                          className="px-0 w-full text-gray-500 border-none shadow-none"
-                          isMulti
-                          menuPortalTarget={document.body}
-                          options={places_of_classes}
-                          getOptionValue={(option) => option.value}
-                          getOptionLabel={(option) => option.label}
-                          {...field}
-                          placeholder={
-                            <span className="text-gray-400">
-                              Miejsce udzielania zajęć
-                            </span>
-                          }
-                          noOptionsMessage={() => "Brak opcji."}
-                          styles={customSelectStyle}
-                        />
-                      )}
-                    />
-                    <small className="text-red-400 text-right">
-                      {errors?.place_of_classes &&
-                        errors.place_of_classes.message}
-                      {backendErrors?.place_of_classes?.map((e, i) => (
-                        <span key={i}>
-                          {e} <br />
-                        </span>
-                      ))}
-                    </small>
+                {user?.role == "Teacher" && (
+                  <div className="items-center">
+                    <div className="flex flex-col float-right w-full">
+                      <label
+                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                        htmlFor="place_of_classes"
+                      >
+                        Miejsca udzielania zajęć
+                      </label>
+                      <Controller
+                        name="place_of_classes"
+                        control={control}
+                        rules={editProfile.place_of_classes}
+                        render={({ field }) => (
+                          <Select
+                            className="px-0 w-full text-gray-500 border-none shadow-none"
+                            isMulti
+                            menuPortalTarget={document.body}
+                            options={places_of_classes}
+                            getOptionValue={(option) => option.value}
+                            getOptionLabel={(option) => option.label}
+                            {...field}
+                            placeholder={
+                              <span className="text-gray-400">
+                                Miejsce udzielania zajęć
+                              </span>
+                            }
+                            noOptionsMessage={() => "Brak opcji."}
+                            styles={customSelectStyle}
+                          />
+                        )}
+                      />
+                      <small className="text-red-400 text-right">
+                        {errors?.place_of_classes &&
+                          errors.place_of_classes.message}
+                        {backendErrors?.place_of_classes?.map((e, i) => (
+                          <span key={i}>
+                            {e} <br />
+                          </span>
+                        ))}
+                      </small>
+                    </div>
                   </div>
-                </div>
-
-                <div className="items-center">
-                  <div className="flex flex-col float-right w-full">
-                    <label
-                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                      htmlFor="cities_of_work"
-                    >
-                      Miasta, w których udzielam zajęć
-                    </label>
-                    <Controller
-                      name="cities_of_work"
-                      control={control}
-                      {...register(
-                        "cities_of_work",
-                        editProfile.cities_of_work
-                      )}
-                      render={({ field }) => (
-                        <Select
-                          className="px-0 w-full text-gray-500 border-none shadow-none"
-                          menuPortalTarget={document.body}
-                          isClearable
-                          isMulti
-                          options={cities}
-                          {...field}
-                          onInputChange={(e) => {
-                            fetchCities(e);
-                          }}
-                          getOptionLabel={(option) => option.name}
-                          getOptionValue={(option) => option.id}
-                          placeholder={
-                            <span className="text-gray-400">Miasta</span>
-                          }
-                          noOptionsMessage={({ inputValue }) =>
-                            loadingCity
-                              ? "Szukanie miast..."
-                              : !inputValue
-                              ? "Wpisz tekst..."
-                              : "Nie znaleziono"
-                          }
-                          styles={customSelectStyle}
-                        />
-                      )}
-                    />
-                    <small className="text-red-400 text-right">
-                      {errors?.cities_of_work && errors.cities_of_work.message}
-                      {backendErrors?.cities_of_work?.map((e, i) => (
-                        <span key={i}>
-                          {e} <br />
-                        </span>
-                      ))}
-                    </small>
+                )}
+                {user?.role == "Teacher" && (
+                  <div className="items-center">
+                    <div className="flex flex-col float-right w-full">
+                      <label
+                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                        htmlFor="cities_of_work"
+                      >
+                        Miasta, w których udzielam zajęć
+                      </label>
+                      <Controller
+                        name="cities_of_work"
+                        control={control}
+                        {...register(
+                          "cities_of_work",
+                          editProfile.cities_of_work
+                        )}
+                        render={({ field }) => (
+                          <Select
+                            className="px-0 w-full text-gray-500 border-none shadow-none"
+                            menuPortalTarget={document.body}
+                            isClearable
+                            isMulti
+                            options={cities}
+                            {...field}
+                            onInputChange={(e) => {
+                              fetchCities(e);
+                            }}
+                            getOptionLabel={(option) => option.name}
+                            getOptionValue={(option) => option.id}
+                            placeholder={
+                              <span className="text-gray-400">Miasta</span>
+                            }
+                            noOptionsMessage={({ inputValue }) =>
+                              loadingCity
+                                ? "Szukanie miast..."
+                                : !inputValue
+                                ? "Wpisz tekst..."
+                                : "Nie znaleziono"
+                            }
+                            styles={customSelectStyle}
+                          />
+                        )}
+                      />
+                      <small className="text-red-400 text-right">
+                        {errors?.cities_of_work &&
+                          errors.cities_of_work.message}
+                        {backendErrors?.cities_of_work?.map((e, i) => (
+                          <span key={i}>
+                            {e} <br />
+                          </span>
+                        ))}
+                      </small>
+                    </div>
                   </div>
-                </div>
-
-                <div className="items-center">
-                  <div className="flex flex-col float-right w-full">
-                    <label
-                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                      htmlFor="cities_of_work"
-                    >
-                      Znane języki
-                    </label>
-                    <Controller
-                      name="known_languages"
-                      control={control}
-                      {...register(
-                        "known_languages",
-                        editProfile.known_languages
-                      )}
-                      render={({ field }) => (
-                        <Select
-                          className="px-0 w-full text-gray-500 border-none shadow-none"
-                          menuPortalTarget={document.body}
-                          isClearable
-                          isMulti
-                          options={languages}
-                          {...field}
-                          getOptionLabel={(option) => option.name}
-                          getOptionValue={(option) => option.id}
-                          placeholder={
-                            <span className="text-gray-400">Języki</span>
-                          }
-                          noOptionsMessage={() => "Brak języków."}
-                          styles={customSelectStyle}
-                        />
-                      )}
-                    />
-                    <small className="text-red-400 text-right">
-                      {errors?.known_languages &&
-                        errors.known_languages.message}
-                      {backendErrors?.known_languages?.map((e, i) => (
-                        <span key={i}>
-                          {e} <br />
-                        </span>
-                      ))}
-                    </small>
+                )}
+                {user?.role == "Teacher" && (
+                  <div className="items-center">
+                    <div className="flex flex-col float-right w-full">
+                      <label
+                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                        htmlFor="cities_of_work"
+                      >
+                        Znane języki
+                      </label>
+                      <Controller
+                        name="known_languages"
+                        control={control}
+                        {...register(
+                          "known_languages",
+                          editProfile.known_languages
+                        )}
+                        render={({ field }) => (
+                          <Select
+                            className="px-0 w-full text-gray-500 border-none shadow-none"
+                            menuPortalTarget={document.body}
+                            isClearable
+                            isMulti
+                            options={languages}
+                            {...field}
+                            getOptionLabel={(option) => option.name}
+                            getOptionValue={(option) => option.id}
+                            placeholder={
+                              <span className="text-gray-400">Języki</span>
+                            }
+                            noOptionsMessage={() => "Brak języków."}
+                            styles={customSelectStyle}
+                          />
+                        )}
+                      />
+                      <small className="text-red-400 text-right">
+                        {errors?.known_languages &&
+                          errors.known_languages.message}
+                        {backendErrors?.known_languages?.map((e, i) => (
+                          <span key={i}>
+                            {e} <br />
+                          </span>
+                        ))}
+                      </small>
+                    </div>
                   </div>
-                </div>
-
-                <div className="items-center block">
+                )}
+                <div className="items-center">
                   <div className="flex flex-col float-right w-full">
                     <label
                       htmlFor="description"
@@ -679,7 +681,7 @@ const EditMoreInfosPage = () => {
                       type="text"
                       className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
                       name="address.building_number"
-                      placeholder="Podaj bnumer budynku"
+                      placeholder="Podaj numer budynku"
                       id="building_number"
                       {...register(
                         "address.building_number",
@@ -697,73 +699,75 @@ const EditMoreInfosPage = () => {
                     </small>
                   </div>
                 </div>
-                <div className="items-center">
-                  <div className="flex flex-col float-right w-full">
-                    <label
-                      htmlFor="description"
-                      className="block uppercase tracking-wide text-gray-700 text-lg font-bold"
-                    >
-                      O sobie
-                    </label>
-                    <div className="border-b-[1px] border-base-100 mb-2"></div>
-                    <Editor
-                      fieldValue={getValues("description")}
-                      setValue={setValue}
-                      setValueHtml={setDescriptionHtml}
-                      name="description"
-                      id="description"
-                      fieldName="description"
-                      {...register("description", editProfile.description)}
-                    />
+                {user?.role == "Teacher" && (
+                  <div className="items-center">
+                    <div className="flex flex-col float-right w-full">
+                      <label
+                        htmlFor="description"
+                        className="block uppercase tracking-wide text-gray-700 text-lg font-bold"
+                      >
+                        O sobie
+                      </label>
+                      <div className="border-b-[1px] border-base-100 mb-2"></div>
+                      <Editor
+                        fieldValue={getValues("description")}
+                        setValue={setValue}
+                        setValueHtml={setDescriptionHtml}
+                        name="description"
+                        id="description"
+                        fieldName="description"
+                        {...register("description", editProfile.description)}
+                      />
 
-                    <span className="text-[11px] text-red-400">
-                      <span>
-                        {errors.description && errors.description.message}
+                      <span className="text-[11px] text-red-400">
+                        <span>
+                          {errors.description && errors.description.message}
+                        </span>
+                        <span className="flex flex-col">
+                          {backendErrors?.description &&
+                            backendErrors.description.map((err) => (
+                              <span key={err}>{err}</span>
+                            ))}
+                        </span>
                       </span>
-                      <span className="flex flex-col">
-                        {backendErrors?.description &&
-                          backendErrors.description.map((err) => (
-                            <span key={err}>{err}</span>
-                          ))}
-                      </span>
-                    </span>
+                    </div>
                   </div>
-                </div>
+                )}
+                {user?.role == "Teacher" && (
+                  <div className="items-center">
+                    <div className="flex flex-col float-right w-full">
+                      <label
+                        htmlFor="experience"
+                        className="block uppercase tracking-wide text-gray-700 text-lg font-bold"
+                      >
+                        Doświadczenie
+                      </label>
+                      <div className="border-b-[1px] border-base-100 mb-2"></div>
 
-                <div className="items-center">
-                  <div className="flex flex-col float-right w-full">
-                    <label
-                      htmlFor="experience"
-                      className="block uppercase tracking-wide text-gray-700 text-lg font-bold"
-                    >
-                      Doświadczenie
-                    </label>
-                    <div className="border-b-[1px] border-base-100 mb-2"></div>
+                      <Editor
+                        fieldValue={getValues("experience")}
+                        setValue={setValue}
+                        setValueHtml={setExperienceHtml}
+                        name="experience"
+                        id="experience"
+                        fieldName="experience"
+                        {...register("experience", editProfile.experience)}
+                      />
 
-                    <Editor
-                      fieldValue={getValues("experience")}
-                      setValue={setValue}
-                      setValueHtml={setExperienceHtml}
-                      name="experience"
-                      id="experience"
-                      fieldName="experience"
-                      {...register("experience", editProfile.experience)}
-                    />
-
-                    <span className="text-[11px] text-red-400">
-                      <span>
-                        {errors.experience && errors.experience.message}
+                      <span className="text-[11px] text-red-400">
+                        <span>
+                          {errors.experience && errors.experience.message}
+                        </span>
+                        <span className="flex flex-col">
+                          {backendErrors?.experience &&
+                            backendErrors.experience.map((err) => (
+                              <span key={err}>{err}</span>
+                            ))}
+                        </span>
                       </span>
-                      <span className="flex flex-col">
-                        {backendErrors?.experience &&
-                          backendErrors.experience.map((err) => (
-                            <span key={err}>{err}</span>
-                          ))}
-                      </span>
-                    </span>
+                    </div>
                   </div>
-                </div>
-
+                )}
                 <button className="btn btn-outline no-animation w-6/12 max-md:w-5/12 max-phone:w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400">
                   Edytuj profil
                 </button>
