@@ -128,6 +128,8 @@ class TimeSlotsCreateView(generics.ListCreateAPIView):
         data = request.data
         many = isinstance(data, list)
 
+        Timeslot.objects.filter(teacher=request.user).delete()
+
         serializer = self.get_serializer(data=data, many=many)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

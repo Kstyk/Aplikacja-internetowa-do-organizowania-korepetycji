@@ -50,7 +50,7 @@ class PurchaseHistory(models.Model):
     place_of_classes = models.TextField(
         choices=LOCATION_CHOICES, null=True, blank=True)
     room = models.ForeignKey(
-        Room, on_delete=models.CASCADE, null=True, blank=True
+        Room, on_delete=models.SET_NULL, null=True, blank=True
     )
     start_date = models.DateTimeField(blank=True, null=True)
     paid_price = models.DecimalField(

@@ -115,7 +115,7 @@ class CreateOpinionSerializer(serializers.ModelSerializer):
         teacher = data.get('teacher')
 
         if Opinion.objects.filter(student=student, teacher=teacher).exists():
-            raise serializers.ValidationError({"teacher":
+            raise serializers.ValidationError({"exist_opinion":
                                                "Możesz dodać tylko jedną opinię dla tego nauczyciela."})
 
         return data

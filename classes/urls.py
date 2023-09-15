@@ -6,7 +6,7 @@ urlpatterns = [
     path('languages/most-popular/', get_top_languages,
          name="get_popular_languages"),
     path('create/', ClassCreateView.as_view(), name="create_class"),
-    path('<int:teacher_id>/timeslots/create/',
+    path('timeslots/create/',
          TimeSlotsCreateView.as_view()),
     path('<int:teacher_id>/timeslots/', TimeslotsTeacherView.as_view()),
     path('<int:teacher_id>/schedule/', ScheduleTeacherView.as_view()),
