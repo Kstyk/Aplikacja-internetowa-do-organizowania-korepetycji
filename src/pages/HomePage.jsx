@@ -76,7 +76,7 @@ const HomePage = () => {
                 </div>
               </div>
             </div>
-            <h1 className="text-center text-4xl max-md:text-3xl bg-base-200 hover:bg-opacity-80 transition-all duration-200 border-y-2 border-base-100 py-5 -mx-5 mb-10 text-gray-700 relative px-10 ">
+            <h1 className="text-center text-4xl max-md:text-3xl max-phone:text-2xl bg-base-200 hover:bg-opacity-80 transition-all duration-200 border-y-2 border-base-100 py-5 -mx-5 mb-10 text-gray-700 relative px-10 ">
               <div className="absolute border-8 border-base-100 h-full left-5 top-0 bg-transparent"></div>
               <div className="absolute border-2 border-base-100 h-full left-2 top-0 bg-transparent"></div>
               <div className="absolute border-8 border-base-100 h-full right-5 top-0 bg-transparent"></div>
