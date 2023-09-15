@@ -159,9 +159,6 @@ const Chat = ({ archivized }) => {
       );
       const hasCamera = devices.some((device) => device.kind === "videoinput");
 
-      console.log("Has Microphone:", hasMicrophone);
-      console.log("Has Camera:", hasCamera);
-
       // Tutaj możesz podjąć odpowiednie działania w zależności od wyników
       if (!hasMicrophone) {
         console.log("brak mikro");
@@ -482,7 +479,9 @@ const Chat = ({ archivized }) => {
       >
         <TransformWrapper minScale={0.5} initialScale={1}>
           <TransformComponent>
-            <div className="w-[100%] mx-auto">
+            <div
+              className={`${peerId != "" ? "w-[100vw] h-[100vh]" : ""} mx-auto`}
+            >
               <video
                 preload="none"
                 ref={remoteVideoRef}

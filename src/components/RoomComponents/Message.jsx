@@ -22,7 +22,6 @@ const Message = ({ message, secondUser }) => {
         user?.email === message.to_user.email ? "chat-start" : "chat-end"
       )}
     >
-      {console.log(message)}
       <Link
         to={
           message?.from_user?.role?.label == "Teacher"
