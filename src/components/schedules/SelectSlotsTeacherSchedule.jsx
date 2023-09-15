@@ -9,12 +9,15 @@ import useAxios from "../../utils/useAxios";
 import { timeslots } from "../../variables/Timeslots";
 import CustomToolbarNoButtons from "./CustomToolbarNoButtons";
 import AuthContext from "../../context/AuthContext";
+import showAlertError from "../messages/SwalAlertError";
 
-const SelectSlotsTeacherSchedule = () => {
+const SelectSlotsTeacherSchedule = ({
+  timeSlotsTeacher,
+  setTimeSlotsTeacher,
+}) => {
   const { user } = useContext(AuthContext);
   dayjs.locale("pl");
 
-  const [timeSlotsTeacher, setTimeSlotsTeacher] = useState([]);
   const [eventArray, setEventArray] = useState([]);
   const localizer = dayjsLocalizer(dayjs);
 
@@ -41,7 +44,10 @@ const SelectSlotsTeacherSchedule = () => {
         setTimeSlotsTeacher(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
   };
 
@@ -141,10 +147,6 @@ const SelectSlotsTeacherSchedule = () => {
       }
     }, 50);
   };
-
-  useEffect(() => {
-    console.log(timeSlotsTeacher);
-  }, [timeSlotsTeacher]);
 
   return (
     <Calendar
