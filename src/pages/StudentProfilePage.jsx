@@ -64,7 +64,7 @@ const StudentProfilePage = () => {
               <div className="border-b-[1px] border-base-100 mb-2 w-full"></div>
               <section className="w-6/12 max-phone:w-full flex justify-center max-phone:justify-start max-phone:items-start flex-col items-center">
                 <div className="contact">
-                  <label className="block uppercase tracking-wide text-gray-700 text-lg font-bold">
+                  <label className="block uppercase tracking-wide text-gray-700 text-lg font-bold text-center">
                     Dane kontaktowe
                   </label>
                 </div>
