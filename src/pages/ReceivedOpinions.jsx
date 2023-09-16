@@ -65,16 +65,25 @@ const ReceivedOpinions = () => {
           <h1 className="text-2xl text-center">Otrzymane opinie</h1>
           <div className="border-b-[1px] border-base-100 my-4"></div>
           <div>
-            <h2 className="text-center text-xl">
-              Otrzymałeś {amountOfOpinions} {amountOfOpinions == 1 && "opinię"}{" "}
-              {amountOfOpinions == 2 && "opinie"}
-              {amountOfOpinions == 3 && "opinie"}
-              {amountOfOpinions == 4 && "opinie"}
-              {amountOfOpinions > 4 && "opinii"}
-            </h2>
-            <h3 className="text-center text-lg">
-              Średnia ocena: {averageRating}
-            </h3>
+            {amountOfOpinions != 0 ? (
+              <>
+                <h2 className="text-center text-xl">
+                  Otrzymałeś {amountOfOpinions}{" "}
+                  {amountOfOpinions == 1 && "opinię"}{" "}
+                  {amountOfOpinions == 2 && "opinie"}
+                  {amountOfOpinions == 3 && "opinie"}
+                  {amountOfOpinions == 4 && "opinie"}
+                  {amountOfOpinions > 4 && "opinii"}
+                </h2>
+                <h3 className="text-center text-lg">
+                  Średnia ocena: {averageRating}
+                </h3>
+              </>
+            ) : (
+              <h2 className="text-center text-xl">
+                Nie otrzymałeś jeszcze żadnej opinii.
+              </h2>
+            )}
           </div>
           <div className="border-b-[1px] border-base-100 my-4"></div>
 

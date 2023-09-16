@@ -27,16 +27,16 @@ const MenuBar = ({ editorComponent }) => {
   }, [editorComponent]);
 
   const buttonClassActive =
-    "w-[12.5%] max-[300px]:w-1/6 bg-base-400 text-white active:bg-custom-darkgreen font-bold uppercase text-xs px-2 py-2 shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150";
+    "tooltip normal-case w-[12.5%] max-[300px]:w-1/6 bg-base-400 text-white active:bg-custom-darkgreen font-bold uppercase text-xs px-2 py-2 shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150";
 
   const buttonClass =
-    "w-[12.5%] max-[300px]:w-1/6 bg-slate-200 text-custom-darkgreen active:bg-white font-bold uppercase text-xs px-2 py-2 shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150 border-none";
+    "tooltip normal-case w-[12.5%] max-[300px]:w-1/6 bg-slate-200 text-custom-darkgreen active:bg-white font-bold uppercase text-xs px-2 py-2 shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150 border-none";
 
   return (
     <div className="w-full flex flex-row flex-wrap content-stretch">
       <button
         type="button"
-        title="Nagłówek pierwszego stopnia"
+        data-tip="Nagłówek pierwszego stopnia"
         onClick={() =>
           editorComponent.chain().focus().toggleHeading({ level: 1 }).run()
         }
@@ -63,7 +63,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Nagłówek drugiego stopnia"
+        data-tip="Nagłówek drugiego stopnia"
         onClick={() =>
           editorComponent.chain().focus().toggleHeading({ level: 2 }).run()
         }
@@ -90,7 +90,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Nagłówek trzeciego stopnia"
+        data-tip="Nagłówek trzeciego stopnia"
         onClick={() =>
           editorComponent.chain().focus().toggleHeading({ level: 3 }).run()
         }
@@ -117,7 +117,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Paragraf"
+        data-tip="Paragraf"
         onClick={() => editorComponent.chain().focus().setParagraph().run()}
         className={
           editorComponent.isActive("paragraph")
@@ -140,7 +140,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Pogrubienie"
+        data-tip="Pogrubienie"
         onClick={() => editorComponent.chain().focus().toggleBold().run()}
         className={
           editorComponent.isActive("bold") ? buttonClassActive : buttonClass
@@ -161,7 +161,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Kursywa"
+        data-tip="Kursywa"
         onClick={() => editorComponent.chain().focus().toggleItalic().run()}
         className={
           editorComponent.isActive("italic") ? buttonClassActive : buttonClass
@@ -182,7 +182,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Podkreślenie"
+        data-tip="Podkreślenie"
         onClick={() => editorComponent.chain().focus().toggleUnderline().run()}
         className={
           editorComponent.isActive("underline")
@@ -205,7 +205,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Przekreślenie"
+        data-tip="Przekreślenie"
         onClick={() => editorComponent.chain().focus().toggleStrike().run()}
         className={
           editorComponent.isActive("strike") ? buttonClassActive : buttonClass
@@ -226,7 +226,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Indeks górny"
+        data-tip="Indeks górny"
         onClick={() =>
           editorComponent.chain().focus().toggleSuperscript().run()
         }
@@ -251,7 +251,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Indeks dolny"
+        data-tip="Indeks dolny"
         onClick={() => editorComponent.chain().focus().toggleSubscript().run()}
         className={
           editorComponent.isActive("subscript")
@@ -274,7 +274,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Link"
+        data-tip="Link"
         onClick={() => setLink()}
         className={
           editorComponent.isActive("link") ? buttonClassActive : buttonClass
@@ -284,7 +284,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Lista nieponumerowana"
+        data-tip="Lista nieponumerowana"
         onClick={() => editorComponent.chain().focus().toggleBulletList().run()}
         className={
           editorComponent.isActive("bulletList")
@@ -307,7 +307,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Lista ponumerowana"
+        data-tip="Lista ponumerowana"
         onClick={() =>
           editorComponent.chain().focus().toggleOrderedList().run()
         }
@@ -332,7 +332,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Wyrównianie do lewej"
+        data-tip="Wyrównianie do lewej"
         onClick={() =>
           editorComponent.chain().focus().setTextAlign("left").run()
         }
@@ -359,7 +359,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Wyśrodkowanie"
+        data-tip="Wyśrodkowanie"
         onClick={() =>
           editorComponent.chain().focus().setTextAlign("center").run()
         }
@@ -386,7 +386,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Wyrównanie do prawej"
+        data-tip="Wyrównanie do prawej"
         onClick={() =>
           editorComponent.chain().focus().setTextAlign("right").run()
         }
@@ -413,7 +413,7 @@ const MenuBar = ({ editorComponent }) => {
       </button>
       <button
         type="button"
-        title="Wyjustowanie"
+        data-tip="Wyjustowanie"
         onClick={() =>
           editorComponent.chain().focus().setTextAlign("justify").run()
         }

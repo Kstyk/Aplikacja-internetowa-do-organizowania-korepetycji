@@ -57,7 +57,7 @@ const StartedRoomsPage = () => {
               <h1 className="text-2xl text-center">Twoje pokoje</h1>
 
               <div className="border-b-[1px] border-base-100 my-4"></div>
-              <div className="min-h-[200px] flex items-center w-full justify-center mb-10">
+              <div className="flex items-center w-full justify-center mb-10">
                 {rooms.length == 0 && (
                   <div className="h-full">
                     {user?.role == "Student" ? (
@@ -71,8 +71,10 @@ const StartedRoomsPage = () => {
                         </Link>
                       </div>
                     ) : (
-                      <div className="flex flex-col justify-center  w-full h-full">
-                        <h2>Nie masz żadnych aktywnych pokoi.</h2>
+                      <div className="flex justify-center w-full">
+                        <h2 className="text-center">
+                          Nie masz żadnych aktywnych pokoi.
+                        </h2>
                       </div>
                     )}
                   </div>
@@ -99,8 +101,10 @@ const StartedRoomsPage = () => {
                 {archivizedRooms?.length == 0 && (
                   <div className="h-full">
                     {user?.role == "Student" ? (
-                      <div className="flex flex-col justify-center  w-full h-full">
-                        <h2>Nie masz żadnych zarchiwizowanych pokoi.</h2>
+                      <div className="flex flex-col justify-center w-full h-full">
+                        <h2 className="text-center">
+                          Nie masz żadnych zarchiwizowanych pokoi.
+                        </h2>
                       </div>
                     ) : (
                       <div className="flex flex-col justify-center  w-full h-full">
