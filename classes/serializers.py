@@ -5,6 +5,7 @@ from rooms.serializers import RoomSerializer
 from .validators import validate_teacher_role
 from django.core.validators import MinValueValidator
 from users.models import User, UserDetails
+from django.db.models import Avg
 
 
 class LanguageSerializer(serializers.ModelSerializer):
@@ -29,6 +30,8 @@ class ClassSerializer(serializers.ModelSerializer):
     # Zaimportowany gotowy serializer dla modelu TypeOfClasses
     language = LanguageSerializer()
     teacher = UserProfileSerializer(source='teacher.userdetails')
+    average_rate = serializers.SerializerMethodField()
+    amount_of_opinions = serializers.SerializerMethodField()
 
     class Meta:
         model = Class
@@ -38,6 +41,21 @@ class ClassSerializer(serializers.ModelSerializer):
         validate_teacher_role(value)
         return value
 
+    def get_average_rate(self, obj):
+        opinions = Opinion.objects.filter(teacher=obj.teacher)
+
+        average_rate = opinions.aggregate(Avg('rate'))['rate__avg']
+
+        if average_rate is not None:
+            return average_rate
+        else:
+            return None
+
+    def get_amount_of_opinions(self, obj):
+        opinions = Opinion.objects.filter(teacher=obj.teacher)
+
+        return len(opinions)
+
 
 class CreateClassSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,7 +63,6 @@ class CreateClassSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        # Pobierz przekazanego nauczyciela z kontekstu
         return Class.objects.create(**validated_data)
 
 

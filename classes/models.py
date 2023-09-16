@@ -121,7 +121,6 @@ class Schedule(models.Model):
 
 class Opinion(models.Model):
     class Meta:
-        # unique_together = ('student', 'teacher')
         ordering = ["-published_date"]
 
     student = models.ForeignKey(
