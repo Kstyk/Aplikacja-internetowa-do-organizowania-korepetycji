@@ -233,7 +233,7 @@ const ClassesPage = () => {
                             key={index}
                             type="radio"
                             name={`average__rate`}
-                            className="mask mask-star-2 bg-base-300"
+                            className="mask mask-star-2 bg-base-400"
                             checked={
                               Math.floor(averageRating) == index + 1
                                 ? true

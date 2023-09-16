@@ -236,6 +236,8 @@ const TeacherPage = () => {
                       {profile?.user.first_name} {profile?.user.last_name}
                     </h1>
                   </div>
+                  <div className="border-b-[1px] border-base-100 my-2"></div>
+
                   <div className="text-gray-700 flex flex-row items-center gap-x-3">
                     {averageRating != null ? (
                       <>
@@ -245,7 +247,7 @@ const TeacherPage = () => {
                               key={index}
                               type="radio"
                               name={`average__rate`}
-                              className="mask mask-star-2 bg-base-300"
+                              className="mask mask-star-2 bg-base-400"
                               checked={
                                 Math.floor(averageRating) == index + 1
                                   ? true
@@ -267,7 +269,7 @@ const TeacherPage = () => {
                     )}
                   </div>
                 </div>
-                <div className="border-b-2 border-base-100 my-4"></div>
+                <div className="border-b-2 border-base-100 my-2"></div>
                 <section className="flex flex-col gap-y-5">
                   <article className="describe !break-words">
                     <h2 className="block uppercase tracking-wide text-gray-700 text-lg font-bold border-b-[1px] border-base-100 mb-2">

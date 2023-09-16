@@ -13,40 +13,38 @@ const ClassesCard = (props) => {
       <div className="flex flex-row">
         <div className="flex flex-col phone:w-10/12 phone:border-r-[1px] border-base-200 pr-4">
           <div className="phone:hidden w-full mb-2 pb-2 border-b-[1px] border-base-200">
-            <div className="rating rating-xs mr-2 ">
-              <input
-                type="radio"
-                name="rating-6"
-                className="mask mask-star-2 bg-base-400"
-                readOnly
-              />
-              <input
-                type="radio"
-                name="rating-6"
-                className="mask mask-star-2 bg-base-400"
-                readOnly
-              />
-              <input
-                type="radio"
-                name="rating-6"
-                className="mask mask-star-2 bg-base-400"
-                readOnly
-              />
-              <input
-                type="radio"
-                name="rating-6"
-                className="mask mask-star-2 bg-base-400"
-                readOnly
-              />
-              <input
-                type="radio"
-                name="rating-6"
-                className="mask mask-star-2 bg-base-400"
-                readOnly
-              />
+            <div className="rating rating-xs mr-2">
+              {classes?.amount_of_opinions > 0 && (
+                <div>
+                  {Array.from({ length: 5 }, (_, index) => (
+                    <input
+                      key={index}
+                      type="radio"
+                      name={`${classes?.id}__rate_phone`}
+                      className="mask mask-star-2 bg-base-400"
+                      checked={
+                        Math.floor(classes?.average_rate) == index + 1
+                          ? true
+                          : false
+                      }
+                      readOnly
+                    />
+                  ))}
+                </div>
+              )}
             </div>
             <span className="text-center text-xs mt-2 text-base-400">
-              (66 opinii)
+              {classes?.amount_of_opinions == 0 && "(Brak opinii)"}
+              {classes?.amount_of_opinions == 1 &&
+                `(${classes?.amount_of_opinions} opinia)`}
+              {classes?.amount_of_opinions == 2 &&
+                `(${classes?.amount_of_opinions} opinie)`}
+              {classes?.amount_of_opinions == 3 &&
+                `(${classes?.amount_of_opinions} opinie)`}
+              {classes?.amount_of_opinions == 4 &&
+                `(${classes?.amount_of_opinions} opinie)`}
+              {classes?.amount_of_opinions > 4 &&
+                `(${classes?.amount_of_opinions} opinii)`}
             </span>
           </div>
           <div className="text-gray-500 text-sm">
@@ -101,7 +99,8 @@ const ClassesCard = (props) => {
               <span className="text-center max-md:text-sm"> za godzinę</span>
             </div>
             <div className="pl-2 text-sm">
-              {classes?.teacher?.phone_number != null ? (
+              {classes?.teacher?.phone_number != null &&
+              classes?.teacher?.phone_number != "" ? (
                 <span className="flex flex-row items-center">
                   <AiOutlinePhone className="mr-2 text-[1.5em]" />
                   {classes?.teacher?.phone_number}
@@ -155,40 +154,38 @@ const ClassesCard = (props) => {
             {classes.price_for_lesson} PLN
           </span>
           <span className="text-center max-md:text-sm">za godzinę</span>
-          <div className="rating lg:rating-sm max-lg:rating-xs mx-auto mt-2 pt-2 border-t-[1px] border-base-200">
-            <input
-              type="radio"
-              name="rating-6"
-              className="mask mask-star-2 bg-base-400"
-              readOnly
-            />
-            <input
-              type="radio"
-              name="rating-6"
-              className="mask mask-star-2 bg-base-400"
-              readOnly
-            />
-            <input
-              type="radio"
-              name="rating-6"
-              className="mask mask-star-2 bg-base-400"
-              readOnly
-            />
-            <input
-              type="radio"
-              name="rating-6"
-              className="mask mask-star-2 bg-base-400"
-              readOnly
-            />
-            <input
-              type="radio"
-              name="rating-6"
-              className="mask mask-star-2 bg-base-400"
-              readOnly
-            />
+          <div className="rating lg:rating-sm max-lg:rating-xs mx-auto mt-2 pt-2 border-t-[1px] border-base-200 w-full flex justify-center">
+            {classes?.amount_of_opinions > 0 && (
+              <div>
+                {Array.from({ length: 5 }, (_, index) => (
+                  <input
+                    key={index}
+                    type="radio"
+                    name={`${classes?.id}__rate`}
+                    className="mask mask-star-2 bg-base-400"
+                    checked={
+                      Math.floor(classes?.average_rate) == index + 1
+                        ? true
+                        : false
+                    }
+                    readOnly
+                  />
+                ))}
+              </div>
+            )}
           </div>
           <span className="text-center text-xs mt-2 text-base-400">
-            (66 opinii)
+            {classes?.amount_of_opinions == 0 && "(Brak opinii)"}
+            {classes?.amount_of_opinions == 1 &&
+              `(${classes?.amount_of_opinions} opinia)`}
+            {classes?.amount_of_opinions == 2 &&
+              `(${classes?.amount_of_opinions} opinie)`}
+            {classes?.amount_of_opinions == 3 &&
+              `(${classes?.amount_of_opinions} opinie)`}
+            {classes?.amount_of_opinions == 4 &&
+              `(${classes?.amount_of_opinions} opinie)`}
+            {classes?.amount_of_opinions > 4 &&
+              `(${classes?.amount_of_opinions} opinii)`}
           </span>
         </div>
       </div>
