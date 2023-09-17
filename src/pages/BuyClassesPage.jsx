@@ -8,7 +8,8 @@ import { AiOutlineCalendar } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import showAlertError from "../components/messages/SwalAlertError";
 import showSuccessAlert from "../components/messages/SwalAlertSuccess";
-import Swal from "sweetalert2";
+import Select from "react-select";
+import { useForm, Controller } from "react-hook-form";
 
 const BuyClassesPage = () => {
   const api = useAxios();
@@ -21,6 +22,25 @@ const BuyClassesPage = () => {
   const [placeOfClasses, setPlaceOfClasses] = useState("online");
 
   const { classesId } = useParams();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    useWatch,
+    formState: { errors },
+  } = useForm({
+    mode: "all",
+  });
+
+  const customSelectStyle = {
+    control: (base) => ({
+      ...base,
+      boxShadow: "none",
+      borderRadius: "none",
+    }),
+  };
 
   const fetchClasses = async () => {
     setLoading(true);
@@ -39,22 +59,23 @@ const BuyClassesPage = () => {
       });
   };
 
-  const handleChangePlace = (e) => {
-    setPlaceOfClasses(e.target.value);
-  };
+  const onSubmit = (formData) => {
+    if (formData.place_of_classes == "online") {
+      setValue("city_of_classes", null);
+      formData.city_of_classes = null;
+    }
 
-  const purchaseClasses = async () => {
     let selected_slots = [];
     selected.map((selected) =>
       selected_slots.push(dayjs(selected.start).format("YYYY-MM-DDTHH:mm:ss"))
     );
     const data = {
+      ...formData,
       selected_slots: selected_slots,
       classes_id: classesId,
-      place_of_classes: placeOfClasses,
     };
 
-    await api
+    api
       .post(`/api/classes/purchase_classes/`, data)
       .then((res) => {
         showSuccessAlert(
@@ -97,72 +118,104 @@ const BuyClassesPage = () => {
             <h1 className="text-xl">{classes?.name}</h1>
             <div className="border-b-[1px] border-base-100 my-4"></div>
             <section className="flex flex-row max-lg:flex-col">
-              <div className="card shadow-md rounded-none p-4 flex flex-row justify-between max-phone:flex-col w-6/12 max-lg:w-full">
-                <div className="max-phone:order-2">
-                  <h3 className="font-bold mb-2">Wybrane daty zajęć:</h3>
-                  {selected.length == 0 && (
-                    <section className="flex flex-row items-center gap-x-3">
-                      <AiOutlineCalendar className="w-6 h-6" />
-                      <span className="italic">Brak wybranych zajęć.</span>
-                    </section>
-                  )}
-                  {selected?.map((date, i) => (
-                    <section
-                      className="flex flex-row items-center gap-x-3"
-                      key={i}
-                    >
-                      <AiOutlineCalendar className="w-6 h-6" />
-                      {dayjs(date.start).format("YYYY-MM-DD HH:mm")}
-                    </section>
-                  ))}
-                </div>
-                <div className="max-phone:order-1 max-phone:mb-3">
-                  <h3 className="font-bold mb-2">Wybierz miejsce zajęć:</h3>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="card shadow-md rounded-none p-4 flex flex-row justify-between max-phone:flex-col w-6/12 max-lg:w-full">
+                  <div className="max-phone:order-2">
+                    <h3 className="font-bold mb-2">Wybrane daty zajęć:</h3>
+                    {selected.length == 0 && (
+                      <section className="flex flex-row items-center gap-x-3">
+                        <AiOutlineCalendar className="w-6 h-6" />
+                        <span className="italic">Brak wybranych zajęć.</span>
+                      </section>
+                    )}
+                    {selected?.map((date, i) => (
+                      <section
+                        className="flex flex-row items-center gap-x-3"
+                        key={i}
+                      >
+                        <AiOutlineCalendar className="w-6 h-6" />
+                        {dayjs(date.start).format("YYYY-MM-DD HH:mm")}
+                      </section>
+                    ))}
+                  </div>
+                  <div className="max-phone:order-1 max-phone:mb-3">
+                    <h3 className="font-bold mb-2">Wybierz miejsce zajęć:</h3>
 
-                  {classes?.teacher?.place_of_classes.map((place) => (
-                    <div className="form-control" key={place}>
-                      <label className="label cursor-pointer gap-x-4">
-                        <input
-                          type="radio"
-                          name="radio-10"
-                          className="radio checked:bg-base-400"
-                          value={place}
-                          onClick={(e) => handleChangePlace(e)}
-                          defaultChecked={place == "online"}
-                        />
-                        <span className="label-text">
-                          {place == "teacher_home" && "U nauczyciela"}
-                          {place == "student_home" && "U studenta"}
-                          {place == "online" && "Online"}
-                        </span>
-                      </label>
-                    </div>
-                  ))}
+                    {classes?.place_of_classes.map((place) => (
+                      <div className="form-control" key={place}>
+                        <label className="label cursor-pointer gap-x-4">
+                          <input
+                            type="radio"
+                            name="place_of_classes"
+                            className="radio checked:bg-base-400"
+                            value={place}
+                            defaultChecked={place == "online"}
+                            onClick={() => {
+                              setPlaceOfClasses(place);
+                            }}
+                            onChange={() => {
+                              setValue("place_of_classes", place);
+                            }}
+                            {...register("place_of_classes")}
+                          />
+                          <span className="label-text">
+                            {place == "stationary" && "Stacjonarnie"}
+                            {place == "online" && "Online"}
+                          </span>
+                        </label>
+                      </div>
+                    ))}
+                    {placeOfClasses == "stationary" && (
+                      <Controller
+                        name="city_of_classes"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            className="px-0 h-10 w-full text-gray-500 border-none shadow-none mt-2"
+                            menuPortalTarget={document.body}
+                            isClearable
+                            options={classes?.cities_of_work}
+                            getOptionLabel={(option) => option.name}
+                            getOptionValue={(option) => option.id}
+                            {...field}
+                            placeholder={
+                              <span className="text-gray-400">Miasto</span>
+                            }
+                            noOptionsMessage={({ inputValue }) =>
+                              loadingCity
+                                ? "Szukanie miast..."
+                                : !inputValue
+                                ? "Wpisz tekst..."
+                                : "Nie znaleziono"
+                            }
+                            styles={customSelectStyle}
+                          />
+                        )}
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="card shadow-md rounded-none p-4 flex flex-col max-phone:flex-col w-6/12 max-lg:w-full ">
-                <h2 className="font-bold text-lg text-right">Podsumowanie</h2>
-                <div className=" w-full text-right">
-                  Do zapłaty:
-                  <br />
-                  {selected.length} x{" "}
-                  <span className="font-bold text-lg">
-                    {classes?.price_for_lesson} PLN
-                  </span>
-                  <hr />
-                  <span className="font-bold text-xl">
-                    {classes?.price_for_lesson * selected.length} PLN
-                  </span>
+                <div className="card shadow-md rounded-none p-4 flex flex-col max-phone:flex-col w-6/12 max-lg:w-full ">
+                  <h2 className="font-bold text-lg text-right">Podsumowanie</h2>
+                  <div className=" w-full text-right">
+                    Do zapłaty:
+                    <br />
+                    {selected.length} x{" "}
+                    <span className="font-bold text-lg">
+                      {classes?.price_for_lesson} PLN
+                    </span>
+                    <hr />
+                    <span className="font-bold text-xl">
+                      {classes?.price_for_lesson * selected.length} PLN
+                    </span>
+                  </div>
+                  <div className="w-full flex justify-end">
+                    <button className="btn btn-outline no-animation h-12 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full md:w-6/12 lg:w-3/12 mb-2">
+                      Finalizuj zakup
+                    </button>
+                  </div>
                 </div>
-                <div className="w-full flex justify-end">
-                  <button
-                    onClick={() => purchaseClasses()}
-                    className="btn btn-outline no-animation h-12 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full md:w-6/12 lg:w-3/12 mb-2"
-                  >
-                    Finalizuj zakup
-                  </button>
-                </div>
-              </div>
+              </form>
             </section>
             <section className="w-full flex justify-end mt-5">
               <button
