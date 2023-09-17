@@ -181,8 +181,7 @@ const TeacherPage = () => {
                           >
                             <MdOutlineLocationOn className="w-6 h-6 text-base-400" />
                             <span className="text-sm">
-                              {place == "teacher_home" && "U nauczyciela"}
-                              {place == "student_home" && "U ucznia"}
+                              {place == "stationary" && "Stacjonarnie"}
                               {place == "online" && "Online"}
                             </span>
                           </li>
@@ -191,17 +190,24 @@ const TeacherPage = () => {
                     </>
                   )}
                   <div className="border-b-[1px] border-base-100 my-4"></div>
-                  <ul className="w-full">
-                    {profile?.cities_of_work.map((city, i) => (
-                      <li
-                        key={i}
-                        className="flex flex-row items-center gap-x-5"
-                      >
-                        <MdOutlineLocationOn className="w-6 h-6 text-base-400" />
-                        <span className="text-sm">{city.name}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  {profile?.cities_of_work && (
+                    <>
+                      <h3 className="text-sm mb-1">
+                        Miasta prowadzenia zajęć:
+                      </h3>
+                      <ul className="w-full">
+                        {profile?.cities_of_work.map((city, i) => (
+                          <li
+                            key={i}
+                            className="flex flex-row items-center gap-x-5"
+                          >
+                            <MdOutlineLocationOn className="w-6 h-6 text-base-400" />
+                            <span className="text-sm">{city.name}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
                   <div className="border-b-[1px] border-base-100 my-4"></div>
                   {profile?.address != null && (
                     <div className="text-sm">

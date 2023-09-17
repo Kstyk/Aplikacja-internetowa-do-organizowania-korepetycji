@@ -135,12 +135,12 @@ const ClassesCard = (props) => {
                   verticalAlign: "middle",
                 }}
               />
-              {classes.teacher?.place_of_classes.map((item) =>
+              {classes?.place_of_classes.map((item) =>
                 item == "online" ? "Online" : ""
               )}
               {" | "}
-              {classes.teacher?.cities_of_work.length > 0
-                ? classes.teacher.cities_of_work
+              {classes?.cities_of_work.length > 0
+                ? classes?.cities_of_work
                     .map((city) => city.name)
                     .slice(0, 10) // Pobierz maksymalnie 3 miasta
                     .join(" | ")

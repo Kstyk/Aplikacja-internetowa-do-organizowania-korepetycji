@@ -31,6 +31,7 @@ const ClassesPage = () => {
       .get(`/api/classes/${classesId}`)
       .then((res) => {
         setClasses(res.data);
+        console.log(res.data);
       })
       .catch((err) => {
         showAlertError(
@@ -154,22 +155,21 @@ const ClassesPage = () => {
                       </span>
                     </li>
                   </ul>
-                  {classes?.teacher?.place_of_classes && (
+                  {classes?.place_of_classes && (
                     <>
                       <div className="border-b-[1px] border-base-100 my-4"></div>
                       <h3 className="text-sm mb-1">
                         Sposób prowadzenia zajęć:
                       </h3>
                       <ul className="w-full">
-                        {classes?.teacher?.place_of_classes.map((place, i) => (
+                        {classes?.place_of_classes.map((place, i) => (
                           <li
                             key={i}
                             className="flex flex-row items-center gap-x-5"
                           >
                             <MdOutlineLocationOn className="w-6 h-6 text-base-400" />
                             <span className="text-sm">
-                              {place == "teacher_home" && "U nauczyciela"}
-                              {place == "student_home" && "U ucznia"}
+                              {place == "stationary" && "Stacjonarnie"}
                               {place == "online" && "Online"}
                             </span>
                           </li>
@@ -177,18 +177,25 @@ const ClassesPage = () => {
                       </ul>
                     </>
                   )}
-                  <div className="border-b-[1px] border-base-100 my-4"></div>
-                  <ul className="w-full">
-                    {classes?.teacher?.cities_of_work.map((city, i) => (
-                      <li
-                        key={i}
-                        className="flex flex-row items-center gap-x-5"
-                      >
-                        <MdOutlineLocationOn className="w-6 h-6 text-base-400" />
-                        <span className="text-sm">{city.name}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  {classes?.cities_of_work && (
+                    <>
+                      <div className="border-b-[1px] border-base-100 my-4"></div>
+                      <h3 className="text-sm mb-1">
+                        Miasta prowadzenia zajęć:
+                      </h3>
+                      <ul className="w-full">
+                        {classes?.cities_of_work.map((city, i) => (
+                          <li
+                            key={i}
+                            className="flex flex-row items-center gap-x-5"
+                          >
+                            <MdOutlineLocationOn className="w-6 h-6 text-base-400" />
+                            <span className="text-sm">{city.name}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
                   <div className="phone:hidden border-b-[1px] border-base-100 my-4"></div>
                 </section>
               </div>

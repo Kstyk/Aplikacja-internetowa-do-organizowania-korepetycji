@@ -7,6 +7,7 @@ import Editor from "../components/TextEditor/Editor";
 import Select from "react-select";
 import showSuccessAlert from "../components/messages/SwalAlertSuccess";
 import AuthContext from "../context/AuthContext";
+import showAlertError from "../components/messages/SwalAlertError";
 
 const EditMoreInfosPage = () => {
   const { user } = useContext(AuthContext);
@@ -36,11 +37,7 @@ const EditMoreInfosPage = () => {
   };
 
   const places_of_classes = [
-    {
-      value: "teacher_home",
-      label: "U nauczyciela",
-    },
-    { value: "student_home", label: "U studenta" },
+    { value: "stationary", label: "Stacjonarnie" },
     { value: "online", label: "Online" },
   ];
 

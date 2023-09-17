@@ -21,6 +21,7 @@ const ProfilePage = () => {
     await api
       .get(`/api/users/profile/${user?.user_id}`)
       .then((res) => {
+        console.log(res.data);
         setProfile(res.data);
       })
       .catch((err) => {
@@ -121,8 +122,7 @@ const ProfilePage = () => {
                           >
                             <MdOutlineLocationOn className="w-6 h-6 text-base-400" />
                             <span className="text-sm">
-                              {place == "teacher_home" && "U nauczyciela"}
-                              {place == "student_home" && "U ucznia"}
+                              {place == "stationary" && "Stacjonarnie"}
                               {place == "online" && "Online"}
                             </span>
                           </li>
@@ -158,17 +158,26 @@ const ProfilePage = () => {
                           <div className="border-b-[1px] border-base-100 my-2"></div>
 
                           <section className="pl-5 gap-y-2 flex flex-col">
-                            <div>
-                              {profile?.address?.postal_code},{" "}
-                              {profile?.address?.city?.name}
-                            </div>
-                            <div>
-                              ul. {profile?.address?.street},{" "}
-                              {profile?.address?.building_number}
-                            </div>
-                            <div>
-                              {profile?.address?.voivodeship?.alternate_names}
-                            </div>
+                            {profile?.address != null ? (
+                              <>
+                                <div>
+                                  {profile?.address?.postal_code},{" "}
+                                  {profile?.address?.city?.name}
+                                </div>
+                                <div>
+                                  ul. {profile?.address?.street},{" "}
+                                  {profile?.address?.building_number}
+                                </div>
+                                <div>
+                                  {
+                                    profile?.address?.voivodeship
+                                      ?.alternate_names
+                                  }
+                                </div>
+                              </>
+                            ) : (
+                              ""
+                            )}
                           </section>
                         </div>
                       )}

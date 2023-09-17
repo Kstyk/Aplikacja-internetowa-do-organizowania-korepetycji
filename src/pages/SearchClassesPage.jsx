@@ -172,7 +172,6 @@ const SearchClassesPage = () => {
           setLoadingCity(false);
         })
         .catch((err) => {
-          console.log(err);
           setLoadingCity(false);
         });
     } else {
