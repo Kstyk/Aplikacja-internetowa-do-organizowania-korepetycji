@@ -83,17 +83,14 @@ class Address(models.Model):
     street = models.CharField(max_length=50, null=True, blank=True)
     building_number = models.CharField(max_length=10, null=True, blank=True)
 
-    def __str__(self) -> str:
-        return f"{self.voivodeship.name} - {self.city.name} - {self.postal_code} {self.street}, {self.building_number}"
+    # def __str__(self) -> str:
+    #     return f"{self.voivodeship.name} - {self.city.name} - {self.postal_code} {self.street}, {self.building_number}"
 
 
-TEACHER_HOME = 'teacher_home'
-STUDENT_HOME = 'student_home'
+STATIONARY = 'stationary'
 ONLINE = 'online'
-
 LOCATION_CHOICES = [
-    (TEACHER_HOME, 'U nauczyciela'),
-    (STUDENT_HOME, 'U ucznia'),
+    (STATIONARY, 'Stacjonarnie'),
     (ONLINE, 'Online'),
 ]
 
@@ -121,7 +118,7 @@ class UserDetails(models.Model):
         City, related_name="cities_of_work", null=True, blank=True)
     experience = models.CharField(null=True, blank=True, max_length=10000)
     address = models.ForeignKey(
-        Address, on_delete=models.CASCADE, null=True, blank=True)
+        Address, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.email} - {self.user.first_name} {self.user.last_name}"

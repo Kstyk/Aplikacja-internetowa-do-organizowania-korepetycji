@@ -58,12 +58,18 @@ class CustomAddressAdmin(admin.ModelAdmin):
     form = AddressForm
 
     def get_voivodeship_name(self, obj):
-        return obj.voivodeship.name
+        if obj.voivodeship:
+            return obj.voivodeship.name
+        else:
+            return None
 
     get_voivodeship_name.short_description = "Województwo"
 
     def get_city_name(self, obj):
-        return obj.city.name
+        if obj.city:
+            return obj.city.name
+        else:
+            return None
     get_city_name.short_description = "Miasto"
 
 

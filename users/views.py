@@ -92,7 +92,6 @@ class UserDetailsUpdateView(generics.UpdateAPIView):
         return userdetails
 
     def put(self, request, *args, **kwargs):
-        print(self.get_object())
         instance = self.get_object()
         serializer = self.get_serializer(
             instance, data=request.data, partial=True)
@@ -160,16 +159,16 @@ class CityByIdView(generics.RetrieveAPIView):
 @api_view(['GET'])
 def get_top_cities(request):
     teacher_subquery = Class.objects.filter(
-        teacher__userdetails__cities_of_work=OuterRef('id')
-    ).values('teacher__userdetails__cities_of_work').annotate(count=Count('teacher__userdetails__cities_of_work')).values('count')
+        cities_of_work=OuterRef('id')
+    ).values('cities_of_work').annotate(count=Count('cities_of_work')).values('count')
 
     top_cities = City.objects.annotate(
         has_tutors=Exists(teacher_subquery.filter(
-            teacher__userdetails__cities_of_work=OuterRef('id')))
+            cities_of_work=OuterRef('id')))
     ).filter(has_tutors=True).annotate(
         num_tutors=Subquery(
             teacher_subquery.filter(
-                teacher__userdetails__cities_of_work=OuterRef('id')).values('count')
+                cities_of_work=OuterRef('id')).values('count')
         )
     ).values('id', 'num_tutors', 'slug', 'name',
              'search_names', 'region_id').order_by('-num_tutors')[:20]
