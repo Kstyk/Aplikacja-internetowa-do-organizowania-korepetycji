@@ -58,13 +58,10 @@ def get_all_classes(request):
     if voivodeship_id is not None:
         voivodeship = Region.objects.get(pk=voivodeship_id)
 
-        classes = classes.filter(Q(
-            teacher__userdetails__address__voivodeship=voivodeship) | Q(teacher__userdetails__cities_of_work__region=voivodeship))
+        classes = classes.filter(cities_of_work__region=voivodeship)
     if city_id is not None:
         city = City.objects.get(pk=city_id)
-        tutors = User.objects.filter(userdetails__cities_of_work=city)
-        classes = classes.filter(Q(teacher__in=tutors) | Q(
-            teacher__userdetails__address__city=city))
+        classes = classes.filter(cities_of_work=city)
 
     if min_price is not None:
         classes = classes.filter(price_for_lesson__gte=min_price)
@@ -170,6 +167,7 @@ def purchase_classes(request):
     student = request.user
     classes_id = request.data.get('classes_id', [])
     place = request.data.get('place_of_classes')
+    city_of_classes = request.data.get('city_of_classes', None)
 
     try:
         with transaction.atomic():  # Rozpoczęcie transakcji
@@ -209,6 +207,7 @@ def purchase_classes(request):
                     'student': student.id,
                     'classes': classes.id,
                     'place_of_classes': place,
+                    'city_of_classes': city_of_classes["id"] if city_of_classes is not None else None,
                     'room': new_room.room_id if room.first() is None else room.first().room_id,
                 }
                 # Dodaj do listy poprawnych danych
@@ -228,6 +227,8 @@ def purchase_classes(request):
                 classes=classes,
                 room=new_room if room.first() is None else room.first(),
                 place_of_classes=place,
+                city_of_classes=City.objects.get(
+                    pk=city_of_classes["id"]) if city_of_classes is not None else None,
                 amount_of_lessons=len(selected_slots),
                 start_date=datetime_slots[0],
                 paid_price=len(selected_slots)*classes.price_for_lesson,

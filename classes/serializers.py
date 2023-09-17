@@ -6,6 +6,7 @@ from .validators import validate_teacher_role
 from django.core.validators import MinValueValidator
 from users.models import User, UserDetails
 from django.db.models import Avg
+from users.serializers import CitySerializer
 
 
 class LanguageSerializer(serializers.ModelSerializer):
@@ -32,6 +33,7 @@ class ClassSerializer(serializers.ModelSerializer):
     teacher = UserProfileSerializer(source='teacher.userdetails')
     average_rate = serializers.SerializerMethodField()
     amount_of_opinions = serializers.SerializerMethodField()
+    cities_of_work = CitySerializer(many=True)
 
     class Meta:
         model = Class
@@ -68,6 +70,7 @@ class CreateClassSerializer(serializers.ModelSerializer):
 
 class ScheduleSerializer(serializers.ModelSerializer):
     classes = ClassSerializer()
+    city_of_classes = CitySerializer()
 
     class Meta:
         model = Schedule
@@ -84,6 +87,7 @@ class PurchaseHistorySerializer(serializers.ModelSerializer):
     classes = ClassSerializer()
     room = RoomSerializer()
     student = UserSerializer()
+    city_of_classes = CitySerializer()
 
     class Meta:
         model = PurchaseHistory

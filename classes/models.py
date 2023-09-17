@@ -3,6 +3,9 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from .validators import validate_teacher_role, validate_future_date, validate_student_role, validate_teacher_for_timeslot
 from rooms.models import Room
 from autoslug import AutoSlugField
+from multiselectfield import MultiSelectField
+from cities_light.models import City
+
 # Create your models here.
 
 
@@ -12,6 +15,14 @@ class Language(models.Model):
 
     def __str__(self):
         return self.name
+
+
+STATIONARY = 'stationary'
+ONLINE = 'online'
+LOCATION_CHOICES = [
+    (STATIONARY, 'Stacjonarnie'),
+    (ONLINE, 'Online'),
+]
 
 
 class Class(models.Model):
@@ -25,19 +36,13 @@ class Class(models.Model):
     price_for_lesson = models.DecimalField(max_digits=6, decimal_places=2)
     description = models.TextField()
     able_to_buy = models.BooleanField(default=True, null=True, blank=True)
+    place_of_classes = MultiSelectField(
+        choices=LOCATION_CHOICES, null=True, blank=True, max_choices=3, max_length=150)
+    cities_of_work = models.ManyToManyField(
+        City)
 
     def __str__(self):
         return self.name
-
-
-TEACHER_HOME = 'teacher_home'
-STUDENT_HOME = 'student_home'
-ONLINE = 'online'
-LOCATION_CHOICES = [
-    (TEACHER_HOME, 'U nauczyciela'),
-    (STUDENT_HOME, 'U ucznia'),
-    (ONLINE, 'Online'),
-]
 
 
 class PurchaseHistory(models.Model):
@@ -49,6 +54,8 @@ class PurchaseHistory(models.Model):
     )
     place_of_classes = models.TextField(
         choices=LOCATION_CHOICES, null=True, blank=True)
+    city_of_classes = models.ForeignKey(
+        City, on_delete=models.SET_NULL, blank=True, null=True)
     room = models.ForeignKey(
         Room, on_delete=models.SET_NULL, null=True, blank=True
     )
@@ -111,6 +118,8 @@ class Schedule(models.Model):
     )
     place_of_classes = models.TextField(
         choices=LOCATION_CHOICES, null=True, blank=True)
+    city_of_classes = models.ForeignKey(
+        City, on_delete=models.SET_NULL, blank=True, null=True)
     room = models.ForeignKey(
         Room, on_delete=models.CASCADE, null=True, blank=True
     )
