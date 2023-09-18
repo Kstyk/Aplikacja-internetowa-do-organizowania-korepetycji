@@ -7,6 +7,7 @@ from django.core.validators import MinValueValidator
 from users.models import User, UserDetails
 from django.db.models import Avg
 from users.serializers import CitySerializer
+from cities_light.models import City
 
 
 class LanguageSerializer(serializers.ModelSerializer):
@@ -33,7 +34,7 @@ class ClassSerializer(serializers.ModelSerializer):
     teacher = UserProfileSerializer(source='teacher.userdetails')
     average_rate = serializers.SerializerMethodField()
     amount_of_opinions = serializers.SerializerMethodField()
-    cities_of_work = CitySerializer(many=True)
+    cities_of_classes = CitySerializer(many=True)
 
     class Meta:
         model = Class
@@ -60,12 +61,22 @@ class ClassSerializer(serializers.ModelSerializer):
 
 
 class CreateClassSerializer(serializers.ModelSerializer):
+    place_of_classes = serializers.ListField(
+        child=serializers.CharField(max_length=150), allow_empty=True, required=False
+    )
+
     class Meta:
         model = Class
         fields = '__all__'
 
     def create(self, validated_data):
-        return Class.objects.create(**validated_data)
+        cities_data = validated_data.pop('cities_of_classes', [])
+
+        instance = Class.objects.create(**validated_data)
+
+        instance.cities_of_classes.set(cities_data)
+
+        return instance
 
 
 class ScheduleSerializer(serializers.ModelSerializer):

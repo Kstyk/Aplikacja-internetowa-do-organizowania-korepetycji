@@ -1,22 +1,20 @@
-from django.shortcuts import render
 from .models import Class, Language, Schedule, Timeslot, PurchaseHistory, Opinion
 from rooms.models import Room
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
-from .serializers import ClassSerializer, LanguageSerializer, CreateClassSerializer, ScheduleSerializer, MostPopularLanguages, TimeslotSerializer, CreateTimeSlotsSerializer, PurchaseClassesSerializer, PurchaseHistorySerializer, OpinionSerializer, CreateOpinionSerializer
+from .serializers import *
 from rest_framework.response import Response
 from rest_framework import status, generics
 from django.db.models import Q, F
-from django.db import IntegrityError, transaction
+from django.db import transaction
 from .paginators import ClassPagination, PurchaseHistoryPagination, OpinionPagination
-from users.permissions import IsTeacher, IsStudent
-from django.db.models import Count
+from users.permissions import IsStudent
+from django.db.models import Count, Exists, OuterRef, Subquery
+from django.db import models
 from cities_light.models import City, Region
-from users.models import UserDetails, User
 from datetime import datetime
 from rest_framework.serializers import ValidationError
 import uuid
-from django.db import IntegrityError
 from django.db.models import Avg
 
 # Create your views here.
@@ -58,10 +56,10 @@ def get_all_classes(request):
     if voivodeship_id is not None:
         voivodeship = Region.objects.get(pk=voivodeship_id)
 
-        classes = classes.filter(cities_of_work__region=voivodeship)
+        classes = classes.filter(cities_of_classes__region=voivodeship)
     if city_id is not None:
         city = City.objects.get(pk=city_id)
-        classes = classes.filter(cities_of_work=city)
+        classes = classes.filter(cities_of_classes=city)
 
     if min_price is not None:
         classes = classes.filter(price_for_lesson__gte=min_price)
@@ -109,12 +107,14 @@ class ClassCreateView(generics.CreateAPIView):
 
     def post(self, request):
         data = request.data
+        print(data)
         data["teacher"] = request.user.id
+        data["language"] = data["language"]["id"]
         serializer = self.get_serializer(
             data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({'success': 'Klasa została utworzona'}, status=status.HTTP_201_CREATED)
+        return Response({'success': 'Zajęcia zostały utworzone.'}, status=status.HTTP_201_CREATED)
 
 
 class TimeSlotsCreateView(generics.ListCreateAPIView):
@@ -152,8 +152,9 @@ class TimeslotsTeacherView(generics.ListAPIView):
 
 @api_view(['GET'])
 def get_top_languages(request):
-    top_languages = Language.objects.annotate(num_classes=Count(
-        'class_language')).order_by('-num_classes')[:20]
+    top_languages = Language.objects.annotate(
+        num_classes=Count('class_language')
+    ).order_by('-num_classes')[:20]
 
     language_serializer = MostPopularLanguages(top_languages, many=True)
 
@@ -175,7 +176,16 @@ def purchase_classes(request):
                 raise ValidationError(
                     "Nie wybrałeś żadnego terminu zajęć.")
 
+            if place == "stationary" and city_of_classes is None:
+                raise ValidationError(
+                    "Nie wybrałeś miejsca odbywania zajęć stacjonarnych.")
+
             classes = Class.objects.get(pk=classes_id)
+
+            if classes.able_to_buy is False:
+                raise ValidationError(
+                    "Te zajęcia nie są dostępne do zakupu.")
+
             # Sprawdź, czy istnieje pokój między studentem a nauczycielem w danej klasie
 
             room = Room.objects.filter(

@@ -32,14 +32,12 @@ class Class(models.Model):
         Language, on_delete=models.PROTECT, null=True, related_name="class_language"
     )
     name = models.CharField(max_length=255, null=False, blank=False)
-    active = models.BooleanField(default=True)
     price_for_lesson = models.DecimalField(max_digits=6, decimal_places=2)
     description = models.TextField()
-    able_to_buy = models.BooleanField(default=True, null=True, blank=True)
+    able_to_buy = models.BooleanField(default=True)
     place_of_classes = MultiSelectField(
         choices=LOCATION_CHOICES, null=True, blank=True, max_choices=3, max_length=150)
-    cities_of_work = models.ManyToManyField(
-        City)
+    cities_of_classes = models.ManyToManyField(City, blank=True, null=True)
 
     def __str__(self):
         return self.name
