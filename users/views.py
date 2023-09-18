@@ -159,16 +159,16 @@ class CityByIdView(generics.RetrieveAPIView):
 @api_view(['GET'])
 def get_top_cities(request):
     teacher_subquery = Class.objects.filter(
-        cities_of_work=OuterRef('id')
-    ).values('cities_of_work').annotate(count=Count('cities_of_work')).values('count')
+        cities_of_classes=OuterRef('id')
+    ).values('cities_of_classes').annotate(count=Count('cities_of_classes')).values('count')
 
     top_cities = City.objects.annotate(
         has_tutors=Exists(teacher_subquery.filter(
-            cities_of_work=OuterRef('id')))
+            cities_of_classes=OuterRef('id')))
     ).filter(has_tutors=True).annotate(
         num_tutors=Subquery(
             teacher_subquery.filter(
-                cities_of_work=OuterRef('id')).values('count')
+                cities_of_classes=OuterRef('id')).values('count')
         )
     ).values('id', 'num_tutors', 'slug', 'name',
              'search_names', 'region_id').order_by('-num_tutors')[:20]
@@ -179,7 +179,7 @@ def get_top_cities(request):
 @api_view(['GET'])
 def get_top_cities_in_teacher_address(request):
     top_cities = City.objects.annotate(num_tutors=Count(
-        'cities_of_work')).order_by('-num_tutors')[:20]
+        'cities_of_classes')).order_by('-num_tutors')[:20]
 
     city_serializer = MostPopularCitySerializer(top_cities, many=True)
 

@@ -77,10 +77,15 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
 
 class CitySerializer(serializers.ModelSerializer):
+    region_name = serializers.SerializerMethodField()
+
     class Meta:
         model = City
         fields = ['id', 'slug', 'name',
-                  'region_id']
+                  'region_id', 'region_name']
+
+    def get_region_name(self, obj):
+        return obj.region.name
 
 
 class VoivodeshipSerializer(serializers.ModelSerializer):
