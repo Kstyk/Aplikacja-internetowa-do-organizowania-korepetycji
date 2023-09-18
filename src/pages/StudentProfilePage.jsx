@@ -3,6 +3,8 @@ import useAxios from "../utils/useAxios";
 import AuthContext from "../context/AuthContext";
 import guest from "../assets/guest.png";
 import LoadingComponent from "../components/LoadingComponent";
+import showAlertError from "../components/messages/SwalAlertError";
+
 import {
   AiOutlinePhone,
   AiOutlineMail,
@@ -26,7 +28,10 @@ const StudentProfilePage = () => {
         setProfile(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
     setLoading(false);
   };

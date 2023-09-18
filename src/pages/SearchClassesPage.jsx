@@ -7,6 +7,7 @@ import LoadingComponent from "../components/LoadingComponent";
 import Select from "react-select";
 import ClassesCard from "../components/ClassesComponents/ClassesCard";
 import Pagination from "../components/Pagination";
+import showAlertError from "../components/messages/SwalAlertError";
 
 const SearchClassesPage = () => {
   const { languageSlug, citySlug, searchText } = useParams();
@@ -81,7 +82,10 @@ const SearchClassesPage = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
   };
 
@@ -132,7 +136,7 @@ const SearchClassesPage = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError("Błąd", "Wystąpił błąd przy wyszukiwaniu zajęć.");
       });
     setLoading(false);
   };
@@ -144,7 +148,10 @@ const SearchClassesPage = () => {
         setLanguages(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
   };
 
@@ -157,7 +164,10 @@ const SearchClassesPage = () => {
           setCity(res.data);
         })
         .catch((err) => {
-          console.log(err);
+          showAlertError(
+            "Błąd",
+            "Wystąpił błąd przy pobieraniu danych z serwera."
+          );
         });
     }
   };
@@ -187,7 +197,10 @@ const SearchClassesPage = () => {
         setVoivodeships(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
   };
 

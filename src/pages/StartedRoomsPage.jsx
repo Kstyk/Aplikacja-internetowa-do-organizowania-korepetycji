@@ -4,8 +4,9 @@ import AuthContext from "../context/AuthContext";
 import { Link } from "react-router-dom";
 import LoadingComponent from "../components/LoadingComponent";
 import RoomCard from "../components/RoomComponents/RoomCard";
-import { AiOutlineQuestion, AiOutlineQuestionCircle } from "react-icons/ai";
+import { AiOutlineQuestionCircle } from "react-icons/ai";
 import ArchivizedRoomCard from "../components/RoomComponents/ArchivizedRoomCard";
+import showAlertError from "../components/messages/SwalAlertError";
 
 const StartedRoomsPage = () => {
   const api = useAxios();
@@ -20,22 +21,25 @@ const StartedRoomsPage = () => {
     await api
       .get("/api/rooms/all-rooms/")
       .then((res) => {
-        console.log(res.data);
-
         setRooms(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
 
     await api
       .get("/api/rooms/all-archivized-rooms/")
       .then((res) => {
-        console.log(res.data);
         setArchivizedRooms(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu danych z serwera."
+        );
       });
     setLoading(false);
   };
