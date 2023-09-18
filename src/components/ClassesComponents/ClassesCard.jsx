@@ -139,9 +139,9 @@ const ClassesCard = (props) => {
                 item == "online" ? "Online" : ""
               )}
               {" | "}
-              {classes?.cities_of_work.length > 0
-                ? classes?.cities_of_work
-                    .map((city) => city.name)
+              {classes?.cities_of_classes?.length > 0
+                ? classes?.cities_of_classes
+                    ?.map((city) => city.name)
                     .slice(0, 10) // Pobierz maksymalnie 3 miasta
                     .join(" | ")
                     .substring(0, 100) // Ogranicz do 100 znaków

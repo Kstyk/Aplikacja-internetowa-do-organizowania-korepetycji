@@ -44,7 +44,7 @@ const ClassesPage = () => {
 
   const fetchOpinions = async () => {
     await api
-      .get(`/api/classes/${classes?.teacher?.user?.id}/opinions?page_size=1`)
+      .get(`/api/classes/${classes?.teacher?.user?.id}/opinions?page_size=10`)
       .then((res) => {
         setLoading(false);
         setOpinions(res.data.results);
@@ -65,7 +65,7 @@ const ClassesPage = () => {
   const loadMoreOpinions = async () => {
     await api
       .get(
-        `/api/classes/${classes?.teacher?.user?.id}/opinions?page=${opinionPage}&page_size=1`
+        `/api/classes/${classes?.teacher?.user?.id}/opinions?page=${opinionPage}&page_size=10`
       )
       .then((res) => {
         setLoading(false);
@@ -177,14 +177,14 @@ const ClassesPage = () => {
                       </ul>
                     </>
                   )}
-                  {classes?.cities_of_work && (
+                  {classes?.cities_of_classes && (
                     <>
                       <div className="border-b-[1px] border-base-100 my-4"></div>
                       <h3 className="text-sm mb-1">
                         Miasta prowadzenia zajęć:
                       </h3>
                       <ul className="w-full">
-                        {classes?.cities_of_work.map((city, i) => (
+                        {classes?.cities_of_classes.map((city, i) => (
                           <li
                             key={i}
                             className="flex flex-row items-center gap-x-5"
