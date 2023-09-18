@@ -31,7 +31,7 @@ const Editor = forwardRef((props, ref) => {
       Superscript,
       TextStyle.configure({ types: [ListItem.name] }),
       TextAlign.configure({
-        types: ["heading", "paragraph"],
+        types: ["paragraph"],
       }),
       Link.configure({
         openOnClick: false,
@@ -50,14 +50,14 @@ const Editor = forwardRef((props, ref) => {
             class: "list-[square] pl-6",
           },
           keepMarks: true,
-          keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
+          keepAttributes: false,
         },
         orderedList: {
           HTMLAttributes: {
             class: "list-decimal pl-6",
           },
           keepMarks: true,
-          keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
+          keepAttributes: false,
         },
       }),
       Heading.configure({ levels: [1, 2, 3] }).extend({
