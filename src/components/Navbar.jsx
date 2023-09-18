@@ -163,6 +163,14 @@ const Navbar = () => {
                       Ustal harmonogram
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      to="/zajecia/dodaj"
+                      className="focus:bg-base-300 hover:bg-base-200"
+                    >
+                      Dodaj nowe zajęcia
+                    </Link>
+                  </li>
 
                   <li>
                     <a href="#" className="focus:bg-base-300 hover:bg-base-200">

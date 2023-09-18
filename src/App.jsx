@@ -26,6 +26,7 @@ import { ToastContainer } from "react-toastify";
 import ReceivedOpinions from "./pages/ReceivedOpinions";
 import StudentPage from "./pages/StudentPage";
 import ModifyTimeslotsPage from "./pages/ModifyTimeslotsPage";
+import CreateClassesPage from "./pages/CreateClassesPage";
 
 function App() {
   return (
@@ -62,6 +63,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <ModifyTimeslotsPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/zajecia/dodaj"
+                element={
+                  <PrivateRoute>
+                    <CreateClassesPage />
                   </PrivateRoute>
                 }
               />
