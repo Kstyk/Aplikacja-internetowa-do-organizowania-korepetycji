@@ -17,7 +17,6 @@ const PurchaseHistoryPage = () => {
     await api
       .get(`api/classes/purchase-classes/history/?page_size=10`)
       .then((res) => {
-        console.log(res);
         if (res.data.results == null) {
           setPurchases(null);
           setTotalPages(0);
@@ -52,7 +51,6 @@ const PurchaseHistoryPage = () => {
           setTotalResults(0);
           setCurrentPage(1);
         } else {
-          console.log(res.data);
           setPurchases(res.data.results);
           setTotalPages(res.data.num_pages);
           setTotalResults(res.data.count);
@@ -81,7 +79,7 @@ const PurchaseHistoryPage = () => {
       ) : (
         <>
           <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-none mb-5 text-center p-4 border-[1px] border-base-200 flex flex-row justify-between items-center z-30  mt-10 shadow-xl">
-            <h1 className="text-center w-full">Historia zakuów</h1>
+            <h1 className="text-center w-full">Historia zakupów</h1>
           </div>
           <div className="border-b-[1px] border-base-100 my-4"></div>
 

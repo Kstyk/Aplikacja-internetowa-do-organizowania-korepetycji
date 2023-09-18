@@ -4,6 +4,7 @@ import useAxios from "../utils/useAxios";
 import { useState } from "react";
 import LoadingComponent from "../components/LoadingComponent";
 import books from "../assets/books.jpg";
+import showAlertError from "../components/messages/SwalAlertError";
 
 const HomePage = () => {
   const api = useAxios();
@@ -87,7 +88,7 @@ const HomePage = () => {
               <div className="input-group">
                 <input
                   type="text"
-                  placeholder="Szukaj korepetytora"
+                  placeholder="Szukaj zajęć"
                   className="input input-bordered w-full !rounded-none focus:outline-none bg-white"
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />

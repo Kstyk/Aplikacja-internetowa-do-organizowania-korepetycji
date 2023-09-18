@@ -205,7 +205,6 @@ const SearchClassesPage = () => {
   };
 
   const handleLanguageSelectChange = (e) => {
-    console.log(e);
     setLanguage(e);
   };
 

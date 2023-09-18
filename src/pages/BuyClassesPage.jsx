@@ -28,7 +28,6 @@ const BuyClassesPage = () => {
     handleSubmit,
     setValue,
     control,
-    useWatch,
     formState: { errors },
   } = useForm({
     mode: "all",
@@ -117,9 +116,9 @@ const BuyClassesPage = () => {
           <div className="card shadow-sm bg-white p-5 rounded-none mb-5">
             <h1 className="text-xl">{classes?.name}</h1>
             <div className="border-b-[1px] border-base-100 my-4"></div>
-            <section className="flex flex-row max-lg:flex-col">
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="card shadow-md rounded-none p-4 flex flex-row justify-between max-phone:flex-col w-6/12 max-lg:w-full">
+            <section className="flex flex-row max-lg:flex-col w-full">
+              <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+                <div className="card shadow-md rounded-none p-4 flex flex-row justify-between max-phone:flex-col w-full max-lg:w-full">
                   <div className="max-phone:order-2">
                     <h3 className="font-bold mb-2">Wybrane daty zajęć:</h3>
                     {selected.length == 0 && (
@@ -195,7 +194,7 @@ const BuyClassesPage = () => {
                     )}
                   </div>
                 </div>
-                <div className="card shadow-md rounded-none p-4 flex flex-col max-phone:flex-col w-6/12 max-lg:w-full ">
+                <div className="card shadow-md rounded-none p-4 flex flex-col max-phone:flex-col w-full max-lg:w-full ">
                   <h2 className="font-bold text-lg text-right">Podsumowanie</h2>
                   <div className=" w-full text-right">
                     Do zapłaty:
@@ -210,7 +209,10 @@ const BuyClassesPage = () => {
                     </span>
                   </div>
                   <div className="w-full flex justify-end">
-                    <button className="btn btn-outline no-animation h-12 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full md:w-6/12 lg:w-3/12 mb-2">
+                    <button
+                      disabled={classes?.able_to_buy ? false : true}
+                      className="btn btn-outline no-animation h-12 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full md:w-6/12 lg:w-3/12 mb-2 "
+                    >
                       Finalizuj zakup
                     </button>
                   </div>
