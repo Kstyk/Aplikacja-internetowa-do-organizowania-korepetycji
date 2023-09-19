@@ -27,6 +27,7 @@ import ReceivedOpinions from "./pages/ReceivedOpinions";
 import StudentPage from "./pages/StudentPage";
 import ModifyTimeslotsPage from "./pages/ModifyTimeslotsPage";
 import CreateClassesPage from "./pages/CreateClassesPage";
+import ListOfTeachersClassesPage from "./pages/ListOfTeachersClassesPage";
 
 function App() {
   return (
@@ -63,6 +64,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <ModifyTimeslotsPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/zajecia"
+                element={
+                  <PrivateRoute>
+                    <ListOfTeachersClassesPage />
                   </PrivateRoute>
                 }
               />
@@ -156,9 +165,9 @@ function App() {
               path="/search-classes/text/:searchText"
               element={<SearchClassesPage />}
             />
-            <Route path="/classes/:classesId" element={<ClassesPage />} />
+            <Route path="/zajecia/:classesId" element={<ClassesPage />} />
             <Route
-              path="/classes/:classesId/buy"
+              path="/zajecia/:classesId/buy"
               element={<BuyClassesPage />}
             />
             <Route path="/nauczyciel/:teacherId" element={<TeacherPage />} />

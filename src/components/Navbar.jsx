@@ -165,6 +165,14 @@ const Navbar = () => {
                   </li>
                   <li>
                     <Link
+                      to="/zajecia"
+                      className="focus:bg-base-300 hover:bg-base-200"
+                    >
+                      Lista zajęć
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
                       to="/zajecia/dodaj"
                       className="focus:bg-base-300 hover:bg-base-200"
                     >
