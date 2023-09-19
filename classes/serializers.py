@@ -60,6 +60,15 @@ class ClassSerializer(serializers.ModelSerializer):
         return len(opinions)
 
 
+class ClassTeacherViewSerializer(serializers.ModelSerializer):
+    language = LanguageSerializer()
+    cities_of_classes = CitySerializer(many=True)
+
+    class Meta:
+        model = Class
+        fields = '__all__'
+
+
 class CreateClassSerializer(serializers.ModelSerializer):
     place_of_classes = serializers.ListField(
         child=serializers.CharField(max_length=150), allow_empty=True, required=False

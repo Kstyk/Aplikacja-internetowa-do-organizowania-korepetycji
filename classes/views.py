@@ -8,7 +8,7 @@ from rest_framework import status, generics
 from django.db.models import Q, F
 from django.db import transaction
 from .paginators import ClassPagination, PurchaseHistoryPagination, OpinionPagination
-from users.permissions import IsStudent
+from users.permissions import IsStudent, IsTeacher
 from django.db.models import Count, Exists, OuterRef, Subquery
 from django.db import models
 from cities_light.models import City, Region
@@ -102,6 +102,7 @@ class ClassesByIdView(generics.RetrieveAPIView):
 
 
 class ClassCreateView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated, IsTeacher]
     serializer_class = CreateClassSerializer
     queryset = Class.objects.all()
 
@@ -115,6 +116,17 @@ class ClassCreateView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({'success': 'Zajęcia zostały utworzone.'}, status=status.HTTP_201_CREATED)
+
+
+class TeacherClassesView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated, IsTeacher]
+    serializer_class = ClassTeacherViewSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        queryset = Class.objects.filter(teacher=user)
+        return queryset
 
 
 class TimeSlotsCreateView(generics.ListCreateAPIView):

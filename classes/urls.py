@@ -1,13 +1,12 @@
 from django.urls import path
-from .views import get_all_classes, get_languages, get_top_languages, ClassCreateView, TimeSlotsCreateView, ScheduleTeacherView, ClassesByIdView, TimeslotsTeacherView, purchase_classes, PurchaseHistoryList, TeacherOpinionsList, ReceivedOpinionsList, CreateOpinionView
+from .views import get_all_classes, get_languages, get_top_languages, ClassCreateView, TimeSlotsCreateView, ScheduleTeacherView, ClassesByIdView, TimeslotsTeacherView, purchase_classes, PurchaseHistoryList, TeacherOpinionsList, ReceivedOpinionsList, CreateOpinionView, TeacherClassesView
 urlpatterns = [
     path('', get_all_classes, name="get_all_classes"),
     path('languages/', get_languages, name="get_languages"),
     path('languages/most-popular/', get_top_languages,
          name="get_popular_languages"),
-
     path('create/', ClassCreateView.as_view(), name="create_class"),
-
+    path('teacher-classes/', TeacherClassesView.as_view()),
     path('timeslots/create/',
          TimeSlotsCreateView.as_view()),
     path('<int:teacher_id>/timeslots/', TimeslotsTeacherView.as_view()),
