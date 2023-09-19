@@ -112,7 +112,7 @@ const ClassesPage = () => {
             </Link>
           </div>
 
-          <div className="flex md:flex-row md:gap-x-2 max-md:flex-col ">
+          <div className="flex md:flex-row md:gap-x-2 max-md:flex-col md:min-h-[50vh]">
             <div className="card  border-[1px] border-base-200 py-4 rounded-none bg-white md:w-9/12 max-md:w-full flex phone:flex-row max-phone:flex-col shadow-xl">
               <div className="profile max-phone:pr-6 phone:pr-3 ml-3 w-4/12 max-phone:w-full border-r-[1px] border-base-300 flex flex-col justify-start items-center max-phone:order-2">
                 <div className="avatar">
@@ -155,7 +155,7 @@ const ClassesPage = () => {
                       </span>
                     </li>
                   </ul>
-                  {classes?.place_of_classes && (
+                  {classes?.place_of_classes?.length > 0 && (
                     <>
                       <div className="border-b-[1px] border-base-100 my-4"></div>
                       <h3 className="text-sm mb-1">
@@ -177,7 +177,7 @@ const ClassesPage = () => {
                       </ul>
                     </>
                   )}
-                  {classes?.cities_of_classes && (
+                  {classes?.cities_of_classes?.length > 0 && (
                     <>
                       <div className="border-b-[1px] border-base-100 my-4"></div>
                       <h3 className="text-sm mb-1">

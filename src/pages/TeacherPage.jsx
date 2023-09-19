@@ -340,7 +340,7 @@ const TeacherPage = () => {
                           key={i}
                         >
                           <Link
-                            to={`/classes/${classTeacher?.id}`}
+                            to={`/zajecia/${classTeacher?.id}`}
                             className="w-6/12"
                             params={{
                               classesId: classTeacher?.id,
@@ -353,7 +353,7 @@ const TeacherPage = () => {
                             <span className="text-gray-400">60 min</span>
                           </span>
                           <Link
-                            to={`/classes/${classTeacher?.id}`}
+                            to={`/zajecia/${classTeacher?.id}`}
                             params={{
                               classesId: classTeacher?.id,
                             }}

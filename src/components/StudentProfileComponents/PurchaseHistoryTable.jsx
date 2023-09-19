@@ -8,7 +8,7 @@ const PurchaseHistoryTable = (props) => {
   const { user } = useContext(AuthContext);
   return (
     <div className="container mx-auto text-gray-100 mb-10">
-      <div className="flex flex-col  text-xs">
+      <div className="flex flex-col text-xs">
         <div className="flex items-center justify-center text-left bg-transparent text-gray-700 border-b border-opacity-60 border-gray-700">
           <div
             className="flex-1 px-2 py-3 sm:p-3 cursor-pointer hover:font-bold transition-all duration-300"
@@ -31,7 +31,7 @@ const PurchaseHistoryTable = (props) => {
         </div>
         {purchases.length == 0 && (
           <span className="text-black italic text-center mt-3">
-            Brak plików.
+            Brak zakupionych zajęć.
           </span>
         )}
         {purchases?.map((purchase) => (

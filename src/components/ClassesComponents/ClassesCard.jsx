@@ -2,7 +2,7 @@ import React from "react";
 import { MdOutlineLocationOn } from "react-icons/md";
 import guest from "../../assets/guest.png";
 import { AiOutlinePhone } from "react-icons/ai";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { backendUrl } from "../../variables/backendUrl";
 
 const ClassesCard = (props) => {
@@ -51,7 +51,7 @@ const ClassesCard = (props) => {
             Język {classes.language.name}
           </div>
           <Link
-            to={`/classes/${classes?.id}`}
+            to={`/zajecia/${classes?.id}`}
             params={{
               classesId: classes?.id,
             }}
