@@ -71,7 +71,7 @@ class ClassTeacherViewSerializer(serializers.ModelSerializer):
 
 class CreateClassSerializer(serializers.ModelSerializer):
     place_of_classes = serializers.ListField(
-        child=serializers.CharField(max_length=150), allow_empty=True, required=False
+        child=serializers.CharField(max_length=150), allow_empty=False, required=True
     )
 
     class Meta:
@@ -85,6 +85,38 @@ class CreateClassSerializer(serializers.ModelSerializer):
 
         instance.cities_of_classes.set(cities_data)
 
+        return instance
+
+
+class UpdateClassSerializer(serializers.ModelSerializer):
+    place_of_classes = serializers.ListField(
+        child=serializers.CharField(max_length=150), allow_empty=False, required=True
+    )
+
+    class Meta:
+        model = Class
+        fields = ['language', 'name', 'price_for_lesson', 'description',
+                  'able_to_buy', 'place_of_classes', 'cities_of_classes']
+
+    def update(self, instance, validated_data):
+        cities_data = validated_data.pop('cities_of_classes', [])
+
+        instance.name = validated_data.get('name', instance.name)
+        instance.language = validated_data.get(
+            'language', instance.language)
+        instance.description = validated_data.get(
+            'description', instance.description)
+        instance.price_for_lesson = validated_data.get(
+            'price_for_lesson', instance.price_for_lesson)
+        instance.description = validated_data.get(
+            'description', instance.description)
+        instance.able_to_buy = validated_data.get(
+            'able_to_buy', instance.able_to_buy)
+        instance.place_of_classes = validated_data.get(
+            'place_of_classes', instance.place_of_classes)
+        instance.cities_of_classes.set(cities_data)
+
+        instance.save()
         return instance
 
 

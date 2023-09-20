@@ -108,7 +108,6 @@ class ClassCreateView(generics.CreateAPIView):
 
     def post(self, request):
         data = request.data
-        print(data)
         data["teacher"] = request.user.id
         data["language"] = data["language"]["id"]
         serializer = self.get_serializer(
@@ -116,6 +115,25 @@ class ClassCreateView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({'success': 'Zajęcia zostały utworzone.'}, status=status.HTTP_201_CREATED)
+
+    def put(self, request, pk):
+        try:
+            class_instance = Class.objects.get(id=pk)
+        except Class.DoesNotExist:
+            return Response({'error': 'Zajęcia nie istnieją.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if request.user.id is not class_instance.teacher.id:
+            return Response({'error': 'Nie jesteś właścicielem tych zajęć.'}, status=status.HTTP_403_FORBIDDEN)
+
+        data = request.data
+        data["language"] = data["language"]["id"]
+
+        serializer = UpdateClassSerializer(instance=class_instance, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'success': 'Zajęcia zostały zaktualizowane.'}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TeacherClassesView(generics.ListAPIView):
