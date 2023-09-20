@@ -33,7 +33,7 @@ class Class(models.Model):
     )
     name = models.CharField(max_length=255, null=False, blank=False)
     price_for_lesson = models.DecimalField(max_digits=6, decimal_places=2)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     able_to_buy = models.BooleanField(default=True)
     place_of_classes = MultiSelectField(
         choices=LOCATION_CHOICES, null=True, blank=True, max_choices=3, max_length=150)
