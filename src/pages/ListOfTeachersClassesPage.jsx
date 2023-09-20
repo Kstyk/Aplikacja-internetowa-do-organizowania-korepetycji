@@ -3,6 +3,7 @@ import useAxios from "../utils/useAxios";
 import LoadingComponent from "../components/LoadingComponent";
 import { Link } from "react-router-dom";
 import { FiExternalLink, FiEdit } from "react-icons/fi";
+import showAlertError from "../components/messages/SwalAlertError";
 
 const ListOfTeachersClassesPage = () => {
   const api = useAxios();
@@ -14,9 +15,13 @@ const ListOfTeachersClassesPage = () => {
       .get(`/api/classes/teacher-classes/`)
       .then((res) => {
         setClasses(res.data);
-        console.log(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd podczas pobierania danych z serwera."
+        );
+      });
     setLoading(false);
   };
 
@@ -90,7 +95,8 @@ const ListOfTeachersClassesPage = () => {
                     <div className="w-20 sm:w-24 px-2 py-3 sm:p-3 flex justify-center items-center text-center">
                       <Link
                         className="hover:underline transition-all duration-200 sm:truncate"
-                        to={`/zajecia/${classes?.id}`}
+                        to={`/zajecia/edytuj`}
+                        state={{ classes: classes }}
                       >
                         <FiEdit />
                       </Link>

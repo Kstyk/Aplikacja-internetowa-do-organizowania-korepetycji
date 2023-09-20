@@ -296,7 +296,6 @@ const CreateClassesPage = () => {
                     }
                     noOptionsMessage={() => "Nie znaleziono"}
                     styles={customSelectStyle}
-                    name={name}
                     onChange={(selectedOption) => {
                       setIsStationary(
                         selectedOption.find((opt) => opt.value == "stationary")
@@ -385,16 +384,14 @@ const CreateClassesPage = () => {
                 fieldName="description"
                 {...register("description")}
               />
-
-              <span className="text-[11px] text-red-400">
-                <span>{errors.description && errors.description.message}</span>
-                <span className="flex flex-col">
-                  {backendErrors?.description &&
-                    backendErrors.description.map((err) => (
-                      <span key={err}>{err}</span>
-                    ))}
-                </span>
-              </span>
+              <small className="text-red-400 text-right">
+                {errors?.description && errors.description.message}
+                {backendErrors?.description?.map((e, i) => (
+                  <span key={i}>
+                    {e} <br />
+                  </span>
+                ))}
+              </small>
             </div>
           </div>
           <button className="btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full md:w-6/12 mb-2">

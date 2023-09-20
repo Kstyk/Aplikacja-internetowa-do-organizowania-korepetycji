@@ -31,7 +31,6 @@ const ClassesPage = () => {
       .get(`/api/classes/${classesId}`)
       .then((res) => {
         setClasses(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         showAlertError(

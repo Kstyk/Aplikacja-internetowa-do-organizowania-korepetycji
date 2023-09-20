@@ -28,6 +28,7 @@ import StudentPage from "./pages/StudentPage";
 import ModifyTimeslotsPage from "./pages/ModifyTimeslotsPage";
 import CreateClassesPage from "./pages/CreateClassesPage";
 import ListOfTeachersClassesPage from "./pages/ListOfTeachersClassesPage";
+import EditClassesPage from "./pages/EditClassesPage";
 
 function App() {
   return (
@@ -80,6 +81,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <CreateClassesPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/zajecia/edytuj"
+                element={
+                  <PrivateRoute>
+                    <EditClassesPage />
                   </PrivateRoute>
                 }
               />
