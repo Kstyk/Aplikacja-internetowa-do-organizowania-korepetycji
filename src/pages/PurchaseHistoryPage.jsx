@@ -72,18 +72,18 @@ const PurchaseHistoryPage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col">
-      <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 "></div>
+    <div className="flex flex-col pb-5">
+      <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 max-phone:hidden"></div>
       {loading ? (
         <LoadingComponent message="Ładowanie informacji o plikach..." />
       ) : (
         <>
-          <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-none mb-5 text-center p-4 border-[1px] border-base-200 flex flex-row justify-between items-center z-30  mt-10 shadow-xl">
+          <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-md text-center p-4 border-[1px] border-base-200 flex flex-row justify-between items-center z-30  mt-10 shadow-xl">
             <h1 className="text-center w-full">Historia zakupów</h1>
           </div>
           <div className="border-b-[1px] border-base-100 my-4"></div>
 
-          <div className="card rounded-none bg-white p-6 shadow-xl">
+          <div className="card rounded-md bg-white p-6 shadow-xl">
             <PurchaseHistoryTable purchases={purchases} />
             {totalPages > 1 && (
               <Pagination

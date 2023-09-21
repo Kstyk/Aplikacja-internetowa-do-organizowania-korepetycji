@@ -28,7 +28,7 @@ const EditMoreInfosPage = () => {
     control: (base) => ({
       ...base,
       boxShadow: "none",
-      borderRadius: "none",
+      borderRadius: "2px",
       borderColor: "#BFEAF5",
       "&:hover": {
         border: "1px solid #aaabac",
@@ -258,9 +258,9 @@ const EditMoreInfosPage = () => {
       ) : (
         <>
           <div>
-            <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300 "></div>
+            <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300 max-phone:hidden"></div>
 
-            <div className="bg-white card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto w-8/12 max-lg:w-full max-md:w-8/12 max-phone:w-full">
+            <div className="bg-white card shadow-xl h-full px-5 py-5 mt-10 rounded-md mb-10 mx-auto w-8/12 max-lg:w-full max-md:w-8/12 max-phone:w-full">
               <h1 className="text-2xl text-center">
                 Edytuj dodatkowe informacje
               </h1>
@@ -285,7 +285,7 @@ const EditMoreInfosPage = () => {
                     </label>
                     <input
                       type="number"
-                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
+                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
                       name="year_of_birth"
                       placeholder="Podaj rok urodzenia"
                       id="year_of_birth"
@@ -311,7 +311,7 @@ const EditMoreInfosPage = () => {
                     </label>
                     <input
                       type="text"
-                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
+                      className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
                       name="phone_number"
                       placeholder="Podaj numer telefonu"
                       id="phone_number"
@@ -620,7 +620,7 @@ const EditMoreInfosPage = () => {
                     </label>
                     <input
                       type="text"
-                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
+                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
                       name="address.postal_code"
                       placeholder="Podaj kod pocztowy"
                       id="postal_code"
@@ -650,7 +650,7 @@ const EditMoreInfosPage = () => {
                     </label>
                     <input
                       type="text"
-                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
+                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
                       name="address.street"
                       placeholder="Podaj ulicę"
                       id="street"
@@ -676,7 +676,7 @@ const EditMoreInfosPage = () => {
                     </label>
                     <input
                       type="text"
-                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
+                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
                       name="address.building_number"
                       placeholder="Podaj numer budynku"
                       id="building_number"
@@ -765,7 +765,7 @@ const EditMoreInfosPage = () => {
                     </div>
                   </div>
                 )}
-                <button className="btn btn-outline no-animation w-6/12 max-md:w-5/12 max-phone:w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400">
+                <button className="btn btn-outline no-animation w-6/12 max-md:w-5/12 max-phone:w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400">
                   Edytuj profil
                 </button>
               </form>

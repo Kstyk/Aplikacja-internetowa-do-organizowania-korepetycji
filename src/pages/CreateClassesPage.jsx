@@ -25,7 +25,7 @@ const CreateClassesPage = () => {
     control: (base) => ({
       ...base,
       boxShadow: "none",
-      borderRadius: "none",
+      borderRadius: "2px",
       borderColor: "#BFEAF5",
       "&:hover": {
         border: "1px solid #aaabac",
@@ -130,9 +130,9 @@ const CreateClassesPage = () => {
 
   return (
     <div className="pt-10">
-      <div className="absolute top-[70px] left-0 right-0 h-[200px] bg-base-300"></div>
+      <div className="absolute top-[70px] left-0 right-0 h-[200px] bg-base-300 max-phone:hidden"></div>
 
-      <div className="bg-white card shadow-xl h-full px-5 py-5 rounded-none mb-10 mx-auto w-8/12 max-lg:w-full max-md:w-8/12 max-phone:w-full">
+      <div className="bg-white card shadow-xl h-full px-5 py-5 rounded-md mb-10 mx-auto w-8/12 max-lg:w-full max-md:w-8/12 max-phone:w-full">
         <h1 className="text-2xl text-center">Dodaj nowe zajęcia</h1>
         <div className="border-b-[1px] border-base-100 my-4"></div>
         <form
@@ -149,7 +149,7 @@ const CreateClassesPage = () => {
               </label>
               <input
                 type="text"
-                className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
+                className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
                 name="name"
                 placeholder="Nazwa zajęć"
                 id="name"
@@ -175,7 +175,7 @@ const CreateClassesPage = () => {
               </label>
               <input
                 type="number"
-                className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
+                className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
                 name="price_for_lesson"
                 placeholder="Cena zajęć"
                 id="price_for_lesson"
@@ -394,7 +394,7 @@ const CreateClassesPage = () => {
               </small>
             </div>
           </div>
-          <button className="btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full md:w-6/12 mb-2">
+          <button className="btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400 w-full md:w-6/12 mb-2">
             Dodaj zajęcia
           </button>
         </form>

@@ -28,7 +28,6 @@ const RoomPageSchedule = ({ roomId }) => {
 
   return (
     <div className="mt-10">
-      <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 "></div>
       {loading ? (
         <LoadingComponent message="Ładowanie..." />
       ) : (

@@ -261,7 +261,7 @@ const Navbar = () => {
           )}
         </div>
       </nav>
-      <div className="navbar bg-base-100 phone:hidden pl-0 relative">
+      <div className="navbar bg-base-100 phone:hidden h-[70px] pl-0 relative">
         <div className="flex-1">
           <Link
             className="btn border-none bg-white hover:bg-white normal-case text-xl"

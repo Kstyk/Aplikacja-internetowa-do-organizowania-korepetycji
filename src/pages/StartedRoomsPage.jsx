@@ -54,9 +54,9 @@ const StartedRoomsPage = () => {
         <LoadingComponent message="Ładowanie danych o zajęciach" />
       ) : (
         <div className="pt-10">
-          <div className="absolute top-[70px] left-0 right-0 h-[200px] bg-base-300"></div>
+          <div className="absolute top-[70px] left-0 right-0 h-[200px] bg-base-300 max-phone:hidden"></div>
 
-          <div className="card shadow-xl bg-white p-5 pb-10 rounded-none mb-5">
+          <div className="card shadow-xl bg-white p-5 pb-10 rounded-md mb-5">
             <div className="w-full m-auto h-full">
               <h1 className="text-2xl text-center">Twoje pokoje</h1>
 

@@ -38,7 +38,7 @@ const SearchClassesPage = () => {
     control: (base) => ({
       ...base,
       boxShadow: "none",
-      borderRadius: "none",
+      borderRadius: "2px",
     }),
   };
 
@@ -243,14 +243,14 @@ const SearchClassesPage = () => {
 
   return (
     <div>
-      <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300 "></div>
+      <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300 max-phone:hidden"></div>
 
-      <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto">
+      <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-md mb-10 mx-auto">
         <div className="input-group">
           <input
             type="text"
             placeholder="Szukaj korepetycji"
-            className="input input-bordered w-full !rounded-none focus:outline-none bg-white placeholder:text-gray-400"
+            className="input input-bordered w-full !rounded-sm focus:outline-none bg-white placeholder:text-gray-400"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -376,13 +376,13 @@ const SearchClassesPage = () => {
           <div className="flex justify-between">
             <button
               onClick={(e) => searchTutors(1)}
-              className="btn btn-outline no-animation w-3/12 max-md:w-5/12 h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400"
+              className="btn btn-outline no-animation w-3/12 max-md:w-5/12 h-10 py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400"
             >
               Filtruj
             </button>
             <button
               onClick={(e) => clearFilters()}
-              className="btn btn-outline no-animation w-3/12 max-md:w-5/12 h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400"
+              className="btn btn-outline no-animation w-3/12 max-md:w-5/12 h-10 py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400"
             >
               Wyczyść filtry
             </button>
@@ -395,7 +395,7 @@ const SearchClassesPage = () => {
         </div>
       ) : (
         <section className="mb-10">
-          <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto gap-y-3">
+          <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-md mb-10 mx-auto gap-y-3">
             {classes == null && (
               <h1 className="text-lg">
                 Brak wyników dopasowanych do podanych kryteriów.

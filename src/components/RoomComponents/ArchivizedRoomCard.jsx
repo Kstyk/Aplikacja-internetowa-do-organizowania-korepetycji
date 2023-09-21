@@ -6,7 +6,7 @@ const ArchivizedRoomCard = ({ room, user }) => {
   return (
     <Link
       to={`/pokoj/${room.room_id}/`}
-      className="card rounded-none bg-white hover:bg-slate-100 transition-all duration-200 border-[1px] flex flex-col items-center justify-center w-full p-5"
+      className="card rounded-md bg-white hover:bg-slate-100 transition-all duration-200 border-[1px] flex flex-col items-center justify-center w-full p-5"
     >
       <React.Fragment>
         <figure className="w-4/12 aspect-square">

@@ -370,8 +370,6 @@ const Chat = ({ archivized }) => {
 
   return (
     <div className="flex flex-col h-full bg-white">
-      <div className="absolute z-5 top-[70px] left-0 right-0 h-[300px] bg-base-300"></div>
-
       <div className="h-full flex flex-col justify-between bg-white !z-10">
         <div
           id="scrollableDiv"

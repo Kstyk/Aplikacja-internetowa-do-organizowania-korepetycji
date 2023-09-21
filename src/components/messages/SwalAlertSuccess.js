@@ -15,7 +15,7 @@ const showSuccessAlert = (title, text, onClose) => {
       text: text,
       customClass: {
         confirmButton:
-          "btn btn-outline rounded-none outline-none border-[1px] text-black w-full",
+          "btn btn-outline rounded-md outline-none border-[1px] text-black w-full",
         popup: "rounded-none bg-base-100",
       },
     })

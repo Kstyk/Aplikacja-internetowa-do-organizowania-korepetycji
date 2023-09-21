@@ -95,9 +95,11 @@ const RegistrationPage = () => {
 
   return (
     <div>
-      <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300 "></div>
-
-      <div className="bg-white card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto w-10/12 max-lg:w-full flex flex-row max-md:flex-col max-md:w-8/12 max-phone:w-full">
+      <div className="absolute top-[70px] left-0 right-0 h-[200px] max-phone:hidden bg-base-300 "></div>
+      <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-md mt-10 mb-5 text-center p-4 flex flex-col phone:flex-row justify-between items-center z-30 shadow-xl w-10/12 max-lg:w-full max-md:w-8/12 max-phone:w-full mx-auto">
+        <h1 className="text-center w-full">Rejestracja</h1>
+      </div>
+      <div className="bg-white card shadow-xl h-full px-5 pt-5 pb-5 rounded-md mb-10 mx-auto w-10/12 max-lg:w-full max-md:w-8/12 max-phone:w-full flex flex-row max-md:flex-col">
         <div className="flex flex-col justify-center w-6/12 max-md:w-full mx-auto py-20 px-5 max-md:py-10">
           <img src={transparent_logo} alt="logo" />
           <p className="text-center mt-5 text-lg">
@@ -116,7 +118,7 @@ const RegistrationPage = () => {
             <div className="flex flex-col float-right w-full">
               <input
                 type="email"
-                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
+                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
                 name="email"
                 placeholder="Wprowadź email..."
                 id="email"
@@ -136,7 +138,7 @@ const RegistrationPage = () => {
             <div className="flex flex-col float-right w-full">
               <input
                 type="password"
-                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
+                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
                 name="password"
                 placeholder="Podaj hasło..."
                 id="password"
@@ -156,7 +158,7 @@ const RegistrationPage = () => {
             <div className="flex flex-col float-right w-full">
               <input
                 type="password"
-                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
+                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
                 id="confirm_password"
                 placeholder="Powtórz hasło..."
                 {...register(
@@ -175,7 +177,7 @@ const RegistrationPage = () => {
                 name="first_name"
                 id="first_name"
                 placeholder="Podaj imię..."
-                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
+                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
                 type="text"
                 {...register("first_name", registerOptions.first_name)}
               />
@@ -195,7 +197,7 @@ const RegistrationPage = () => {
                 name="last_name"
                 id="last_name"
                 placeholder="Podaj nazwisko..."
-                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac]"
+                className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
                 type="text"
                 {...register("last_name", registerOptions.last_name)}
               />
@@ -227,7 +229,7 @@ const RegistrationPage = () => {
                       control: (base) => ({
                         ...base,
                         boxShadow: "none",
-                        borderRadius: "none",
+                        borderRadius: "2px",
                         borderColor: "#BFEAF5",
                         backgroundColor: "transparent",
                       }),
@@ -246,7 +248,7 @@ const RegistrationPage = () => {
             </div>
           </div>
           <hr />
-          <button className="btn btn-outline no-animation w-6/12 max-md:w-5/12 max-phone:w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400">
+          <button className="btn btn-outline no-animation w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400">
             Zarejestruj
           </button>
         </form>

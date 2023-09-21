@@ -8,7 +8,7 @@ const OpinionCard = ({ opinion, page }) => {
   dayjs.locale("pl");
   return (
     <div
-      className={`card w-full p-5 max-phone:px-0 hover:bg-gray-50 hover:shadow-sm rounded-sm animate__animated animate__fadeIn`}
+      className={`card w-full p-5 max-phone:px-0 hover:bg-gray-50 hover:shadow-sm rounded-md animate__animated animate__fadeIn`}
     >
       <div className="header flex flex-row justify-between gap-x-2">
         <div className="flex flex-row gap-x-5 items-center">

@@ -96,23 +96,23 @@ const ClassesPage = () => {
       {loading ? (
         <LoadingComponent message="Ładowanie informacji o zajęciach..." />
       ) : (
-        <section className="mt-10 w-full max-phone:px-3 mb-10">
-          <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300"></div>
+        <section className="mt-10 w-full max-phone:px-0 max-md:px-3 mb-10">
+          <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300 max-phone:hidden"></div>
 
-          <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-none mb-5 text-center p-4 border-[1px] border-base-200 flex flex-col phone:flex-row justify-between items-center z-30 shadow-xl">
+          <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-md mb-5 text-center p-4 border-[1px] border-base-200 flex flex-col phone:flex-row justify-between items-center z-30 shadow-xl">
             <h1 className="text-center w-full">{classes?.name}</h1>
             <Link
-              className={`btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full phone:w-4/12 ${
+              className={`btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400 w-full phone:w-4/12 ${
                 classes?.able_to_buy ? "" : "btn-disabled"
               }`}
-              to={`/classes/${classes?.id}/buy`}
+              to={`/zajecia/${classes?.id}/kup`}
             >
               Zakup zajęcia
             </Link>
           </div>
 
           <div className="flex md:flex-row md:gap-x-2 max-md:flex-col md:min-h-[50vh]">
-            <div className="card  border-[1px] border-base-200 py-4 rounded-none bg-white md:w-9/12 max-md:w-full flex phone:flex-row max-phone:flex-col shadow-xl">
+            <div className="card  border-[1px] border-base-200 py-4 rounded-md bg-white md:w-9/12 max-md:w-full flex phone:flex-row max-phone:flex-col shadow-xl">
               <div className="profile max-phone:pr-6 phone:pr-3 ml-3 w-4/12 max-phone:w-full border-r-[1px] border-base-300 flex flex-col justify-start items-center max-phone:order-2">
                 <div className="avatar">
                   <div className="w-20 rounded-full hover:ring ring-primary ring-offset-base-100 ring-offset-2 transition-all duration-200">
@@ -126,7 +126,7 @@ const ClassesPage = () => {
                   </div>
                 </div>
                 <button
-                  className="btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full"
+                  className="btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400 w-full"
                   onClickCapture={() =>
                     window.open(
                       "mailto:email@example.com?subject=Subject&body=Body%20goes%20here"
@@ -266,7 +266,7 @@ const ClassesPage = () => {
                 </article>
               </div>
             </div>
-            <div className="card border-[1px] border-base-200 p-4 rounded-none bg-white md:w-3/12 gap-y-5 max-md:w-full shadow-xl">
+            <div className="card border-[1px] border-base-200 p-4 rounded-md bg-white md:w-3/12 gap-y-5 max-md:w-full shadow-xl">
               <div>
                 <h2 className="block uppercase tracking-wide text-gray-700 text-base font-bold border-b-[1px] border-base-100 mb-2">
                   O nuaczycielu
@@ -291,7 +291,7 @@ const ClassesPage = () => {
           </div>
 
           {opinions?.length > 0 && (
-            <div className="card border-[1px] border-base-200 p-5 rounded-none shadow-xl bg-white md:w-full max-md:w-full flex flex-col mt-2">
+            <div className="card border-[1px] border-base-200 p-5 rounded-md shadow-xl bg-white md:w-full max-md:w-full flex flex-col mt-2">
               <h1 className="block uppercase tracking-wide text-gray-700 text-xl font-bold border-b-[1px] border-base-100 mb-2 w-full">
                 Opinie o nauczycielu
               </h1>

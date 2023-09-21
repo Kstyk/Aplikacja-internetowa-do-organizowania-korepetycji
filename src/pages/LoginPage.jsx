@@ -10,9 +10,11 @@ const LoginPage = () => {
 
   return (
     <div>
-      <div className="absolute top-[70px] left-0 right-0 h-[200px] bg-base-300 "></div>
-
-      <div className="bg-white card shadow-xl h-full px-5 py-5 mt-10 rounded-none mb-10 mx-auto w-10/12 max-lg:w-full flex flex-row max-md:flex-col max-md:w-8/12 max-phone:w-full">
+      <div className="absolute top-[70px] left-0 right-0 h-[200px] max-phone:hidden bg-base-300 "></div>
+      <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-md mt-10 mb-5 text-center p-4 flex flex-col phone:flex-row justify-between items-center z-30 shadow-xl w-10/12 max-lg:w-full max-md:w-8/12 max-phone:w-full mx-auto">
+        <h1 className="text-center w-full">Logowanie</h1>
+      </div>
+      <div className="bg-white card shadow-xl h-full px-5 py-5 rounded-md mb-10 mx-auto w-10/12 max-lg:w-full flex flex-row max-md:flex-col max-md:w-8/12 max-phone:w-full">
         <div className="flex flex-col justify-center w-6/12 max-md:w-full mx-auto py-20 px-5 max-md:py-10">
           <img src={transparent_logo} alt="logo" />
           <p className="text-center mt-5 text-lg">
@@ -49,7 +51,7 @@ const LoginPage = () => {
           <div className="border-base-200 border-b-[1px]"></div>
           <button
             type="submit"
-            className="btn btn-outline no-animation w-6/12 max-md:w-5/12 max-phone:w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400"
+            className="btn btn-outline no-animation w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-sm mt-4 hover:bg-base-400 border-base-400"
           >
             Zaloguj
           </button>

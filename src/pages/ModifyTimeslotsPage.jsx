@@ -23,9 +23,9 @@ const ModifyTimeslotsPage = () => {
 
   return (
     <div className="pt-10">
-      <div className="absolute top-[70px] left-0 right-0 h-[200px] bg-base-300"></div>
+      <div className="absolute top-[70px] left-0 right-0 h-[200px] bg-base-300 max-phone:hidden"></div>
 
-      <div className="card shadow-xl bg-white p-5 rounded-none mb-5">
+      <div className="card shadow-xl bg-white p-5 rounded-md mb-5">
         <h1 className="text-2xl text-center">Ustal swój harmonogram</h1>
         <div className="border-b-[1px] border-base-100 my-4"></div>
         <h2 className="text-lg text-center">Wybrane terminy:</h2>
@@ -64,7 +64,7 @@ const ModifyTimeslotsPage = () => {
         <div className="w-full flex justify-center">
           <button
             onClick={() => editSchedule()}
-            className="btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full md:w-6/12 lg:w-3/12 mb-2"
+            className="btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400 w-full md:w-6/12 lg:w-3/12 mb-2"
           >
             Edytuj harmonogram
           </button>

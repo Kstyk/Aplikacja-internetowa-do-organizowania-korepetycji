@@ -29,160 +29,186 @@ import ModifyTimeslotsPage from "./pages/ModifyTimeslotsPage";
 import CreateClassesPage from "./pages/CreateClassesPage";
 import ListOfTeachersClassesPage from "./pages/ListOfTeachersClassesPage";
 import EditClassesPage from "./pages/EditClassesPage";
-
+import AnonymousRoute from "./components/AccessComponents/AnonymousRoute";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 function App() {
   return (
     <div
       data-theme="mytheme"
-      className="flex flex-col w-8/12 mx-auto max-md:w-11/12 max-lg:w-10/12 max-sm:w-full"
+      className="flex flex-col mx-auto w-full phone:w-11/12 md:w-10/12 lg:w-8/12"
     >
       <AuthProvider>
         <NotificationContextProvider>
           <Navbar />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegistrationPage />} />
-            <Route element={<TeacherAllowed />}>
+          <div className="max-phone:px-3 max-phone:bg-base-300 min-h-[calc(100vh-70px)]">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
               <Route
-                path="/profil"
+                path="/login"
+                element={
+                  <AnonymousRoute>
+                    <LoginPage />{" "}
+                  </AnonymousRoute>
+                }
+              />
+              <Route
+                path="/register"
+                element={
+                  <AnonymousRoute>
+                    <RegistrationPage />{" "}
+                  </AnonymousRoute>
+                }
+              />
+              <Route
+                path="/zapomniane-haslo"
+                element={
+                  <AnonymousRoute>
+                    <ForgotPasswordPage />{" "}
+                  </AnonymousRoute>
+                }
+              />
+              <Route element={<TeacherAllowed />}>
+                <Route
+                  path="/profil"
+                  element={
+                    <PrivateRoute>
+                      <ProfilePage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/profil/otrzymane-opinie"
+                  element={
+                    <PrivateRoute>
+                      <ReceivedOpinions />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/plan/edytuj"
+                  element={
+                    <PrivateRoute>
+                      <ModifyTimeslotsPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/zajecia"
+                  element={
+                    <PrivateRoute>
+                      <ListOfTeachersClassesPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/zajecia/dodaj"
+                  element={
+                    <PrivateRoute>
+                      <CreateClassesPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/zajecia/edytuj"
+                  element={
+                    <PrivateRoute>
+                      <EditClassesPage />
+                    </PrivateRoute>
+                  }
+                />
+              </Route>
+              <Route element={<StudentAllowed />}>
+                <Route
+                  path="/profil-ucznia"
+                  element={
+                    <PrivateRoute>
+                      <StudentProfilePage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/profil/historia-zakupow"
+                  element={
+                    <PrivateRoute>
+                      <PurchaseHistoryPage />
+                    </PrivateRoute>
+                  }
+                />
+              </Route>
+              <Route
+                path="/profil/edytuj"
                 element={
                   <PrivateRoute>
-                    <ProfilePage />
+                    <EditBaseProfile />
                   </PrivateRoute>
                 }
               />
               <Route
-                path="/profil/otrzymane-opinie"
+                path="/profil/zmien-haslo"
                 element={
                   <PrivateRoute>
-                    <ReceivedOpinions />
+                    <ChangePasswordPage />
                   </PrivateRoute>
                 }
               />
               <Route
-                path="/plan/edytuj"
+                path="/profil/edytuj-dodatkowe"
                 element={
                   <PrivateRoute>
-                    <ModifyTimeslotsPage />
+                    <EditMoreInfosPage />
                   </PrivateRoute>
                 }
               />
               <Route
-                path="/zajecia"
+                path="/profil/edytuj-avatar"
                 element={
                   <PrivateRoute>
-                    <ListOfTeachersClassesPage />
+                    <ChangeAvatarPage />
                   </PrivateRoute>
                 }
               />
               <Route
-                path="/zajecia/dodaj"
+                path="/my-rooms"
                 element={
                   <PrivateRoute>
-                    <CreateClassesPage />
+                    <StartedRoomsPage />
                   </PrivateRoute>
                 }
               />
               <Route
-                path="/zajecia/edytuj"
+                path="/pokoj/:roomId"
                 element={
                   <PrivateRoute>
-                    <EditClassesPage />
+                    <RoomProvider>
+                      <Room />
+                    </RoomProvider>
                   </PrivateRoute>
                 }
               />
-            </Route>
-            <Route element={<StudentAllowed />}>
+              <Route path="/search-classes" element={<SearchClassesPage />} />
               <Route
-                path="/profil-ucznia"
-                element={
-                  <PrivateRoute>
-                    <StudentProfilePage />
-                  </PrivateRoute>
-                }
+                path="/search-classes/language/:languageSlug"
+                element={<SearchClassesPage />}
               />
               <Route
-                path="/profil/historia-zakupow"
-                element={
-                  <PrivateRoute>
-                    <PurchaseHistoryPage />
-                  </PrivateRoute>
-                }
+                path="/search-classes/city/:citySlug"
+                element={<SearchClassesPage />}
               />
-            </Route>
-            <Route
-              path="/profil/edytuj"
-              element={
-                <PrivateRoute>
-                  <EditBaseProfile />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/profil/zmien-haslo"
-              element={
-                <PrivateRoute>
-                  <ChangePasswordPage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/profil/edytuj-dodatkowe"
-              element={
-                <PrivateRoute>
-                  <EditMoreInfosPage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/profil/edytuj-avatar"
-              element={
-                <PrivateRoute>
-                  <ChangeAvatarPage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/my-rooms"
-              element={
-                <PrivateRoute>
-                  <StartedRoomsPage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/pokoj/:roomId"
-              element={
-                <PrivateRoute>
-                  <RoomProvider>
-                    <Room />
-                  </RoomProvider>
-                </PrivateRoute>
-              }
-            />
-            <Route path="/search-classes" element={<SearchClassesPage />} />
-            <Route
-              path="/search-classes/language/:languageSlug"
-              element={<SearchClassesPage />}
-            />
-            <Route
-              path="/search-classes/city/:citySlug"
-              element={<SearchClassesPage />}
-            />
-            <Route
-              path="/search-classes/text/:searchText"
-              element={<SearchClassesPage />}
-            />
-            <Route path="/zajecia/:classesId" element={<ClassesPage />} />
-            <Route
-              path="/zajecia/:classesId/buy"
-              element={<BuyClassesPage />}
-            />
-            <Route path="/nauczyciel/:teacherId" element={<TeacherPage />} />
-            <Route path="/student/:studentId" element={<StudentPage />} />
-            <Route path="*" element={<HomePage />} /> // dla nieistniejących url
-          </Routes>
+              <Route
+                path="/search-classes/text/:searchText"
+                element={<SearchClassesPage />}
+              />
+              <Route path="/zajecia/:classesId" element={<ClassesPage />} />
+              <Route
+                path="/zajecia/:classesId/kup"
+                element={<BuyClassesPage />}
+              />
+              <Route path="/nauczyciel/:teacherId" element={<TeacherPage />} />
+              <Route path="/student/:studentId" element={<StudentPage />} />
+              <Route path="*" element={<HomePage />} /> // dla nieistniejących
+              url
+            </Routes>
+          </div>
           <ToastContainer
             position="bottom-right"
             autoClose={false}

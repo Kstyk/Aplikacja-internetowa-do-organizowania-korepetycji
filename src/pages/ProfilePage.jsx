@@ -21,12 +21,9 @@ const ProfilePage = () => {
     await api
       .get(`/api/users/profile/${user?.user_id}`)
       .then((res) => {
-        console.log(res.data);
         setProfile(res.data);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   const fetchClassesTeacher = async () => {
@@ -37,9 +34,7 @@ const ProfilePage = () => {
       .then((res) => {
         setClasses(res.data.classes);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   const fetchAll = async () => {
@@ -58,15 +53,15 @@ const ProfilePage = () => {
       {loading ? (
         <LoadingComponent message="Ładowanie informacji o nauczycielu..." />
       ) : (
-        <section className="mt-10 w-full max-phone:px-3 mb-10 shadow-xl">
-          <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300"></div>
-          <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-none mb-5 text-center p-4 border-[1px] border-base-200 flex flex-row justify-between items-center z-30">
+        <section className="mt-10 w-full mb-10 shadow-xl">
+          <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300 max-phone:hidden"></div>
+          <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-md mb-5 text-center py-4 border-[1px] border-base-200 flex flex-row justify-between items-center z-30 shadow-xl">
             <h1 className="text-center w-full">
               {profile?.user?.first_name} {profile?.user?.last_name}
             </h1>
           </div>
           <div className="flex md:flex-row md:gap-x-2 max-md:flex-col">
-            <div className="card  border-[1px] border-base-200 pt-5 pb-5 phone:pb-10 rounded-none bg-white md:w-full max-md:w-full flex phone:flex-row max-phone:flex-col ">
+            <div className="card border-[1px] border-base-200 py-5 phone:pb-10 rounded-md bg-white md:w-full max-md:w-full flex phone:flex-row max-phone:flex-col ">
               <div className="profile max-phone:pr-6 phone:pr-3 ml-3 w-4/12 sm:w-3/12 max-phone:w-full border-r-[1px] border-base-300 flex flex-col justify-start items-center max-phone:order-1">
                 <div className="avatar">
                   <div className="w-20 rounded-full">
@@ -80,7 +75,7 @@ const ProfilePage = () => {
                   </div>
                 </div>
                 <button
-                  className="btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full"
+                  className="btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400 w-full"
                   onClickCapture={() =>
                     window.open(
                       "mailto:email@example.com?subject=Subject&body=Body%20goes%20here"

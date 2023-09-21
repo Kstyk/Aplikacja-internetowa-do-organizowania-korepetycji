@@ -9,7 +9,7 @@ const ClassesCard = (props) => {
   const { classes } = props;
 
   return (
-    <div className="card border-[1px] border-base-200 p-4 rounded-none bg-white">
+    <div className="card border-[1px] border-base-200 p-4 rounded-sm bg-white">
       <div className="flex flex-row">
         <div className="flex flex-col phone:w-10/12 phone:border-r-[1px] border-base-200 pr-4">
           <div className="phone:hidden w-full mb-2 pb-2 border-b-[1px] border-base-200">

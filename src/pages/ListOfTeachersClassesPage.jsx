@@ -31,12 +31,12 @@ const ListOfTeachersClassesPage = () => {
 
   return (
     <div className="pt-10">
-      <div className="absolute top-[70px] left-0 right-0 h-[200px] bg-base-300"></div>
+      <div className="absolute top-[70px] left-0 right-0 h-[200px] bg-base-300 max-phone:hidden"></div>
       {loading ? (
         <LoadingComponent message="Ładowanie informacji o plikach..." />
       ) : (
         <>
-          <div className="bg-white card shadow-xl h-full px-5 py-5 rounded-none mb-10 mx-auto w-full">
+          <div className="bg-white card shadow-xl min-h-[40vh] px-5 py-5 rounded-md mb-10 mx-auto w-full">
             <h1 className="text-2xl text-center">Lista Twoich zajęć</h1>
             <div className="border-b-[1px] border-base-100 my-4"></div>
             <div className="container mx-auto text-gray-100 mb-10">

@@ -58,9 +58,9 @@ const HomePage = () => {
         </div>
       ) : (
         <>
-          <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 "></div>
+          <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 max-phone:hidden"></div>
 
-          <div className="bg-base-100 card shadow-xl h-full px-5 pt-5 mt-10 rounded-none mb-10 mx-auto">
+          <div className="bg-base-100 card shadow-xl h-full px-5 pt-5 mt-10 rounded-md mb-10 mx-auto">
             <div
               className="hero h-[300px] mb-10"
               style={{
@@ -124,7 +124,7 @@ const HomePage = () => {
                   to={`/search-classes/language/${language.slug}`}
                   params={{ languageSlug: language.slug }}
                   key={language.id}
-                  className="btn no-animation font-normal bg-transparent border-t-[1px] border-b-0 border-x-0 border-base-200 text-black hover:bg-opacity-30 rounded-none flex justify-between w-1/3 max-md:w-1/2 hover:border-t-0 hover:border-b-[1px]"
+                  className="btn no-animation font-normal bg-transparent border-t-[1px] border-b-0 border-x-0 border-base-200 text-black hover:bg-opacity-30 rounded-sm flex justify-between w-1/3 max-md:w-1/2 hover:border-t-0 hover:border-b-[1px]"
                 >
                   <div>{language.name}</div>
                   <div className="text-sm text-gray-400">
@@ -151,11 +151,11 @@ const HomePage = () => {
                 </Link>
               ))}
             </ul>
-            <div className="bg-gradient-to-b from-base-100 to-base-200 -mx-5 flex flex-col justify-center py-20 mt-10">
+            <div className="bg-gradient-to-b from-base-100 to-base-200 -mx-5 flex flex-col justify-center py-20 mt-10 rounded-md">
               <h1 className="text-center text-3xl mb-2">
                 Załóż darmowe konto już dziś!
               </h1>
-              <button className="btn btn-outline no-animation w-3/12 max-md:w-5/12 max-phone:w-10/12 max-phone:mx-auto h-15 mx-auto py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400">
+              <button className="btn btn-outline no-animation w-3/12 max-md:w-5/12 max-phone:w-10/12 max-phone:mx-auto h-15 mx-auto py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400">
                 Zarejestruj się
               </button>
             </div>

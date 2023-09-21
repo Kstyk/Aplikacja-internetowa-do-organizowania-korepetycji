@@ -357,11 +357,10 @@ const Files = ({ roomId }) => {
 
   return (
     <div className="flex flex-col">
-      <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 "></div>
       {loading ? (
         <LoadingComponent message="Ładowanie informacji o plikach..." />
       ) : (
-        <div className="card rounded-none mt-10 bg-white p-6 shadow-xl">
+        <div className="card rounded-none mt-10 bg-white p-6 shadow-xl min-h-[60vh]">
           <form className="flex flex-col justify-center w-full space-y-4 max-md:w-full mx-auto items-center h-[100px] phone:h-full">
             <div className="file-input-container">
               <input

@@ -110,7 +110,9 @@ const Room = () => {
         <LoadingComponent />
       ) : (
         <>
-          <div className="z-10 flex flex-row bg-white mt-10 p-5 pb-0 w-full tab-bordered justify-between gap-x-5">
+          <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 max-phone:hidden"></div>
+
+          <div className="relative flex flex-row bg-white mt-10 p-5 pb-0 w-full tab-bordered justify-between gap-x-5">
             <h1 className="text-base phone:text-lg sm:text-xl uppercase tracking-wide font-bold ">
               {name}
             </h1>
@@ -139,7 +141,7 @@ const Room = () => {
               </button>
             </section>
           </div>
-          <div className="tabs z-10 bg-white p-5 shadow-xl h-[100%] max-sm:pl-0">
+          <div className="relative tabs bg-white p-5 shadow-xl h-[100%] max-sm:pl-0">
             <div
               className={`tab tab-bordered uppercase tracking-wide text-sm phone:text-base font-bold  hover:text-[#00000080] ${
                 selectedTab == 1
