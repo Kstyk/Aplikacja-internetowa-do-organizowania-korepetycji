@@ -31,6 +31,7 @@ import ListOfTeachersClassesPage from "./pages/ListOfTeachersClassesPage";
 import EditClassesPage from "./pages/EditClassesPage";
 import AnonymousRoute from "./components/AccessComponents/AnonymousRoute";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 function App() {
   return (
     <div
@@ -64,6 +65,14 @@ function App() {
                 element={
                   <AnonymousRoute>
                     <ForgotPasswordPage />{" "}
+                  </AnonymousRoute>
+                }
+              />
+              <Route
+                path="/resetuj-haslo/:token"
+                element={
+                  <AnonymousRoute>
+                    <ResetPasswordPage />
                   </AnonymousRoute>
                 }
               />
@@ -205,8 +214,7 @@ function App() {
               />
               <Route path="/nauczyciel/:teacherId" element={<TeacherPage />} />
               <Route path="/student/:studentId" element={<StudentPage />} />
-              <Route path="*" element={<HomePage />} /> // dla nieistniejących
-              url
+              <Route path="*" element={<HomePage />} />
             </Routes>
           </div>
           <ToastContainer
