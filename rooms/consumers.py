@@ -152,7 +152,6 @@ class NotificationConsumer(JsonWebsocketConsumer):
 
             # Jeśli token jest poprawny, akceptuj połączenie WebSocket
             self.user = user
-            print(user)
             self.accept()
 
             self.notification_group_name = f"{self.user.id}__notifications"

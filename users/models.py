@@ -4,7 +4,8 @@ from classes.models import Language
 from multiselectfield import MultiSelectField
 from cities_light.models import City, Region
 from django.core.validators import MinLengthValidator, MinValueValidator, MaxValueValidator
-# Create your models here.
+import uuid
+from django.utils import timezone
 
 
 class Role(models.Model):
@@ -122,3 +123,9 @@ class UserDetails(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - {self.user.first_name} {self.user.last_name}"
+
+
+class PasswordResetRequest(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid.uuid4, unique=True)
+    created_at = models.DateTimeField(default=timezone.now)

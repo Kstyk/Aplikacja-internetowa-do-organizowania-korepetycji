@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from users.permissions import IsStudent, IsOwnerProfile
-from .models import Role, User, UserDetails
-from .serializers import CreateUserSerializer, RoleSerializer, UserSerializer, CreateOrUpdateUserDetailsSerializer, UserProfileSerializer, UpdateUserSerializer, VoivodeshipSerializer, CitySerializer, MostPopularCitySerializer, ChangePasswordSerializer
+from .models import Role, User, UserDetails, PasswordResetRequest
+from .serializers import CreateUserSerializer, RoleSerializer, UserSerializer, CreateOrUpdateUserDetailsSerializer, UserProfileSerializer, UpdateUserSerializer, VoivodeshipSerializer, CitySerializer, MostPopularCitySerializer, ChangePasswordSerializer, PasswordResetRequestSerializer
 from django.contrib.auth import get_user_model
 from cities_light.models import City, Region
 from django.db.models import Count,  OuterRef, Exists, Subquery
@@ -13,6 +13,10 @@ from classes.models import Class
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.serializers import ValidationError
+from django.core.mail import send_mail
+from django.utils import timezone
+import uuid
+from django.conf import settings
 
 # Create your views here.
 
@@ -214,3 +218,55 @@ class ChangePasswordView(APIView):
             return Response({"message": "Hasło zostało pomyślnie zmienione."}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PasswordResetRequestView(APIView):
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return Response({'error': 'Niepoprawny email.'}, status=status.HTTP_404_NOT_FOUND)
+
+            token = uuid.uuid4()
+            expiration_time = timezone.now() + timezone.timedelta(hours=24)
+            reset_request = PasswordResetRequest.objects.create(
+                user=user, token=token, created_at=expiration_time)
+
+            reset_link = f'http://localhost:5173/resetuj-haslo/{token}/'
+            send_mail(
+                'Korepetycje Online',
+                f'Kliknij w ten link, by móc zresetować hasło: {reset_link}',
+                settings.EMAIL_HOST_USER,
+                [email],
+                fail_silently=False,
+            )
+
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ResetPasswordView(APIView):
+    def post(self, request):
+        token = request.data.get('token')
+        new_password = request.data.get('new_password')
+        confirm_password = request.data.get('confirm_password')
+
+        # Ważność tokena i czy istnieje
+        try:
+            password_reset_request = PasswordResetRequest.objects.get(
+                token=token, created_at__gte=timezone.now() - timezone.timedelta(hours=24)
+            )
+            user = password_reset_request.user
+        except PasswordResetRequest.DoesNotExist:
+            return Response({'error': 'Token jest niepoprawny lub już wygasł.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if new_password == confirm_password:
+            user.set_password(new_password)
+            user.save()
+            password_reset_request.delete()
+            return Response({'success': 'Hasło zostało pomyślnie zmienione.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Hasła nie są identyczne.'}, status=status.HTTP_400_BAD_REQUEST)

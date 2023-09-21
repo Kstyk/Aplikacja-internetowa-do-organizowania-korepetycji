@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
+from .settings_local import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -219,3 +220,10 @@ CITIES_LIGHT_CITY_SOURCES = [
     "http://download.geonames.org/export/dump/cities500.zip"]
 
 TIME_INPUT_FORMATS = ('%H:%M',)
+
+# Sending mail settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_USE_SSL = False
