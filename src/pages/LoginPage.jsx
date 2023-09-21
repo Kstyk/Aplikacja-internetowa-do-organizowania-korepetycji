@@ -51,10 +51,17 @@ const LoginPage = () => {
           <div className="border-base-200 border-b-[1px]"></div>
           <button
             type="submit"
-            className="btn btn-outline no-animation w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-sm mt-4 hover:bg-base-400 border-base-400"
+            className="btn btn-outline no-animation w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-sm my-4 hover:bg-base-400 border-base-400"
           >
             Zaloguj
           </button>
+          <div className="border-base-200 border-b-[1px]"></div>
+          <span className="text-sm tracking-wider text-center mt-2">
+            Zapomniałeś hasła?{" "}
+            <Link to="/zapomniane-haslo" className="underline hover:font-bold">
+              Zresetuj je tutaj
+            </Link>
+          </span>
         </form>
       </div>
     </div>

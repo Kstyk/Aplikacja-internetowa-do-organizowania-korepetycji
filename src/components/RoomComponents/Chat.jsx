@@ -176,12 +176,12 @@ const Chat = ({ archivized }) => {
     checkMediaDevices();
     window.videocall.showModal();
 
-    const peer = new Peer({
-      host: "localhost",
-      port: 9000,
-      path: "/myapp",
-    });
-
+    // const peer = new Peer({
+    //   host: "localhost",
+    //   port: 9000,
+    //   path: "/myapp",
+    // });
+    const peer = new Peer();
     peer.on("open", (id) => {
       setPeerId(id);
     });
@@ -369,125 +369,131 @@ const Chat = ({ archivized }) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white">
-      <div className="h-full flex flex-col justify-between bg-white !z-10">
-        <div
-          id="scrollableDiv"
-          className="flex flex-col-reverse w-8/12 mx-auto max-md:w-11/12 max-lg:w-10/12 max-sm:w-full fixed bottom-20 top-[14rem] mt-10 overflow-y-auto shadow-xl p-5 pl-0 bg-white"
-        >
-          {readyState === ReadyState.CONNECTING ? (
-            <LoadingComponent message="Ładowanie wiadomości..." />
-          ) : (
-            <>
+    <>
+      <div className="flex flex-col h-full">
+        <div className="h-full flex flex-col justify-between !z-10">
+          <div
+            id="scrollableDiv"
+            className="rounded-md flex flex-col-reverse mx-auto fixed w-inherit phone:w-11/12 md:w-10/12 lg:w-8/12 max-phone:mr-3 bottom-20 top-[16rem] md:top-[14rem] mt-10 overflow-y-auto shadow-xl p-5 pl-0 bg-white"
+          >
+            {readyState === ReadyState.CONNECTING ? (
+              <LoadingComponent message="Ładowanie wiadomości..." />
+            ) : (
               <>
-                {messageHistory.length != 0 ? (
-                  <InfiniteScroll
-                    dataLength={messageHistory.length}
-                    next={fetchMessages}
-                    className="flex flex-col-reverse"
-                    inverse={true}
-                    hasMore={hasMoreMessages}
-                    loader={<ChatLoader />}
-                    scrollableTarget="scrollableDiv"
-                  >
-                    {messageHistory.map((message) => (
-                      <Message
-                        key={message.id}
-                        message={message}
-                        secondUser={secondUserProfile}
-                      />
-                    ))}
-                  </InfiniteScroll>
-                ) : (
-                  <div className="w-full h-full text-center italic">
-                    Brak nowych wiadomości.
-                  </div>
-                )}
-                {archivized ? (
-                  <div className="fixed bottom-0 p-5 border-t-2 w-8/12 mx-auto max-md:w-11/12 max-lg:w-10/12 max-sm:w-full bg-white flex flex-row items-center">
-                    <div className="italic text-gray-600 h-10 flex items-center justify-center w-full">
-                      <span>Historia czatu</span>
+                <>
+                  {messageHistory.length != 0 ? (
+                    <InfiniteScroll
+                      dataLength={messageHistory.length}
+                      next={fetchMessages}
+                      className="flex flex-col-reverse"
+                      inverse={true}
+                      hasMore={hasMoreMessages}
+                      loader={<ChatLoader />}
+                      scrollableTarget="scrollableDiv"
+                    >
+                      {messageHistory.map((message) => (
+                        <Message
+                          key={message.id}
+                          message={message}
+                          secondUser={secondUserProfile}
+                        />
+                      ))}
+                    </InfiniteScroll>
+                  ) : (
+                    <div className="w-full h-full text-center italic">
+                      Brak nowych wiadomości.
                     </div>
-                  </div>
-                ) : (
-                  <div className="fixed bottom-0 p-5 border-t-2 w-8/12 mx-auto max-md:w-11/12 max-lg:w-10/12 max-sm:w-full bg-white flex flex-row items-center">
-                    <input
-                      type="text"
-                      name="message"
-                      placeholder="Napisz wiadomość..."
-                      onChange={handleChangeMessage}
-                      value={message}
-                      className="shadow-sm sm:text-sm border-black border-[1px] bg-gray-100 rounded-none h-10 w-6/12 pl-5"
-                    />
-                    <button
-                      className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
-                      onClick={handleSubmit}
-                    >
-                      Wyślij
-                    </button>
-                    <button
-                      className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px] "
-                      onClick={() => startVideoCall()}
-                    >
-                      Zadzwoń
-                    </button>
+                  )}
+                  {archivized ? (
+                    <div className="fixed bottom-0 right- p-5 border-t-2 bg-white flex flex-row items-center mx-auto w-full phone:w-11/12 md:w-10/12 lg:w-8/12">
+                      <div className="italic text-gray-600 h-10 flex items-center justify-center w-full">
+                        <span>Historia czatu</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="fixed bottom-0 p-5 border-t-2 w-inherit phone:w-11/12 md:w-10/12 lg:w-8/12 max-phone:mr-3 mx-auto bg-white flex flex-row items-center">
+                      <input
+                        type="text"
+                        name="message"
+                        placeholder="Napisz wiadomość..."
+                        onChange={handleChangeMessage}
+                        value={message}
+                        className="shadow-sm sm:text-sm border-black border-[1px] bg-gray-100 rounded-none h-10 w-6/12 pl-5"
+                      />
+                      <button
+                        className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
+                        onClick={handleSubmit}
+                      >
+                        Wyślij
+                      </button>
+                      <button
+                        className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px] "
+                        onClick={() => startVideoCall()}
+                      >
+                        Zadzwoń
+                      </button>
 
-                    <>
-                      {callButton == true ||
-                      localStorage.getItem("callButton") == "true" ? (
-                        <button
-                          className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
-                          onClick={(e) => openModal()}
-                        >
-                          Odbierz połączenie
-                        </button>
-                      ) : (
-                        ""
-                      )}
-                      {callButton == true ||
-                      localStorage.getItem("callButton") == "true" ? (
-                        <button
-                          className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
-                          onClick={(e) => {
-                            localStorage.removeItem("callButton");
-                            localStorage.removeItem("peerId");
-                            setCallButton(null);
-                            rejectVideoCall();
-                          }}
-                        >
-                          Zakończ połączenie
-                        </button>
-                      ) : (
-                        ""
-                      )}
-                    </>
-                  </div>
-                )}
+                      <>
+                        {callButton == true ||
+                        localStorage.getItem("callButton") == "true" ? (
+                          <button
+                            className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
+                            onClick={(e) => openModal()}
+                          >
+                            Odbierz połączenie
+                          </button>
+                        ) : (
+                          ""
+                        )}
+                        {callButton == true ||
+                        localStorage.getItem("callButton") == "true" ? (
+                          <button
+                            className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
+                            onClick={(e) => {
+                              localStorage.removeItem("callButton");
+                              localStorage.removeItem("peerId");
+                              setCallButton(null);
+                              rejectVideoCall();
+                            }}
+                          >
+                            Zakończ połączenie
+                          </button>
+                        ) : (
+                          ""
+                        )}
+                      </>
+                    </div>
+                  )}
+                </>
               </>
-            </>
-          )}
+            )}
+          </div>
+          {/* </div> */}
         </div>
-        {/* </div> */}
-      </div>
 
-      {/* modal videocall */}
+        {/* modal videocall */}
+      </div>
       <dialog
         id="videocall"
         className="modal bg-black flex flex-row justify-center items-center !z-[999] relative"
       >
-        <TransformWrapper minScale={0.5} initialScale={1}>
-          <TransformComponent>
-            <div
-              className={`${peerId != "" ? "w-[100vw] h-[100vh]" : ""} mx-auto`}
-            >
-              <video
-                preload="none"
-                ref={remoteVideoRef}
-                className="w-full h-full"
-              />
-            </div>
-          </TransformComponent>
-        </TransformWrapper>
+        <div className={`${peerId != "" ? "block" : "hidden"}`}>
+          <TransformWrapper minScale={0.5} initialScale={1}>
+            <TransformComponent>
+              <div
+                className={`${
+                  peerId != "" ? "w-[100vw] h-[100vh]" : ""
+                } mx-auto`}
+              >
+                <video
+                  preload="none"
+                  ref={remoteVideoRef}
+                  className="w-full h-full"
+                />
+              </div>
+            </TransformComponent>
+          </TransformWrapper>
+        </div>
         <div className="absolute top-0 w-full flex flex-row justify-center bg-black text-white gap-x-4">
           <form method="dialog m-0 p-0 min-h-0">
             <div className="modal-action m-0 p-0">
@@ -527,7 +533,7 @@ const Chat = ({ archivized }) => {
           className="absolute bottom-0 left-0 w-2/12"
         />
       </dialog>
-    </div>
+    </>
   );
 };
 

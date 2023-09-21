@@ -39,7 +39,6 @@ export const NotificationContextProvider = ({ children }) => {
         const data = JSON.parse(e.data);
         switch (data.type) {
           case "incomingcall":
-            console.log(data);
             localStorage.setItem("remotePeerId", data.peer);
             localStorage.setItem("callButton", true);
             toast.info(
