@@ -12,6 +12,10 @@ import Peer from "peerjs";
 import LoadingComponent from "../LoadingComponent";
 import { NotificationContext } from "../../context/NotificationContext";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { AiOutlineSend } from "react-icons/ai";
+import { FiPhoneCall } from "react-icons/fi";
+import { FcCallback, FcEndCall } from "react-icons/fc";
+import showAlertError from "../messages/SwalAlertError";
 
 const Chat = ({ archivized }) => {
   const [message, setMessage] = useState("");
@@ -59,12 +63,13 @@ const Chat = ({ archivized }) => {
             setHasMoreMessages(data.has_more);
             break;
           case "received_peer":
-            // django potrzebuje 2-3 sekund by odeslac wiadomosc
             setRemotePeerIdValue(data.peer);
-
             break;
           case "rejected_call":
             endVideoCall();
+            if (peerId != "") {
+              document.getElementById("closeCallForm").submit();
+            }
           default:
             break;
         }
@@ -81,7 +86,7 @@ const Chat = ({ archivized }) => {
         setMessageHistory((prev) => prev.concat(res.data.results));
       })
       .catch((err) => {
-        nav("/");
+        showAlertError("Błąd", "Wystąpił błąd przy pobieraniu wiadomości.");
       });
   };
 
@@ -92,7 +97,10 @@ const Chat = ({ archivized }) => {
         setSecondUserProfile(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        showAlertError(
+          "Błąd",
+          "Wystąpił błąd przy pobieraniu wiadomości o pokoju."
+        );
       });
   };
 
@@ -160,6 +168,7 @@ const Chat = ({ archivized }) => {
       const hasCamera = devices.some((device) => device.kind === "videoinput");
 
       // Tutaj możesz podjąć odpowiednie działania w zależności od wyników
+      // TODO
       if (!hasMicrophone) {
         console.log("brak mikro");
       }
@@ -241,7 +250,7 @@ const Chat = ({ archivized }) => {
           };
         },
         function (err) {
-          console.log("Failed to get local stream", err);
+          showAlertError("Błąd", "Błąd przy strumieniowaniu obrazu.");
         }
       );
     });
@@ -372,10 +381,7 @@ const Chat = ({ archivized }) => {
     <>
       <div className="flex flex-col h-full">
         <div className="h-full flex flex-col justify-between !z-10">
-          <div
-            id="scrollableDiv"
-            className="rounded-md flex flex-col-reverse mx-auto fixed w-inherit phone:w-11/12 md:w-10/12 lg:w-8/12 max-phone:mr-3 bottom-20 top-[16rem] md:top-[14rem] mt-10 overflow-y-auto shadow-xl p-5 pl-0 bg-white"
-          >
+          <div id="scrollableDiv" className="w-full">
             {readyState === ReadyState.CONNECTING ? (
               <LoadingComponent message="Ładowanie wiadomości..." />
             ) : (
@@ -385,7 +391,7 @@ const Chat = ({ archivized }) => {
                     <InfiniteScroll
                       dataLength={messageHistory.length}
                       next={fetchMessages}
-                      className="flex flex-col-reverse"
+                      className="flex flex-col-reverse fixed bottom-20 top-[16rem] bg-white w-[calc(100%-24px)] phone:w-11/12 md:w-10/12 lg:w-8/12 phone:border-t-2 pt-2"
                       inverse={true}
                       hasMore={hasMoreMessages}
                       loader={<ChatLoader />}
@@ -411,36 +417,41 @@ const Chat = ({ archivized }) => {
                       </div>
                     </div>
                   ) : (
-                    <div className="fixed bottom-0 p-5 border-t-2 w-inherit phone:w-11/12 md:w-10/12 lg:w-8/12 max-phone:mr-3 mx-auto bg-white flex flex-row items-center">
-                      <input
-                        type="text"
-                        name="message"
-                        placeholder="Napisz wiadomość..."
-                        onChange={handleChangeMessage}
-                        value={message}
-                        className="shadow-sm sm:text-sm border-black border-[1px] bg-gray-100 rounded-none h-10 w-6/12 pl-5"
-                      />
-                      <button
-                        className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
-                        onClick={handleSubmit}
-                      >
-                        Wyślij
-                      </button>
-                      <button
-                        className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px] "
-                        onClick={() => startVideoCall()}
-                      >
-                        Zadzwoń
-                      </button>
+                    <div className="fixed bottom-0 p-5 border-t-2 w-[calc(100%-24px)] phone:w-11/12 md:w-10/12 lg:w-8/12 max-phone:mr-3 mx-auto bg-white flex flex-row items-center justify-between">
+                      <div className="h-10 border-b-2 flex items-center justify-between w-10/12">
+                        <input
+                          type="text"
+                          name="message"
+                          placeholder="Napisz wiadomość..."
+                          onChange={handleChangeMessage}
+                          value={message}
+                          className="pl-3 h-full outline-none w-11/12"
+                        />
+                        <button
+                          className="ml-2 px-3 py-1 h-10 tooltip"
+                          data-tip="Wyślij wiadomość"
+                          onClick={handleSubmit}
+                        >
+                          <AiOutlineSend className="w-5 h-5 phone:w-6 phone:h-6" />
+                        </button>
+                      </div>
 
                       <>
+                        <button
+                          className="ml-3px-3 py-1 h-10 tooltip"
+                          data-tip="Zadzwoń"
+                          onClick={() => startVideoCall()}
+                        >
+                          <FiPhoneCall className="w-5 h-5 phone:w-6 phone:h-6" />
+                        </button>
                         {callButton == true ||
                         localStorage.getItem("callButton") == "true" ? (
                           <button
-                            className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
+                            className="ml-3 py-1 h-10 tooltip"
+                            data-tip="Odbierz połączenie"
                             onClick={(e) => openModal()}
                           >
-                            Odbierz połączenie
+                            <FcCallback className="w-7 h-7 phone:w-8 phone:h-8" />
                           </button>
                         ) : (
                           ""
@@ -448,7 +459,8 @@ const Chat = ({ archivized }) => {
                         {callButton == true ||
                         localStorage.getItem("callButton") == "true" ? (
                           <button
-                            className="ml-3 bg-gray-100 px-3 py-1 h-10 border-black border-[1px]"
+                            className="ml-3 py-1 h-10 tooltip"
+                            data-tip="Odrzuć połączenie"
                             onClick={(e) => {
                               localStorage.removeItem("callButton");
                               localStorage.removeItem("peerId");
@@ -456,7 +468,7 @@ const Chat = ({ archivized }) => {
                               rejectVideoCall();
                             }}
                           >
-                            Zakończ połączenie
+                            <FcEndCall className="w-7 h-7 phone:w-8 phone:h-8" />
                           </button>
                         ) : (
                           ""
@@ -495,7 +507,7 @@ const Chat = ({ archivized }) => {
           </TransformWrapper>
         </div>
         <div className="absolute top-0 w-full flex flex-row justify-center bg-black text-white gap-x-4">
-          <form method="dialog m-0 p-0 min-h-0">
+          <form method="dialog m-0 p-0 min-h-0" id="closeCallForm">
             <div className="modal-action m-0 p-0">
               <button
                 onClick={(e) => {

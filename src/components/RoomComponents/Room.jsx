@@ -112,7 +112,7 @@ const Room = () => {
         <>
           <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 max-phone:hidden"></div>
 
-          <div className="relative flex flex-row bg-white mt-10 p-5 pb-0 w-full tab-bordered justify-between gap-x-5 rounded-t-md">
+          <div className="relative flex flex-row bg-white mt-5 phone:mt-10 p-5 pb-0 w-full tab-bordered justify-between gap-x-5 rounded-t-md">
             <h1 className="text-base phone:text-lg sm:text-xl uppercase tracking-wide font-bold ">
               {name}
             </h1>
@@ -141,7 +141,7 @@ const Room = () => {
               </button>
             </section>
           </div>
-          <div className="relative tabs bg-white p-5 shadow-xl h-[100%] max-sm:pl-0 rounded-b-md">
+          <div className="relative tabs bg-white p-5 shadow-xl h-[100%] max-sm:pl-0 phone:rounded-b-md">
             <div
               className={`tab tab-bordered uppercase tracking-wide text-sm phone:text-base font-bold  hover:text-[#00000080] ${
                 selectedTab == 1
