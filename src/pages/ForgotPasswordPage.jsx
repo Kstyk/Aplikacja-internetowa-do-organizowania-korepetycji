@@ -10,13 +10,7 @@ const ForgotPasswordPage = () => {
   const [loading, setLoading] = useState(false);
   const [isSended, setIsSended] = useState(false);
 
-  const { register, handleSubmit, formState } = useForm({ mode: "all" });
-
-  const resetOptions = {
-    email: {
-      required: "Email jest wymagany.",
-    },
-  };
+  const { register, handleSubmit } = useForm({ mode: "all" });
 
   const onSubmit = (data) => {
     setLoading(true);
@@ -34,6 +28,7 @@ const ForgotPasswordPage = () => {
         setLoading(false);
       });
   };
+
   return (
     <div className="pt-10">
       <div className="absolute top-[70px] left-0 right-0 h-[200px] bg-base-300 max-phone:hidden"></div>
