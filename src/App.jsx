@@ -45,7 +45,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route
-                path="/login"
+                path="/logowanie"
                 element={
                   <AnonymousRoute>
                     <LoginPage />{" "}

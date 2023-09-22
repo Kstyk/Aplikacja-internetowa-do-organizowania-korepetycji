@@ -67,7 +67,7 @@ const RegistrationPage = () => {
           "Sukces",
           "Poprawnie zarejestrowano. Teraz możesz się zalogować.",
           () => {
-            nav("/login");
+            nav("/logowanie");
           }
         );
       })
@@ -104,7 +104,7 @@ const RegistrationPage = () => {
           <img src={transparent_logo} alt="logo" />
           <p className="text-center mt-5 text-lg">
             Masz już konto?{" "}
-            <Link to="/login" className="hover:underline">
+            <Link to="/logowanie" className="hover:underline">
               Zaloguj się już teraz!
             </Link>
           </p>

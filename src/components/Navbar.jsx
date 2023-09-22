@@ -102,7 +102,7 @@ const Navbar = () => {
 
                   <li>
                     <Link
-                      to="/login"
+                      to="/logowanie"
                       onClick={logoutUser}
                       className="rounded-none"
                     >
@@ -228,7 +228,7 @@ const Navbar = () => {
                   </li>
                   <li>
                     <Link
-                      to="/login"
+                      to="/logowanie"
                       onClick={logoutUser}
                       className="hover:bg-base-200"
                     >
@@ -243,7 +243,7 @@ const Navbar = () => {
             <ul className="menu menu-horizontal px-1 gap-3">
               <li>
                 <Link
-                  to="/login"
+                  to="/logowanie"
                   className="focus:bg-base-300 hover:bg-base-200"
                 >
                   Zaloguj
@@ -303,14 +303,14 @@ const Navbar = () => {
                   className="pl-5 w-full hover:bg-slate-100 h-10 flex items-center"
                 >
                   {" "}
-                  <Link to="/login">Strona główna</Link>
+                  <Link to="/logowanie">Strona główna</Link>
                 </li>
                 <li
                   onClick={() => setShowMobileMenu((prev) => !prev)}
                   className="pl-5 w-full hover:bg-slate-100 h-10 flex items-center"
                 >
                   {" "}
-                  <Link to="/login">Zaloguj</Link>
+                  <Link to="/logowanie">Zaloguj</Link>
                 </li>
                 <li
                   onClick={() => setShowMobileMenu((prev) => !prev)}
@@ -357,7 +357,7 @@ const Navbar = () => {
                 </li>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <Link
-                    to="/login"
+                    to="/logowanie"
                     onClick={logoutUser}
                     className="pl-5 w-full hover:bg-slate-200 border-t-[1px] h-10 flex items-center"
                   >
@@ -411,7 +411,7 @@ const Navbar = () => {
                 </li>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <Link
-                    to="/login"
+                    to="/logowanie"
                     onClick={logoutUser}
                     className="pl-5 w-full hover:bg-slate-200 border-t-[1px] h-10 flex items-center"
                   >
