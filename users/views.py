@@ -17,6 +17,7 @@ from django.core.mail import send_mail
 from django.utils import timezone
 import uuid
 from django.conf import settings
+from django.core.exceptions import ValidationError as ValidationResetPasswordError
 
 # Create your views here.
 
@@ -262,6 +263,8 @@ class ResetPasswordView(APIView):
             user = password_reset_request.user
         except PasswordResetRequest.DoesNotExist:
             return Response({'error': 'Token jest niepoprawny lub już wygasł.'}, status=status.HTTP_400_BAD_REQUEST)
+        except ValidationResetPasswordError as e:
+            return Response({'error': 'Niepoprawny format tokenu.'}, status=status.HTTP_400_BAD_REQUEST)
 
         if new_password == confirm_password:
             user.set_password(new_password)
