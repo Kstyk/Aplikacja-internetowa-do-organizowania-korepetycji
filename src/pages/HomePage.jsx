@@ -137,19 +137,21 @@ const HomePage = () => {
               Wyszukaj zajęcia po najpopularniejszych lokalizacjach:
             </h2>
             <ul className="list-none flex flex-row justify-center flex-wrap">
-              {cities.map((city) => (
-                <Link
-                  to={`/search-classes/city/${city.slug}?id=${city.id}`}
-                  params={{ citySlug: city.slug }}
-                  key={city.id}
-                  className="btn no-animation font-normal bg-transparent border-t-[1px] border-b-0 border-x-0 border-base-200 text-black hover:bg-opacity-30 rounded-none flex justify-between w-1/3 max-md:w-1/2 hover:border-t-0 hover:border-b-[1px]"
-                >
-                  <div>{city.name}</div>
-                  <div className="text-sm text-gray-400">
-                    ({city.num_tutors})
-                  </div>
-                </Link>
-              ))}
+              {cities.length > 0
+                ? cities.map((city) => (
+                    <Link
+                      to={`/search-classes/city/${city.slug}?id=${city.id}`}
+                      params={{ citySlug: city.slug }}
+                      key={city.id}
+                      className="btn no-animation font-normal bg-transparent border-t-[1px] border-b-0 border-x-0 border-base-200 text-black hover:bg-opacity-30 rounded-none flex justify-between w-1/3 max-md:w-1/2 hover:border-t-0 hover:border-b-[1px]"
+                    >
+                      <div>{city.name}</div>
+                      <div className="text-sm text-gray-400">
+                        ({city.num_tutors})
+                      </div>
+                    </Link>
+                  ))
+                : "Brak obecnie zajęć dostępnych stacjonarnie."}
             </ul>
             <div className="bg-gradient-to-b from-base-100 to-base-200 -mx-5 flex flex-col justify-center py-20 mt-10 rounded-md">
               <h1 className="text-center text-3xl mb-2">

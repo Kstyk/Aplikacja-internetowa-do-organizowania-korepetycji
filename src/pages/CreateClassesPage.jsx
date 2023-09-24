@@ -86,6 +86,7 @@ const CreateClassesPage = () => {
       .post(`/api/classes/create/`, formData)
       .then((res) => {
         showSuccessAlert("Sukces!", res?.data?.success);
+        nav("/zajecia");
       })
       .catch((err) => {
         setBackendErrors(JSON.parse(err.request.response));

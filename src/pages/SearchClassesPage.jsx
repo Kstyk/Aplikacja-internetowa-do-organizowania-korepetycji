@@ -45,6 +45,7 @@ const SearchClassesPage = () => {
   const clearFilters = () => {
     setCities([]);
     setSearchQuery([]);
+    setLanguage(null);
     setCity(null);
     setVoivodeship(null);
     setMinPrice(0);
