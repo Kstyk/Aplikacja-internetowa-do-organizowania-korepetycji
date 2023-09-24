@@ -5,6 +5,7 @@ from rooms.models import Room
 from autoslug import AutoSlugField
 from multiselectfield import MultiSelectField
 from cities_light.models import City
+from django.db.models import Avg
 
 # Create your models here.
 

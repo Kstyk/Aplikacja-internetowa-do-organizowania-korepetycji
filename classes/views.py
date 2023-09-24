@@ -66,13 +66,27 @@ def get_all_classes(request):
     if max_price is not None:
         classes = classes.filter(price_for_lesson__lte=max_price)
 
-    if sort_by is not None:
-        if sort_direction == 'DESC':
+    if sort_direction == 'DESC':
+        if sort_by == 'name':
             classes = classes.order_by(F(sort_by).desc())
-        elif sort_direction == 'ASC':
+        if sort_by == 'price_for_lesson':
+            classes = classes.order_by(F(sort_by).desc())
+        if sort_by == 'average_rating':
+            classes = classes.annotate(
+                average_rate=Avg('teacher__rated_teacher__rate'))
+            classes = classes.order_by('-average_rate')
+
+    elif sort_direction == 'ASC':
+        if sort_by == 'name':
             classes = classes.order_by(F(sort_by).asc())
-        else:
-            pass
+        if sort_by == 'price_for_lesson':
+            classes = classes.order_by(F(sort_by).asc())
+        if sort_by == 'average_rating':
+            classes = classes.annotate(
+                average_rate=Avg('teacher__rated_teacher__rate'))
+            classes = classes.order_by('average_rate')
+    else:
+        pass
 
     if len(classes) > 0:
 
