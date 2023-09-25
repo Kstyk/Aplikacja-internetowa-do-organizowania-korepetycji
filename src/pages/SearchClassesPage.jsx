@@ -21,6 +21,8 @@ const SearchClassesPage = () => {
   const [language, setLanguage] = useState(languageSlug)
   const [minPrice, setMinPrice] = useState(0)
   const [maxPrice, setMaxPrice] = useState(500)
+  const [sortBy, setSortBy] = useState(null)
+  const [sortDirection, setSortDirection] = useState('ASC')
 
   const [classes, setClasses] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -39,7 +41,49 @@ const SearchClassesPage = () => {
       ...base,
       boxShadow: 'none',
       borderRadius: '2px',
+      borderColor: '#BFEAF5',
+      '&:hover': {
+        border: '1px solid #aaabac',
+      },
     }),
+  }
+  const customSortSelectStyle = {
+    control: (provided, state) => ({
+      ...provided,
+      boxShadow: 'none',
+      borderRadius: '2px',
+      borderColor: '#BFEAF5',
+      minHeight: '30px',
+      height: '30px',
+      '&:hover': {
+        border: '1px solid #aaabac',
+      },
+    }),
+    valueContainer: (provided, state) => ({
+      ...provided,
+      height: '30px',
+      padding: '0 6px',
+    }),
+
+    input: (provided, state) => ({
+      ...provided,
+      margin: '0px',
+    }),
+
+    indicatorsContainer: (provided, state) => ({
+      ...provided,
+      height: '30px',
+    }),
+
+    option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+      return {
+        ...styles,
+        fontSize: '12px',
+        paddingTop: '2px',
+        paddingBottom: '2px',
+        cursor: isDisabled ? 'not-allowed' : 'default',
+      }
+    },
   }
 
   const clearFilters = () => {
@@ -117,6 +161,62 @@ const SearchClassesPage = () => {
 
     if (maxPrice != null) {
       baseurl += `&max_price=${maxPrice}`
+    }
+    if (sortBy != null) {
+      baseurl += `&sort_by=${sortBy}&sort_direction=${sortDirection}`
+    }
+    await api
+      .get(baseurl)
+      .then((res) => {
+        if (res.data.classes == null) {
+          setClasses(null)
+          setTotalPages(0)
+          setTotalResults(0)
+          setCurrentPage(1)
+        } else {
+          setClasses(res.data.classes)
+          setTotalPages(res.data.total_pages)
+          setTotalResults(res.data.total_classes)
+          setCurrentPage(res.data.page_number)
+        }
+      })
+      .catch((err) => {
+        showAlertError('Błąd', 'Wystąpił błąd przy wyszukiwaniu zajęć.')
+      })
+    setLoading(false)
+  }
+
+  const sortTutors = async (page) => {
+    setLoading(true)
+
+    let baseurl = `/api/classes/?page_size=10&page=${page}`
+
+    if (searchQuery != null && searchQuery != '') {
+      baseurl += `&search_text=${searchQuery}`
+    }
+
+    if (language != null) {
+      baseurl += `&language=${language.slug != null ? language.slug : language}`
+    }
+
+    if (voivodeship != null) {
+      baseurl += `&voivodeship=${voivodeship.id}`
+    }
+
+    if (city != null) {
+      baseurl += `&city=${city.id}`
+    }
+
+    if (minPrice != null) {
+      baseurl += `&min_price=${minPrice}`
+    }
+
+    if (maxPrice != null) {
+      baseurl += `&max_price=${maxPrice}`
+    }
+
+    if (sortBy != null) {
+      baseurl += `&sort_by=${sortBy}&sort_direction=${sortDirection}`
     }
 
     await api
@@ -298,7 +398,7 @@ const SearchClassesPage = () => {
               styles={customSelectStyle}
             />
             <Select
-              className="mt-2 h-10 w-4/12 border-none px-0 text-gray-500 shadow-none max-md:w-5/12"
+              className="mt-2 h-10 w-4/12 border-none px-0 text-gray-500 shadow-none max-md:w-5/12 max-phone:w-full"
               menuPortalTarget={document.body}
               isClearable
               options={cities}
@@ -320,7 +420,7 @@ const SearchClassesPage = () => {
               styles={customSelectStyle}
             />
             <Select
-              className="mt-2 h-10 w-4/12 border-none px-0 text-gray-500 shadow-none max-md:w-5/12"
+              className="mt-2 h-10 w-4/12 border-none px-0 text-gray-500 shadow-none max-md:w-5/12 max-phone:w-full"
               menuPortalTarget={document.body}
               isClearable
               options={languages}
@@ -384,6 +484,48 @@ const SearchClassesPage = () => {
               className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-3/12 rounded-sm border-base-400 py-0 hover:bg-base-400 max-md:w-5/12"
             >
               Wyczyść filtry
+            </button>
+          </div>
+          <div className="my-4 border-t-[1px] border-base-200"></div>
+          <div className="flex w-full flex-col items-center justify-start gap-x-3 gap-y-3 sm:flex-row sm:gap-y-0">
+            <div className="flex w-full flex-row gap-x-3 sm:w-6/12">
+              <Select
+                className="h-fit w-6/12 border-none px-0 text-sm text-gray-500 shadow-none"
+                menuPortalTarget={document.body}
+                isClearable
+                options={[
+                  { label: 'Alfabetycznie', value: 'name' },
+                  { label: 'Cena za lekcję', value: 'price_for_lesson' },
+                  { label: 'Średnia opinia', value: 'average_rating' },
+                ]}
+                placeholder={<span className="text-gray-400">Sortuj po</span>}
+                noOptionsMessage={({ inputValue }) =>
+                  !inputValue ? 'Wpisz tekst...' : 'Nie znaleziono'
+                }
+                onChange={(e) => setSortBy(e.value)}
+                styles={customSortSelectStyle}
+              />
+              <Select
+                className="h-fit w-6/12 border-none px-0 text-sm text-gray-500 shadow-none"
+                menuPortalTarget={document.body}
+                isClearable
+                options={[
+                  { label: 'Rosnąco', value: 'ASC' },
+                  { label: 'Malejąco', value: 'DESC' },
+                ]}
+                placeholder={<span className="text-gray-400">Kierunek</span>}
+                noOptionsMessage={({ inputValue }) =>
+                  !inputValue ? 'Wpisz tekst...' : 'Nie znaleziono'
+                }
+                onChange={(e) => setSortDirection(e.value)}
+                styles={customSortSelectStyle}
+              />
+            </div>
+            <button
+              className="btn-outline no-animation btn h-[30px] !min-h-0 w-2/12 rounded-sm border-base-400 py-0 text-xs hover:bg-base-400 max-md:w-5/12"
+              onClick={() => sortTutors(1)}
+            >
+              Sortuj
             </button>
           </div>
         </div>
