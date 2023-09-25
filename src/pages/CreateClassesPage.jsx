@@ -37,7 +37,6 @@ const CreateClassesPage = () => {
     handleSubmit,
     setValue,
     control,
-    getValues,
     formState: { errors },
   } = useForm({
     mode: 'all',
@@ -212,7 +211,7 @@ const CreateClassesPage = () => {
               <div className="flex flex-row items-center justify-start gap-x-3">
                 <input
                   type="checkbox"
-                  className="checkbox checked:bg-base-400"
+                  className="checkbox-accent checkbox"
                   name="able_to_buy"
                   placeholder="Cena zajęć"
                   id="able_to_buy"

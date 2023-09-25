@@ -23,6 +23,7 @@ const SearchClassesPage = () => {
   const [maxPrice, setMaxPrice] = useState(500)
   const [sortBy, setSortBy] = useState(null)
   const [sortDirection, setSortDirection] = useState('ASC')
+  const [ableOnline, setAbleOnline] = useState(true)
 
   const [classes, setClasses] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -137,7 +138,7 @@ const SearchClassesPage = () => {
   const searchTutors = async (page) => {
     setLoading(true)
 
-    let baseurl = `/api/classes/?page_size=10&page=${page}`
+    let baseurl = `/api/classes/?page_size=10&page=${page}&able_online=${ableOnline}`
 
     if (searchQuery != null && searchQuery != '') {
       baseurl += `&search_text=${searchQuery}`
@@ -189,7 +190,7 @@ const SearchClassesPage = () => {
   const sortTutors = async (page) => {
     setLoading(true)
 
-    let baseurl = `/api/classes/?page_size=10&page=${page}`
+    let baseurl = `/api/classes/?page_size=10&page=${page}&able_online=${ableOnline}`
 
     if (searchQuery != null && searchQuery != '') {
       baseurl += `&search_text=${searchQuery}`
@@ -438,6 +439,19 @@ const SearchClassesPage = () => {
               styles={customSelectStyle}
             />
           </div>
+          <div className="form-control mt-2">
+            <label className="label my-0 flex cursor-pointer justify-start gap-x-2">
+              <input
+                type="checkbox"
+                className="checkbox-accent checkbox"
+                checked={ableOnline}
+                onChange={() => setAbleOnline(!ableOnline)}
+              />
+              <span className="label-text">Możliwość zajęć zdalnych</span>
+            </label>
+          </div>
+          <div className="my-2 border-t-[1px] border-base-200"></div>
+
           <div className="mt-3 flex flex-row justify-between max-[550px]:flex-col">
             <div className="w-5/12 max-[550px]:w-full">
               <label htmlFor="" className="text-[15px]">
@@ -531,8 +545,8 @@ const SearchClassesPage = () => {
         </div>
       </div>
       {loading ? (
-        <div className="bg-inherit">
-          <LoadingComponent message="Pobieramy dane..." />
+        <div className="bg-white">
+          <LoadingComponent />
         </div>
       ) : (
         <section className="mb-10">
@@ -542,9 +556,24 @@ const SearchClassesPage = () => {
                 Brak wyników dopasowanych do podanych kryteriów.
               </h1>
             )}
-            {classes?.map((classes) => (
-              <ClassesCard key={classes.id} classes={classes} />
-            ))}
+            {classes != null && (
+              <>
+                <div className="flex w-full justify-end">
+                  <span className="text-xs text-gray-400">
+                    Znaleziono {totalResults}{' '}
+                    {totalResults == 1
+                      ? 'wynik'
+                      : totalResults < 5
+                      ? 'wyniki'
+                      : 'wyników'}{' '}
+                    (strona {currentPage} z {totalPages})
+                  </span>
+                </div>
+                {classes?.map((classes) => (
+                  <ClassesCard key={classes.id} classes={classes} />
+                ))}
+              </>
+            )}
           </div>
           {totalPages > 1 && (
             <Pagination
