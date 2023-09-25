@@ -1,19 +1,19 @@
-import React from "react";
-import guest from "../../assets/guest.png";
-import { backendUrl } from "../../variables/backendUrl";
-import dayjs from "dayjs";
-import { BiSolidQuoteLeft, BiSolidQuoteRight } from "react-icons/bi";
+import React from 'react'
+import guest from '../../assets/guest.png'
+import { backendUrl } from '../../variables/backendUrl'
+import dayjs from 'dayjs'
+import { BiSolidQuoteLeft, BiSolidQuoteRight } from 'react-icons/bi'
 
 const OpinionCard = ({ opinion, page }) => {
-  dayjs.locale("pl");
+  dayjs.locale('pl')
   return (
     <div
-      className={`card w-full p-5 max-phone:px-0 hover:bg-gray-50 hover:shadow-sm rounded-md animate__animated animate__fadeIn`}
+      className={`animate__animated animate__fadeIn card w-full rounded-md p-5 hover:bg-gray-50 hover:shadow-sm max-phone:px-0`}
     >
       <div className="header flex flex-row justify-between gap-x-2">
-        <div className="flex flex-row gap-x-5 items-center">
+        <div className="flex flex-row items-center gap-x-5">
           <div className="avatar">
-            <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-full hover:ring ring-primary ring-offset-base-100 ring-offset-2 transition-all duration-200">
+            <div className="h-12 w-12 rounded-full ring-primary ring-offset-2 ring-offset-base-100 transition-all duration-200 hover:ring sm:h-20 sm:w-20">
               <img
                 src={
                   opinion?.student_profile_image
@@ -40,27 +40,27 @@ const OpinionCard = ({ opinion, page }) => {
                   />
                 ))}
               </div>
-              <span className="text-xl hidden phone:block">
+              <span className="hidden text-xl phone:block">
                 {opinion?.rate} / 5
               </span>
             </div>
           </div>
         </div>
         <div className="date">
-          <span className="text-gray-600 text-sm">
-            {dayjs(opinion.published_date).format("DD MMMM YYYY")}
+          <span className="text-sm text-gray-600">
+            {dayjs(opinion.published_date).format('DD MMMM YYYY')}
           </span>
         </div>
       </div>
-      <div className="mt-5 px-8 py-3 bg-gray-100 border-gray-400 border-[1px] relative">
+      <div className="relative mt-5 border-[1px] border-gray-400 bg-gray-100 px-8 py-3">
         <BiSolidQuoteLeft className="absolute -top-3 left-2 h-5 w-5" />
         <BiSolidQuoteRight className="absolute -bottom-3 right-2 h-5 w-5" />
-        <p className="italic text-gray-700 b text-sm phone:text-base break-words">
+        <p className="b break-words text-sm italic text-gray-700 phone:text-base">
           {opinion?.content}
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default OpinionCard;
+export default OpinionCard

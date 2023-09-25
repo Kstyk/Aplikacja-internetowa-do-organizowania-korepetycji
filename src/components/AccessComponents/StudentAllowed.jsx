@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
-import AuthContext from "../../context/AuthContext";
-import { Navigate, Outlet } from "react-router-dom";
+import React, { useContext } from 'react'
+import AuthContext from '../../context/AuthContext'
+import { Navigate, Outlet } from 'react-router-dom'
 
 const StudentAllowed = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext)
 
-  return user != null && user?.role == "Student" ? (
+  return user != null && user?.role == 'Student' ? (
     <>
       <Outlet />
     </>
@@ -13,7 +13,7 @@ const StudentAllowed = () => {
     <>
       <Navigate to="/" replace />
     </>
-  );
-};
+  )
+}
 
-export default StudentAllowed;
+export default StudentAllowed

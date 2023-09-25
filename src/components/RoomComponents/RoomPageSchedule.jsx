@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from "react";
-import LoadingComponent from "../LoadingComponent";
-import useAxios from "../../utils/useAxios";
-import RoomSchedule from "../schedules/RoomSchedule";
-import dayjs from "dayjs";
+import React, { useState, useEffect } from 'react'
+import LoadingComponent from '../LoadingComponent'
+import useAxios from '../../utils/useAxios'
+import RoomSchedule from '../schedules/RoomSchedule'
+import dayjs from 'dayjs'
 
 const RoomPageSchedule = ({ roomId }) => {
-  const [loading, setLoading] = useState();
-  const [schedule, setSchedule] = useState([]);
-  const [nextSchedule, setNextSchedule] = useState(null);
+  const [loading, setLoading] = useState()
+  const [schedule, setSchedule] = useState([])
+  const [nextSchedule, setNextSchedule] = useState(null)
 
-  const api = useAxios();
+  const api = useAxios()
   const fetchSchedule = async () => {
     await api
       .get(`api/rooms/${roomId}/schedules/`)
       .then((res) => {
-        setSchedule(res.data.schedules);
-        setNextSchedule(res.data.next_schedule);
+        setSchedule(res.data.schedules)
+        setNextSchedule(res.data.next_schedule)
       })
       .catch((err) => {
-        console.log(err);
-      });
-  };
+        console.log(err)
+      })
+  }
 
   useEffect(() => {
-    fetchSchedule();
-  }, [roomId]);
+    fetchSchedule()
+  }, [roomId])
 
   return (
     <div className="mt-10">
@@ -32,8 +32,8 @@ const RoomPageSchedule = ({ roomId }) => {
         <LoadingComponent message="Ładowanie..." />
       ) : (
         <>
-          <div className="card rounded-none shadow-xl bg-white mb-5 p-4">
-            <h2 className="uppercase tracking-wide text-xl font-bold text-gray-700 mb-3 border-b-[1px]">
+          <div className="card mb-5 rounded-none bg-white p-4 shadow-xl">
+            <h2 className="mb-3 border-b-[1px] text-xl font-bold uppercase tracking-wide text-gray-700">
               Najbliższe zajęcia
             </h2>
             {nextSchedule == null ? (
@@ -42,9 +42,9 @@ const RoomPageSchedule = ({ roomId }) => {
               <>
                 <span>
                   {dayjs(nextSchedule?.date).format(
-                    "dddd, DD-MM-YYYY, g. HH:mm"
-                  )}{" "}
-                  -{" "}
+                    'dddd, DD-MM-YYYY, g. HH:mm'
+                  )}{' '}
+                  -{' '}
                   <span className="font-bold">
                     {nextSchedule?.place_of_classes}
                   </span>
@@ -59,7 +59,7 @@ const RoomPageSchedule = ({ roomId }) => {
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default RoomPageSchedule;
+export default RoomPageSchedule

@@ -1,53 +1,53 @@
-import React, { useState, useEffect, useContext } from "react";
-import LoadingComponent from "../components/LoadingComponent";
-import { useForm, Controller } from "react-hook-form";
-import useAxios from "../utils/useAxios";
-import { useNavigate } from "react-router-dom";
-import Editor from "../components/TextEditor/Editor";
-import Select from "react-select";
-import showSuccessAlert from "../components/messages/SwalAlertSuccess";
-import AuthContext from "../context/AuthContext";
-import showAlertError from "../components/messages/SwalAlertError";
+import React, { useState, useEffect, useContext } from 'react'
+import LoadingComponent from '../components/LoadingComponent'
+import { useForm, Controller } from 'react-hook-form'
+import useAxios from '../utils/useAxios'
+import { useNavigate } from 'react-router-dom'
+import Editor from '../components/TextEditor/Editor'
+import Select from 'react-select'
+import showSuccessAlert from '../components/messages/SwalAlertSuccess'
+import AuthContext from '../context/AuthContext'
+import showAlertError from '../components/messages/SwalAlertError'
 
 const EditMoreInfosPage = () => {
-  const { user } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
-  const api = useAxios();
+  const { user } = useContext(AuthContext)
+  const [loading, setLoading] = useState(true)
+  const api = useAxios()
 
-  const [backendErrors, setBackendErrors] = useState({});
-  const [descriptionHtml, setDescriptionHtml] = useState(null);
-  const [experienceHtml, setExperienceHtml] = useState(null);
+  const [backendErrors, setBackendErrors] = useState({})
+  const [descriptionHtml, setDescriptionHtml] = useState(null)
+  const [experienceHtml, setExperienceHtml] = useState(null)
 
-  const [cities, setCities] = useState([]);
-  const [loadingCity, setLoadingCity] = useState(false);
-  const [voivodeships, setVoivodeships] = useState([]);
-  const [languages, setLanguages] = useState([]);
+  const [cities, setCities] = useState([])
+  const [loadingCity, setLoadingCity] = useState(false)
+  const [voivodeships, setVoivodeships] = useState([])
+  const [languages, setLanguages] = useState([])
 
-  const nav = useNavigate();
+  const nav = useNavigate()
   const customSelectStyle = {
     control: (base) => ({
       ...base,
-      boxShadow: "none",
-      borderRadius: "2px",
-      borderColor: "#BFEAF5",
-      "&:hover": {
-        border: "1px solid #aaabac",
+      boxShadow: 'none',
+      borderRadius: '2px',
+      borderColor: '#BFEAF5',
+      '&:hover': {
+        border: '1px solid #aaabac',
       },
     }),
-  };
+  }
 
   const places_of_classes = [
-    { value: "stationary", label: "Stacjonarnie" },
-    { value: "online", label: "Online" },
-  ];
+    { value: 'stationary', label: 'Stacjonarnie' },
+    { value: 'online', label: 'Online' },
+  ]
 
   const sexs = [
     {
-      value: "mężczyzna",
-      label: "Mężczyzna",
+      value: 'mężczyzna',
+      label: 'Mężczyzna',
     },
-    { value: "kobieta", label: "Kobieta" },
-  ];
+    { value: 'kobieta', label: 'Kobieta' },
+  ]
 
   const {
     register,
@@ -57,158 +57,158 @@ const EditMoreInfosPage = () => {
     getValues,
     formState: { errors },
   } = useForm({
-    mode: "all",
-  });
+    mode: 'all',
+  })
 
   const editProfile = {
     phone_number: {
       pattern: {
         value:
           /^[^a-zA-Z]*\+?\d{1,4}[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}[^a-zA-Z]*$/,
-        message: "Nieprawidłowy format numeru telefonu.",
+        message: 'Nieprawidłowy format numeru telefonu.',
       },
     },
     postal_code: {
       pattern: {
         value: /^[0-9]{2}-[0-9]{3}$/,
-        message: "Nieprawidłowy format kodu pocztowego.",
+        message: 'Nieprawidłowy format kodu pocztowego.',
       },
     },
     street: {
       maxLength: {
         value: 50,
-        message: "Ulica może mieć maksymalnie 50 znaków.",
+        message: 'Ulica może mieć maksymalnie 50 znaków.',
       },
     },
     building_number: {
       maxLength: {
         value: 40,
-        message: "Numer budynku nie może być dłuższy niż 50 znaków.",
+        message: 'Numer budynku nie może być dłuższy niż 50 znaków.',
       },
     },
-  };
+  }
 
   const fetchCities = async (e) => {
-    setLoadingCity(true);
-    if (e.trim() != "") {
+    setLoadingCity(true)
+    if (e.trim() != '') {
       await api
         .get(`/api/users/address/cities/?name=${e}`)
         .then((res) => {
-          setCities(res.data);
-          setLoadingCity(false);
+          setCities(res.data)
+          setLoadingCity(false)
         })
         .catch((err) => {
-          setLoadingCity(false);
-          showAlertError("Błąd", "Nie udało się znaleźć żądanej miejscowości.");
-        });
+          setLoadingCity(false)
+          showAlertError('Błąd', 'Nie udało się znaleźć żądanej miejscowości.')
+        })
     } else {
-      setCities([]);
-      setLoadingCity(false);
+      setCities([])
+      setLoadingCity(false)
     }
-  };
+  }
 
   const fetchLanguages = async () => {
     await api
       .get(`/api/classes/languages`)
       .then((res) => {
-        setLanguages(res.data);
+        setLanguages(res.data)
       })
       .catch((err) => {
         showAlertError(
-          "Błąd",
-          "Wystąpił błąd przy pobieraniu danych z serwera."
-        );
-      });
-  };
+          'Błąd',
+          'Wystąpił błąd przy pobieraniu danych z serwera.'
+        )
+      })
+  }
 
   const fetchVoivodeships = async () => {
     await api
       .get(`/api/users/address/voivodeships/`)
       .then((res) => {
-        setVoivodeships(res.data);
+        setVoivodeships(res.data)
       })
       .catch((err) => {
         showAlertError(
-          "Błąd",
-          "Wystąpił błąd przy pobieraniu danych z serwera."
-        );
-      });
-  };
+          'Błąd',
+          'Wystąpił błąd przy pobieraniu danych z serwera.'
+        )
+      })
+  }
 
   const fetchProfile = async () => {
     await api
       .get(`/api/users/profile/`)
       .then((res) => {
-        setValue("description", res.data.description);
-        setValue("year_of_birth", res.data.year_of_birth);
-        setValue("phone_number", res.data.phone_number);
-        setValue("known_languages", res.data.known_languages);
+        setValue('description', res.data.description)
+        setValue('year_of_birth', res.data.year_of_birth)
+        setValue('phone_number', res.data.phone_number)
+        setValue('known_languages', res.data.known_languages)
         setValue(
-          "sex",
+          'sex',
           sexs.map((sex) => res.data.sex == sex.value && sex)
-        );
+        )
 
-        let places = [];
+        let places = []
         res.data.place_of_classes.forEach((place) => {
           const matchingPlace = places_of_classes.find(
             (place_obj) => place_obj.value === place
-          );
+          )
           if (matchingPlace) {
-            places.push(matchingPlace);
+            places.push(matchingPlace)
           }
-        });
-        setValue("place_of_classes", places);
-        setValue("cities_of_work", res.data.cities_of_work);
-        setValue("experience", res.data.experience);
-        setValue("address.voivodeship", res.data.address?.voivodeship);
-        setValue("address.city", res.data.address?.city);
-        setValue("address.postal_code", res.data.address?.postal_code);
-        setValue("address.street", res.data.address?.street);
-        setValue("address.building_number", res.data.address?.building_number);
+        })
+        setValue('place_of_classes', places)
+        setValue('cities_of_work', res.data.cities_of_work)
+        setValue('experience', res.data.experience)
+        setValue('address.voivodeship', res.data.address?.voivodeship)
+        setValue('address.city', res.data.address?.city)
+        setValue('address.postal_code', res.data.address?.postal_code)
+        setValue('address.street', res.data.address?.street)
+        setValue('address.building_number', res.data.address?.building_number)
       })
       .catch((err) => {
         showAlertError(
-          "Błąd",
-          "Wystąpił błąd przy pobieraniu danych profilu z serwera."
-        );
-      });
-  };
+          'Błąd',
+          'Wystąpił błąd przy pobieraniu danych profilu z serwera.'
+        )
+      })
+  }
 
   const fetchAll = async () => {
-    setLoading(true);
-    await fetchVoivodeships();
-    await fetchLanguages();
-    await fetchProfile();
-    setLoading(false);
-  };
+    setLoading(true)
+    await fetchVoivodeships()
+    await fetchLanguages()
+    await fetchProfile()
+    setLoading(false)
+  }
 
   useEffect(() => {
-    fetchAll();
-  }, []);
+    fetchAll()
+  }, [])
 
   const onSubmit = (data) => {
     data.place_of_classes.map((place, i) => {
-      data.place_of_classes[i] = place.value;
-    });
+      data.place_of_classes[i] = place.value
+    })
 
     data.cities_of_work.map((city, i) => {
-      data.cities_of_work[i] = city.id;
-    });
+      data.cities_of_work[i] = city.id
+    })
 
     data.known_languages.map((language, i) => {
-      data.known_languages[i] = language.id;
-    });
+      data.known_languages[i] = language.id
+    })
 
     if (data.sex != null) {
-      data.sex = data.sex.value;
+      data.sex = data.sex.value
     }
 
     if (data?.address?.voivodeship != null) {
-      data.address.voivodeship = data.address.voivodeship.id;
+      data.address.voivodeship = data.address.voivodeship.id
     }
 
     if (data?.address?.city != null) {
-      data.address.city = data.address.city.id;
+      data.address.city = data.address.city.id
     }
 
     if (
@@ -216,9 +216,9 @@ const EditMoreInfosPage = () => {
       descriptionHtml != data.description &&
       data.description.length > 0
     ) {
-      data.description = descriptionHtml;
+      data.description = descriptionHtml
     } else {
-      data.description = null;
+      data.description = null
     }
 
     if (
@@ -226,30 +226,30 @@ const EditMoreInfosPage = () => {
       experienceHtml != data.experience &&
       data.experience.length > 0
     ) {
-      data.experience = experienceHtml;
+      data.experience = experienceHtml
     } else {
-      data.experience = null;
+      data.experience = null
     }
 
-    if (data.year_of_birth == "") {
-      data.year_of_birth = null;
+    if (data.year_of_birth == '') {
+      data.year_of_birth = null
     }
 
     api
       .put(`/api/users/profile/edit-informations/`, data)
       .then((res) => {
         showSuccessAlert(
-          "Sukces!",
-          "Pomyślnie zedytowałeś dane swojego konta.",
+          'Sukces!',
+          'Pomyślnie zedytowałeś dane swojego konta.',
           () => {
-            user?.role == "Teacher" ? nav("/profil") : nav("/profil-ucznia");
+            user?.role == 'Teacher' ? nav('/profil') : nav('/profil-ucznia')
           }
-        );
+        )
       })
       .catch((err) => {
-        setBackendErrors(JSON.parse(err.request.response));
-      });
-  };
+        setBackendErrors(JSON.parse(err.request.response))
+      })
+  }
 
   return (
     <>
@@ -258,40 +258,40 @@ const EditMoreInfosPage = () => {
       ) : (
         <>
           <div>
-            <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300 max-phone:hidden"></div>
+            <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
 
-            <div className="bg-white card shadow-xl h-full px-5 py-5 mt-10 rounded-md mb-10 mx-auto w-8/12 max-lg:w-full max-md:w-8/12 max-phone:w-full">
-              <h1 className="text-2xl text-center">
+            <div className="card mx-auto mb-10 mt-10 h-full w-8/12 rounded-md bg-white px-5 py-5 shadow-xl max-lg:w-full max-md:w-8/12 max-phone:w-full">
+              <h1 className="text-center text-2xl">
                 Edytuj dodatkowe informacje
               </h1>
-              <div className="border-b-[1px] border-base-100 my-4"></div>
+              <div className="my-4 border-b-[1px] border-base-100"></div>
               <p className="text-center text-sm">
-                {user?.role == "Teacher"
-                  ? "Dodaj więcej informacji o sobie tak, by uczniowie mogli Cię łatwiej wyszukać."
-                  : "Dodaj więcej informacji o sobie dla nauczyciela."}
+                {user?.role == 'Teacher'
+                  ? 'Dodaj więcej informacji o sobie tak, by uczniowie mogli Cię łatwiej wyszukać.'
+                  : 'Dodaj więcej informacji o sobie dla nauczyciela.'}
               </p>
-              <div className="border-b-[1px] border-base-100 my-4"></div>
+              <div className="my-4 border-b-[1px] border-base-100"></div>
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col justify-center w-10/12 space-y-4 max-md:w-full mx-auto"
+                className="mx-auto flex w-10/12 flex-col justify-center space-y-4 max-md:w-full"
               >
                 <div className="items-center">
-                  <div className="flex flex-col float-right w-full">
+                  <div className="float-right flex w-full flex-col">
                     <label
-                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                       htmlFor="year_of_birth"
                     >
                       Rok urodzenia
                     </label>
                     <input
                       type="number"
-                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
+                      className=" relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
                       name="year_of_birth"
                       placeholder="Podaj rok urodzenia"
                       id="year_of_birth"
-                      {...register("year_of_birth", editProfile.year_of_birth)}
+                      {...register('year_of_birth', editProfile.year_of_birth)}
                     />
-                    <small className="text-red-400 text-right">
+                    <small className="text-right text-red-400">
                       {errors?.year_of_birth && errors.year_of_birth.message}
                       {backendErrors?.year_of_birth?.map((e, i) => (
                         <span key={i}>
@@ -302,22 +302,22 @@ const EditMoreInfosPage = () => {
                   </div>
                 </div>
                 <div className="items-center">
-                  <div className="flex flex-col float-right w-full">
+                  <div className="float-right flex w-full flex-col">
                     <label
-                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                       htmlFor="phone_number"
                     >
                       Numer telefonu
                     </label>
                     <input
                       type="text"
-                      className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
+                      className="relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
                       name="phone_number"
                       placeholder="Podaj numer telefonu"
                       id="phone_number"
-                      {...register("phone_number", editProfile.phone_number)}
+                      {...register('phone_number', editProfile.phone_number)}
                     />
-                    <small className="text-red-400 text-right">
+                    <small className="text-right text-red-400">
                       {errors?.phone_number && errors.phone_number.message}
                       {backendErrors?.phone_number?.map((e, i) => (
                         <span key={i}>
@@ -329,9 +329,9 @@ const EditMoreInfosPage = () => {
                 </div>
 
                 <div className="items-center">
-                  <div className="flex flex-col float-right w-full">
+                  <div className="float-right flex w-full flex-col">
                     <label
-                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                       htmlFor="sex"
                     >
                       Płeć
@@ -342,7 +342,7 @@ const EditMoreInfosPage = () => {
                       rules={editProfile.sex}
                       render={({ field }) => (
                         <Select
-                          className="px-0 h-10 w-full text-gray-500 border-none shadow-none"
+                          className="h-10 w-full border-none px-0 text-gray-500 shadow-none"
                           menuPortalTarget={document.body}
                           isClearable
                           options={sexs}
@@ -350,12 +350,12 @@ const EditMoreInfosPage = () => {
                           placeholder={
                             <span className="text-gray-400">Płeć</span>
                           }
-                          noOptionsMessage={() => "Brak opcji."}
+                          noOptionsMessage={() => 'Brak opcji.'}
                           styles={customSelectStyle}
                         />
                       )}
                     />
-                    <small className="text-red-400 text-right">
+                    <small className="text-right text-red-400">
                       {errors?.sex && errors.sex.message}
                       {backendErrors?.sex?.map((e, i) => (
                         <span key={i}>
@@ -365,11 +365,11 @@ const EditMoreInfosPage = () => {
                     </small>
                   </div>
                 </div>
-                {user?.role == "Teacher" && (
+                {user?.role == 'Teacher' && (
                   <div className="items-center">
-                    <div className="flex flex-col float-right w-full">
+                    <div className="float-right flex w-full flex-col">
                       <label
-                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                        className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                         htmlFor="place_of_classes"
                       >
                         Miejsca udzielania zajęć
@@ -380,7 +380,7 @@ const EditMoreInfosPage = () => {
                         rules={editProfile.place_of_classes}
                         render={({ field }) => (
                           <Select
-                            className="px-0 w-full text-gray-500 border-none shadow-none"
+                            className="w-full border-none px-0 text-gray-500 shadow-none"
                             isMulti
                             menuPortalTarget={document.body}
                             options={places_of_classes}
@@ -392,12 +392,12 @@ const EditMoreInfosPage = () => {
                                 Miejsce udzielania zajęć
                               </span>
                             }
-                            noOptionsMessage={() => "Brak opcji."}
+                            noOptionsMessage={() => 'Brak opcji.'}
                             styles={customSelectStyle}
                           />
                         )}
                       />
-                      <small className="text-red-400 text-right">
+                      <small className="text-right text-red-400">
                         {errors?.place_of_classes &&
                           errors.place_of_classes.message}
                         {backendErrors?.place_of_classes?.map((e, i) => (
@@ -409,11 +409,11 @@ const EditMoreInfosPage = () => {
                     </div>
                   </div>
                 )}
-                {user?.role == "Teacher" && (
+                {user?.role == 'Teacher' && (
                   <div className="items-center">
-                    <div className="flex flex-col float-right w-full">
+                    <div className="float-right flex w-full flex-col">
                       <label
-                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                        className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                         htmlFor="cities_of_work"
                       >
                         Miasta, w których udzielam zajęć
@@ -422,19 +422,19 @@ const EditMoreInfosPage = () => {
                         name="cities_of_work"
                         control={control}
                         {...register(
-                          "cities_of_work",
+                          'cities_of_work',
                           editProfile.cities_of_work
                         )}
                         render={({ field }) => (
                           <Select
-                            className="px-0 w-full text-gray-500 border-none shadow-none"
+                            className="w-full border-none px-0 text-gray-500 shadow-none"
                             menuPortalTarget={document.body}
                             isClearable
                             isMulti
                             options={cities}
                             {...field}
                             onInputChange={(e) => {
-                              fetchCities(e);
+                              fetchCities(e)
                             }}
                             getOptionLabel={(option) => option.name}
                             getOptionValue={(option) => option.id}
@@ -443,16 +443,16 @@ const EditMoreInfosPage = () => {
                             }
                             noOptionsMessage={({ inputValue }) =>
                               loadingCity
-                                ? "Szukanie miast..."
+                                ? 'Szukanie miast...'
                                 : !inputValue
-                                ? "Wpisz tekst..."
-                                : "Nie znaleziono"
+                                ? 'Wpisz tekst...'
+                                : 'Nie znaleziono'
                             }
                             styles={customSelectStyle}
                           />
                         )}
                       />
-                      <small className="text-red-400 text-right">
+                      <small className="text-right text-red-400">
                         {errors?.cities_of_work &&
                           errors.cities_of_work.message}
                         {backendErrors?.cities_of_work?.map((e, i) => (
@@ -464,11 +464,11 @@ const EditMoreInfosPage = () => {
                     </div>
                   </div>
                 )}
-                {user?.role == "Teacher" && (
+                {user?.role == 'Teacher' && (
                   <div className="items-center">
-                    <div className="flex flex-col float-right w-full">
+                    <div className="float-right flex w-full flex-col">
                       <label
-                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                        className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                         htmlFor="cities_of_work"
                       >
                         Znane języki
@@ -477,12 +477,12 @@ const EditMoreInfosPage = () => {
                         name="known_languages"
                         control={control}
                         {...register(
-                          "known_languages",
+                          'known_languages',
                           editProfile.known_languages
                         )}
                         render={({ field }) => (
                           <Select
-                            className="px-0 w-full text-gray-500 border-none shadow-none"
+                            className="w-full border-none px-0 text-gray-500 shadow-none"
                             menuPortalTarget={document.body}
                             isClearable
                             isMulti
@@ -493,12 +493,12 @@ const EditMoreInfosPage = () => {
                             placeholder={
                               <span className="text-gray-400">Języki</span>
                             }
-                            noOptionsMessage={() => "Brak języków."}
+                            noOptionsMessage={() => 'Brak języków.'}
                             styles={customSelectStyle}
                           />
                         )}
                       />
-                      <small className="text-red-400 text-right">
+                      <small className="text-right text-red-400">
                         {errors?.known_languages &&
                           errors.known_languages.message}
                         {backendErrors?.known_languages?.map((e, i) => (
@@ -511,34 +511,34 @@ const EditMoreInfosPage = () => {
                   </div>
                 )}
                 <div className="items-center">
-                  <div className="flex flex-col float-right w-full">
+                  <div className="float-right flex w-full flex-col">
                     <label
                       htmlFor="description"
-                      className="block uppercase tracking-wide text-gray-700 text-lg font-bold"
+                      className="block text-lg font-bold uppercase tracking-wide text-gray-700"
                     >
                       Adres
                     </label>
-                    <div className="border-b-[1px] border-base-100 mb-2"></div>
+                    <div className="mb-2 border-b-[1px] border-base-100"></div>
 
                     <label
-                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                       htmlFor="city"
                     >
-                      Miasto{" "}
+                      Miasto{' '}
                     </label>
                     <Controller
                       name="address.city"
                       control={control}
-                      {...register("address.city", editProfile.city)}
+                      {...register('address.city', editProfile.city)}
                       render={({ field }) => (
                         <Select
-                          className="px-0 h-10 w-full text-gray-500 border-none shadow-none"
+                          className="h-10 w-full border-none px-0 text-gray-500 shadow-none"
                           menuPortalTarget={document.body}
                           isClearable
                           options={cities}
                           {...field}
                           onInputChange={(e) => {
-                            fetchCities(e);
+                            fetchCities(e)
                           }}
                           getOptionLabel={(option) => option.name}
                           getOptionValue={(option) => option.id}
@@ -547,16 +547,16 @@ const EditMoreInfosPage = () => {
                           }
                           noOptionsMessage={({ inputValue }) =>
                             loadingCity
-                              ? "Szukanie miast..."
+                              ? 'Szukanie miast...'
                               : !inputValue
-                              ? "Wpisz tekst..."
-                              : "Nie znaleziono"
+                              ? 'Wpisz tekst...'
+                              : 'Nie znaleziono'
                           }
                           styles={customSelectStyle}
                         />
                       )}
                     />
-                    <small className="text-red-400 text-right">
+                    <small className="text-right text-red-400">
                       {errors?.city && errors.city.message}
                       {backendErrors?.address?.city?.map((e, i) => (
                         <span key={i}>
@@ -567,9 +567,9 @@ const EditMoreInfosPage = () => {
                   </div>
                 </div>
                 <div className="items-center">
-                  <div className="flex flex-col float-right w-full">
+                  <div className="float-right flex w-full flex-col">
                     <label
-                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                       htmlFor="voivodeship"
                     >
                       Województwo
@@ -578,12 +578,12 @@ const EditMoreInfosPage = () => {
                       name="address.voivodeship"
                       control={control}
                       {...register(
-                        "address.voivodeship",
+                        'address.voivodeship',
                         editProfile.voivodeship
                       )}
                       render={({ field }) => (
                         <Select
-                          className="px-0 h-10 text-gray-500 border-none shadow-none"
+                          className="h-10 border-none px-0 text-gray-500 shadow-none"
                           menuPortalTarget={document.body}
                           isClearable
                           {...field}
@@ -594,13 +594,13 @@ const EditMoreInfosPage = () => {
                             <span className="text-gray-400">Województwo</span>
                           }
                           noOptionsMessage={({ inputValue }) =>
-                            !inputValue ? "Brak województwa" : "Nie znaleziono"
+                            !inputValue ? 'Brak województwa' : 'Nie znaleziono'
                           }
                           styles={customSelectStyle}
                         />
                       )}
                     />
-                    <small className="text-red-400 text-right">
+                    <small className="text-right text-red-400">
                       {errors?.voivodeship && errors.voivodeship.message}
                       {backendErrors?.address?.voivodeship?.map((e, i) => (
                         <span key={i}>
@@ -611,25 +611,25 @@ const EditMoreInfosPage = () => {
                   </div>
                 </div>
                 <div className="items-center">
-                  <div className="flex flex-col float-right w-full">
+                  <div className="float-right flex w-full flex-col">
                     <label
-                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                       htmlFor="postal_code"
                     >
                       Kod pocztowy
                     </label>
                     <input
                       type="text"
-                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
+                      className=" relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
                       name="address.postal_code"
                       placeholder="Podaj kod pocztowy"
                       id="postal_code"
                       {...register(
-                        "address.postal_code",
+                        'address.postal_code',
                         editProfile.postal_code
                       )}
                     />
-                    <small className="text-red-400 text-right">
+                    <small className="text-right text-red-400">
                       {errors?.postal_code && errors.postal_code.message}
                       {backendErrors?.address?.postal_code?.map((e, i) => (
                         <span key={i}>
@@ -641,22 +641,22 @@ const EditMoreInfosPage = () => {
                 </div>
 
                 <div className="items-center">
-                  <div className="flex flex-col float-right w-full">
+                  <div className="float-right flex w-full flex-col">
                     <label
-                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                       htmlFor="street"
                     >
                       Ulica
                     </label>
                     <input
                       type="text"
-                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
+                      className=" relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
                       name="address.street"
                       placeholder="Podaj ulicę"
                       id="street"
-                      {...register("address.street", editProfile.street)}
+                      {...register('address.street', editProfile.street)}
                     />
-                    <small className="text-red-400 text-right">
+                    <small className="text-right text-red-400">
                       {errors?.street && errors.street.message}
                       {backendErrors?.address?.street?.map((e, i) => (
                         <span key={i}>
@@ -667,25 +667,25 @@ const EditMoreInfosPage = () => {
                   </div>
                 </div>
                 <div className="items-center">
-                  <div className="flex flex-col float-right w-full">
+                  <div className="float-right flex w-full flex-col">
                     <label
-                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                       htmlFor="building_number"
                     >
                       Numer budynku
                     </label>
                     <input
                       type="text"
-                      className=" h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
+                      className=" relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
                       name="address.building_number"
                       placeholder="Podaj numer budynku"
                       id="building_number"
                       {...register(
-                        "address.building_number",
+                        'address.building_number',
                         editProfile.building_number
                       )}
                     />
-                    <small className="text-red-400 text-right">
+                    <small className="text-right text-red-400">
                       {errors?.building_number &&
                         errors.building_number.message}
                       {backendErrors?.address?.building_number?.map((e, i) => (
@@ -696,24 +696,24 @@ const EditMoreInfosPage = () => {
                     </small>
                   </div>
                 </div>
-                {user?.role == "Teacher" && (
+                {user?.role == 'Teacher' && (
                   <div className="items-center">
-                    <div className="flex flex-col float-right w-full">
+                    <div className="float-right flex w-full flex-col">
                       <label
                         htmlFor="description"
-                        className="block uppercase tracking-wide text-gray-700 text-lg font-bold"
+                        className="block text-lg font-bold uppercase tracking-wide text-gray-700"
                       >
                         O sobie
                       </label>
-                      <div className="border-b-[1px] border-base-100 mb-2"></div>
+                      <div className="mb-2 border-b-[1px] border-base-100"></div>
                       <Editor
-                        fieldValue={getValues("description")}
+                        fieldValue={getValues('description')}
                         setValue={setValue}
                         setValueHtml={setDescriptionHtml}
                         name="description"
                         id="description"
                         fieldName="description"
-                        {...register("description", editProfile.description)}
+                        {...register('description', editProfile.description)}
                       />
 
                       <span className="text-[11px] text-red-400">
@@ -730,25 +730,25 @@ const EditMoreInfosPage = () => {
                     </div>
                   </div>
                 )}
-                {user?.role == "Teacher" && (
+                {user?.role == 'Teacher' && (
                   <div className="items-center">
-                    <div className="flex flex-col float-right w-full">
+                    <div className="float-right flex w-full flex-col">
                       <label
                         htmlFor="experience"
-                        className="block uppercase tracking-wide text-gray-700 text-lg font-bold"
+                        className="block text-lg font-bold uppercase tracking-wide text-gray-700"
                       >
                         Doświadczenie
                       </label>
-                      <div className="border-b-[1px] border-base-100 mb-2"></div>
+                      <div className="mb-2 border-b-[1px] border-base-100"></div>
 
                       <Editor
-                        fieldValue={getValues("experience")}
+                        fieldValue={getValues('experience')}
                         setValue={setValue}
                         setValueHtml={setExperienceHtml}
                         name="experience"
                         id="experience"
                         fieldName="experience"
-                        {...register("experience", editProfile.experience)}
+                        {...register('experience', editProfile.experience)}
                       />
 
                       <span className="text-[11px] text-red-400">
@@ -765,7 +765,7 @@ const EditMoreInfosPage = () => {
                     </div>
                   </div>
                 )}
-                <button className="btn btn-outline no-animation w-6/12 max-md:w-5/12 max-phone:w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400">
+                <button className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-6/12 rounded-sm border-base-400 py-0 hover:bg-base-400 max-md:w-5/12 max-phone:mx-auto max-phone:w-full">
                   Edytuj profil
                 </button>
               </form>
@@ -774,7 +774,7 @@ const EditMoreInfosPage = () => {
         </>
       )}
     </>
-  );
-};
+  )
+}
 
-export default EditMoreInfosPage;
+export default EditMoreInfosPage

@@ -1,29 +1,29 @@
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2'
 
 const showSuccessAlert = (title, text, onClose) => {
   const swalAlertSuccess = Swal.mixin({
     customClass: {
-      confirmButton: "btn btn-success",
+      confirmButton: 'btn btn-success',
     },
     buttonsStyling: false,
-  });
+  })
 
   swalAlertSuccess
     .fire({
-      icon: "success",
+      icon: 'success',
       title: title,
       text: text,
       customClass: {
         confirmButton:
-          "btn btn-outline rounded-md outline-none border-[1px] text-black w-full",
-        popup: "rounded-md bg-base-100",
+          'btn btn-outline rounded-md outline-none border-[1px] text-black w-full',
+        popup: 'rounded-md bg-base-100',
       },
     })
     .then(() => {
-      if (onClose && typeof onClose === "function") {
-        onClose();
+      if (onClose && typeof onClose === 'function') {
+        onClose()
       }
-    });
-};
+    })
+}
 
-export default showSuccessAlert;
+export default showSuccessAlert

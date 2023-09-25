@@ -1,64 +1,64 @@
-import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
-import AuthContext from "../context/AuthContext";
-import "./Navbar.scss";
+import React, { useContext, useState } from 'react'
+import { Link } from 'react-router-dom'
+import AuthContext from '../context/AuthContext'
+import './Navbar.scss'
 
 const Navbar = () => {
-  let { user, logoutUser } = useContext(AuthContext);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  let { user, logoutUser } = useContext(AuthContext)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   return (
     <>
-      <nav className="navbar bg-base-100 h-[70px] max-phone:hidden">
+      <nav className="navbar h-[70px] bg-base-100 max-phone:hidden">
         <div className="flex-1"></div>
         <div className="flex-none">
           <Link
-            className="btn border-none bg-white hover:bg-white normal-case text-xl"
+            className="btn border-none bg-white text-xl normal-case hover:bg-white"
             to="/"
           >
             korki.PL
           </Link>
-          {user?.role == "Student" && (
-            <ul className="menu menu-horizontal px-1 gap-3">
+          {user?.role == 'Student' && (
+            <ul className="menu menu-horizontal gap-3 px-1">
               <li>
-                <Link to="#" className="focus:bg-base-300 hover:bg-base-200">
+                <Link to="#" className="hover:bg-base-200 focus:bg-base-300">
                   Szukaj korepetytorów
                 </Link>
               </li>
               <li>
                 <Link
                   to="/my-rooms"
-                  className="focus:bg-base-300 hover:bg-base-200"
+                  className="hover:bg-base-200 focus:bg-base-300"
                 >
                   Twoje pokoje
                 </Link>
               </li>
 
-              <div className="dropdown dropdown-end z-40">
-                <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+              <div className="dropdown-end dropdown z-40">
+                <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
                   Profil
                 </label>
                 <ul
                   tabIndex={0}
-                  className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 border-base-300 border-2 rounded-none w-52"
+                  className="dropdown-content menu menu-sm z-[1] mt-3 w-52 rounded-none border-2 border-base-300 bg-base-100 p-2 shadow"
                 >
                   <li>
                     <Link
                       to="/profil-ucznia"
-                      className="focus:bg-base-300  rounded-none"
+                      className="rounded-none  focus:bg-base-300"
                     >
                       Profil
                     </Link>
                   </li>
                   <li>
-                    <a href="#" className="focus:bg-base-300 rounded-none">
+                    <a href="#" className="rounded-none focus:bg-base-300">
                       Twoje pokoje
                     </a>
                   </li>
                   <li>
                     <Link
                       to="/profil/historia-zakupow"
-                      className="focus:bg-base-300 rounded-none"
+                      className="rounded-none focus:bg-base-300"
                     >
                       Historia zakupów
                     </Link>
@@ -113,44 +113,44 @@ const Navbar = () => {
               </div>
             </ul>
           )}
-          {user?.role == "Teacher" && (
-            <ul className="menu menu-horizontal !px-0 gap-3">
+          {user?.role == 'Teacher' && (
+            <ul className="menu menu-horizontal gap-3 !px-0">
               <li>
                 <Link
                   to="/my-rooms"
-                  className="focus:bg-base-300 hover:bg-base-200"
+                  className="hover:bg-base-200 focus:bg-base-300"
                 >
                   Twoje pokoje
                 </Link>
               </li>
 
-              <div className="dropdown dropdown-end z-40">
-                <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+              <div className="dropdown-end dropdown z-40">
+                <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
                   <div className="w-10 rounded-full">
                     <img src="/images/stock/photo-1534528741775-53994a69daeb.jpg" />
                   </div>
                 </label>
                 <ul
                   tabIndex={0}
-                  className=" mt-1z-[1] p-2 shadow shadow-base-400  menu menu-sm dropdown-content bg-white rounded-box w-52"
+                  className=" mt-1z-[1] dropdown-content menu rounded-box  menu-sm w-52 bg-white p-2 shadow shadow-base-400"
                 >
                   <li>
                     <Link
                       to="/profil"
-                      className="focus:bg-base-300 hover:bg-base-200"
+                      className="hover:bg-base-200 focus:bg-base-300"
                     >
                       Profil
                     </Link>
                   </li>
                   <li>
-                    <a href="#" className="focus:bg-base-300 hover:bg-base-200">
+                    <a href="#" className="hover:bg-base-200 focus:bg-base-300">
                       Edytuj swoje oferty
                     </a>
                   </li>
                   <li>
                     <Link
                       to="/profil/otrzymane-opinie"
-                      className="focus:bg-base-300 hover:bg-base-200"
+                      className="hover:bg-base-200 focus:bg-base-300"
                     >
                       Otrzymane opinie
                     </Link>
@@ -158,7 +158,7 @@ const Navbar = () => {
                   <li>
                     <Link
                       to="/plan/edytuj"
-                      className="focus:bg-base-300 hover:bg-base-200"
+                      className="hover:bg-base-200 focus:bg-base-300"
                     >
                       Ustal harmonogram
                     </Link>
@@ -166,7 +166,7 @@ const Navbar = () => {
                   <li>
                     <Link
                       to="/zajecia"
-                      className="focus:bg-base-300 hover:bg-base-200"
+                      className="hover:bg-base-200 focus:bg-base-300"
                     >
                       Lista zajęć
                     </Link>
@@ -174,26 +174,26 @@ const Navbar = () => {
                   <li>
                     <Link
                       to="/zajecia/dodaj"
-                      className="focus:bg-base-300 hover:bg-base-200"
+                      className="hover:bg-base-200 focus:bg-base-300"
                     >
                       Dodaj nowe zajęcia
                     </Link>
                   </li>
 
                   <li>
-                    <a href="#" className="focus:bg-base-300 hover:bg-base-200">
+                    <a href="#" className="hover:bg-base-200 focus:bg-base-300">
                       Historia zakupów
                     </a>
                   </li>
                   <li>
                     <details open>
-                      <summary className="focus:bg-base-300 hover:bg-base-200">
+                      <summary className="hover:bg-base-200 focus:bg-base-300">
                         Edytuj profil
                       </summary>
                       <ul>
                         <li>
                           <Link
-                            className="focus:bg-base-300 hover:bg-base-200"
+                            className="hover:bg-base-200 focus:bg-base-300"
                             to="/profil/edytuj"
                           >
                             Edytuj dane podstawowe
@@ -201,7 +201,7 @@ const Navbar = () => {
                         </li>
                         <li>
                           <Link
-                            className="focus:bg-base-300 hover:bg-base-200"
+                            className="hover:bg-base-200 focus:bg-base-300"
                             to="/profil/edytuj-dodatkowe"
                           >
                             Edytuj dane dodatkowe
@@ -210,7 +210,7 @@ const Navbar = () => {
                         <li>
                           <Link
                             to="/profil/edytuj-avatar"
-                            className="focus:bg-base-300 hover:bg-base-200"
+                            className="hover:bg-base-200 focus:bg-base-300"
                           >
                             Zmień avatar
                           </Link>
@@ -218,7 +218,7 @@ const Navbar = () => {
                         <li>
                           <Link
                             to="/profil/zmien-haslo"
-                            className="focus:bg-base-300 hover:bg-base-200"
+                            className="hover:bg-base-200 focus:bg-base-300"
                           >
                             Zmień hasło
                           </Link>
@@ -240,11 +240,11 @@ const Navbar = () => {
             </ul>
           )}
           {user == null && (
-            <ul className="menu menu-horizontal px-1 gap-3">
+            <ul className="menu menu-horizontal gap-3 px-1">
               <li>
                 <Link
                   to="/logowanie"
-                  className="focus:bg-base-300 hover:bg-base-200"
+                  className="hover:bg-base-200 focus:bg-base-300"
                 >
                   Zaloguj
                 </Link>
@@ -252,7 +252,7 @@ const Navbar = () => {
               <li>
                 <Link
                   to="/register"
-                  className="focus:bg-base-300 hover:bg-base-200"
+                  className="hover:bg-base-200 focus:bg-base-300"
                 >
                   Zarejestruj
                 </Link>
@@ -261,10 +261,10 @@ const Navbar = () => {
           )}
         </div>
       </nav>
-      <div className="navbar bg-base-100 phone:hidden h-[70px] pl-0 relative">
+      <div className="navbar relative h-[70px] bg-base-100 pl-0 phone:hidden">
         <div className="flex-1">
           <Link
-            className="btn border-none bg-white hover:bg-white normal-case text-xl"
+            className="btn border-none bg-white text-xl normal-case hover:bg-white"
             to="/"
           >
             korki.PL
@@ -272,14 +272,14 @@ const Navbar = () => {
         </div>
         <div className="flex-none">
           <button
-            className="btn btn-square btn-ghost"
+            className="btn-ghost btn-square btn"
             onClick={() => setShowMobileMenu((prev) => !prev)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              className="inline-block w-5 h-5 stroke-current"
+              className="inline-block h-5 w-5 stroke-current"
             >
               <path
                 strokeLinecap="round"
@@ -291,42 +291,42 @@ const Navbar = () => {
           </button>
         </div>
         <div
-          className={`absolute z-[999] right-0 left-0 top-[60px] bg-white border-y-2 pb-5 mobile-menu ${
-            showMobileMenu ? "menu-visible menu-fade-in" : "menu-fade-out"
+          className={`mobile-menu absolute left-0 right-0 top-[60px] z-[999] border-y-2 bg-white pb-5 ${
+            showMobileMenu ? 'menu-visible menu-fade-in' : 'menu-fade-out'
           }`}
         >
-          <ul className="w-full text-lg pt-2 ">
+          <ul className="w-full pt-2 text-lg ">
             {user == null && (
               <>
                 <li
                   onClick={() => setShowMobileMenu((prev) => !prev)}
-                  className="pl-5 w-full hover:bg-slate-100 h-10 flex items-center"
+                  className="flex h-10 w-full items-center pl-5 hover:bg-slate-100"
                 >
-                  {" "}
+                  {' '}
                   <Link to="/logowanie">Strona główna</Link>
                 </li>
                 <li
                   onClick={() => setShowMobileMenu((prev) => !prev)}
-                  className="pl-5 w-full hover:bg-slate-100 h-10 flex items-center"
+                  className="flex h-10 w-full items-center pl-5 hover:bg-slate-100"
                 >
-                  {" "}
+                  {' '}
                   <Link to="/logowanie">Zaloguj</Link>
                 </li>
                 <li
                   onClick={() => setShowMobileMenu((prev) => !prev)}
-                  className="pl-5 w-full hover:bg-slate-100 h-10 flex items-center"
+                  className="flex h-10 w-full items-center pl-5 hover:bg-slate-100"
                 >
-                  {" "}
+                  {' '}
                   <Link to="/register">Zarejestruj</Link>
                 </li>
               </>
             )}
-            {user?.role == "Student" && (
+            {user?.role == 'Student' && (
               <>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <Link
                     to="/profile"
-                    className="pl-5 w-full hover:bg-slate-100 h-10 flex items-center"
+                    className="flex h-10 w-full items-center pl-5 hover:bg-slate-100"
                   >
                     Profil
                   </Link>
@@ -334,7 +334,7 @@ const Navbar = () => {
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <Link
                     to="/my-rooms"
-                    className="pl-5 w-full hover:bg-slate-100 h-10 flex items-center"
+                    className="flex h-10 w-full items-center pl-5 hover:bg-slate-100"
                   >
                     Twoje pokoje
                   </Link>
@@ -342,7 +342,7 @@ const Navbar = () => {
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <a
                     href="#"
-                    className="pl-5 w-full hover:bg-slate-100 h-10 flex items-center"
+                    className="flex h-10 w-full items-center pl-5 hover:bg-slate-100"
                   >
                     Historia zakupów
                   </a>
@@ -350,7 +350,7 @@ const Navbar = () => {
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <a
                     href="#"
-                    className="pl-5 w-full hover:bg-slate-100 h-10 flex items-center"
+                    className="flex h-10 w-full items-center pl-5 hover:bg-slate-100"
                   >
                     Edytuj profil
                   </a>
@@ -359,19 +359,19 @@ const Navbar = () => {
                   <Link
                     to="/logowanie"
                     onClick={logoutUser}
-                    className="pl-5 w-full hover:bg-slate-200 border-t-[1px] h-10 flex items-center"
+                    className="flex h-10 w-full items-center border-t-[1px] pl-5 hover:bg-slate-200"
                   >
                     Wyloguj
                   </Link>
                 </li>
               </>
             )}
-            {user?.role == "Teacher" && (
+            {user?.role == 'Teacher' && (
               <>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <Link
                     to="/profile"
-                    className="pl-5 hover:bg-slate-100 h-10 flex items-center"
+                    className="flex h-10 items-center pl-5 hover:bg-slate-100"
                   >
                     Profil
                   </Link>
@@ -379,7 +379,7 @@ const Navbar = () => {
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <a
                     href="#"
-                    className="pl-5 hover:bg-slate-100 h-10 flex items-center"
+                    className="flex h-10 items-center pl-5 hover:bg-slate-100"
                   >
                     Edytuj swoje oferty
                   </a>
@@ -387,7 +387,7 @@ const Navbar = () => {
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <a
                     href="#"
-                    className="pl-5 hover:bg-slate-100 h-10 flex items-center"
+                    className="flex h-10 items-center pl-5 hover:bg-slate-100"
                   >
                     Ustal harmonogram
                   </a>
@@ -396,7 +396,7 @@ const Navbar = () => {
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <a
                     href="#"
-                    className="pl-5 hover:bg-slate-100 h-10 flex items-center"
+                    className="flex h-10 items-center pl-5 hover:bg-slate-100"
                   >
                     Historia zakupów
                   </a>
@@ -404,7 +404,7 @@ const Navbar = () => {
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <a
                     href="#"
-                    className="pl-5 hover:bg-slate-100 h-10 flex items-center"
+                    className="flex h-10 items-center pl-5 hover:bg-slate-100"
                   >
                     Edytuj profil
                   </a>
@@ -413,7 +413,7 @@ const Navbar = () => {
                   <Link
                     to="/logowanie"
                     onClick={logoutUser}
-                    className="pl-5 w-full hover:bg-slate-200 border-t-[1px] h-10 flex items-center"
+                    className="flex h-10 w-full items-center border-t-[1px] pl-5 hover:bg-slate-200"
                   >
                     Wyloguj
                   </Link>
@@ -424,7 +424,7 @@ const Navbar = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

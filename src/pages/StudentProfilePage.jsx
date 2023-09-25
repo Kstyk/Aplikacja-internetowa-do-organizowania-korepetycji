@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect } from "react";
-import useAxios from "../utils/useAxios";
-import AuthContext from "../context/AuthContext";
-import guest from "../assets/guest.png";
-import LoadingComponent from "../components/LoadingComponent";
-import showAlertError from "../components/messages/SwalAlertError";
+import React, { useContext, useState, useEffect } from 'react'
+import useAxios from '../utils/useAxios'
+import AuthContext from '../context/AuthContext'
+import guest from '../assets/guest.png'
+import LoadingComponent from '../components/LoadingComponent'
+import showAlertError from '../components/messages/SwalAlertError'
 
 import {
   AiOutlinePhone,
@@ -11,50 +11,50 @@ import {
   AiOutlineMan,
   AiOutlineWoman,
   AiOutlineCalendar,
-} from "react-icons/ai";
+} from 'react-icons/ai'
 
 const StudentProfilePage = () => {
-  const api = useAxios();
-  const { user } = useContext(AuthContext);
+  const api = useAxios()
+  const { user } = useContext(AuthContext)
 
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   const fetchProfile = async () => {
-    setLoading(true);
+    setLoading(true)
     await api
       .get(`/api/users/profile/${user?.user_id}`)
       .then((res) => {
-        setProfile(res.data);
+        setProfile(res.data)
       })
       .catch((err) => {
         showAlertError(
-          "Błąd",
-          "Wystąpił błąd przy pobieraniu danych z serwera."
-        );
-      });
-    setLoading(false);
-  };
+          'Błąd',
+          'Wystąpił błąd przy pobieraniu danych z serwera.'
+        )
+      })
+    setLoading(false)
+  }
 
   useEffect(() => {
-    fetchProfile();
-  }, []);
+    fetchProfile()
+  }, [])
 
   return (
     <>
       {loading ? (
         <LoadingComponent message="Ładowanie informacji o nauczycielu..." />
       ) : (
-        <section className="mt-10 w-6/12 max-md:w-10/12 max-phone:w-full mb-10 mx-auto">
-          <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300 mx-phone:hidden"></div>
-          <div className="md:text-2xl max-md:text-xl max-phone:text-lg card bg-white rounded-md mb-5 text-center p-4 border-[1px] border-base-200 flex flex-row justify-between items-center z-30 shadow-xl">
-            <h1 className="text-center w-full">
+        <section className="mx-auto mb-10 mt-10 w-6/12 max-md:w-10/12 max-phone:w-full">
+          <div className="mx-phone:hidden absolute left-0 right-0 top-[70px] h-[500px] bg-base-300"></div>
+          <div className="card z-30 mb-5 flex flex-row items-center justify-between rounded-md border-[1px] border-base-200 bg-white p-4 text-center shadow-xl max-md:text-xl max-phone:text-lg md:text-2xl">
+            <h1 className="w-full text-center">
               {profile?.user?.first_name} {profile?.user?.last_name}
             </h1>
           </div>
-          <div className="card  border-[1px] border-base-200 py-4 rounded-md bg-white md:w-full max-md:w-full flex items-center justify-center shadow-xl">
+          <div className="card  flex items-center justify-center rounded-md border-[1px] border-base-200 bg-white py-4 shadow-xl max-md:w-full md:w-full">
             <div className="avatar flex justify-center">
-              <div className="w-5/12 max-md:w-8/12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+              <div className="w-5/12 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100 max-md:w-8/12">
                 <img
                   src={
                     profile?.profile_image == null
@@ -65,41 +65,41 @@ const StudentProfilePage = () => {
               </div>
             </div>
 
-            <div className="profile mt-10 w-full flex flex-col items-center justify-center gap-y-5">
-              <div className="border-b-[1px] border-base-100 mb-2 w-full"></div>
-              <section className="w-6/12 max-phone:w-full flex justify-center max-phone:justify-start max-phone:items-start flex-col items-center">
+            <div className="profile mt-10 flex w-full flex-col items-center justify-center gap-y-5">
+              <div className="mb-2 w-full border-b-[1px] border-base-100"></div>
+              <section className="flex w-6/12 flex-col items-center justify-center max-phone:w-full max-phone:items-start max-phone:justify-start">
                 <div className="contact mx-auto">
-                  <label className="block uppercase tracking-wide text-gray-700 text-lg font-bold text-center">
+                  <label className="block text-center text-lg font-bold uppercase tracking-wide text-gray-700">
                     Dane kontaktowe
                   </label>
                 </div>
-                <div className="flex flex-row w-full justify-center gap-x-3">
-                  <AiOutlineMail className="w-6 h-6 text-base-400" />
+                <div className="flex w-full flex-row justify-center gap-x-3">
+                  <AiOutlineMail className="h-6 w-6 text-base-400" />
 
                   {profile?.user?.email}
                 </div>
-                <div className="flex flex-row w-full justify-center gap-x-3">
-                  <AiOutlinePhone className="w-6 h-6 text-base-400" />
+                <div className="flex w-full flex-row justify-center gap-x-3">
+                  <AiOutlinePhone className="h-6 w-6 text-base-400" />
                   {profile?.phone_number == null
-                    ? "Nie podano"
+                    ? 'Nie podano'
                     : profile?.phone_number}
                 </div>
               </section>
               {profile?.address != null && (
-                <div className="contact flex justify-center flex-col w-full">
-                  <label className="block uppercase tracking-wide text-gray-700 text-lg font-bold text-center">
+                <div className="contact flex w-full flex-col justify-center">
+                  <label className="block text-center text-lg font-bold uppercase tracking-wide text-gray-700">
                     Adres
                   </label>
-                  <div className="flex flex-row w-full justify-center gap-x-5">
-                    <div className="data w-9/12 flex justify-center text-center">
-                      {profile?.address?.postal_code}{" "}
+                  <div className="flex w-full flex-row justify-center gap-x-5">
+                    <div className="data flex w-9/12 justify-center text-center">
+                      {profile?.address?.postal_code}{' '}
                       {profile?.address?.city.name}
                       {profile?.address?.street != null
                         ? `, ulica ${profile?.address?.street}`
-                        : ""}{" "}
+                        : ''}{' '}
                       {profile?.address?.building_number != null
                         ? profile?.address?.building_number
-                        : ""}
+                        : ''}
                       <br />
                       {profile?.address?.voivodeship?.alternate_names}
                     </div>
@@ -108,21 +108,21 @@ const StudentProfilePage = () => {
               )}
 
               {profile?.sex != null && (
-                <div className="sex flex justify-center flex-col items-center w-full">
-                  <label className="block uppercase tracking-wide text-gray-700 text-lg font-bold text-center">
+                <div className="sex flex w-full flex-col items-center justify-center">
+                  <label className="block text-center text-lg font-bold uppercase tracking-wide text-gray-700">
                     Płeć
                   </label>
-                  <div className="data w-9/12 flex flex-row justify-center text-center">
-                    {profile?.sex == "kobieta" ? (
+                  <div className="data flex w-9/12 flex-row justify-center text-center">
+                    {profile?.sex == 'kobieta' ? (
                       <section className="flex gap-x-3">
-                        {" "}
-                        <AiOutlineWoman className="w-6 h-6 text-base-400" />
+                        {' '}
+                        <AiOutlineWoman className="h-6 w-6 text-base-400" />
                         <span>Kobieta</span>
                       </section>
                     ) : (
                       <section className="flex gap-x-3">
-                        {" "}
-                        <AiOutlineMan className="w-6 h-6 text-base-400" />
+                        {' '}
+                        <AiOutlineMan className="h-6 w-6 text-base-400" />
                         <span>Mężczyzna</span>
                       </section>
                     )}
@@ -131,14 +131,14 @@ const StudentProfilePage = () => {
               )}
 
               {profile?.year_of_birth != null && (
-                <div className="sex flex justify-center flex-col items-center w-full">
-                  <label className="block uppercase tracking-wide text-gray-700 text-lg font-bold text-center">
+                <div className="sex flex w-full flex-col items-center justify-center">
+                  <label className="block text-center text-lg font-bold uppercase tracking-wide text-gray-700">
                     Rok urodzenia
                   </label>
-                  <div className="data w-9/12 flex flex-row justify-center text-center">
+                  <div className="data flex w-9/12 flex-row justify-center text-center">
                     <section className="flex gap-x-3">
-                      {" "}
-                      <AiOutlineCalendar className="w-6 h-6 text-base-400" />
+                      {' '}
+                      <AiOutlineCalendar className="h-6 w-6 text-base-400" />
                       <span>{profile?.year_of_birth}</span>
                     </section>
                   </div>
@@ -149,7 +149,7 @@ const StudentProfilePage = () => {
         </section>
       )}
     </>
-  );
-};
+  )
+}
 
-export default StudentProfilePage;
+export default StudentProfilePage

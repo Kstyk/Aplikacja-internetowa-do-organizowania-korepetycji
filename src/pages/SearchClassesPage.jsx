@@ -1,263 +1,261 @@
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import useAxios from "../utils/useAxios";
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
-import LoadingComponent from "../components/LoadingComponent";
-import Select from "react-select";
-import ClassesCard from "../components/ClassesComponents/ClassesCard";
-import Pagination from "../components/Pagination";
-import showAlertError from "../components/messages/SwalAlertError";
+import React, { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import useAxios from '../utils/useAxios'
+import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import LoadingComponent from '../components/LoadingComponent'
+import Select from 'react-select'
+import ClassesCard from '../components/ClassesComponents/ClassesCard'
+import Pagination from '../components/Pagination'
+import showAlertError from '../components/messages/SwalAlertError'
 
 const SearchClassesPage = () => {
-  const { languageSlug, citySlug, searchText } = useParams();
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const cityId = params.get("id");
-  const api = useAxios();
+  const { languageSlug, citySlug, searchText } = useParams()
+  const location = useLocation()
+  const params = new URLSearchParams(location.search)
+  const cityId = params.get('id')
+  const api = useAxios()
 
-  const [city, setCity] = useState(null);
-  const [voivodeship, setVoivodeship] = useState(null);
-  const [language, setLanguage] = useState(languageSlug);
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(500);
+  const [city, setCity] = useState(null)
+  const [voivodeship, setVoivodeship] = useState(null)
+  const [language, setLanguage] = useState(languageSlug)
+  const [minPrice, setMinPrice] = useState(0)
+  const [maxPrice, setMaxPrice] = useState(500)
 
-  const [classes, setClasses] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState();
-  const [totalResults, setTotalResults] = useState();
+  const [classes, setClasses] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState()
+  const [totalResults, setTotalResults] = useState()
 
-  const [languages, setLanguages] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [voivodeships, setVoivodeships] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [loadingCity, setLoadingCity] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(searchText);
+  const [languages, setLanguages] = useState([])
+  const [cities, setCities] = useState([])
+  const [voivodeships, setVoivodeships] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [loadingCity, setLoadingCity] = useState(false)
+  const [searchQuery, setSearchQuery] = useState(searchText)
 
   const customSelectStyle = {
     control: (base) => ({
       ...base,
-      boxShadow: "none",
-      borderRadius: "2px",
+      boxShadow: 'none',
+      borderRadius: '2px',
     }),
-  };
+  }
 
   const clearFilters = () => {
-    setCities([]);
-    setSearchQuery([]);
-    setLanguage(null);
-    setCity(null);
-    setVoivodeship(null);
-    setMinPrice(0);
-    setMaxPrice(500);
-  };
+    setCities([])
+    setSearchQuery([])
+    setLanguage(null)
+    setCity(null)
+    setVoivodeship(null)
+    setMinPrice(0)
+    setMaxPrice(500)
+  }
 
   const fetchTutors = async () => {
-    let baseurl = `/api/classes/?page_size=10&page=1`;
+    let baseurl = `/api/classes/?page_size=10&page=1`
 
-    if (searchQuery != null && searchQuery != "") {
-      baseurl += `&search_text=${searchQuery}`;
+    if (searchQuery != null && searchQuery != '') {
+      baseurl += `&search_text=${searchQuery}`
     }
 
     if (languageSlug != null) {
-      baseurl += `&language=${language}`;
+      baseurl += `&language=${language}`
     }
 
     if (citySlug != null) {
-      baseurl += `&city=${cityId}`;
+      baseurl += `&city=${cityId}`
     }
 
     await api
       .get(baseurl)
       .then((res) => {
         if (res.data.classes == null) {
-          setClasses(null);
-          setTotalPages(0);
-          setTotalResults(0);
-          setCurrentPage(1);
+          setClasses(null)
+          setTotalPages(0)
+          setTotalResults(0)
+          setCurrentPage(1)
         } else {
-          setClasses(res.data.classes);
-          setTotalPages(res.data.total_pages);
-          setTotalResults(res.data.total_classes);
-          setCurrentPage(res.data.page_number);
+          setClasses(res.data.classes)
+          setTotalPages(res.data.total_pages)
+          setTotalResults(res.data.total_classes)
+          setCurrentPage(res.data.page_number)
         }
       })
       .catch((err) => {
         showAlertError(
-          "Błąd",
-          "Wystąpił błąd przy pobieraniu danych z serwera."
-        );
-      });
-  };
+          'Błąd',
+          'Wystąpił błąd przy pobieraniu danych z serwera.'
+        )
+      })
+  }
 
   const searchTutors = async (page) => {
-    setLoading(true);
+    setLoading(true)
 
-    let baseurl = `/api/classes/?page_size=10&page=${page}`;
+    let baseurl = `/api/classes/?page_size=10&page=${page}`
 
-    if (searchQuery != null && searchQuery != "") {
-      baseurl += `&search_text=${searchQuery}`;
+    if (searchQuery != null && searchQuery != '') {
+      baseurl += `&search_text=${searchQuery}`
     }
 
     if (language != null) {
-      baseurl += `&language=${
-        language.slug != null ? language.slug : language
-      }`;
+      baseurl += `&language=${language.slug != null ? language.slug : language}`
     }
 
     if (voivodeship != null) {
-      baseurl += `&voivodeship=${voivodeship.id}`;
+      baseurl += `&voivodeship=${voivodeship.id}`
     }
 
     if (city != null) {
-      baseurl += `&city=${city.id}`;
+      baseurl += `&city=${city.id}`
     }
 
     if (minPrice != null) {
-      baseurl += `&min_price=${minPrice}`;
+      baseurl += `&min_price=${minPrice}`
     }
 
     if (maxPrice != null) {
-      baseurl += `&max_price=${maxPrice}`;
+      baseurl += `&max_price=${maxPrice}`
     }
 
     await api
       .get(baseurl)
       .then((res) => {
         if (res.data.classes == null) {
-          setClasses(null);
-          setTotalPages(0);
-          setTotalResults(0);
-          setCurrentPage(1);
+          setClasses(null)
+          setTotalPages(0)
+          setTotalResults(0)
+          setCurrentPage(1)
         } else {
-          setClasses(res.data.classes);
-          setTotalPages(res.data.total_pages);
-          setTotalResults(res.data.total_classes);
-          setCurrentPage(res.data.page_number);
+          setClasses(res.data.classes)
+          setTotalPages(res.data.total_pages)
+          setTotalResults(res.data.total_classes)
+          setCurrentPage(res.data.page_number)
         }
       })
       .catch((err) => {
-        showAlertError("Błąd", "Wystąpił błąd przy wyszukiwaniu zajęć.");
-      });
-    setLoading(false);
-  };
+        showAlertError('Błąd', 'Wystąpił błąd przy wyszukiwaniu zajęć.')
+      })
+    setLoading(false)
+  }
 
   const fetchLanguages = async () => {
     await api
       .get(`/api/classes/languages`)
       .then((res) => {
-        setLanguages(res.data);
+        setLanguages(res.data)
       })
       .catch((err) => {
         showAlertError(
-          "Błąd",
-          "Wystąpił błąd przy pobieraniu danych z serwera."
-        );
-      });
-  };
+          'Błąd',
+          'Wystąpił błąd przy pobieraniu danych z serwera.'
+        )
+      })
+  }
 
   const fetchCity = async (cityId) => {
     if (cityId != null) {
       await api
         .get(`/api/users/address/city/${cityId}`)
         .then((res) => {
-          setCities([...cities, res.data]);
-          setCity(res.data);
+          setCities([...cities, res.data])
+          setCity(res.data)
         })
         .catch((err) => {
           showAlertError(
-            "Błąd",
-            "Wystąpił błąd przy pobieraniu danych z serwera."
-          );
-        });
+            'Błąd',
+            'Wystąpił błąd przy pobieraniu danych z serwera.'
+          )
+        })
     }
-  };
+  }
 
   const fetchCities = async (e) => {
-    setLoadingCity(true);
-    if (e.trim() != "") {
+    setLoadingCity(true)
+    if (e.trim() != '') {
       await api
         .get(`/api/users/address/cities/?name=${e}`)
         .then((res) => {
-          setCities(res.data);
-          setLoadingCity(false);
+          setCities(res.data)
+          setLoadingCity(false)
         })
         .catch((err) => {
-          setLoadingCity(false);
-        });
+          setLoadingCity(false)
+        })
     } else {
-      setCities([]);
-      setLoadingCity(false);
+      setCities([])
+      setLoadingCity(false)
     }
-  };
+  }
 
   const fetchVoivodeships = async () => {
     await api
       .get(`/api/users/address/voivodeships/`)
       .then((res) => {
-        setVoivodeships(res.data);
+        setVoivodeships(res.data)
       })
       .catch((err) => {
         showAlertError(
-          "Błąd",
-          "Wystąpił błąd przy pobieraniu danych z serwera."
-        );
-      });
-  };
+          'Błąd',
+          'Wystąpił błąd przy pobieraniu danych z serwera.'
+        )
+      })
+  }
 
   const handleCitySelectChange = (e) => {
-    setCity(e);
+    setCity(e)
     if (e != null) {
-      setVoivodeship(voivodeships.find((voi) => voi.id == e.region_id && voi));
-    } else setVoivodeship(null);
-  };
+      setVoivodeship(voivodeships.find((voi) => voi.id == e.region_id && voi))
+    } else setVoivodeship(null)
+  }
 
   const handleVoivodeshipSelectChange = (e) => {
-    setVoivodeship(e);
-    setCity(null);
-    setCities([]);
-  };
+    setVoivodeship(e)
+    setCity(null)
+    setCities([])
+  }
 
   const handleLanguageSelectChange = (e) => {
-    setLanguage(e);
-  };
+    setLanguage(e)
+  }
 
   const handleMinPrice = (e) => {
-    setMinPrice(e.target.value);
-  };
+    setMinPrice(e.target.value)
+  }
   const handleMaxPrice = (e) => {
-    setMaxPrice(e.target.value);
-  };
+    setMaxPrice(e.target.value)
+  }
 
   const fetchingDatas = async () => {
-    setLoading(true);
-    await fetchVoivodeships();
-    await fetchLanguages();
-    await fetchCity(cityId);
-    await fetchTutors();
-    setLoading(false);
-  };
+    setLoading(true)
+    await fetchVoivodeships()
+    await fetchLanguages()
+    await fetchCity(cityId)
+    await fetchTutors()
+    setLoading(false)
+  }
 
   useEffect(() => {
-    fetchingDatas();
-  }, [setLoading]);
+    fetchingDatas()
+  }, [setLoading])
 
   return (
     <div>
-      <div className="absolute top-[70px] left-0 right-0 h-[500px] bg-base-300 max-phone:hidden"></div>
+      <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
 
-      <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-md mb-10 mx-auto">
+      <div className="card mx-auto mb-10 mt-10 h-full rounded-md bg-base-100 px-5 py-5 shadow-xl">
         <div className="input-group">
           <input
             type="text"
             placeholder="Szukaj korepetycji"
-            className="input input-bordered w-full !rounded-sm focus:outline-none bg-white placeholder:text-gray-400"
+            className="input-bordered input w-full !rounded-sm bg-white placeholder:text-gray-400 focus:outline-none"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button
             type="submit"
-            className="btn btn-square bg-base-300 border-none !rounded-none"
+            className="btn-square btn !rounded-none border-none bg-base-300"
             onClick={(e) => searchTutors(1)}
           >
             <svg
@@ -278,9 +276,9 @@ const SearchClassesPage = () => {
         </div>
 
         <div className="selects mt-5 flex flex-col">
-          <div className="flex flex-row max-phone:flex-col gap-x-5 justify-start">
+          <div className="flex flex-row justify-start gap-x-5 max-phone:flex-col">
             <Select
-              className="px-0 h-10 w-4/12 max-md:w-5/12 max-phone:w-full text-gray-500 border-none shadow-none mt-2"
+              className="mt-2 h-10 w-4/12 border-none px-0 text-gray-500 shadow-none max-md:w-5/12 max-phone:w-full"
               menuPortalTarget={document.body}
               isClearable
               options={voivodeships}
@@ -295,17 +293,17 @@ const SearchClassesPage = () => {
               placeholder={<span className="text-gray-400">Województwo</span>}
               onChange={(e) => handleVoivodeshipSelectChange(e)}
               noOptionsMessage={({ inputValue }) =>
-                !inputValue ? "Brak województwa" : "Nie znaleziono"
+                !inputValue ? 'Brak województwa' : 'Nie znaleziono'
               }
               styles={customSelectStyle}
             />
             <Select
-              className="px-0 h-10 w-4/12 max-md:w-5/12 text-gray-500 border-none shadow-none mt-2"
+              className="mt-2 h-10 w-4/12 border-none px-0 text-gray-500 shadow-none max-md:w-5/12"
               menuPortalTarget={document.body}
               isClearable
               options={cities}
               onInputChange={(e) => {
-                fetchCities(e);
+                fetchCities(e)
               }}
               value={city}
               getOptionLabel={(option) => option.name}
@@ -314,15 +312,15 @@ const SearchClassesPage = () => {
               onChange={(e) => handleCitySelectChange(e)}
               noOptionsMessage={({ inputValue }) =>
                 loadingCity
-                  ? "Szukanie miast..."
+                  ? 'Szukanie miast...'
                   : !inputValue
-                  ? "Wpisz tekst..."
-                  : "Nie znaleziono"
+                  ? 'Wpisz tekst...'
+                  : 'Nie znaleziono'
               }
               styles={customSelectStyle}
             />
             <Select
-              className="px-0 h-10 w-4/12 max-md:w-5/12 text-gray-500 border-none shadow-none mt-2"
+              className="mt-2 h-10 w-4/12 border-none px-0 text-gray-500 shadow-none max-md:w-5/12"
               menuPortalTarget={document.body}
               isClearable
               options={languages}
@@ -335,15 +333,15 @@ const SearchClassesPage = () => {
                 languages.find((lang) => lang.slug == language && lang)
               }
               noOptionsMessage={({ inputValue }) =>
-                !inputValue ? "Wpisz tekst..." : "Nie znaleziono"
+                !inputValue ? 'Wpisz tekst...' : 'Nie znaleziono'
               }
               styles={customSelectStyle}
             />
           </div>
-          <div className="flex flex-row justify-between mt-3 max-[550px]:flex-col">
+          <div className="mt-3 flex flex-row justify-between max-[550px]:flex-col">
             <div className="w-5/12 max-[550px]:w-full">
               <label htmlFor="" className="text-[15px]">
-                Cena minimalna za lekcję:{" "}
+                Cena minimalna za lekcję:{' '}
                 {<span className="font-bold">{minPrice}</span>}
               </label>
               <input
@@ -351,15 +349,15 @@ const SearchClassesPage = () => {
                 min={0}
                 value={minPrice}
                 max="500"
-                className="range range-xs range-primary"
+                className="range range-primary range-xs"
                 onChange={(e) => {
-                  handleMinPrice(e);
+                  handleMinPrice(e)
                 }}
               />
             </div>
             <div className="w-5/12 max-[550px]:w-full">
               <label htmlFor="" className="text-[15px]">
-                Cena maksymalna za lekcję:{" "}
+                Cena maksymalna za lekcję:{' '}
                 {<span className="font-bold">{maxPrice}</span>}
               </label>
               <input
@@ -367,9 +365,9 @@ const SearchClassesPage = () => {
                 min={0}
                 value={maxPrice}
                 max="500"
-                className="range range-xs range-primary"
+                className="range range-primary range-xs"
                 onChange={(e) => {
-                  handleMaxPrice(e);
+                  handleMaxPrice(e)
                 }}
               />
             </div>
@@ -377,13 +375,13 @@ const SearchClassesPage = () => {
           <div className="flex justify-between">
             <button
               onClick={(e) => searchTutors(1)}
-              className="btn btn-outline no-animation w-3/12 max-md:w-5/12 h-10 py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400"
+              className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-3/12 rounded-sm border-base-400 py-0 hover:bg-base-400 max-md:w-5/12"
             >
               Filtruj
             </button>
             <button
               onClick={(e) => clearFilters()}
-              className="btn btn-outline no-animation w-3/12 max-md:w-5/12 h-10 py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400"
+              className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-3/12 rounded-sm border-base-400 py-0 hover:bg-base-400 max-md:w-5/12"
             >
               Wyczyść filtry
             </button>
@@ -396,7 +394,7 @@ const SearchClassesPage = () => {
         </div>
       ) : (
         <section className="mb-10">
-          <div className="bg-base-100 card shadow-xl h-full px-5 py-5 mt-10 rounded-md mb-10 mx-auto gap-y-3">
+          <div className="card mx-auto mb-10 mt-10 h-full gap-y-3 rounded-md bg-base-100 px-5 py-5 shadow-xl">
             {classes == null && (
               <h1 className="text-lg">
                 Brak wyników dopasowanych do podanych kryteriów.
@@ -417,7 +415,7 @@ const SearchClassesPage = () => {
         </section>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default SearchClassesPage;
+export default SearchClassesPage

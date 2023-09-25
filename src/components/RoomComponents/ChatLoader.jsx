@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 const ChatLoader = () => {
   return (
@@ -20,7 +20,7 @@ const ChatLoader = () => {
         />
       </svg>
     </div>
-  );
-};
+  )
+}
 
-export default ChatLoader;
+export default ChatLoader

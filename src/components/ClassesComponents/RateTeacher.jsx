@@ -1,95 +1,95 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import useAxios from "../../utils/useAxios";
-import showAlertError from "../messages/SwalAlertError";
-import showSuccessAlert from "../messages/SwalAlertSuccess";
-import Modal from "react-modal";
-import { AiOutlineClose } from "react-icons/ai";
-import { useEffect } from "react";
+import React from 'react'
+import { useForm } from 'react-hook-form'
+import useAxios from '../../utils/useAxios'
+import showAlertError from '../messages/SwalAlertError'
+import showSuccessAlert from '../messages/SwalAlertSuccess'
+import Modal from 'react-modal'
+import { AiOutlineClose } from 'react-icons/ai'
+import { useEffect } from 'react'
 
 const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
   useEffect(() => {
     if (opened) {
-      openModal();
+      openModal()
     }
-  }, [opened]);
+  }, [opened])
 
   function openModal() {
-    setIsOpened(true);
+    setIsOpened(true)
   }
 
   function afterOpenModal() {}
 
   function closeModal() {
-    setIsOpened(false);
+    setIsOpened(false)
   }
 
   const customStyles = {
     overlay: {
       zIndex: 1000,
-      background: "rgb(80,80,80, 0.5)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
+      background: 'rgb(80,80,80, 0.5)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
-  };
+  }
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    mode: "all",
-  });
+    mode: 'all',
+  })
 
-  const api = useAxios();
+  const api = useAxios()
 
   const onSubmit = (data) => {
     if (data.rate == null) {
-      data.rate = 5;
+      data.rate = 5
     }
 
-    data.teacher = teacher.id;
-    data.student = student.user_id;
+    data.teacher = teacher.id
+    data.student = student.user_id
 
     api
       .post(`api/classes/add-opinion/`, data)
       .then((res) => {
-        closeModal();
-        showSuccessAlert("Sukces!", "Pomyślnie dodałeś ocenę nauczycielowi.");
+        closeModal()
+        showSuccessAlert('Sukces!', 'Pomyślnie dodałeś ocenę nauczycielowi.')
       })
       .catch((err) => {
-        closeModal();
+        closeModal()
         if (err.response.status == 400) {
           if (err.response.data.exist_opinion) {
             showAlertError(
-              "Błąd",
+              'Błąd',
               err.response.data.exist_opinion.map((error) => error)
-            );
+            )
           }
           if (err.response.data.student) {
             showAlertError(
-              "Błąd",
+              'Błąd',
               err.response.data.student.map((error) => error)
-            );
+            )
           }
           if (err.response.data.teacher) {
             showAlertError(
-              "Błąd",
+              'Błąd',
               err.response.data.teacher.map((error) => error)
-            );
+            )
           }
           if (err.response.data.rate) {
             showAlertError(
-              "Błąd",
+              'Błąd',
               err.response.data.rate.map((error) => error)
-            );
+            )
           }
         } else {
-          showAlertError("Błąd", "Nieudane dodanie opinii.");
+          showAlertError('Błąd', 'Nieudane dodanie opinii.')
         }
-      });
-  };
+      })
+  }
 
   return (
     <div className="flex items-center">
@@ -99,23 +99,23 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
         onRequestClose={closeModal}
         style={customStyles}
         contentLabel="Oceń nauczyciela"
-        className={`w-full rounded-sm phone:w-10/12 sm:w-8/12 md:w-6/12 bg-base-100 my-auto p-10 animate__animated animate__zoomIn`}
+        className={`animate__animated animate__zoomIn my-auto w-full rounded-sm bg-base-100 p-10 phone:w-10/12 sm:w-8/12 md:w-6/12`}
       >
         <button onClick={closeModal} className="float-right rounded-full">
           <AiOutlineClose className="h-6 w-6" />
         </button>
-        <h3 className="font-bold text-lg text-gray-800 text-center">
-          Wystaw ocenę dla:{" "}
+        <h3 className="text-center text-lg font-bold text-gray-800">
+          Wystaw ocenę dla:{' '}
           <span className="uppercase">
             {teacher?.first_name} {teacher?.last_name}
           </span>
         </h3>
-        <div className="alert alert-info rounded-sm bg-blue-200 border-none mt-2">
+        <div className="alert alert-info mt-2 rounded-sm border-none bg-blue-200">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            className="stroke-current shrink-0 w-6 h-6"
+            className="h-6 w-6 shrink-0 stroke-current"
           >
             <path
               strokeLinecap="round"
@@ -136,17 +136,17 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
         >
           <label
             htmlFor="workQuality"
-            className="block text-sm leading-6 font-bold mt-8 text-center text-custom-darkgreen"
+            className="text-custom-darkgreen mt-8 block text-center text-sm font-bold leading-6"
           >
             Ocena
           </label>
-          <div className="rating phone:rating-lg flex justify-center">
+          <div className="rating flex justify-center phone:rating-lg">
             {Array.from({ length: 5 }, (_, index) => (
               <input
                 key={index}
                 type="radio"
                 name="rate"
-                {...register("rate")}
+                {...register('rate')}
                 value={`${index + 1}`}
                 className="mask mask-star-2 bg-base-300"
               />
@@ -154,7 +154,7 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
           </div>
           <label
             htmlFor="meetingTheConditions"
-            className="block text-sm leading-6 font-bold mt-2 text-center text-custom-darkgreen"
+            className="text-custom-darkgreen mt-2 block text-center text-sm font-bold leading-6"
           >
             Komentarz
           </label>
@@ -162,19 +162,19 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
             id="content"
             name="content"
             placeholder="Wprowadź tekst komentarza"
-            {...register("content")}
-            className="textarea w-full block rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 bg-white focus:outline-none mt-2 min-h-12 h-32"
+            {...register('content')}
+            className="textarea min-h-12 mt-2 block h-32 w-full rounded-md border-0 bg-white px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6"
           />
           <button
             type="submit"
-            className="btn btn-outline no-animation h-10 py-0 !min-h-0 rounded-none mt-2 hover:bg-base-400 border-base-400 w-full md:w-5/12 xl:w-4/12 mb-2"
+            className="btn-outline no-animation btn mb-2 mt-2 h-10 !min-h-0 w-full rounded-none border-base-400 py-0 hover:bg-base-400 md:w-5/12 xl:w-4/12"
           >
             Dodaj opinię
           </button>
         </form>
       </Modal>
     </div>
-  );
-};
+  )
+}
 
-export default RateTeacher;
+export default RateTeacher

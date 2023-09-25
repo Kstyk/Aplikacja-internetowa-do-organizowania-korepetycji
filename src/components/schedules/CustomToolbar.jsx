@@ -1,30 +1,30 @@
-import React from "react";
-import Toolbar from "react-big-calendar/lib/Toolbar";
+import React from 'react'
+import Toolbar from 'react-big-calendar/lib/Toolbar'
 
 class CustomToolbar extends Toolbar {
   render() {
     return (
-      <div className="flex justify-center md:justify-between mb-3 z-30 px-3 md:px-0 flex-col md:flex-row items-center">
+      <div className="z-30 mb-3 flex flex-col items-center justify-center px-3 md:flex-row md:justify-between md:px-0">
         <span className="rbc-btn-group">
           <button
-            className="btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400 hover:text-white"
+            className="btn-outline no-animation btn h-8 min-h-0 rounded-none hover:bg-base-400 hover:text-white"
             type="button"
-            onClick={() => this.props.onNavigate("TODAY")}
+            onClick={() => this.props.onNavigate('TODAY')}
           >
             Dzisiaj
           </button>
           <button
-            className={`btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400 hover:text-white`}
+            className={`btn-outline no-animation btn h-8 min-h-0 rounded-none hover:bg-base-400 hover:text-white`}
             type="button"
-            onClick={() => this.props.onNavigate("PREV")}
+            onClick={() => this.props.onNavigate('PREV')}
             disabled={this.props.isMinDateReached}
           >
             Do tyłu
           </button>
           <button
-            className={`btn btn-outline no-animation min-h-0 h-8 rounded-none hover:bg-base-400 hover:text-white`}
+            className={`btn-outline no-animation btn h-8 min-h-0 rounded-none hover:bg-base-400 hover:text-white`}
             type="button"
-            onClick={() => this.props.onNavigate("NEXT")}
+            onClick={() => this.props.onNavigate('NEXT')}
             disabled={this.props.isMaxDateReached}
           >
             Do przodu
@@ -34,8 +34,8 @@ class CustomToolbar extends Toolbar {
           {this.props.label}
         </span>
       </div>
-    );
+    )
   }
 }
 
-export default CustomToolbar;
+export default CustomToolbar

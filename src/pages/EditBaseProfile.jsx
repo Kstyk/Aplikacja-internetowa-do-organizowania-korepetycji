@@ -1,22 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
-import AuthContext from "../context/AuthContext";
-import { useForm, Controller } from "react-hook-form";
-import Select from "react-select";
-import { useNavigate } from "react-router-dom";
-import useAxios from "../utils/useAxios";
-import LoadingComponent from "../components/LoadingComponent";
-import showSuccessAlert from "../components/messages/SwalAlertSuccess";
-import showAlertError from "../components/messages/SwalAlertError";
+import React, { useContext, useEffect, useState } from 'react'
+import AuthContext from '../context/AuthContext'
+import { useForm, Controller } from 'react-hook-form'
+import Select from 'react-select'
+import { useNavigate } from 'react-router-dom'
+import useAxios from '../utils/useAxios'
+import LoadingComponent from '../components/LoadingComponent'
+import showSuccessAlert from '../components/messages/SwalAlertSuccess'
+import showAlertError from '../components/messages/SwalAlertError'
 
 const EditBaseProfile = () => {
-  const { user } = useContext(AuthContext);
-  const [backendErrors, setBackendErrors] = useState({});
-  const [baseUser, setBaseUser] = useState(null);
-  const [roles, setRoles] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { user } = useContext(AuthContext)
+  const [backendErrors, setBackendErrors] = useState({})
+  const [baseUser, setBaseUser] = useState(null)
+  const [roles, setRoles] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const nav = useNavigate();
-  const api = useAxios();
+  const nav = useNavigate()
+  const api = useAxios()
   const {
     register,
     handleSubmit,
@@ -24,50 +24,50 @@ const EditBaseProfile = () => {
     control,
     formState: { errors },
   } = useForm({
-    mode: "all",
-  });
+    mode: 'all',
+  })
 
   const editUserOptions = {
-    first_name: { required: "Imię jest wymagane." },
-    last_name: { required: "Nazwisko jest wymagane." },
-  };
+    first_name: { required: 'Imię jest wymagane.' },
+    last_name: { required: 'Nazwisko jest wymagane.' },
+  }
 
   const fetchBaseUser = async () => {
     await api
       .get(`/api/users/profile/base-user/`)
       .then((res) => {
-        setBaseUser(res.data);
-        setValue("first_name", res.data.first_name);
-        setValue("last_name", res.data.last_name);
+        setBaseUser(res.data)
+        setValue('first_name', res.data.first_name)
+        setValue('last_name', res.data.last_name)
       })
       .catch((err) => {
         showAlertError(
-          "Błąd",
-          "Nie udało się pobrać danych z serwera, przepraszamy."
-        );
-      });
-  };
+          'Błąd',
+          'Nie udało się pobrać danych z serwera, przepraszamy.'
+        )
+      })
+  }
 
   const fetchRoles = async () => {
     await api
-      .get("/api/users/roles/")
+      .get('/api/users/roles/')
       .then((res) => {
-        setRoles(res.data);
+        setRoles(res.data)
       })
       .catch((err) => {
         showAlertError(
-          "Błąd",
-          "Nie udało się pobrać danych z serwera, przepraszamy."
-        );
-      });
-  };
+          'Błąd',
+          'Nie udało się pobrać danych z serwera, przepraszamy.'
+        )
+      })
+  }
 
   const fetchAll = async () => {
-    setLoading(true);
-    await fetchRoles();
-    await fetchBaseUser();
-    setLoading(false);
-  };
+    setLoading(true)
+    await fetchRoles()
+    await fetchBaseUser()
+    setLoading(false)
+  }
 
   const onSubmit = (data) => {
     api
@@ -75,22 +75,22 @@ const EditBaseProfile = () => {
       .then((res) => {
         if (res.status == 200) {
           showSuccessAlert(
-            "Sukces",
-            "Twoje dane zostały zaktualizowane.",
+            'Sukces',
+            'Twoje dane zostały zaktualizowane.',
             () => {
-              nav("/profil");
+              nav('/profil')
             }
-          );
+          )
         }
       })
       .catch((err) => {
-        setBackendErrors(JSON.parse(err.request.response));
-      });
-  };
+        setBackendErrors(JSON.parse(err.request.response))
+      })
+  }
 
   useEffect(() => {
-    fetchAll();
-  }, []);
+    fetchAll()
+  }, [])
 
   return (
     <>
@@ -99,28 +99,28 @@ const EditBaseProfile = () => {
       ) : (
         <>
           <div>
-            <div className="absolute top-[70px] left-0 right-0 h-[200px] bg-base-300 max-phone:hidden"></div>
+            <div className="absolute left-0 right-0 top-[70px] h-[200px] bg-base-300 max-phone:hidden"></div>
 
-            <div className="bg-white card shadow-xl h-full px-5 py-5 mt-10 rounded-md mb-10 mx-auto w-8/12 max-lg:w-full max-md:w-8/12 max-phone:w-full">
-              <h1 className="text-2xl text-center">
+            <div className="card mx-auto mb-10 mt-10 h-full w-8/12 rounded-md bg-white px-5 py-5 shadow-xl max-lg:w-full max-md:w-8/12 max-phone:w-full">
+              <h1 className="text-center text-2xl">
                 Edytuj podstawowe informacje
               </h1>
-              <div className="border-b-[1px] border-base-100 my-4"></div>
+              <div className="my-4 border-b-[1px] border-base-100"></div>
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col justify-center w-10/12 space-y-4 max-md:w-full mx-auto"
+                className="mx-auto flex w-10/12 flex-col justify-center space-y-4 max-md:w-full"
               >
                 <section>
                   <label
-                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                    className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                     htmlFor="email"
                   >
                     Email
                   </label>
                   <input
                     type="email"
-                    className="h-10 px-2 border-[1px] border-[#E2E3E4] w-full bg-transparent outline-none rounded-sm"
-                    style={{ color: "#999999" }}
+                    className="h-10 w-full rounded-sm border-[1px] border-[#E2E3E4] bg-transparent px-2 outline-none"
+                    style={{ color: '#999999' }}
                     name="email"
                     value={baseUser?.email}
                     disabled
@@ -130,21 +130,21 @@ const EditBaseProfile = () => {
                 </section>
                 <section>
                   <label
-                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                    className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                     htmlFor="first_name"
                   >
                     Imię
                   </label>
-                  <div className="flex flex-col float-right w-full">
+                  <div className="float-right flex w-full flex-col">
                     <input
                       name="first_name"
                       id="first_name"
                       placeholder="Podaj imię..."
-                      className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
+                      className="relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
                       type="text"
-                      {...register("first_name", editUserOptions.first_name)}
+                      {...register('first_name', editUserOptions.first_name)}
                     />
-                    <small className="text-red-400 text-right">
+                    <small className="text-right text-red-400">
                       {errors?.first_name && errors.first_name.message}
                       {backendErrors?.first_name?.map((e, i) => (
                         <span key={i}>
@@ -156,21 +156,21 @@ const EditBaseProfile = () => {
                 </section>
                 <section>
                   <label
-                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                    className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                     htmlFor="last_name"
                   >
                     Nazwisko
                   </label>
-                  <div className="flex flex-col float-right w-full">
+                  <div className="float-right flex w-full flex-col">
                     <input
                       name="last_name"
                       id="last_name"
                       placeholder="Podaj nazwisko..."
-                      className="h-10 px-2 border-[1px] border-base-200 bg-transparent outline-none w-full relative hover:border-[#aaabac] rounded-sm"
+                      className="relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
                       type="text"
-                      {...register("last_name", editUserOptions.last_name)}
+                      {...register('last_name', editUserOptions.last_name)}
                     />
-                    <small className="text-red-400 text-right">
+                    <small className="text-right text-red-400">
                       {errors?.last_name && errors.last_name.message}
                       {backendErrors?.last_name?.map((e, i) => (
                         <span key={i}>
@@ -182,12 +182,12 @@ const EditBaseProfile = () => {
                 </section>
                 <section>
                   <label
-                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                    className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                     htmlFor="role"
                   >
                     Rola
                   </label>
-                  <div className="flex flex-col float-right w-full">
+                  <div className="float-right flex w-full flex-col">
                     <Select
                       className="h-10"
                       name="role"
@@ -202,16 +202,16 @@ const EditBaseProfile = () => {
                       styles={{
                         control: (base) => ({
                           ...base,
-                          boxShadow: "none",
-                          borderRadius: "none",
-                          borderColor: "#E2E3E4",
-                          backgroundColor: "transparent",
+                          boxShadow: 'none',
+                          borderRadius: 'none',
+                          borderColor: '#E2E3E4',
+                          backgroundColor: 'transparent',
                         }),
                       }}
                     />
                   </div>
                 </section>
-                <button className="btn btn-outline no-animation w-6/12 max-md:w-5/12 max-phone:w-full max-phone:mx-auto h-10 py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400">
+                <button className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-6/12 rounded-sm border-base-400 py-0 hover:bg-base-400 max-md:w-5/12 max-phone:mx-auto max-phone:w-full">
                   Edytuj
                 </button>
               </form>
@@ -220,7 +220,7 @@ const EditBaseProfile = () => {
         </>
       )}
     </>
-  );
-};
+  )
+}
 
-export default EditBaseProfile;
+export default EditBaseProfile

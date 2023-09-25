@@ -1,62 +1,62 @@
-import React from "react";
+import React from 'react'
 
 const Pagination = (props) => {
-  const { totalPages, totalResults, currentPage, search } = props;
+  const { totalPages, totalResults, currentPage, search } = props
   return (
     <>
       {totalResults > 0 && (
         <>
           <div
             data-theme="cupcake"
-            className="join mt-5 flex flex-row justify-center w-full bg-inherit rounded-sm h-[40px] sm:h-[50px]"
+            className="join mt-5 flex h-[40px] w-full flex-row justify-center rounded-sm bg-inherit sm:h-[50px]"
           >
             <button
-              className={`join-item btn text-xl min-h-0 h-full ${
+              className={`join-item btn h-full min-h-0 text-xl ${
                 currentPage - 1 == 0
-                  ? "text-white cursor-default hover:bg-base-200 hover:border-base-200"
-                  : ""
+                  ? 'cursor-default text-white hover:border-base-200 hover:bg-base-200'
+                  : ''
               }`}
               onClick={() => {
-                currentPage - 1 > 0 && search(1);
+                currentPage - 1 > 0 && search(1)
               }}
             >
               ⇤
             </button>
             <button
-              className={`join-item btn min-h-0 h-full ${
+              className={`join-item btn h-full min-h-0 ${
                 currentPage - 1 == 0
-                  ? "text-white cursor-default hover:bg-base-200 hover:border-base-200"
-                  : ""
+                  ? 'cursor-default text-white hover:border-base-200 hover:bg-base-200'
+                  : ''
               }`}
               onClick={() => {
-                currentPage - 1 > 0 && search(currentPage - 1);
+                currentPage - 1 > 0 && search(currentPage - 1)
               }}
             >
               «
             </button>
-            <button className="join-item btn min-h-0 h-full">
+            <button className="join-item btn h-full min-h-0">
               Strona {currentPage} z {totalPages}
             </button>
             <button
-              className={`join-item btn min-h-0 h-full ${
+              className={`join-item btn h-full min-h-0 ${
                 currentPage == totalResults
-                  ? "text-white cursor-default hover:bg-base-200 hover:border-base-200"
-                  : ""
+                  ? 'cursor-default text-white hover:border-base-200 hover:bg-base-200'
+                  : ''
               }`}
               onClick={() => {
-                currentPage != totalPages && search(currentPage + 1);
+                currentPage != totalPages && search(currentPage + 1)
               }}
             >
               »
             </button>
             <button
-              className={`join-item btn text-xl min-h-0 h-full ${
+              className={`join-item btn h-full min-h-0 text-xl ${
                 currentPage == totalPages
-                  ? "text-white cursor-default hover:bg-base-200 hover:border-base-200"
-                  : ""
+                  ? 'cursor-default text-white hover:border-base-200 hover:bg-base-200'
+                  : ''
               }`}
               onClick={() => {
-                currentPage != totalPages && search(totalPages);
+                currentPage != totalPages && search(totalPages)
               }}
             >
               ⇥
@@ -65,7 +65,7 @@ const Pagination = (props) => {
         </>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Pagination;
+export default Pagination

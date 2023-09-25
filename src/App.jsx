@@ -1,54 +1,54 @@
-import { Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import Navbar from "./components/Navbar";
-import PrivateRoute from "./components/AccessComponents/PrivateRoute";
-import TeacherAllowed from "./components/AccessComponents/TeacherAllowed";
-import StudentAllowed from "./components/AccessComponents/StudentAllowed";
-import ProfilePage from "./pages/ProfilePage";
-import { AuthProvider } from "./context/AuthContext";
-import { NotificationContextProvider } from "./context/NotificationContext";
-import { RoomProvider } from "./context/RoomContext";
-import RegistrationPage from "./pages/RegistrationPage";
-import StartedRoomsPage from "./pages/StartedRoomsPage";
-import Room from "./components/RoomComponents/Room";
-import SearchClassesPage from "./pages/SearchClassesPage";
-import ClassesPage from "./pages/ClassesPage";
-import BuyClassesPage from "./pages/BuyClassesPage";
-import TeacherPage from "./pages/TeacherPage";
-import EditBaseProfile from "./pages/EditBaseProfile";
-import ChangePasswordPage from "./pages/ChangePasswordPage";
-import EditMoreInfosPage from "./pages/EditMoreInfosPage";
-import ChangeAvatarPage from "./pages/ChangeAvatarPage";
-import StudentProfilePage from "./pages/StudentProfilePage";
-import PurchaseHistoryPage from "./pages/PurchaseHistoryPage";
-import { ToastContainer } from "react-toastify";
-import ReceivedOpinions from "./pages/ReceivedOpinions";
-import StudentPage from "./pages/StudentPage";
-import ModifyTimeslotsPage from "./pages/ModifyTimeslotsPage";
-import CreateClassesPage from "./pages/CreateClassesPage";
-import ListOfTeachersClassesPage from "./pages/ListOfTeachersClassesPage";
-import EditClassesPage from "./pages/EditClassesPage";
-import AnonymousRoute from "./components/AccessComponents/AnonymousRoute";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import ResetPasswordPage from "./pages/ResetPasswordPage";
+import { Route, Routes } from 'react-router-dom'
+import HomePage from './pages/HomePage'
+import LoginPage from './pages/LoginPage'
+import Navbar from './components/Navbar'
+import PrivateRoute from './components/AccessComponents/PrivateRoute'
+import TeacherAllowed from './components/AccessComponents/TeacherAllowed'
+import StudentAllowed from './components/AccessComponents/StudentAllowed'
+import ProfilePage from './pages/ProfilePage'
+import { AuthProvider } from './context/AuthContext'
+import { NotificationContextProvider } from './context/NotificationContext'
+import { RoomProvider } from './context/RoomContext'
+import RegistrationPage from './pages/RegistrationPage'
+import StartedRoomsPage from './pages/StartedRoomsPage'
+import Room from './components/RoomComponents/Room'
+import SearchClassesPage from './pages/SearchClassesPage'
+import ClassesPage from './pages/ClassesPage'
+import BuyClassesPage from './pages/BuyClassesPage'
+import TeacherPage from './pages/TeacherPage'
+import EditBaseProfile from './pages/EditBaseProfile'
+import ChangePasswordPage from './pages/ChangePasswordPage'
+import EditMoreInfosPage from './pages/EditMoreInfosPage'
+import ChangeAvatarPage from './pages/ChangeAvatarPage'
+import StudentProfilePage from './pages/StudentProfilePage'
+import PurchaseHistoryPage from './pages/PurchaseHistoryPage'
+import { ToastContainer } from 'react-toastify'
+import ReceivedOpinions from './pages/ReceivedOpinions'
+import StudentPage from './pages/StudentPage'
+import ModifyTimeslotsPage from './pages/ModifyTimeslotsPage'
+import CreateClassesPage from './pages/CreateClassesPage'
+import ListOfTeachersClassesPage from './pages/ListOfTeachersClassesPage'
+import EditClassesPage from './pages/EditClassesPage'
+import AnonymousRoute from './components/AccessComponents/AnonymousRoute'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import ResetPasswordPage from './pages/ResetPasswordPage'
 function App() {
   return (
     <div
       data-theme="mytheme"
-      className="flex flex-col mx-auto w-full phone:w-11/12 md:w-10/12 lg:w-8/12"
+      className="mx-auto flex w-full flex-col phone:w-11/12 md:w-10/12 lg:w-8/12"
     >
       <AuthProvider>
         <NotificationContextProvider>
           <Navbar />
-          <div className="max-phone:px-3 max-phone:bg-base-300 min-h-[calc(100vh-70px)]">
+          <div className="min-h-[calc(100vh-70px)] max-phone:bg-base-300 max-phone:px-3">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route
                 path="/logowanie"
                 element={
                   <AnonymousRoute>
-                    <LoginPage />{" "}
+                    <LoginPage />{' '}
                   </AnonymousRoute>
                 }
               />
@@ -56,7 +56,7 @@ function App() {
                 path="/register"
                 element={
                   <AnonymousRoute>
-                    <RegistrationPage />{" "}
+                    <RegistrationPage />{' '}
                   </AnonymousRoute>
                 }
               />
@@ -64,7 +64,7 @@ function App() {
                 path="/zapomniane-haslo"
                 element={
                   <AnonymousRoute>
-                    <ForgotPasswordPage />{" "}
+                    <ForgotPasswordPage />{' '}
                   </AnonymousRoute>
                 }
               />
@@ -230,7 +230,7 @@ function App() {
         </NotificationContextProvider>
       </AuthProvider>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

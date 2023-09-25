@@ -1,17 +1,17 @@
-import React from "react";
-import { useState } from "react";
-import "animate.css";
+import React from 'react'
+import { useState } from 'react'
+import 'animate.css'
 
 const ErrorMessage = (props) => {
-  const { error, setError } = props;
+  const { error, setError } = props
 
   return (
     <>
       {error != null ? (
-        <div className="alert alert-error rounded-none mb-4 animate__animated animate__zoomIn">
+        <div className="animate__animated animate__zoomIn alert alert-error mb-4 rounded-none">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="stroke-current shrink-0 h-6 w-6"
+            className="h-6 w-6 shrink-0 stroke-current"
             fill="none"
             viewBox="0 0 24 24"
             onClick={() => setError(null)}
@@ -26,10 +26,10 @@ const ErrorMessage = (props) => {
           <span>{error}</span>
         </div>
       ) : (
-        ""
+        ''
       )}
     </>
-  );
-};
+  )
+}
 
-export default ErrorMessage;
+export default ErrorMessage

@@ -1,54 +1,54 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import useAxios from "../utils/useAxios";
-import { useState } from "react";
-import LoadingComponent from "../components/LoadingComponent";
-import books from "../assets/books.jpg";
-import showAlertError from "../components/messages/SwalAlertError";
+import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import useAxios from '../utils/useAxios'
+import { useState } from 'react'
+import LoadingComponent from '../components/LoadingComponent'
+import books from '../assets/books.jpg'
+import showAlertError from '../components/messages/SwalAlertError'
 
 const HomePage = () => {
-  const api = useAxios();
+  const api = useAxios()
 
-  const [languages, setLanguages] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [languages, setLanguages] = useState([])
+  const [cities, setCities] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const fetchLanguages = async () => {
-    setLoading(true);
+    setLoading(true)
     await api
       .get(`/api/classes/languages/most-popular/`)
       .then((res) => {
-        setLanguages(res.data);
+        setLanguages(res.data)
       })
       .catch((err) => {
         showAlertError(
-          "Błąd",
-          "Wystąpił błąd przy pobieraniu danych z serwera."
-        );
-      });
-  };
+          'Błąd',
+          'Wystąpił błąd przy pobieraniu danych z serwera.'
+        )
+      })
+  }
 
   const fetchCities = async () => {
     await api
       .get(`/api/users/address/cities/most-popular/`)
       .then((res) => {
-        setCities(res.data);
-        setLoading(false);
+        setCities(res.data)
+        setLoading(false)
       })
       .catch((err) => {
-        setLoading(false);
+        setLoading(false)
         showAlertError(
-          "Błąd",
-          "Wystąpił błąd przy pobieraniu danych z serwera."
-        );
-      });
-  };
+          'Błąd',
+          'Wystąpił błąd przy pobieraniu danych z serwera.'
+        )
+      })
+  }
 
   useEffect(() => {
-    fetchLanguages();
-    fetchCities();
-  }, []);
+    fetchLanguages()
+    fetchCities()
+  }, [])
 
   return (
     <div>
@@ -58,11 +58,11 @@ const HomePage = () => {
         </div>
       ) : (
         <>
-          <div className="absolute top-[70px] left-0 right-0 h-[300px] bg-base-300 max-phone:hidden"></div>
+          <div className="absolute left-0 right-0 top-[70px] h-[300px] bg-base-300 max-phone:hidden"></div>
 
-          <div className="bg-base-100 card shadow-xl h-full px-5 pt-5 mt-10 rounded-md mb-10 mx-auto">
+          <div className="card mx-auto mb-10 mt-10 h-full rounded-md bg-base-100 px-5 pt-5 shadow-xl">
             <div
-              className="hero h-[300px] mb-10"
+              className="hero mb-10 h-[300px]"
               style={{
                 backgroundImage: `url(${books})`,
               }}
@@ -77,26 +77,26 @@ const HomePage = () => {
                 </div>
               </div>
             </div>
-            <h1 className="text-center text-4xl max-md:text-3xl max-phone:text-2xl bg-base-200 hover:bg-opacity-80 transition-all duration-200 border-y-2 border-base-100 py-5 -mx-5 mb-10 text-gray-700 relative px-10 ">
-              <div className="absolute border-8 border-base-100 h-full left-5 top-0 bg-transparent"></div>
-              <div className="absolute border-2 border-base-100 h-full left-2 top-0 bg-transparent"></div>
-              <div className="absolute border-8 border-base-100 h-full right-5 top-0 bg-transparent"></div>
-              <div className="absolute border-2 border-base-100 h-full right-2 top-0 bg-transparent"></div>
+            <h1 className="relative -mx-5 mb-10 border-y-2 border-base-100 bg-base-200 px-10 py-5 text-center text-4xl text-gray-700 transition-all duration-200 hover:bg-opacity-80 max-md:text-3xl max-phone:text-2xl ">
+              <div className="absolute left-5 top-0 h-full border-8 border-base-100 bg-transparent"></div>
+              <div className="absolute left-2 top-0 h-full border-2 border-base-100 bg-transparent"></div>
+              <div className="absolute right-5 top-0 h-full border-8 border-base-100 bg-transparent"></div>
+              <div className="absolute right-2 top-0 h-full border-2 border-base-100 bg-transparent"></div>
               Znajdź korepetytora dla siebie lub dla swojego dziecka już dziś!
             </h1>
-            <div className="form form-control w-10/12 mx-auto">
+            <div className="form form-control mx-auto w-10/12">
               <div className="input-group">
                 <input
                   type="text"
                   placeholder="Szukaj zajęć"
-                  className="input input-bordered w-full !rounded-none focus:outline-none bg-white"
+                  className="input-bordered input w-full !rounded-none bg-white focus:outline-none"
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <Link
                   to={`/search-classes/text/${searchQuery}`}
                   params={{ searchText: searchQuery }}
                   type="submit"
-                  className="btn btn-square bg-base-300 border-none !rounded-none"
+                  className="btn-square btn !rounded-none border-none bg-base-300"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -115,16 +115,16 @@ const HomePage = () => {
                 </Link>
               </div>
             </div>
-            <h2 className="text-center text-2xl max-md:text-xl mt-10 mb-2">
+            <h2 className="mb-2 mt-10 text-center text-2xl max-md:text-xl">
               Wyszukaj zajęcia po językach:
             </h2>
-            <ul className="list-none flex flex-row justify-center flex-wrap">
+            <ul className="flex list-none flex-row flex-wrap justify-center">
               {languages.map((language) => (
                 <Link
                   to={`/search-classes/language/${language.slug}`}
                   params={{ languageSlug: language.slug }}
                   key={language.id}
-                  className="btn no-animation font-normal bg-transparent border-t-[1px] border-b-0 border-x-0 border-base-200 text-black hover:bg-opacity-30 rounded-sm flex justify-between w-1/3 max-md:w-1/2 hover:border-t-0 hover:border-b-[1px]"
+                  className="no-animation btn flex w-1/3 justify-between rounded-sm border-x-0 border-b-0 border-t-[1px] border-base-200 bg-transparent font-normal text-black hover:border-b-[1px] hover:border-t-0 hover:bg-opacity-30 max-md:w-1/2"
                 >
                   <div>{language.name}</div>
                   <div className="text-sm text-gray-400">
@@ -133,17 +133,17 @@ const HomePage = () => {
                 </Link>
               ))}
             </ul>
-            <h2 className="text-center text-2xl max-md:text-xl mt-10 mb-2">
+            <h2 className="mb-2 mt-10 text-center text-2xl max-md:text-xl">
               Wyszukaj zajęcia po najpopularniejszych lokalizacjach:
             </h2>
-            <ul className="list-none flex flex-row justify-center flex-wrap">
+            <ul className="flex list-none flex-row flex-wrap justify-center">
               {cities.length > 0
                 ? cities.map((city) => (
                     <Link
                       to={`/search-classes/city/${city.slug}?id=${city.id}`}
                       params={{ citySlug: city.slug }}
                       key={city.id}
-                      className="btn no-animation font-normal bg-transparent border-t-[1px] border-b-0 border-x-0 border-base-200 text-black hover:bg-opacity-30 rounded-none flex justify-between w-1/3 max-md:w-1/2 hover:border-t-0 hover:border-b-[1px]"
+                      className="no-animation btn flex w-1/3 justify-between rounded-none border-x-0 border-b-0 border-t-[1px] border-base-200 bg-transparent font-normal text-black hover:border-b-[1px] hover:border-t-0 hover:bg-opacity-30 max-md:w-1/2"
                     >
                       <div>{city.name}</div>
                       <div className="text-sm text-gray-400">
@@ -151,13 +151,13 @@ const HomePage = () => {
                       </div>
                     </Link>
                   ))
-                : "Brak obecnie zajęć dostępnych stacjonarnie."}
+                : 'Brak obecnie zajęć dostępnych stacjonarnie.'}
             </ul>
-            <div className="bg-gradient-to-b from-base-100 to-base-200 -mx-5 flex flex-col justify-center py-20 mt-10 rounded-md">
-              <h1 className="text-center text-3xl mb-2">
+            <div className="-mx-5 mt-10 flex flex-col justify-center rounded-md bg-gradient-to-b from-base-100 to-base-200 py-20">
+              <h1 className="mb-2 text-center text-3xl">
                 Załóż darmowe konto już dziś!
               </h1>
-              <button className="btn btn-outline no-animation w-3/12 max-md:w-5/12 max-phone:w-10/12 max-phone:mx-auto h-15 mx-auto py-0 !min-h-0 rounded-sm mt-2 hover:bg-base-400 border-base-400">
+              <button className="h-15 btn-outline no-animation btn mx-auto mt-2 !min-h-0 w-3/12 rounded-sm border-base-400 py-0 hover:bg-base-400 max-md:w-5/12 max-phone:mx-auto max-phone:w-10/12">
                 Zarejestruj się
               </button>
             </div>
@@ -165,7 +165,7 @@ const HomePage = () => {
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage
