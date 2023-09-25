@@ -38,6 +38,7 @@ def get_all_classes(request):
     city_id = request.GET.get('city')
     voivodeship_id = request.GET.get('voivodeship')
     teacher_id = request.GET.get('teacher')
+    able_online = request.GET.get('able_online')
     classes = Class.objects.filter(able_to_buy=True)
 
     # sortowanie
@@ -65,6 +66,11 @@ def get_all_classes(request):
         classes = classes.filter(price_for_lesson__gte=min_price)
     if max_price is not None:
         classes = classes.filter(price_for_lesson__lte=max_price)
+    if able_online is not None:
+        if able_online == 'true':
+            classes = classes.filter(place_of_classes__contains='online')
+        else:
+            pass
 
     if sort_direction == 'DESC':
         if sort_by == 'name':
