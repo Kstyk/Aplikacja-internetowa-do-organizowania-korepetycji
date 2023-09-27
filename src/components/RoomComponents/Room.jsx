@@ -112,7 +112,7 @@ const Room = () => {
         <>
           <div className="absolute left-0 right-0 top-[70px] h-[300px] bg-base-300 max-phone:hidden"></div>
 
-          <div className="tab-bordered relative mt-5 flex w-full flex-row justify-between gap-x-5 rounded-t-md bg-white p-5 pb-0 phone:mt-10">
+          <div className="tab-bordered relative mt-5 flex w-full flex-row justify-between gap-x-5 rounded-t-md bg-white p-5 pb-0 sm:mt-10">
             <h1 className="text-base font-bold uppercase tracking-wide phone:text-lg sm:text-xl ">
               {name}
             </h1>

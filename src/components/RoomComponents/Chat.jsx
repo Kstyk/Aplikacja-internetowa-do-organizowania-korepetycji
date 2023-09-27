@@ -405,7 +405,7 @@ const Chat = ({ archivized }) => {
         <div className="!z-10 flex h-full flex-col justify-between">
           <div
             id="scrollableDiv"
-            className="card fixed bottom-20 top-[16rem] flex w-[calc(100%-24px)] flex-col-reverse overflow-y-auto rounded-none border border-none border-gray-200 bg-white p-6 shadow-xl phone:w-11/12 phone:border-t-2 md:w-10/12 lg:w-8/12"
+            className="card fixed bottom-20 top-[16rem] flex w-[calc(100%-24px)] flex-col-reverse overflow-y-auto rounded-none border border-none border-gray-200 bg-white p-6 shadow-xl sm:w-11/12 sm:border-t-2 md:w-10/12 lg:w-8/12"
           >
             {readyState === ReadyState.CONNECTING ? (
               <LoadingComponent message="Ładowanie wiadomości..." />
@@ -446,7 +446,7 @@ const Chat = ({ archivized }) => {
               </div>
             </div>
           ) : (
-            <div className="fixed bottom-0 mx-auto flex w-[calc(100%-24px)] flex-row items-center justify-between border-t-2 bg-white p-5 max-phone:mr-3 phone:w-11/12 md:w-10/12 lg:w-8/12">
+            <div className="fixed bottom-0 mx-auto flex w-[calc(100%-24px)] flex-row items-center justify-between border-t-2 bg-white p-5 max-sm:mr-3 sm:w-11/12 md:w-10/12 lg:w-8/12">
               <div className="flex h-10 w-10/12 items-center justify-between border-b-2">
                 <input
                   type="text"

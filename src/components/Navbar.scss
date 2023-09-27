@@ -1,3 +1,7 @@
+:root {
+  --base-400: #254B48;
+}
+
 .mobile-menu {
   top: 60px;
   padding-top: 5px;
@@ -21,4 +25,73 @@
   transition:
     opacity 0.3s ease-in-out,
     visibility 0.3s ease-in-out;
+}
+
+li.custom-border {
+  position: relative;
+  padding-bottom: 3px;
+  
+  a {
+    font-size: 13px;
+    text-transform: uppercase;
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  &:hover {
+    border: none;
+    background-color: transparent;
+
+    &::after {
+      width: 100%;
+      left: 0;
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    
+    height: 3px;
+    left: 50%;
+    bottom: 0;
+    background-color: var(--base-400);
+    transition: all ease-in-out 0.2s;
+  }
+}
+
+li.custom-border-dropdown {
+  position: relative;
+  
+  a {
+    font-size: 13px;
+    text-transform: uppercase;
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  &:hover {
+    border: none;
+    background-color: transparent;
+
+    &::after {
+      width: 100%;
+      left: 0;
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    
+    height: 1px !important;
+    left: 50%;
+    bottom: 0;
+    background-color: var(--base-400);
+    transition: all ease-in-out 0.2s;
+  }
 }

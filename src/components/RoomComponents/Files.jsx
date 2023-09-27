@@ -360,7 +360,7 @@ const Files = ({ roomId }) => {
       {loading ? (
         <LoadingComponent message="Ładowanie informacji o plikach..." />
       ) : (
-        <div className="card mt-10 min-h-[60vh] rounded-none bg-white p-6 shadow-xl">
+        <div className="card mt-10 min-h-[60vh] rounded-md bg-white p-6 shadow-xl">
           <form className="mx-auto flex h-[100px] w-full flex-col items-center justify-center space-y-4 max-md:w-full phone:h-full">
             <div className="file-input-container">
               <input

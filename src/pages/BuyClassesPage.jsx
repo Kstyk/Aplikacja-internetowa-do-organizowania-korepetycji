@@ -92,6 +92,11 @@ const BuyClassesPage = () => {
           showAlertError('Błąd', err.response.data.error[0])
         } else if (err.response.status == 403) {
           showAlertError('Nieuprawniona akcja', err.response.data.detail)
+        } else if (err.response.status == 401) {
+          showAlertError(
+            'Jesteś niezalogowany',
+            'Zaloguj się na konto ucznia, by móc zakupić zajęcia.'
+          )
         } else {
           showAlertError(
             'Błąd',

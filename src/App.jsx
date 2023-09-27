@@ -36,12 +36,12 @@ function App() {
   return (
     <div
       data-theme="mytheme"
-      className="mx-auto flex w-full flex-col phone:w-11/12 md:w-10/12 lg:w-8/12"
+      className="mx-auto flex w-full flex-col sm:w-11/12 md:w-10/12 lg:w-8/12"
     >
       <AuthProvider>
         <NotificationContextProvider>
           <Navbar />
-          <div className="min-h-[calc(100vh-70px)] max-phone:bg-base-300 max-phone:px-3">
+          <div className="min-h-[calc(100vh-70px)] max-sm:bg-base-300 max-sm:px-3">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route
@@ -194,17 +194,17 @@ function App() {
                   </PrivateRoute>
                 }
               />
-              <Route path="/search-classes" element={<SearchClassesPage />} />
+              <Route path="/szukaj-zajec" element={<SearchClassesPage />} />
               <Route
-                path="/search-classes/language/:languageSlug"
+                path="/szukaj-zajec/jezyk/:languageSlug"
                 element={<SearchClassesPage />}
               />
               <Route
-                path="/search-classes/city/:citySlug"
+                path="/szukaj-zajec/miasto/:citySlug"
                 element={<SearchClassesPage />}
               />
               <Route
-                path="/search-classes/text/:searchText"
+                path="/szukaj-zajec/tekst/:searchText"
                 element={<SearchClassesPage />}
               />
               <Route path="/zajecia/:classesId" element={<ClassesPage />} />

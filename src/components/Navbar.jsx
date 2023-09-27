@@ -2,6 +2,10 @@ import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 import './Navbar.scss'
+import transparent_logo from '../assets/transparent_logo.png'
+import guest from '../assets/guest.png'
+import { backendUrl } from '../variables/backendUrl'
+import { AiOutlineHome } from 'react-icons/ai'
 
 const Navbar = () => {
   let { user, logoutUser } = useContext(AuthContext)
@@ -9,70 +13,101 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="navbar h-[70px] bg-base-100 max-phone:hidden">
-        <div className="flex-1"></div>
-        <div className="flex-none">
+      <nav className="navbar h-[70px] bg-base-100 max-sm:hidden">
+        <div className="flex h-full w-full items-center justify-between">
           <Link
-            className="btn border-none bg-white text-xl normal-case hover:bg-white"
+            className="hidden border-none bg-transparent text-xl normal-case md:block"
             to="/"
           >
-            korki.PL
+            <img
+              src={transparent_logo}
+              alt="logo_transparent"
+              className="h-14"
+            />
           </Link>
+          <ul>
+            <li className="custom-border h-fit">
+              <Link
+                className="tooltip tooltip-bottom block border-none bg-transparent !text-sm font-bold !normal-case md:hidden"
+                data-tip="Strona główna"
+                to="/"
+              >
+                <AiOutlineHome className="h-10 w-10" />
+              </Link>
+            </li>
+          </ul>
           {user?.role == 'Student' && (
-            <ul className="menu menu-horizontal gap-3 px-1">
+            <ul className="flex flex-row items-center gap-2 px-1">
+              <li className="custom-border h-fit text-center">
+                <Link to="/szukaj-zajec">Szukaj zajęć </Link>
+              </li>
               <li>
-                <Link to="#" className="hover:bg-base-200 focus:bg-base-300">
-                  Szukaj korepetytorów
+                <div className="h-full border-2 border-black"></div>
+              </li>
+              <li className="custom-border h-fit text-center">
+                <Link to="/my-rooms">Twoje pokoje</Link>
+              </li>
+              <li>
+                <div className="h-full border-2 border-black"></div>
+              </li>
+              <li className="custom-border h-fit text-center">
+                <Link to="/my-rooms" className="">
+                  Twój harmonogram
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/my-rooms"
-                  className="hover:bg-base-200 focus:bg-base-300"
-                >
-                  Twoje pokoje
+                <div className="h-full border-2 border-black"></div>
+              </li>
+              <li className="custom-border h-fit text-center">
+                <Link to="/my-rooms" className="">
+                  Wystawione opinie{' '}
                 </Link>
               </li>
-
+              <li>
+                <div className="h-full border-2 border-black"></div>
+              </li>
               <div className="dropdown-end dropdown z-40">
                 <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
-                  Profil
+                  <div className="w-10 rounded-full">
+                    <img
+                      src={
+                        user?.image != null && user?.image != ''
+                          ? `${backendUrl}${user?.image}`
+                          : guest
+                      }
+                    />
+                  </div>
                 </label>
                 <ul
                   tabIndex={0}
-                  className="dropdown-content menu menu-sm z-[1] mt-3 w-52 rounded-none border-2 border-base-300 bg-base-100 p-2 shadow"
+                  className="dropdown-content menu menu-sm z-[1] mt-3 w-52 rounded-none bg-base-100 p-2 shadow"
                 >
-                  <li>
-                    <Link
-                      to="/profil-ucznia"
-                      className="rounded-none  focus:bg-base-300"
-                    >
+                  <li className="custom-border-dropdown h-fit">
+                    <Link to="/profil-ucznia" className="rounded-none">
                       Profil
                     </Link>
                   </li>
-                  <li>
-                    <a href="#" className="rounded-none focus:bg-base-300">
-                      Twoje pokoje
-                    </a>
-                  </li>
-                  <li>
+                  <li className="custom-border-dropdown h-fit">
                     <Link
                       to="/profil/historia-zakupow"
-                      className="rounded-none focus:bg-base-300"
+                      className="rounded-none hover:bg-transparent"
                     >
                       Historia zakupów
                     </Link>
                   </li>
-                  <li>
+
+                  <li className="h-fit">
                     <details open>
-                      <summary className="rounded-none">Edytuj profil</summary>
-                      <ul>
-                        <li>
+                      <summary className="uppercase hover:bg-transparent">
+                        Edytuj profil
+                      </summary>
+                      <ul className="flex flex-col">
+                        <li className="custom-border-dropdown h-fit">
                           <Link className="rounded-none" to="/profil/edytuj">
                             Edytuj dane podstawowe
                           </Link>
                         </li>
-                        <li>
+                        <li className="custom-border-dropdown h-fit">
                           <Link
                             className="rounded-none"
                             to="/profil/edytuj-dodatkowe"
@@ -80,7 +115,7 @@ const Navbar = () => {
                             Edytuj dane dodatkowe
                           </Link>
                         </li>
-                        <li>
+                        <li className="custom-border-dropdown">
                           <Link
                             to="/profil/edytuj-avatar"
                             className="rounded-none"
@@ -88,7 +123,7 @@ const Navbar = () => {
                             Zmień avatar
                           </Link>
                         </li>
-                        <li>
+                        <li className="custom-border-dropdown">
                           <Link
                             className="rounded-none"
                             to="/profil/zmien-haslo"
@@ -100,7 +135,7 @@ const Navbar = () => {
                     </details>
                   </li>
 
-                  <li>
+                  <li className="custom-border-dropdown h-fit">
                     <Link
                       to="/logowanie"
                       onClick={logoutUser}
@@ -127,7 +162,13 @@ const Navbar = () => {
               <div className="dropdown-end dropdown z-40">
                 <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
                   <div className="w-10 rounded-full">
-                    <img src="/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                    <img
+                      src={
+                        user?.image != null && user?.image != ''
+                          ? `${backendUrl}${user?.image}`
+                          : guest
+                      }
+                    />
                   </div>
                 </label>
                 <ul
@@ -261,13 +302,17 @@ const Navbar = () => {
           )}
         </div>
       </nav>
-      <div className="navbar relative h-[70px] bg-base-100 pl-0 phone:hidden">
+      <div className="navbar relative h-[70px] bg-base-100 pl-0 sm:hidden">
         <div className="flex-1">
           <Link
-            className="btn border-none bg-white text-xl normal-case hover:bg-white"
+            className="block border-none bg-transparent text-xl normal-case sm:hidden"
             to="/"
           >
-            korki.PL
+            <img
+              src={transparent_logo}
+              alt="logo_transparent"
+              className="h-14"
+            />
           </Link>
         </div>
         <div className="flex-none">
@@ -291,11 +336,11 @@ const Navbar = () => {
           </button>
         </div>
         <div
-          className={`mobile-menu absolute left-0 right-0 top-[60px] z-[999] border-y-2 bg-white pb-5 ${
-            showMobileMenu ? 'menu-visible menu-fade-in' : 'menu-fade-out'
+          className={`mobile-menu absolute left-0 right-0 top-[65px] z-[999] border-y-2 bg-base-100 ${
+            showMobileMenu ? 'hidden' : 'block'
           }`}
         >
-          <ul className="w-full pt-2 text-lg ">
+          <ul className="w-full bg-base-100 pt-2 text-lg">
             {user == null && (
               <>
                 <li
@@ -325,43 +370,100 @@ const Navbar = () => {
               <>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <Link
-                    to="/profile"
-                    className="flex h-10 w-full items-center pl-5 hover:bg-slate-100"
+                    to="/szukaj-zajec"
+                    className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                   >
-                    Profil
+                    Szukaj zajęć{' '}
+                  </Link>
+                </li>
+
+                <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                  <Link
+                    to="/my-rooms"
+                    className="flex h-8 w-full items-center pl-5 text-sm uppercase"
+                  >
+                    Twoje pokoje
+                  </Link>
+                </li>
+
+                <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                  <Link
+                    to="/my-rooms"
+                    className="flex h-8 w-full items-center pl-5 text-sm uppercase"
+                  >
+                    Twój harmonogram
                   </Link>
                 </li>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <Link
                     to="/my-rooms"
-                    className="flex h-10 w-full items-center pl-5 hover:bg-slate-100"
+                    className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                   >
-                    Twoje pokoje
+                    Wystawione opinie
                   </Link>
                 </li>
-                <li onClick={() => setShowMobileMenu((prev) => !prev)}>
-                  <a
-                    href="#"
-                    className="flex h-10 w-full items-center pl-5 hover:bg-slate-100"
-                  >
-                    Historia zakupów
-                  </a>
-                </li>
-                <li onClick={() => setShowMobileMenu((prev) => !prev)}>
-                  <a
-                    href="#"
-                    className="flex h-10 w-full items-center pl-5 hover:bg-slate-100"
-                  >
-                    Edytuj profil
-                  </a>
-                </li>
-                <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                <div className="collapse-arrow collapse p-0 uppercase">
+                  <input type="checkbox" className="absolute h-8 min-h-0" />
+                  <div className="collapse-title flex h-8 min-h-0 items-center p-0 pl-5 text-sm">
+                    Profil
+                  </div>
+                  <div className="collapse-content mb-3 ml-10 min-h-0 border-l-[1px] border-gray-300 !pb-0 text-sm">
+                    <ul>
+                      <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                        <Link
+                          to="/profil-ucznia"
+                          className="flex h-8 w-full items-center text-sm uppercase"
+                        >
+                          Profil
+                        </Link>
+                      </li>
+
+                      <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                        <Link
+                          className="flex h-8 w-full items-center text-sm uppercase"
+                          to="/profil/edytuj"
+                        >
+                          Edytuj dane podstawowe
+                        </Link>
+                      </li>
+                      <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                        <Link
+                          className="flex h-8 w-full items-center text-sm uppercase"
+                          to="/profil/edytuj-dodatkowe"
+                        >
+                          Edytuj dane dodatkowe
+                        </Link>
+                      </li>
+                      <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                        <Link
+                          to="/profil/edytuj-avatar"
+                          className="flex h-8 w-full items-center text-sm uppercase"
+                        >
+                          Zmień avatar
+                        </Link>
+                      </li>
+                      <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                        <Link
+                          className="flex h-8 w-full items-center text-sm uppercase"
+                          to="/profil/zmien-haslo"
+                        >
+                          Zmień hasło
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <hr />
+                <li
+                  className="mb-2"
+                  onClick={() => setShowMobileMenu((prev) => !prev)}
+                >
                   <Link
                     to="/logowanie"
                     onClick={logoutUser}
-                    className="flex h-10 w-full items-center border-t-[1px] pl-5 hover:bg-slate-200"
+                    className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                   >
-                    Wyloguj
+                    Wyloguj{' '}
                   </Link>
                 </li>
               </>
@@ -409,7 +511,10 @@ const Navbar = () => {
                     Edytuj profil
                   </a>
                 </li>
-                <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                <li
+                  onClick={() => setShowMobileMenu((prev) => !prev)}
+                  className="mb-3"
+                >
                   <Link
                     to="/logowanie"
                     onClick={logoutUser}

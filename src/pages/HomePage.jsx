@@ -121,7 +121,7 @@ const HomePage = () => {
             <ul className="flex list-none flex-row flex-wrap justify-center">
               {languages.map((language) => (
                 <Link
-                  to={`/search-classes/language/${language.slug}`}
+                  to={`/szukaj-zajec/jezyk/${language.slug}`}
                   params={{ languageSlug: language.slug }}
                   key={language.id}
                   className="no-animation btn flex w-1/3 justify-between rounded-sm border-x-0 border-b-0 border-t-[1px] border-base-200 bg-transparent font-normal text-black hover:border-b-[1px] hover:border-t-0 hover:bg-opacity-30 max-md:w-1/2"
@@ -140,7 +140,7 @@ const HomePage = () => {
               {cities.length > 0
                 ? cities.map((city) => (
                     <Link
-                      to={`/search-classes/city/${city.slug}?id=${city.id}`}
+                      to={`/szukaj-zajec/miasto/${city.slug}?id=${city.id}`}
                       params={{ citySlug: city.slug }}
                       key={city.id}
                       className="no-animation btn flex w-1/3 justify-between rounded-none border-x-0 border-b-0 border-t-[1px] border-base-200 bg-transparent font-normal text-black hover:border-b-[1px] hover:border-t-0 hover:bg-opacity-30 max-md:w-1/2"
