@@ -281,22 +281,15 @@ const Navbar = () => {
             </ul>
           )}
           {user == null && (
-            <ul className="menu menu-horizontal gap-3 px-1">
-              <li>
-                <Link
-                  to="/logowanie"
-                  className="hover:bg-base-200 focus:bg-base-300"
-                >
-                  Zaloguj
-                </Link>
+            <ul className="flex flex-row items-center gap-2 px-1">
+              <li className="custom-border h-fit text-center">
+                <Link to="/logowanie">Zaloguj</Link>
               </li>
               <li>
-                <Link
-                  to="/register"
-                  className="hover:bg-base-200 focus:bg-base-300"
-                >
-                  Zarejestruj
-                </Link>
+                <div className="h-full border-2 border-black"></div>
+              </li>
+              <li className="custom-border h-fit text-center">
+                <Link to="/register">Zarejestruj</Link>
               </li>
             </ul>
           )}
@@ -345,21 +338,21 @@ const Navbar = () => {
               <>
                 <li
                   onClick={() => setShowMobileMenu((prev) => !prev)}
-                  className="flex h-10 w-full items-center pl-5 hover:bg-slate-100"
+                  className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                 >
                   {' '}
                   <Link to="/logowanie">Strona główna</Link>
                 </li>
                 <li
                   onClick={() => setShowMobileMenu((prev) => !prev)}
-                  className="flex h-10 w-full items-center pl-5 hover:bg-slate-100"
+                  className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                 >
                   {' '}
                   <Link to="/logowanie">Zaloguj</Link>
                 </li>
                 <li
                   onClick={() => setShowMobileMenu((prev) => !prev)}
-                  className="flex h-10 w-full items-center pl-5 hover:bg-slate-100"
+                  className="mb-2 flex h-8 w-full items-center pl-5 text-sm uppercase"
                 >
                   {' '}
                   <Link to="/register">Zarejestruj</Link>
