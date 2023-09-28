@@ -431,55 +431,131 @@ const Navbar = () => {
               <>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <Link
-                    to="/profile"
-                    className="flex h-10 items-center pl-5 hover:bg-slate-100"
+                    to="/my-rooms"
+                    className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                   >
-                    Profil
+                    Twoje pokoje
                   </Link>
-                </li>
-                <li onClick={() => setShowMobileMenu((prev) => !prev)}>
-                  <a
-                    href="#"
-                    className="flex h-10 items-center pl-5 hover:bg-slate-100"
-                  >
-                    Edytuj swoje oferty
-                  </a>
-                </li>
-                <li onClick={() => setShowMobileMenu((prev) => !prev)}>
-                  <a
-                    href="#"
-                    className="flex h-10 items-center pl-5 hover:bg-slate-100"
-                  >
-                    Ustal harmonogram
-                  </a>
                 </li>
 
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
-                  <a
-                    href="#"
-                    className="flex h-10 items-center pl-5 hover:bg-slate-100"
+                  <Link
+                    to="/profil/harmonogram"
+                    className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                   >
-                    Historia zakupów
-                  </a>
+                    Twój harmonogram
+                  </Link>
                 </li>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
-                  <a
-                    href="#"
-                    className="flex h-10 items-center pl-5 hover:bg-slate-100"
+                  <Link
+                    to="/profil/otrzymane-opinie"
+                    className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                   >
-                    Edytuj profil
-                  </a>
+                    Wystawione opinie
+                  </Link>
                 </li>
+                <div className="collapse-arrow collapse p-0 uppercase">
+                  <input type="checkbox" className="absolute h-8 min-h-0" />
+                  <div className="collapse-title flex h-8 min-h-0 items-center p-0 pl-5 text-sm">
+                    Profil
+                  </div>
+                  <div className="collapse-content ml-10 min-h-0 border-l-[1px] border-gray-300 !pb-0 text-sm">
+                    <ul>
+                      <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                        <Link
+                          to="/profil-ucznia"
+                          className="flex h-8 w-full items-center text-sm uppercase"
+                        >
+                          Profil
+                        </Link>
+                      </li>
+
+                      <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                        <Link
+                          className="flex h-8 w-full items-center text-sm uppercase"
+                          to="/profil/edytuj"
+                        >
+                          Edytuj dane podstawowe
+                        </Link>
+                      </li>
+                      <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                        <Link
+                          className="flex h-8 w-full items-center text-sm uppercase"
+                          to="/profil/edytuj-dodatkowe"
+                        >
+                          Edytuj dane dodatkowe
+                        </Link>
+                      </li>
+                      <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                        <Link
+                          to="/profil/edytuj-avatar"
+                          className="flex h-8 w-full items-center text-sm uppercase"
+                        >
+                          Zmień avatar
+                        </Link>
+                      </li>
+                      <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                        <Link
+                          className="flex h-8 w-full items-center text-sm uppercase"
+                          to="/profil/zmien-haslo"
+                        >
+                          Zmień hasło
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="collapse-arrow collapse p-0 uppercase">
+                  <input type="checkbox" className="absolute h-8 min-h-0" />
+                  <div className="collapse-title flex h-8 min-h-0 items-center p-0 pl-5 text-sm">
+                    Zajęcia
+                  </div>
+                  <div className="collapse-content mb-3 ml-10 min-h-0 border-l-[1px] border-gray-300 !pb-0 text-sm">
+                    <ul>
+                      <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                        <Link
+                          to="/zajecia"
+                          className="flex h-8 w-full items-center text-sm uppercase"
+                        >
+                          Lista zajęć
+                        </Link>
+                      </li>
+
+                      <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                        <Link
+                          className="flex h-8 w-full items-center text-sm uppercase"
+                          to="/zajecia/dodaj"
+                        >
+                          Dodaj nowe zajęcia{' '}
+                        </Link>
+                      </li>
+                      <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                        <Link
+                          className="flex h-8 w-full items-center text-sm uppercase"
+                          to="/plan/edytuj"
+                        >
+                          Ustal harmonogram{' '}
+                        </Link>
+                      </li>
+                      <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                        <Link className="flex h-8 w-full items-center text-sm uppercase">
+                          Historia zakupionych zajęć{' '}
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <hr />
                 <li
+                  className="mb-2"
                   onClick={() => setShowMobileMenu((prev) => !prev)}
-                  className="mb-3"
                 >
                   <Link
                     to="/logowanie"
                     onClick={logoutUser}
-                    className="flex h-10 w-full items-center border-t-[1px] pl-5 hover:bg-slate-200"
+                    className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                   >
-                    Wyloguj
+                    Wyloguj{' '}
                   </Link>
                 </li>
               </>
