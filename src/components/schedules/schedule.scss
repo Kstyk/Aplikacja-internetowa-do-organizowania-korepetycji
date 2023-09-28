@@ -132,8 +132,8 @@
     overflow: hidden;
     border-radius: 0;
     border-width: 1px !important;
-    border-color: white !important;
-    background-color: rgb(211, 211, 211);
+    border-color: rgb(211, 211, 211) !important;
+    background-color: rgb(142, 221, 162);
     color:black;
     text-align: center;
     // padding-top: 0;
@@ -151,10 +151,5 @@
         margin-top: 0;
     }
 
-    // .rbc-event-label {
-    //   height: 0;
-    //   min-height: 0;
-    //   display: none;
-    // }
 }
 

@@ -56,7 +56,7 @@ const ClassesCard = (props) => {
               classesId: classes?.id,
             }}
           >
-            <h1 className="mb-1 border-b-[1px] border-base-200 pb-1 text-xl font-semibold uppercase">
+            <h1 className="mb-1 border-b-[1px] border-base-200 pb-1 text-xl font-semibold uppercase text-gray-700">
               {classes.name}
             </h1>
           </Link>

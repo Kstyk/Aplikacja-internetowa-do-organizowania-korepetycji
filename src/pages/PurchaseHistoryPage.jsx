@@ -79,7 +79,9 @@ const PurchaseHistoryPage = () => {
       ) : (
         <>
           <div className="card z-30 mt-10 flex flex-row items-center justify-between rounded-md border-[1px] border-base-200 bg-white p-4 text-center shadow-xl max-md:text-xl  max-phone:text-lg md:text-2xl">
-            <h1 className="w-full text-center">Historia zakupów</h1>
+            <h1 className="w-full text-center text-xl font-bold uppercase tracking-wider text-gray-700">
+              Historia zakupów
+            </h1>
           </div>
           <div className="my-4 border-b-[1px] border-base-100"></div>
 

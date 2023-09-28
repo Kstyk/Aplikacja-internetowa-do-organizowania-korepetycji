@@ -133,7 +133,9 @@ const CreateClassesPage = () => {
       <div className="absolute left-0 right-0 top-[70px] h-[200px] bg-base-300 max-phone:hidden"></div>
 
       <div className="card mx-auto mb-10 h-full w-8/12 rounded-md bg-white px-5 py-5 shadow-xl max-lg:w-full max-md:w-8/12 max-phone:w-full">
-        <h1 className="text-center text-2xl">Dodaj nowe zajęcia</h1>
+        <h1 className="text-center text-xl font-bold uppercase tracking-wider text-gray-700">
+          Dodaj nowe zajęcia
+        </h1>
         <div className="my-4 border-b-[1px] border-base-100"></div>
         <form
           onSubmit={handleSubmit(onSubmit)}

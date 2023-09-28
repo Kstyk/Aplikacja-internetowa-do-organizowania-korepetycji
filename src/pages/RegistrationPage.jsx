@@ -97,7 +97,9 @@ const RegistrationPage = () => {
     <div>
       <div className="absolute left-0 right-0 top-[70px] h-[200px] bg-base-300 max-phone:hidden "></div>
       <div className="card z-30 mx-auto mb-5 mt-10 flex w-10/12 flex-col items-center justify-between rounded-md bg-white p-4 text-center shadow-xl max-lg:w-full max-md:w-8/12 max-md:text-xl max-phone:w-full max-phone:text-lg phone:flex-row md:text-2xl">
-        <h1 className="w-full text-center">Rejestracja</h1>
+        <h1 className="w-full text-center text-xl font-bold uppercase tracking-wider text-gray-700">
+          Rejestracja
+        </h1>
       </div>
       <div className="card mx-auto mb-10 flex h-full w-10/12 flex-row rounded-md bg-white px-5 pb-5 pt-5 shadow-xl max-lg:w-full max-md:w-8/12 max-md:flex-col max-phone:w-full">
         <div className="mx-auto flex w-6/12 flex-col justify-center px-5 py-20 max-md:w-full max-md:py-10">

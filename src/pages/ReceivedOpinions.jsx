@@ -62,7 +62,9 @@ const ReceivedOpinions = () => {
         <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
 
         <div className="card mx-auto mb-10 mt-10 h-full rounded-md bg-white px-5 py-5 shadow-xl max-lg:w-full">
-          <h1 className="text-center text-2xl">Otrzymane opinie</h1>
+          <h1 className="text-center text-xl font-bold uppercase tracking-wider text-gray-700">
+            Otrzymane opinie
+          </h1>
           <div className="my-4 border-b-[1px] border-base-100"></div>
           <div>
             {amountOfOpinions != 0 ? (

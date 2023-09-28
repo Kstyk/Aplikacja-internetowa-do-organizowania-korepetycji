@@ -37,7 +37,9 @@ const ListOfTeachersClassesPage = () => {
       ) : (
         <>
           <div className="card mx-auto mb-10 min-h-[40vh] w-full rounded-md bg-white px-5 py-5 shadow-xl">
-            <h1 className="text-center text-2xl">Lista Twoich zajęć</h1>
+            <h1 className="text-center text-xl font-bold uppercase tracking-wider text-gray-700">
+              Lista Twoich zajęć
+            </h1>
             <div className="my-4 border-b-[1px] border-base-100"></div>
             <div className="container mx-auto mb-10 text-gray-100">
               <div className="flex flex-col text-xs">

@@ -100,7 +100,9 @@ const ClassesPage = () => {
           <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
 
           <div className="card z-30 mb-5 flex flex-col items-center justify-between rounded-md border-[1px] border-base-200 bg-white p-4 text-center shadow-xl max-md:text-xl max-phone:text-lg phone:flex-row md:text-2xl">
-            <h1 className="w-full text-center">{classes?.name}</h1>
+            <h1 className="w-full text-center text-xl font-bold uppercase tracking-wider text-gray-700">
+              {classes?.name}
+            </h1>
             <Link
               className={`btn-outline no-animation btn mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 phone:w-4/12 ${
                 classes?.able_to_buy ? '' : 'btn-disabled'
@@ -202,7 +204,7 @@ const ClassesPage = () => {
                 <div className="header flex flex-row">
                   <div className="left w-8/12">
                     <Link
-                      to={`/search-classes/language/${classes?.language.slug}`}
+                      to={`/szukaj-zajec/jezyk/${classes?.language.slug}`}
                       params={{
                         languageSlug: classes?.language.slug,
                       }}

@@ -7,11 +7,13 @@ import { useState } from 'react'
 import useAxios from '../../utils/useAxios'
 import { timeslots } from '../../variables/Timeslots'
 import CustomToolbar from './CustomToolbar'
-import Swal from 'sweetalert2'
+import { Link } from 'react-router-dom'
+import './schedule.scss'
 
 const TeacherSchedule = ({ teacherId }) => {
   const [loading, setLoading] = useState(false)
   const [eventArray, setEventArray] = useState([])
+  const [slotInfo, setSlotInfo] = useState(null)
   dayjs.locale('pl')
   const localizer = dayjsLocalizer(dayjs)
 
@@ -63,7 +65,7 @@ const TeacherSchedule = ({ teacherId }) => {
 
   const eventStyleGetter = useCallback(
     (event, start, end, isSelected) => ({
-      className: 'eventCell',
+      className: 'flex items-center classes-cell text-xs phone:text-sm',
     }),
     []
   )
@@ -87,6 +89,7 @@ const TeacherSchedule = ({ teacherId }) => {
         start: startDate,
         end: endDate,
         title: 'X',
+        resource: event,
       }
 
       setEventArray((curr) => [...curr, eventRecord])
@@ -105,6 +108,14 @@ const TeacherSchedule = ({ teacherId }) => {
     }
   }, [teacherId])
 
+  const onSelectEvent = (slotInfo) => {
+    window.clearTimeout(clickRef?.current)
+    setSlotInfo(slotInfo)
+    clickRef.current = window.setTimeout(() => {
+      window.my_modal_5.showModal(slotInfo)
+    })
+  }
+
   const minTime = new Date()
   minTime.setHours(9, 0, 0)
   const maxTime = new Date()
@@ -116,7 +127,77 @@ const TeacherSchedule = ({ teacherId }) => {
     [setDate]
   )
   return (
-    <div>
+    <>
+      <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+        <form
+          method="dialog"
+          className="modal-box flex flex-col gap-y-2 !rounded-md"
+        >
+          <div>
+            <h2 className="mx-auto w-fit border-b-2 border-b-base-400 px-3 text-center font-bold uppercase tracking-wider text-gray-700">
+              Zajęcia
+            </h2>
+            <p className="mt-1 w-full text-center">
+              {slotInfo?.resource?.classes?.name}
+            </p>
+          </div>
+          <div>
+            <h2 className="mx-auto w-fit border-b-2 border-b-base-400 px-3 text-center font-bold uppercase tracking-wider text-gray-700">
+              Język zajęć
+            </h2>
+            <p className="mt-1 w-full text-center">
+              Język <span>{slotInfo?.resource?.classes?.language?.name}</span>
+            </p>
+          </div>
+          <div>
+            <h2 className="mx-auto w-fit border-b-2 border-b-base-400 px-3 text-center font-bold uppercase tracking-wider text-gray-700">
+              Rodzaj zajęć
+            </h2>
+            <p className="mt-1 w-full text-center">
+              Zajęcia{' '}
+              {slotInfo?.resource?.place_of_classes == 'stationary'
+                ? 'stacjonarne'
+                : 'online'}
+              {slotInfo?.resource?.place_of_classes == 'stationary' &&
+                `, ${slotInfo?.resource?.city_of_classes?.name}`}
+            </p>
+          </div>
+          <div>
+            <h2 className="mx-auto w-fit border-b-2 border-b-base-400 px-3 text-center font-bold uppercase tracking-wider text-gray-700">
+              Data zajęć
+            </h2>
+            <p className="mt-1 w-full text-center">
+              {dayjs(slotInfo?.resource?.date).format(
+                'dddd, DD-MM-YYYY, g. HH:mm'
+              )}
+            </p>
+          </div>
+          <div>
+            <h2 className="mx-auto w-fit border-b-2 border-b-base-400 px-3 text-center font-bold uppercase tracking-wider text-gray-700">
+              Uczeń
+            </h2>
+            <p className="mt-1 w-full text-center transition-all duration-200 hover:underline">
+              <Link to={`/student/${slotInfo?.resource?.student?.id}`}>
+                {slotInfo?.resource?.student?.first_name}{' '}
+                {slotInfo?.resource?.student?.last_name}
+              </Link>
+            </p>
+          </div>
+          <div className="modal-action mx-auto">
+            {slotInfo?.resource?.room && (
+              <Link
+                to={`/pokoj/${slotInfo?.resource?.room}`}
+                className="btn-outline no-animation btn h-8 min-h-0 rounded-sm hover:bg-base-400 hover:text-white"
+              >
+                Przejdź do pokoju zajęć
+              </Link>
+            )}
+            <button className="btn-outline no-animation btn h-8 min-h-0 rounded-sm hover:bg-base-400 hover:text-white">
+              Zamknij
+            </button>
+          </div>
+        </form>
+      </dialog>
       <Calendar
         date={date}
         localizer={localizer}
@@ -135,8 +216,9 @@ const TeacherSchedule = ({ teacherId }) => {
         selectable="ignoreEvents"
         components={{ toolbar: CustomToolbar }}
         onNavigate={onNavigate}
+        onSelectEvent={onSelectEvent}
       />
-    </div>
+    </>
   )
 }
 

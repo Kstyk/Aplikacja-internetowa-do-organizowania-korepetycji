@@ -39,7 +39,7 @@ const ForgotPasswordPage = () => {
         </div>
         <div className="mb-5 border-b-[1px] border-base-200"></div>
 
-        <h2 className="text-center text-2xl">
+        <h2 className="text-center text-lg font-bold uppercase tracking-wider text-gray-700">
           Zresetuj hasło do swojego konta
         </h2>
         {loading ? (

@@ -58,7 +58,9 @@ const StartedRoomsPage = () => {
 
           <div className="card mb-5 rounded-md bg-white p-5 pb-10 shadow-xl">
             <div className="m-auto h-full w-full">
-              <h1 className="text-center text-2xl">Twoje pokoje</h1>
+              <h1 className="text-center text-xl font-bold uppercase tracking-wider text-gray-700">
+                Twoje pokoje
+              </h1>
 
               <div className="my-4 border-b-[1px] border-base-100"></div>
               <div className="mb-10 flex w-full items-center justify-center">
@@ -90,7 +92,7 @@ const StartedRoomsPage = () => {
                 </div>
               </div>
 
-              <h1 className="flex flex-row items-center justify-center gap-x-3 text-center text-2xl">
+              <h1 className="flex flex-row items-center justify-center gap-x-2 text-center text-xl font-bold uppercase tracking-wider text-gray-700">
                 <div
                   className="tooltip"
                   data-tip="Pokoje, w których zostałeś sam - druga osoba opuściła pokój."

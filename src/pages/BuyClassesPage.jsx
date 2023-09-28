@@ -37,7 +37,11 @@ const BuyClassesPage = () => {
     control: (base) => ({
       ...base,
       boxShadow: 'none',
-      borderRadius: 'none',
+      borderRadius: '2px',
+      borderColor: '#BFEAF5',
+      '&:hover': {
+        border: '1px solid #aaabac',
+      },
     }),
   }
 
@@ -119,7 +123,9 @@ const BuyClassesPage = () => {
           <div className="absolute left-0 right-0 top-[70px] h-[200px] bg-base-300 max-phone:hidden"></div>
 
           <div className="card mb-5 rounded-md bg-white p-5 shadow-sm">
-            <h1 className="text-xl">{classes?.name}</h1>
+            <h1 className="text-center text-xl font-bold uppercase tracking-wider text-gray-700">
+              {classes?.name}
+            </h1>
             <div className="my-4 border-b-[1px] border-base-100"></div>
             <section className="flex w-full flex-row max-lg:flex-col">
               <form onSubmit={handleSubmit(onSubmit)} className="w-full">
@@ -178,7 +184,7 @@ const BuyClassesPage = () => {
                             className="mt-2 h-10 w-full border-none px-0 text-gray-500 shadow-none"
                             menuPortalTarget={document.body}
                             isClearable
-                            options={classes?.cities_of_work}
+                            options={classes?.cities_of_classes}
                             getOptionLabel={(option) => option.name}
                             getOptionValue={(option) => option.id}
                             {...field}
@@ -186,11 +192,7 @@ const BuyClassesPage = () => {
                               <span className="text-gray-400">Miasto</span>
                             }
                             noOptionsMessage={({ inputValue }) =>
-                              loadingCity
-                                ? 'Szukanie miast...'
-                                : !inputValue
-                                ? 'Wpisz tekst...'
-                                : 'Nie znaleziono'
+                              'Nie znaleziono'
                             }
                             styles={customSelectStyle}
                           />
