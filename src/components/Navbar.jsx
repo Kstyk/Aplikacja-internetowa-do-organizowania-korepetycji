@@ -224,7 +224,10 @@ const Navbar = () => {
                           </Link>
                         </li>
                         <li className="custom-border-dropdown h-fit">
-                          <Link className="hover:bg-base-200 focus:bg-base-300">
+                          <Link
+                            to="/profil/edytuj-avatar"
+                            className="hover:bg-base-200 focus:bg-base-300"
+                          >
                             Zmień avatar
                           </Link>
                         </li>
