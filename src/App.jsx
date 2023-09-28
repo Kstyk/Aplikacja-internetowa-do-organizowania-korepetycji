@@ -32,6 +32,8 @@ import EditClassesPage from './pages/EditClassesPage'
 import AnonymousRoute from './components/AccessComponents/AnonymousRoute'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
+import TeacherSchedulePage from './pages/TeacherSchedulePage'
+import StudentSchedulePage from './pages/StudentSchedulePage'
 function App() {
   return (
     <div
@@ -125,6 +127,14 @@ function App() {
                     </PrivateRoute>
                   }
                 />
+                <Route
+                  path="/profil/harmonogram"
+                  element={
+                    <PrivateRoute>
+                      <TeacherSchedulePage />
+                    </PrivateRoute>
+                  }
+                />
               </Route>
               <Route element={<StudentAllowed />}>
                 <Route
@@ -140,6 +150,14 @@ function App() {
                   element={
                     <PrivateRoute>
                       <PurchaseHistoryPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/profil-ucznia/harmonogram"
+                  element={
+                    <PrivateRoute>
+                      <StudentSchedulePage />
                     </PrivateRoute>
                   }
                 />

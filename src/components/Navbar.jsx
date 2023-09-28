@@ -51,9 +51,7 @@ const Navbar = () => {
                 <div className="h-full border-2 border-black"></div>
               </li>
               <li className="custom-border h-fit text-center">
-                <Link to="/my-rooms" className="">
-                  Twój harmonogram
-                </Link>
+                <Link to="/profil-ucznia/harmonogram">Twój harmonogram</Link>
               </li>
               <li>
                 <div className="h-full border-2 border-black"></div>
@@ -149,14 +147,24 @@ const Navbar = () => {
             </ul>
           )}
           {user?.role == 'Teacher' && (
-            <ul className="menu menu-horizontal gap-3 !px-0">
+            <ul className="flex flex-row items-center gap-2 px-1">
+              <li className="custom-border h-fit text-center">
+                <Link to="/my-rooms">Twoje pokoje</Link>
+              </li>
               <li>
-                <Link
-                  to="/my-rooms"
-                  className="hover:bg-base-200 focus:bg-base-300"
-                >
-                  Twoje pokoje
-                </Link>
+                <div className="h-full border-2 border-black"></div>
+              </li>
+              <li className="custom-border h-fit text-center">
+                <Link to="/profil/harmonogram">Twój harmonogram</Link>
+              </li>
+              <li>
+                <div className="h-full border-2 border-black"></div>
+              </li>
+              <li className="custom-border h-fit text-center">
+                <Link to="/profil/otrzymane-opinie">Otrzymane opinie</Link>
+              </li>
+              <li>
+                <div className="h-full border-2 border-black"></div>
               </li>
 
               <div className="dropdown-end dropdown z-40">
@@ -173,106 +181,61 @@ const Navbar = () => {
                 </label>
                 <ul
                   tabIndex={0}
-                  className=" mt-1z-[1] dropdown-content menu rounded-box  menu-sm w-52 bg-white p-2 shadow shadow-base-400"
+                  className="dropdown-content menu menu-sm z-[1] mt-3 w-52 rounded-none bg-base-100 p-2 shadow"
                 >
                   <li>
-                    <Link
-                      to="/profil"
-                      className="hover:bg-base-200 focus:bg-base-300"
-                    >
-                      Profil
-                    </Link>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:bg-base-200 focus:bg-base-300">
-                      Edytuj swoje oferty
-                    </a>
-                  </li>
-                  <li>
-                    <Link
-                      to="/profil/otrzymane-opinie"
-                      className="hover:bg-base-200 focus:bg-base-300"
-                    >
-                      Otrzymane opinie
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/plan/edytuj"
-                      className="hover:bg-base-200 focus:bg-base-300"
-                    >
-                      Ustal harmonogram
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/zajecia"
-                      className="hover:bg-base-200 focus:bg-base-300"
-                    >
-                      Lista zajęć
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/zajecia/dodaj"
-                      className="hover:bg-base-200 focus:bg-base-300"
-                    >
-                      Dodaj nowe zajęcia
-                    </Link>
-                  </li>
-
-                  <li>
-                    <a href="#" className="hover:bg-base-200 focus:bg-base-300">
-                      Historia zakupów
-                    </a>
-                  </li>
-                  <li>
                     <details open>
-                      <summary className="hover:bg-base-200 focus:bg-base-300">
-                        Edytuj profil
+                      <summary className="uppercase hover:bg-transparent">
+                        Zajęcia
                       </summary>
                       <ul>
-                        <li>
-                          <Link
-                            className="hover:bg-base-200 focus:bg-base-300"
-                            to="/profil/edytuj"
-                          >
-                            Edytuj dane podstawowe
-                          </Link>
+                        <li className="custom-border-dropdown h-fit">
+                          <Link to="/zajecia">Lista zajęć</Link>
                         </li>
-                        <li>
-                          <Link
-                            className="hover:bg-base-200 focus:bg-base-300"
-                            to="/profil/edytuj-dodatkowe"
-                          >
-                            Edytuj dane dodatkowe
-                          </Link>
+                        <li className="custom-border-dropdown h-fit">
+                          <Link to="/zajecia/dodaj">Dodaj nowe zajęcia</Link>
                         </li>
-                        <li>
-                          <Link
-                            to="/profil/edytuj-avatar"
-                            className="hover:bg-base-200 focus:bg-base-300"
-                          >
-                            Zmień avatar
-                          </Link>
+                        <li className="custom-border-dropdown h-fit">
+                          <Link to="/plan/edytuj">Ustal harmonogram</Link>
                         </li>
-                        <li>
-                          <Link
-                            to="/profil/zmien-haslo"
-                            className="hover:bg-base-200 focus:bg-base-300"
-                          >
-                            Zmień hasło
-                          </Link>
+                        <li className="custom-border-dropdown h-fit">
+                          <a href="#">Historia zakupionych zajęć</a>
                         </li>
                       </ul>
                     </details>
                   </li>
                   <li>
-                    <Link
-                      to="/logowanie"
-                      onClick={logoutUser}
-                      className="hover:bg-base-200"
-                    >
+                    <details open>
+                      <summary className="uppercase hover:bg-transparent">
+                        Profil
+                      </summary>
+                      <ul>
+                        <li className="custom-border-dropdown h-fit">
+                          <Link to="/profil">Profil</Link>
+                        </li>
+                        <li className="custom-border-dropdown h-fit">
+                          <Link to="/profil/edytuj">
+                            Edytuj dane podstawowe
+                          </Link>
+                        </li>
+                        <li className="custom-border-dropdown h-fit">
+                          <Link to="/profil/edytuj-dodatkowe">
+                            Edytuj dane dodatkowe
+                          </Link>
+                        </li>
+                        <li className="custom-border-dropdown h-fit">
+                          <Link className="hover:bg-base-200 focus:bg-base-300">
+                            Zmień avatar
+                          </Link>
+                        </li>
+                        <li className="custom-border-dropdown h-fit">
+                          <Link to="/profil/zmien-haslo">Zmień hasło</Link>
+                        </li>
+                      </ul>
+                    </details>
+                  </li>
+                  <li className="custom-border-dropdown h-fit">
+                    <Link to="/logowanie" onClick={logoutUser}>
                       Wyloguj
                     </Link>
                   </li>
