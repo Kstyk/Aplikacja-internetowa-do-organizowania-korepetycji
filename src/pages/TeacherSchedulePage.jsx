@@ -1,5 +1,4 @@
 import React from 'react'
-import ClassesPageSchedule from '../components/schedules/ClassesPageSchedule'
 import TeacherSchedule from '../components/schedules/TeacherSchedule'
 import { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
