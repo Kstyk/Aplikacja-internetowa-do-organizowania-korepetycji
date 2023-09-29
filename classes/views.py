@@ -16,6 +16,7 @@ from datetime import datetime
 from rest_framework.serializers import ValidationError
 import uuid
 from django.db.models import Avg
+from rest_framework.views import APIView
 
 # Create your views here.
 
@@ -190,6 +191,14 @@ class ScheduleTeacherView(generics.ListAPIView):
     def get_queryset(self):
         teacher_id = self.kwargs.get('teacher_id')
         return Schedule.objects.filter(classes__teacher_id=teacher_id)
+
+
+class ScheduleStudentView(generics.ListAPIView):
+    serializer_class = ScheduleSerializer
+
+    def get_queryset(self):
+        student_id = self.kwargs.get('student_id')
+        return Schedule.objects.filter(student_id=student_id)
 
 
 class TimeslotsTeacherView(generics.ListAPIView):

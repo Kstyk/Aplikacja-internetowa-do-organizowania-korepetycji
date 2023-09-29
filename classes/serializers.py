@@ -123,6 +123,7 @@ class UpdateClassSerializer(serializers.ModelSerializer):
 class ScheduleSerializer(serializers.ModelSerializer):
     classes = ClassSerializer()
     city_of_classes = CitySerializer()
+    student = UserSerializer()
 
     class Meta:
         model = Schedule
