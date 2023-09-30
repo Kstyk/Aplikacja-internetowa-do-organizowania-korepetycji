@@ -34,6 +34,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
 import TeacherSchedulePage from './pages/TeacherSchedulePage'
 import StudentSchedulePage from './pages/StudentSchedulePage'
+import AddedOpinionsPage from './pages/AddedOpinionsPage'
 function App() {
   return (
     <div
@@ -95,6 +96,7 @@ function App() {
                     </PrivateRoute>
                   }
                 />
+
                 <Route
                   path="/plan/edytuj"
                   element={
@@ -158,6 +160,14 @@ function App() {
                   element={
                     <PrivateRoute>
                       <StudentSchedulePage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/profil/dodane-opinie"
+                  element={
+                    <PrivateRoute>
+                      <AddedOpinionsPage />
                     </PrivateRoute>
                   }
                 />

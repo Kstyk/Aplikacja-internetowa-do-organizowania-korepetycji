@@ -57,7 +57,7 @@ const Navbar = () => {
                 <div className="h-full border-2 border-black"></div>
               </li>
               <li className="custom-border h-fit text-center">
-                <Link to="/my-rooms" className="">
+                <Link to="/profil/dodane-opinie" className="">
                   Wystawione opinie{' '}
                 </Link>
               </li>
@@ -355,7 +355,7 @@ const Navbar = () => {
                 </li>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <Link
-                    to="/my-rooms"
+                    to="/profil/dodane-opinie"
                     className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                   >
                     Wystawione opinie
@@ -451,7 +451,7 @@ const Navbar = () => {
                     to="/profil/otrzymane-opinie"
                     className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                   >
-                    Wystawione opinie
+                    Otrzymane opinie
                   </Link>
                 </li>
                 <div className="collapse-arrow collapse p-0 uppercase">
