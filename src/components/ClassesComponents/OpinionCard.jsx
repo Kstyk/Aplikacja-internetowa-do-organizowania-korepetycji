@@ -3,6 +3,7 @@ import guest from '../../assets/guest.png'
 import { backendUrl } from '../../variables/backendUrl'
 import dayjs from 'dayjs'
 import { BiSolidQuoteLeft, BiSolidQuoteRight } from 'react-icons/bi'
+import { Link } from 'react-router-dom'
 
 const OpinionCard = ({ opinion, page }) => {
   dayjs.locale('pl')
@@ -12,7 +13,7 @@ const OpinionCard = ({ opinion, page }) => {
     >
       <div className="header flex flex-row justify-between gap-x-2">
         <div className="flex flex-row items-center gap-x-5">
-          <div className="avatar">
+          <Link to={`/student/${opinion?.student?.id}`} className="avatar">
             <div className="h-12 w-12 rounded-full ring-primary ring-offset-2 ring-offset-base-100 transition-all duration-200 hover:ring sm:h-20 sm:w-20">
               <img
                 src={
@@ -22,11 +23,14 @@ const OpinionCard = ({ opinion, page }) => {
                 }
               />
             </div>
-          </div>
+          </Link>
           <div className="flex flex-col justify-start gap-y-2">
-            <span className="name text-lg uppercase tracking-wider ">
+            <Link
+              to={`/student/${opinion?.student?.id}`}
+              className="name text-lg uppercase tracking-wider "
+            >
               {opinion?.student?.first_name}
-            </span>
+            </Link>
             <div className="flex flex-row gap-x-3">
               <div className="rating rating-sm phone:rating-md">
                 {Array.from({ length: 5 }, (_, index) => (
