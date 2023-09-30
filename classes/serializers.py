@@ -162,6 +162,7 @@ class OpinionSerializer(serializers.ModelSerializer):
     student = UserSerializer()
     teacher = UserSerializer()
     student_profile_image = serializers.SerializerMethodField()
+    teacher_profile_image = serializers.SerializerMethodField()
 
     class Meta:
         model = Opinion
@@ -169,6 +170,17 @@ class OpinionSerializer(serializers.ModelSerializer):
 
     def get_student_profile_image(self, obj):
         user_profile = UserDetails.objects.get(user=obj.student)
+
+        if user_profile:
+            if user_profile.profile_image:
+                return user_profile.profile_image.url
+            else:
+                return None
+        else:
+            return None
+
+    def get_teacher_profile_image(self, obj):
+        user_profile = UserDetails.objects.get(user=obj.teacher)
 
         if user_profile:
             if user_profile.profile_image:

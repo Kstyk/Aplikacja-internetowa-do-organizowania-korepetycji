@@ -385,6 +385,34 @@ class ReceivedOpinionsList(generics.ListAPIView):
         return Response(response_data, status=status.HTTP_200_OK)
 
 
+class AddedOpinionsList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = OpinionSerializer
+    pagination_class = OpinionPagination
+
+    def get_queryset(self):
+        user = self.request.user
+
+        queryset = Opinion.objects.filter(student=user)
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+
+        serializer = self.get_serializer(page, many=True)
+        paginated = self.get_paginated_response(serializer.data)
+
+        response_data = {
+            "count": len(queryset),
+            "next": paginated.data['next'],
+            "previous": paginated.data['previous'],
+            "results": serializer.data,
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
+
+
 class CreateOpinionView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = CreateOpinionSerializer
