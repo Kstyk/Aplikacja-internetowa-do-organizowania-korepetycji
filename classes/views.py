@@ -325,6 +325,18 @@ class PurchaseHistoryList(generics.ListAPIView):
         return queryset
 
 
+class TeacherPurchaseHistoryList(generics.ListAPIView):
+    serializer_class = PurchaseHistorySerializer
+    pagination_class = PurchaseHistoryPagination
+    permission_classes = [IsAuthenticated, IsTeacher]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        queryset = PurchaseHistory.objects.filter(classes__teacher=user)
+        return queryset
+
+
 class TeacherOpinionsList(generics.ListAPIView):
     serializer_class = OpinionSerializer
     pagination_class = OpinionPagination

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import get_all_classes, get_languages, get_top_languages, ClassCreateView, TimeSlotsCreateView, ScheduleTeacherView, ScheduleStudentView, ClassesByIdView, TimeslotsTeacherView, purchase_classes, PurchaseHistoryList, TeacherOpinionsList, ReceivedOpinionsList, CreateOpinionView, TeacherClassesView, AddedOpinionsList
+from .views import get_all_classes, get_languages, get_top_languages, ClassCreateView, TimeSlotsCreateView, ScheduleTeacherView, ScheduleStudentView, ClassesByIdView, TimeslotsTeacherView, purchase_classes, PurchaseHistoryList, TeacherOpinionsList, ReceivedOpinionsList, CreateOpinionView, TeacherClassesView, AddedOpinionsList, TeacherPurchaseHistoryList
 urlpatterns = [
     path('', get_all_classes, name="get_all_classes"),
     path('languages/', get_languages, name="get_languages"),
@@ -16,6 +16,8 @@ urlpatterns = [
     path('purchase_classes/', purchase_classes, name="purchase_classes"),
     path('purchase-classes/history/', PurchaseHistoryList.as_view(),
          name="purchase_classes_history"),
+    path('purchase-classes/teacher-history/', TeacherPurchaseHistoryList.as_view(),
+         name="purchase_classes_teacher_history"),
     path('<int:pk>/', ClassesByIdView.as_view()),
     path('<int:teacher_id>/opinions/', TeacherOpinionsList.as_view()),
     path('my-opinions/', ReceivedOpinionsList.as_view()),
