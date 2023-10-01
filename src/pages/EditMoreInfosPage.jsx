@@ -222,21 +222,13 @@ const EditMoreInfosPage = () => {
       data.address.city = data.address.city.id
     }
 
-    if (
-      descriptionHtml != null &&
-      descriptionHtml != data.description &&
-      data.description.length > 0
-    ) {
+    if (descriptionHtml != null && data.description.length > 0) {
       data.description = descriptionHtml
     } else {
       data.description = null
     }
 
-    if (
-      experienceHtml != null &&
-      experienceHtml != data.experience &&
-      data.experience.length > 0
-    ) {
+    if (experienceHtml != null && data.experience.length > 0) {
       data.experience = experienceHtml
     } else {
       data.experience = null
@@ -246,21 +238,20 @@ const EditMoreInfosPage = () => {
       data.year_of_birth = null
     }
 
-    console.log(data)
-    // api
-    //   .put(`/api/users/profile/edit-informations/`, data)
-    //   .then((res) => {
-    //     showSuccessAlert(
-    //       'Sukces!',
-    //       'Pomyślnie zedytowałeś dane swojego konta.',
-    //       () => {
-    //         user?.role == 'Teacher' ? nav('/profil') : nav('/profil-ucznia')
-    //       }
-    //     )
-    //   })
-    //   .catch((err) => {
-    //     setBackendErrors(JSON.parse(err.request.response))
-    //   })
+    api
+      .put(`/api/users/profile/edit-informations/`, data)
+      .then((res) => {
+        showSuccessAlert(
+          'Sukces!',
+          'Pomyślnie zedytowałeś dane swojego konta.',
+          () => {
+            user?.role == 'Teacher' ? nav('/profil') : nav('/profil-ucznia')
+          }
+        )
+      })
+      .catch((err) => {
+        setBackendErrors(JSON.parse(err.request.response))
+      })
   }
 
   return (
