@@ -19,6 +19,7 @@ const EditMoreInfosPage = () => {
   const [experienceHtml, setExperienceHtml] = useState(null)
 
   const [cities, setCities] = useState([])
+  const [addressObjectCreated, setAddressObjectCreated] = useState(false)
   const [loadingCity, setLoadingCity] = useState(false)
   const [voivodeships, setVoivodeships] = useState([])
   const [languages, setLanguages] = useState([])
@@ -68,7 +69,14 @@ const EditMoreInfosPage = () => {
         message: 'Nieprawidłowy format numeru telefonu.',
       },
     },
+    city: {
+      required: addressObjectCreated ? 'Miasto jest wymagane.' : false,
+    },
+    voivodeship: {
+      required: addressObjectCreated ? 'Województwo jest wymagane.' : false,
+    },
     postal_code: {
+      required: addressObjectCreated ? 'Kod pocztowy jest wymagany.' : false,
       pattern: {
         value: /^[0-9]{2}-[0-9]{3}$/,
         message: 'Nieprawidłowy format kodu pocztowego.',
@@ -165,6 +173,9 @@ const EditMoreInfosPage = () => {
         setValue('address.postal_code', res.data.address?.postal_code)
         setValue('address.street', res.data.address?.street)
         setValue('address.building_number', res.data.address?.building_number)
+        if (res.data.address != null) {
+          setAddressObjectCreated(true)
+        }
       })
       .catch((err) => {
         showAlertError(
@@ -235,20 +246,21 @@ const EditMoreInfosPage = () => {
       data.year_of_birth = null
     }
 
-    api
-      .put(`/api/users/profile/edit-informations/`, data)
-      .then((res) => {
-        showSuccessAlert(
-          'Sukces!',
-          'Pomyślnie zedytowałeś dane swojego konta.',
-          () => {
-            user?.role == 'Teacher' ? nav('/profil') : nav('/profil-ucznia')
-          }
-        )
-      })
-      .catch((err) => {
-        setBackendErrors(JSON.parse(err.request.response))
-      })
+    console.log(data)
+    // api
+    //   .put(`/api/users/profile/edit-informations/`, data)
+    //   .then((res) => {
+    //     showSuccessAlert(
+    //       'Sukces!',
+    //       'Pomyślnie zedytowałeś dane swojego konta.',
+    //       () => {
+    //         user?.role == 'Teacher' ? nav('/profil') : nav('/profil-ucznia')
+    //       }
+    //     )
+    //   })
+    //   .catch((err) => {
+    //     setBackendErrors(JSON.parse(err.request.response))
+    //   })
   }
 
   return (
@@ -557,7 +569,7 @@ const EditMoreInfosPage = () => {
                       )}
                     />
                     <small className="text-right text-red-400">
-                      {errors?.city && errors.city.message}
+                      {errors?.address?.city && errors?.address?.city?.message}
                       {backendErrors?.address?.city?.map((e, i) => (
                         <span key={i}>
                           {e} <br />
@@ -601,7 +613,8 @@ const EditMoreInfosPage = () => {
                       )}
                     />
                     <small className="text-right text-red-400">
-                      {errors?.voivodeship && errors.voivodeship.message}
+                      {errors?.address?.voivodeship &&
+                        errors?.address?.voivodeship.message}
                       {backendErrors?.address?.voivodeship?.map((e, i) => (
                         <span key={i}>
                           {e} <br />
@@ -630,7 +643,8 @@ const EditMoreInfosPage = () => {
                       )}
                     />
                     <small className="text-right text-red-400">
-                      {errors?.postal_code && errors.postal_code.message}
+                      {errors?.address?.postal_code &&
+                        errors?.address?.postal_code.message}
                       {backendErrors?.address?.postal_code?.map((e, i) => (
                         <span key={i}>
                           {e} <br />
@@ -686,8 +700,8 @@ const EditMoreInfosPage = () => {
                       )}
                     />
                     <small className="text-right text-red-400">
-                      {errors?.building_number &&
-                        errors.building_number.message}
+                      {errors?.address?.building_number &&
+                        errors?.address?.building_number.message}
                       {backendErrors?.address?.building_number?.map((e, i) => (
                         <span key={i}>
                           {e} <br />

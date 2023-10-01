@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import useAxios from '../utils/useAxios'
 import LoadingComponent from '../components/LoadingComponent'
+import showAlertError from '../components/messages/SwalAlertError'
+import PurchaseTeacherHistoryTable from '../components/PurchaseHistorysComponents/PurchaseTeacherHistoryTable'
 import Pagination from '../components/Pagination'
-import PurchaseHistoryTable from '../components/PurchaseHistorysComponents/PurchaseHistoryTable'
 
-const PurchaseHistoryPage = () => {
+const TeacherPurchaseHistoryPage = () => {
   const [loading, setLoading] = useState(true)
   const [totalPages, setTotalPages] = useState(0)
   const [totalResults, setTotalResults] = useState(0)
@@ -15,8 +16,9 @@ const PurchaseHistoryPage = () => {
   const fetchHistory = async () => {
     setLoading(true)
     await api
-      .get(`api/classes/purchase-classes/history/?page_size=10`)
+      .get(`api/classes/purchase-classes/teacher-history/?page_size=10`)
       .then((res) => {
+        console.log(res)
         if (res.data.results == null) {
           setPurchases(null)
           setTotalPages(0)
@@ -40,7 +42,7 @@ const PurchaseHistoryPage = () => {
 
   const searchPurchases = async (page) => {
     setLoading(true)
-    let baseurl = `api/classes/purchase-classes/history/?page_size=10&page=${page}`
+    let baseurl = `api/classes/purchase-classes/teacher-history/?page_size=10&page=${page}`
 
     await api
       .get(baseurl)
@@ -86,7 +88,7 @@ const PurchaseHistoryPage = () => {
           <div className="my-4 border-b-[1px] border-base-100"></div>
 
           <div className="card rounded-md bg-white p-6 shadow-xl">
-            <PurchaseHistoryTable purchases={purchases} />
+            <PurchaseTeacherHistoryTable purchases={purchases} />
             {totalPages > 1 && (
               <Pagination
                 totalResults={totalResults}
@@ -102,4 +104,4 @@ const PurchaseHistoryPage = () => {
   )
 }
 
-export default PurchaseHistoryPage
+export default TeacherPurchaseHistoryPage

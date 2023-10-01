@@ -199,7 +199,9 @@ const Navbar = () => {
                           <Link to="/plan/edytuj">Ustal harmonogram</Link>
                         </li>
                         <li className="custom-border-dropdown h-fit">
-                          <a href="#">Historia zakupionych zajęć</a>
+                          <Link to="/profil/zakupione-zajecia">
+                            Historia zakupionych zajęć
+                          </Link>
                         </li>
                       </ul>
                     </details>

@@ -35,6 +35,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage'
 import TeacherSchedulePage from './pages/TeacherSchedulePage'
 import StudentSchedulePage from './pages/StudentSchedulePage'
 import AddedOpinionsPage from './pages/AddedOpinionsPage'
+import TeacherPurchaseHistoryPage from './pages/TeacherPurchaseHistoryPage'
 function App() {
   return (
     <div
@@ -80,6 +81,14 @@ function App() {
                 }
               />
               <Route element={<TeacherAllowed />}>
+                <Route
+                  path="/profil/zakupione-zajecia"
+                  element={
+                    <PrivateRoute>
+                      <TeacherPurchaseHistoryPage />
+                    </PrivateRoute>
+                  }
+                />
                 <Route
                   path="/profil"
                   element={
