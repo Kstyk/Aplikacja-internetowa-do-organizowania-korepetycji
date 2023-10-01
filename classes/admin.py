@@ -13,8 +13,13 @@ class OpinionAdmin(admin.ModelAdmin):
     list_display = ('id', 'student', 'teacher', 'rate', 'published_date')
 
 
+class LanguageAdmin(admin.ModelAdmin):
+    model = Language
+    list_display = ('name', 'slug')
+
+
 admin.site.register(Class)
-admin.site.register(Language)
+admin.site.register(Language, LanguageAdmin)
 admin.site.register(Schedule, ScheduleAdmin)
 admin.site.register(Timeslot)
 admin.site.register(PurchaseHistory)

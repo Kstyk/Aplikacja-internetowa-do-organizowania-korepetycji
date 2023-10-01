@@ -165,6 +165,12 @@ class CreateOrUpdateUserDetailsSerializer(serializers.ModelSerializer):
                 if address_data.get('postal_code', address.postal_code) is not None:
                     address.postal_code = address_data.get(
                         'postal_code', address.postal_code)
+                if address_data.get('street', address.street) is not None:
+                    address.street = address_data.get(
+                        'street', address.street)
+                if address_data.get('building_number', address.building_number) is not None:
+                    address.building_number = address_data.get(
+                        'building_number', address.building_number)
                 address.save()
             else:
                 address = Address.objects.create(
