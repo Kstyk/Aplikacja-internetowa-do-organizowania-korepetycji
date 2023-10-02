@@ -9,7 +9,7 @@ from django.db.models import Q, F
 from django.db import transaction
 from .paginators import ClassPagination, PurchaseHistoryPagination, OpinionPagination
 from users.permissions import IsStudent, IsTeacher
-from django.db.models import Count, Exists, OuterRef, Subquery
+from django.db.models import Count
 from cities_light.models import City, Region
 from datetime import datetime
 from rest_framework.serializers import ValidationError
@@ -435,18 +435,21 @@ class CreateOpinionView(generics.CreateAPIView):
 
 class ClassesBoughtByStudentToRateView(APIView):
     permission_classes = [IsAuthenticated, IsStudent]
-    serializer_class = PurchaseHistorySerializer
 
     def get(self, request):
         student = self.request.user
 
         try:
-            print(request.data.get('teacher_id'))
-            teacher_id = request.data.get('teacher_id')
-            print(teacher_id)
-            teacher = User.objects.get(pk=teacher_id)
+            print(request.GET.get('teacher_id'))
+            teacher_id = request.GET.get('teacher_id')
+            teacher = User.objects.get(
+                Q(id=teacher_id) & Q(role__name="Teacher"))
         except User.DoesNotExist:
             return Response({'error': 'Nie istnieje nauczyciel o takim ID.'}, status=status.HTTP_404_NOT_FOUND)
+
         classes = PurchaseHistory.objects.filter(
             Q(student=student) & Q(classes__teacher=teacher))
-        return classes
+
+        serializer = PurchaseHistoryLightSerializer(classes, many=True)
+
+        return Response(serializer.data)

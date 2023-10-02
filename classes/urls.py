@@ -18,7 +18,7 @@ urlpatterns = [
          name="purchase_classes_history"),
     path('purchase-classes/teacher-history/', TeacherPurchaseHistoryList.as_view(),
          name="purchase_classes_teacher_history"),
-    path('purchase-classes/classes-bought-by-student-teacher/<int:teacher_id>/',
+    path('purchase-classes/classes-bought-by-student-teacher/',
          ClassesBoughtByStudentToRateView.as_view()),
     path('<int:pk>/', ClassesByIdView.as_view()),
     path('<int:teacher_id>/opinions/', TeacherOpinionsList.as_view()),

@@ -135,6 +135,8 @@ class Opinion(models.Model):
         "users.User", on_delete=models.CASCADE, validators=[validate_student_role])
     teacher = models.ForeignKey("users.User", on_delete=models.CASCADE, related_name='rated_teacher',
                                 validators=[validate_teacher_role])
+    classes_rated = models.ForeignKey(
+        Class, on_delete=models.CASCADE, null=False)
     published_date = models.DateTimeField(auto_now_add=True)
     rate = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)])

@@ -147,6 +147,15 @@ class PurchaseHistorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PurchaseHistoryLightSerializer(serializers.ModelSerializer):
+    classes = ClassSerializer()
+    student = UserSerializer()
+
+    class Meta:
+        model = PurchaseHistory
+        fields = '__all__'
+
+
 class MostPopularLanguages(serializers.ModelSerializer):
     num_classes = serializers.SerializerMethodField()
 
