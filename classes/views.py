@@ -10,14 +10,13 @@ from django.db import transaction
 from .paginators import ClassPagination, PurchaseHistoryPagination, OpinionPagination
 from users.permissions import IsStudent, IsTeacher
 from django.db.models import Count, Exists, OuterRef, Subquery
-from django.db import models
 from cities_light.models import City, Region
 from datetime import datetime
 from rest_framework.serializers import ValidationError
 import uuid
 from django.db.models import Avg
 from rest_framework.views import APIView
-
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 
@@ -432,3 +431,22 @@ class CreateOpinionView(generics.CreateAPIView):
     def perform_create(self, serializer):
         if serializer.is_valid():
             serializer.save()
+
+
+class ClassesBoughtByStudentToRateView(APIView):
+    permission_classes = [IsAuthenticated, IsStudent]
+    serializer_class = PurchaseHistorySerializer
+
+    def get(self, request):
+        student = self.request.user
+
+        try:
+            print(request.data.get('teacher_id'))
+            teacher_id = request.data.get('teacher_id')
+            print(teacher_id)
+            teacher = User.objects.get(pk=teacher_id)
+        except User.DoesNotExist:
+            return Response({'error': 'Nie istnieje nauczyciel o takim ID.'}, status=status.HTTP_404_NOT_FOUND)
+        classes = PurchaseHistory.objects.filter(
+            Q(student=student) & Q(classes__teacher=teacher))
+        return classes
