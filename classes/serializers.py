@@ -29,7 +29,6 @@ class CreateTimeSlotsSerializer(serializers.ModelSerializer):
 
 
 class ClassSerializer(serializers.ModelSerializer):
-    # Zaimportowany gotowy serializer dla modelu TypeOfClasses
     language = LanguageSerializer()
     teacher = UserProfileSerializer(source='teacher.userdetails')
     average_rate = serializers.SerializerMethodField()

@@ -450,6 +450,13 @@ class ClassesBoughtByStudentToRateView(APIView):
         classes = PurchaseHistory.objects.filter(
             Q(student=student) & Q(classes__teacher=teacher))
 
-        serializer = PurchaseHistoryLightSerializer(classes, many=True)
+        unique_list = []
+
+        for obj in classes:
+            if obj.classes not in unique_list:
+                unique_list.append(obj.classes)
+
+        serializer = ClassSerializer(
+            unique_list, many=True)
 
         return Response(serializer.data)
