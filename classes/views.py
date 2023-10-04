@@ -440,7 +440,6 @@ class ClassesBoughtByStudentToRateView(APIView):
         student = self.request.user
 
         try:
-            print(request.GET.get('teacher_id'))
             teacher_id = request.GET.get('teacher_id')
             teacher = User.objects.get(
                 Q(id=teacher_id) & Q(role__name="Teacher"))
@@ -454,7 +453,12 @@ class ClassesBoughtByStudentToRateView(APIView):
 
         for obj in classes:
             if obj.classes not in unique_list:
-                unique_list.append(obj.classes)
+                opinion = Opinion.objects.filter(
+                    Q(student=student) & Q(classes_rated=obj.classes))
+
+                # Jeśli nie znaleziono opinii, wstaw do uniquelist obj.classes
+                if not opinion:
+                    unique_list.append(obj.classes)
 
         serializer = ClassSerializer(
             unique_list, many=True)

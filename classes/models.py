@@ -141,3 +141,6 @@ class Opinion(models.Model):
     rate = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)])
     content = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return '{}, {} - {}'.format(self.classes_rated.name, self.student, self.rate)

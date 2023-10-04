@@ -202,14 +202,19 @@ class OpinionSerializer(serializers.ModelSerializer):
 class CreateOpinionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Opinion
-        fields = ['student', 'teacher', 'content', 'rate']
+        fields = ['student', 'teacher', 'content', 'rate', 'classes_rated']
 
     def validate(self, data):
         student = data.get('student')
         teacher = data.get('teacher')
+        classes_rated = data.get('classes_rated')
 
-        if Opinion.objects.filter(student=student, teacher=teacher).exists():
+        if classes_rated.teacher.id is not teacher.id:
+            raise serializers.ValidationError({"wrong_classes":
+                                               "To nie są zajęcia określonego nauczyciela."})
+
+        if Opinion.objects.filter(student=student, teacher=teacher, classes_rated=classes_rated).exists():
             raise serializers.ValidationError({"exist_opinion":
-                                               "Możesz dodać tylko jedną opinię dla tego nauczyciela."})
+                                               "Możesz dodać tylko jedną opinię dla tego nauczyciela dotyczącą tych zajęć."})
 
         return data
