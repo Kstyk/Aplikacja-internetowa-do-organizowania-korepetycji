@@ -257,7 +257,7 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }, ref) => {
           />
           <button
             type="submit"
-            className="btn-outline no-animation btn mb-2 mt-2 h-10 !min-h-0 w-full rounded-none border-base-400 py-0 hover:bg-base-400 md:w-5/12 xl:w-4/12"
+            className="btn-outline no-animation btn mb-2 mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 md:w-5/12 xl:w-4/12"
           >
             Dodaj opinię
           </button>

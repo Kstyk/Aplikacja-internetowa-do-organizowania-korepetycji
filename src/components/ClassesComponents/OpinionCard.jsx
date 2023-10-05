@@ -5,14 +5,14 @@ import dayjs from 'dayjs'
 import { BiSolidQuoteLeft, BiSolidQuoteRight } from 'react-icons/bi'
 import { Link } from 'react-router-dom'
 
-const OpinionCard = ({ opinion, page }) => {
+const OpinionCard = ({ opinion }) => {
   dayjs.locale('pl')
   return (
     <div
       className={`animate__animated animate__fadeIn card w-full rounded-md p-5 hover:bg-gray-50 hover:shadow-sm max-phone:px-0`}
     >
-      <div className="header flex flex-row justify-between gap-x-2">
-        <div className="flex flex-row items-center gap-x-5">
+      <div className="header flex flex-col justify-between gap-x-2 phone:flex-row">
+        <div className="order-2 flex flex-row items-center gap-x-5 phone:order-1">
           <Link to={`/student/${opinion?.student?.id}`} className="avatar">
             <div className="h-12 w-12 rounded-full ring-primary ring-offset-2 ring-offset-base-100 transition-all duration-200 hover:ring sm:h-20 sm:w-20">
               <img
@@ -48,9 +48,18 @@ const OpinionCard = ({ opinion, page }) => {
                 {opinion?.rate} / 5
               </span>
             </div>
+            <div className="w-full">
+              <span className="text-sm">Dotyczy: </span>
+              <Link
+                className="text-sm uppercase hover:underline"
+                to={`/zajecia/${opinion?.classes_rated?.id}`}
+              >
+                {opinion?.classes_rated?.name}
+              </Link>
+            </div>
           </div>
         </div>
-        <div className="date">
+        <div className="date order-1 phone:order-2">
           <span className="text-sm text-gray-600">
             {dayjs(opinion.published_date).format('DD MMMM YYYY')}
           </span>
