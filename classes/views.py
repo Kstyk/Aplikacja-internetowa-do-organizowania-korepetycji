@@ -425,12 +425,38 @@ class AddedOpinionsList(generics.ListAPIView):
 
 
 class CreateOpinionView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStudent]
     serializer_class = CreateOpinionSerializer
 
     def perform_create(self, serializer):
         if serializer.is_valid():
             serializer.save()
+
+
+class UpdateOpinionView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsStudent]
+    serializer_class = UpdateOpinionSerializer
+    queryset = Opinion.objects.all()
+
+    def perform_update(self, serializer):
+        if serializer.is_valid():
+            serializer.save()
+
+
+class DeleteOpinionView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Opinion.objects.all()
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if request.user.id != instance.student.id:
+            return Response({'error': "Nie możesz usunąć tej opinii."}, status=status.HTTP_403_FORBIDDEN)
+
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ClassesBoughtByStudentToRateView(APIView):

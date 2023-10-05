@@ -171,6 +171,7 @@ class OpinionSerializer(serializers.ModelSerializer):
     teacher = UserSerializer()
     student_profile_image = serializers.SerializerMethodField()
     teacher_profile_image = serializers.SerializerMethodField()
+    classes_rated = ClassSerializer()
 
     class Meta:
         model = Opinion
@@ -214,6 +215,31 @@ class CreateOpinionSerializer(serializers.ModelSerializer):
                                                "To nie są zajęcia określonego nauczyciela."})
 
         if Opinion.objects.filter(student=student, teacher=teacher, classes_rated=classes_rated).exists():
+            raise serializers.ValidationError({"exist_opinion":
+                                               "Możesz dodać tylko jedną opinię dla tego nauczyciela dotyczącą tych zajęć."})
+
+        return data
+
+
+class UpdateOpinionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Opinion
+        fields = ['teacher', 'classes_rated', 'rate', 'content']
+
+    def validate(self, data):
+        edited_opinion_id = self.context['view'].kwargs.get('pk')
+        print(edited_opinion_id)
+        student = self.context['request'].user
+        teacher = data.get('teacher')
+        classes_rated = data.get('classes_rated')
+
+        if classes_rated.teacher.id is not teacher.id:
+            raise serializers.ValidationError({"wrong_classes":
+                                               "To nie są zajęcia określonego nauczyciela."})
+
+        op = Opinion.objects.filter(
+            student=student, teacher=teacher, classes_rated=classes_rated).exclude(pk=edited_opinion_id)
+        if op.exists():
             raise serializers.ValidationError({"exist_opinion":
                                                "Możesz dodać tylko jedną opinię dla tego nauczyciela dotyczącą tych zajęć."})
 
