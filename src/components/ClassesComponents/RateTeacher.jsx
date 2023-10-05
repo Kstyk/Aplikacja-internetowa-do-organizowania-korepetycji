@@ -1,15 +1,51 @@
-import React from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useState, useEffect } from 'react'
+import { useForm, Controller } from 'react-hook-form'
 import useAxios from '../../utils/useAxios'
 import showAlertError from '../messages/SwalAlertError'
 import showSuccessAlert from '../messages/SwalAlertSuccess'
+import Select from 'react-select'
 import Modal from 'react-modal'
 import { AiOutlineClose } from 'react-icons/ai'
-import { useEffect } from 'react'
 
-const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
+const RateTeacher = ({ teacher, student, opened, setIsOpened }, ref) => {
+  const api = useAxios()
+  const [classes, setClasses] = useState([])
+
+  const customSelectStyle = {
+    control: (base) => ({
+      ...base,
+      boxShadow: 'none',
+      borderRadius: '2px',
+      borderColor: '#BFEAF5',
+      '&:hover': {
+        border: '1px solid #aaabac',
+      },
+    }),
+  }
+
+  const fetchClassesToRate = async () => {
+    await api
+      .get(
+        `/api/classes/purchase-classes/classes-bought-by-student-teacher/?teacher_id=${teacher?.id}`
+      )
+      .then((res) => {
+        setClasses(res.data)
+      })
+      .catch((err) => {
+        if (err.response.status == 404) {
+          showAlertError('Błąd', err.response.data.error)
+        } else {
+          showAlertError(
+            'Błąd',
+            'Wystąpił błąd przy pobieraniu zajęć do oceny.'
+          )
+        }
+      })
+  }
+
   useEffect(() => {
     if (opened) {
+      fetchClassesToRate()
       openModal()
     }
   }, [opened])
@@ -38,11 +74,16 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm({
     mode: 'all',
   })
 
-  const api = useAxios()
+  const addRate = {
+    classes_rated: {
+      required: 'Zajęcia są wymagane.',
+    },
+  }
 
   const onSubmit = (data) => {
     if (data.rate == null) {
@@ -51,12 +92,16 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
 
     data.teacher = teacher.id
     data.student = student.user_id
+    data.classes_rated = data.classes_rated ? data.classes_rated.id : null
 
     api
       .post(`api/classes/add-opinion/`, data)
       .then((res) => {
         closeModal()
-        showSuccessAlert('Sukces!', 'Pomyślnie dodałeś ocenę nauczycielowi.')
+        showSuccessAlert(
+          'Sukces!',
+          'Pomyślnie dodałeś ocenę nauczycielowi. Możesz ją zobaczyć w zakładce "Wystawione Opinie".'
+        )
       })
       .catch((err) => {
         closeModal()
@@ -73,6 +118,12 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
               err.response.data.student.map((error) => error)
             )
           }
+          if (err.response.data.classes_rated) {
+            showAlertError(
+              'Błąd',
+              err.response.data.classes_rated.map((error) => error)
+            )
+          }
           if (err.response.data.teacher) {
             showAlertError(
               'Błąd',
@@ -83,6 +134,18 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
             showAlertError(
               'Błąd',
               err.response.data.rate.map((error) => error)
+            )
+          }
+          if (err.response.data.wrong_classes) {
+            showAlertError(
+              'Błąd',
+              err.response.data.wrong_classes.map((error) => error)
+            )
+          }
+          if (err.response.data.exist_opinion) {
+            showAlertError(
+              'Błąd',
+              err.response.data.exist_opinion.map((error) => error)
             )
           }
         } else {
@@ -137,6 +200,33 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
           <label
             htmlFor="workQuality"
             className="text-custom-darkgreen mt-8 block text-center text-sm font-bold leading-6"
+          >
+            Zajęcia do oceny
+          </label>
+          <Controller
+            name="classes_rated"
+            control={control}
+            render={({ field }) => (
+              <Select
+                {...register('classes_rated', addRate.classes_rated)}
+                className="h-10 w-full border-none px-0 text-gray-500 shadow-none"
+                isClearable
+                options={classes}
+                {...field}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+                placeholder={<span className="text-gray-400">Zajęcia</span>}
+                noOptionsMessage={({ inputValue }) => 'Brak zajęć'}
+                styles={customSelectStyle}
+              />
+            )}
+          />
+          <small className="w-full text-right text-red-400">
+            {errors?.classes_rated && errors.classes_rated.message}
+          </small>
+          <label
+            htmlFor="workQuality"
+            className="text-custom-darkgreen mt-5 block text-center text-sm font-bold leading-6"
           >
             Ocena
           </label>
