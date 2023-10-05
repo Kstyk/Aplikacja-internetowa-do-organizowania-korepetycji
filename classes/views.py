@@ -419,6 +419,7 @@ class AddedOpinionsList(generics.ListAPIView):
             "count": len(queryset),
             "next": paginated.data['next'],
             "previous": paginated.data['previous'],
+            'num_pages': paginated.data['num_pages'],
             "results": serializer.data,
         }
         return Response(response_data, status=status.HTTP_200_OK)

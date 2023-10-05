@@ -228,7 +228,6 @@ class UpdateOpinionSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         edited_opinion_id = self.context['view'].kwargs.get('pk')
-        print(edited_opinion_id)
         student = self.context['request'].user
         teacher = data.get('teacher')
         classes_rated = data.get('classes_rated')
