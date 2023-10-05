@@ -4,10 +4,55 @@ import { backendUrl } from '../../variables/backendUrl'
 import dayjs from 'dayjs'
 import { BiSolidQuoteLeft, BiSolidQuoteRight } from 'react-icons/bi'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import UpdateRateTeacher from './UpdateRateTeacher'
+import Swal from 'sweetalert2'
+import showAlertError from '../messages/SwalAlertError'
+import showSuccessAlert from '../messages/SwalAlertSuccess'
+import useAxios from '../../utils/useAxios'
 
-const OpinionStudentViewCard = ({ opinion }) => {
+const OpinionStudentViewCard = ({ opinion, fetchOpinions }) => {
+  const api = useAxios()
+
   dayjs.locale('pl')
-  console.log(opinion)
+  const [isOpenedUpdateModal, setIsOpenedUpdateModal] = useState(false)
+
+  const deleteOpinion = async () => {
+    Swal.fire({
+      title: 'Jesteś pewien?',
+      text: 'Nie będziesz mógł cofnąć tej operacji!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Usuń opinię',
+      cancelButtonText: 'Zamknij okno',
+      customClass: {
+        confirmButton:
+          'btn !rounded-sm !outline-none border-[1px] text-black w-full !bg-base-400 !focus:outline-none !focus:border-none',
+        cancelButton:
+          'btn !rounded-sm !outline-none border-[1px] text-black w-full !bg-red-500',
+        popup: 'rounded-md bg-base-100',
+      },
+      showClass: {
+        popup: 'animate__animated animate__zoomIn',
+      },
+      hideClass: {
+        popup: 'animate__animated animate__zoomOut',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        api
+          .delete(`api/classes/delete-opinion/${opinion?.id}/`)
+          .then((res) => {
+            showSuccessAlert('Sukces', 'Usunąłeś tę opinię.', () => {
+              fetchOpinions()
+            })
+          })
+          .catch((err) => {
+            showAlertError('Niedozwolona akcja', err.response.data.error)
+          })
+      }
+    })
+  }
 
   return (
     <div
@@ -74,6 +119,26 @@ const OpinionStudentViewCard = ({ opinion }) => {
         <p className="b break-words text-sm italic text-gray-700 phone:text-base">
           {opinion?.content}
         </p>
+      </div>
+      <div className="flex w-full flex-row justify-end gap-x-4">
+        <button
+          className="mt-2 h-8 !min-h-0 rounded-sm !text-sm text-base-400 hover:underline"
+          onClick={() => setIsOpenedUpdateModal(!isOpenedUpdateModal)}
+        >
+          Edytuj opinię
+        </button>
+        <UpdateRateTeacher
+          opinion={opinion}
+          opened={isOpenedUpdateModal}
+          setIsOpened={setIsOpenedUpdateModal}
+          fetchOpinions={fetchOpinions}
+        />
+        <button
+          className="mt-2 h-8 !min-h-0 rounded-sm !text-sm text-red-800 hover:underline"
+          onClick={() => deleteOpinion()}
+        >
+          Usuń opinię
+        </button>
       </div>
     </div>
   )

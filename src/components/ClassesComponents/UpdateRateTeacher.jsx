@@ -1,51 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import useAxios from '../../utils/useAxios'
 import showAlertError from '../messages/SwalAlertError'
 import showSuccessAlert from '../messages/SwalAlertSuccess'
-import Select from 'react-select'
 import Modal from 'react-modal'
 import { AiOutlineClose } from 'react-icons/ai'
 
-const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
+const UpdateRateTeacher = ({ opinion, opened, setIsOpened, fetchOpinions }) => {
   const api = useAxios()
-  const [classes, setClasses] = useState([])
-
-  const customSelectStyle = {
-    control: (base) => ({
-      ...base,
-      boxShadow: 'none',
-      borderRadius: '2px',
-      borderColor: '#BFEAF5',
-      '&:hover': {
-        border: '1px solid #aaabac',
-      },
-    }),
-  }
-
-  const fetchClassesToRate = async () => {
-    await api
-      .get(
-        `/api/classes/purchase-classes/classes-bought-by-student-teacher/?teacher_id=${teacher?.id}`
-      )
-      .then((res) => {
-        setClasses(res.data)
-      })
-      .catch((err) => {
-        if (err.response.status == 404) {
-          showAlertError('Błąd', err.response.data.error)
-        } else {
-          showAlertError(
-            'Błąd',
-            'Wystąpił błąd przy pobieraniu zajęć do oceny.'
-          )
-        }
-      })
-  }
+  Modal.setAppElement('#root')
 
   useEffect(() => {
     if (opened) {
-      fetchClassesToRate()
+      setValue('content', opinion?.content)
+      setValue('rate', opinion?.rate)
+
       openModal()
     }
   }, [opened])
@@ -72,35 +41,31 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
-    control,
   } = useForm({
     mode: 'all',
   })
 
-  const addRate = {
-    classes_rated: {
-      required: 'Zajęcia są wymagane.',
-    },
-  }
-
   const onSubmit = (data) => {
     if (data.rate == null) {
-      data.rate = 5
+      data.rate = opinion?.rate
     }
 
-    data.teacher = teacher.id
-    data.student = student.user_id
-    data.classes_rated = data.classes_rated ? data.classes_rated.id : null
+    data.teacher = opinion?.teacher?.id
+    data.classes_rated = opinion?.classes_rated?.id
 
     api
-      .post(`api/classes/add-opinion/`, data)
+      .put(`api/classes/update-opinion/${opinion?.id}/`, data)
       .then((res) => {
         closeModal()
         showSuccessAlert(
           'Sukces!',
-          'Pomyślnie dodałeś ocenę nauczycielowi. Możesz ją zobaczyć w zakładce "Wystawione Opinie".'
+          'Pomyślnie zedytowałeś ocenę nauczycielowi.',
+          () => {
+            fetchOpinions()
+          }
         )
       })
       .catch((err) => {
@@ -149,7 +114,7 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
             )
           }
         } else {
-          showAlertError('Błąd', 'Nieudane dodanie opinii.')
+          showAlertError('Błąd', 'Nieudana edycja opinii.')
         }
       })
   }
@@ -167,44 +132,17 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
         <button onClick={closeModal} className="float-right rounded-full">
           <AiOutlineClose className="h-6 w-6" />
         </button>
-        <h3 className="text-center text-lg font-bold text-gray-800">
-          Wystaw ocenę dla:{' '}
+        <h3 className="flex flex-col text-center text-lg font-bold text-gray-800">
+          Edytuj ocenę dla:{' '}
           <span className="uppercase">
-            {teacher?.first_name} {teacher?.last_name}
+            {opinion?.teacher?.first_name} {opinion?.teacher?.last_name}
           </span>
+          <span>{opinion?.classes_rated?.name}</span>
         </h3>
-
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col items-center "
         >
-          <label
-            htmlFor="workQuality"
-            className="text-custom-darkgreen mt-8 block text-center text-sm font-bold leading-6"
-          >
-            Zajęcia do oceny
-          </label>
-          <Controller
-            name="classes_rated"
-            control={control}
-            render={({ field }) => (
-              <Select
-                {...register('classes_rated', addRate.classes_rated)}
-                className="h-10 w-full border-none px-0 text-gray-500 shadow-none"
-                isClearable
-                options={classes}
-                {...field}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-                placeholder={<span className="text-gray-400">Zajęcia</span>}
-                noOptionsMessage={({ inputValue }) => 'Brak zajęć'}
-                styles={customSelectStyle}
-              />
-            )}
-          />
-          <small className="w-full text-right text-red-400">
-            {errors?.classes_rated && errors.classes_rated.message}
-          </small>
           <label
             htmlFor="workQuality"
             className="text-custom-darkgreen mt-5 block text-center text-sm font-bold leading-6"
@@ -219,6 +157,7 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
                 name="rate"
                 {...register('rate')}
                 value={`${index + 1}`}
+                defaultChecked={opinion?.rate == index + 1 ? true : false}
                 className="mask mask-star-2 bg-base-300"
               />
             ))}
@@ -240,7 +179,7 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
             type="submit"
             className="btn-outline no-animation btn mb-2 mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 md:w-5/12 xl:w-4/12"
           >
-            Dodaj opinię
+            Edytuj opinię
           </button>
         </form>
       </Modal>
@@ -248,4 +187,4 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
   )
 }
 
-export default RateTeacher
+export default UpdateRateTeacher
