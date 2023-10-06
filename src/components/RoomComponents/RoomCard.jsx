@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import guest from '../../assets/guest.png'
 import dayjs from 'dayjs'
+import { useContext } from 'react'
+import { NotificationContext } from '../../context/NotificationContext'
 
 const RoomCard = ({ room, user }) => {
   dayjs.locale('pl')
@@ -9,8 +11,21 @@ const RoomCard = ({ room, user }) => {
   return (
     <Link
       to={`/pokoj/${room.room_id}/`}
-      className="card flex w-full flex-col items-center justify-center rounded-md border-[1px] bg-white p-5 transition-all duration-200 hover:bg-slate-100"
+      className={`card indicator flex w-full flex-col items-center justify-center rounded-md border-[1px] bg-white p-5 transition-all duration-200 hover:bg-slate-100 ${
+        room?.unread_messages_count > 0 && '!border-2 border-base-300'
+      }`}
     >
+      <span className="badge badge-primary indicator-item">
+        <span
+          className={`tooltip tooltip-left ${
+            room?.unread_messages_count > 0 && 'font-bold'
+          }`}
+          data-tip={`Nieprzeczytanych wiadomości: ${room?.unread_messages_count}`}
+        >
+          {room?.unread_messages_count}
+        </span>
+      </span>
+
       {room.users.map((u) =>
         u?.user?.email != user.email ? (
           <React.Fragment key={u?.user?.id}>

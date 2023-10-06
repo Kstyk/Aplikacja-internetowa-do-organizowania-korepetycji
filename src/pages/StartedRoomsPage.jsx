@@ -7,6 +7,7 @@ import RoomCard from '../components/RoomComponents/RoomCard'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import ArchivizedRoomCard from '../components/RoomComponents/ArchivizedRoomCard'
 import showAlertError from '../components/messages/SwalAlertError'
+import { NotificationContext } from '../context/NotificationContext'
 
 const StartedRoomsPage = () => {
   const api = useAxios()
@@ -16,6 +17,27 @@ const StartedRoomsPage = () => {
 
   const { user } = useContext(AuthContext)
 
+  const { roomToUpdate, countUnreadMessages } = useContext(NotificationContext)
+
+  useEffect(() => {
+    if (roomToUpdate != null) {
+      fetchUnreadMessagesUpdate()
+    }
+  }, [countUnreadMessages])
+
+  const fetchUnreadMessagesUpdate = async () => {
+    await api
+      .get('/api/rooms/all-rooms/')
+      .then((res) => {
+        setRooms(res.data)
+      })
+      .catch((err) => {
+        showAlertError(
+          'Błąd',
+          'Wystąpił błąd przy pobieraniu danych z serwera.'
+        )
+      })
+  }
   const fetchYourRooms = async () => {
     setLoading(true)
     await api
@@ -51,12 +73,12 @@ const StartedRoomsPage = () => {
   return (
     <>
       {loading ? (
-        <LoadingComponent message="Ładowanie danych o zajęciach" />
+        <LoadingComponent message="Ładowanie pokoi..." />
       ) : (
-        <div className="pt-10">
-          <div className="absolute left-0 right-0 top-[70px] h-[200px] bg-base-300 max-phone:hidden"></div>
+        <div className="w-full">
+          <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
 
-          <div className="card mb-5 rounded-md bg-white p-5 pb-10 shadow-xl">
+          <div className="card mx-auto mb-10 mt-10 h-full rounded-md bg-white px-5 py-5 shadow-xl max-lg:w-full">
             <div className="m-auto h-full w-full">
               <h1 className="text-center text-xl font-bold uppercase tracking-wider text-gray-700">
                 Twoje pokoje

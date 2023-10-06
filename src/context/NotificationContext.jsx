@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { toast } from 'react-toastify'
 import { Link } from 'react-router-dom'
@@ -14,6 +14,8 @@ export const NotificationContext = createContext(DefaultProps)
 
 export const NotificationContextProvider = ({ children }) => {
   const { authTokens, user } = useContext(AuthContext)
+  const [roomToUpdate, setRoomToUpdate] = useState(null)
+  const [countUnreadMessages, setCountUnreadMessages] = useState()
 
   const CustomToastWithLink = (fisrt_name, last_name, room_id) => (
     <div className="flex flex-col items-center">
@@ -55,6 +57,11 @@ export const NotificationContextProvider = ({ children }) => {
               }
             )
             break
+
+          case 'updateunreadcount':
+            setCountUnreadMessages(data.unread_messages)
+            setRoomToUpdate(data.room_id)
+            break
           default:
             bash.error('Unknown message type!')
             break
@@ -76,6 +83,8 @@ export const NotificationContextProvider = ({ children }) => {
       value={{
         connectionStatus,
         sendNotification: sendJsonMessage,
+        roomToUpdate: roomToUpdate,
+        countUnreadMessages: countUnreadMessages,
       }}
     >
       {children}

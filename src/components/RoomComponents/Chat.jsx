@@ -65,6 +65,7 @@ const Chat = ({ archivized }) => {
       },
       onMessage: (e) => {
         const data = JSON.parse(e.data)
+        sendJsonMessage({ type: 'read_messages' })
         switch (data.type) {
           case 'chat_message_echo':
             setMessageHistory((prev) => [data.message, ...prev])
@@ -87,6 +88,21 @@ const Chat = ({ archivized }) => {
       },
     }
   )
+  const connectionStatus = {
+    [ReadyState.CONNECTING]: 'Connecting',
+    [ReadyState.OPEN]: 'Open',
+    [ReadyState.CLOSING]: 'Closing',
+    [ReadyState.CLOSED]: 'Closed',
+    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
+  }[readyState]
+
+  useEffect(() => {
+    if (connectionStatus === 'Open') {
+      sendJsonMessage({
+        type: 'read_messages',
+      })
+    }
+  }, [connectionStatus, sendJsonMessage])
 
   const fetchMessages = async () => {
     await api
@@ -130,12 +146,19 @@ const Chat = ({ archivized }) => {
   }
 
   function handleSubmit() {
-    sendJsonMessage({
-      type: 'chat_message',
-      message,
-      name: user ? user.username : '',
-    })
-    setMessage('')
+    if (message.trim() != '') {
+      sendJsonMessage({
+        type: 'chat_message',
+        message,
+        name: user ? user.username : '',
+      })
+      sendNotification({
+        type: 'update_unread_messages_count',
+        token: user.token,
+        roomId: roomId,
+      })
+      setMessage('')
+    }
   }
 
   function openModal() {
@@ -405,7 +428,7 @@ const Chat = ({ archivized }) => {
         <div className="!z-10 flex h-full flex-col justify-between">
           <div
             id="scrollableDiv"
-            className="card fixed bottom-20 top-[16rem] flex w-[calc(100%-24px)] flex-col-reverse overflow-y-auto rounded-none border border-none border-gray-200 bg-white p-6 shadow-xl sm:w-11/12 sm:border-t-2 md:w-10/12 lg:w-8/12"
+            className="card fixed bottom-20 top-[16rem] flex w-[calc(100%-24px)] flex-col-reverse overflow-y-auto rounded-none border border-none border-gray-200 bg-white shadow-xl phone:p-6 sm:w-11/12 sm:border-t-2 md:w-10/12 lg:w-8/12"
           >
             {readyState === ReadyState.CONNECTING ? (
               <LoadingComponent message="Ładowanie wiadomości..." />
