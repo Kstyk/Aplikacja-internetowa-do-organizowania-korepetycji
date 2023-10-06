@@ -62,7 +62,8 @@ def get_room(request, room_id):
 @permission_classes([IsAuthenticated])
 def get_user_rooms(request):
     rooms = Room.objects.filter(users=request.user, archivized=False)
-    room_list = RoomSerializer(rooms, many=True).data
+    room_list = RoomSerializer(rooms, many=True, context={
+                               'request': request}).data
     room_list.sort(key=lambda room: (
         room['next_classes']['date'] if room['next_classes'] else '9999-12-31T23:59:59+00:00', room['room_id']))
 

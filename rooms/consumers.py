@@ -132,6 +132,11 @@ class ChatConsumer(JsonWebsocketConsumer):
                 }
             )
 
+        if message_type == "read_messages":
+            messages_to_me = Message.objects.filter(
+                to_user=self.user, room=self.room)
+            messages_to_me.update(read=True)
+
         return super().receive_json(content, **kwargs)
 
     ##########################
@@ -191,5 +196,26 @@ class NotificationConsumer(JsonWebsocketConsumer):
 
             return super().receive_json(content, **kwargs)
 
+        if message_type == "update_unread_messages_count":
+            room = Room.objects.get(room_id=content['roomId'])
+            unread_messages = Message.objects.filter(
+                room=room, read=False, from_user=self.user).count()
+
+            if room is not None:
+                notification_group_name = f"{self.get_receiver(room).id}__notifications"
+                async_to_sync(self.channel_layer.group_send)(
+                    notification_group_name,
+                    {
+                        "type": "updateunreadcount",
+                        'sender_channel_name': self.channel_name,
+                        'room_id': room.room_id,
+                        'unread_messages': unread_messages
+                    }
+                )
+                return super().receive_json(content, **kwargs)
+
     def incomingcall(self, event):
+        self.send_json(event)
+
+    def updateunreadcount(self, event):
         self.send_json(event)
