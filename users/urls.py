@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserRegistrationView, RolesListView, UsersListView, TeachersListView, UserDetailsUpdateView, UserProfileView, UserUpdateView, VoivodeshipListView, CityListView, get_top_cities, CityByIdView, BaseUserView, ChangePasswordView, LoggeUserProfileView, PasswordResetRequestView, ResetPasswordView
+from .views import UserRegistrationView, RolesListView, UsersListView, TeachersListView, UserDetailsUpdateView, UserProfileView, UserUpdateView, VoivodeshipListView, CityListView, get_top_cities, CityByIdView, BaseUserView, ChangePasswordView, LoggeUserProfileView, PasswordResetRequestView, ResetPasswordView, CreatePrivateMessageView, PrivateConversationsListView, PrivateMessageViewSet
 urlpatterns = [
     path('register/', UserRegistrationView.as_view(), name="user_registration"),
     path('roles/', RolesListView.as_view(), name="all_roles"),
@@ -19,4 +19,8 @@ urlpatterns = [
     path('address/cities/', CityListView.as_view()),
     path('address/city/<int:pk>/', CityByIdView.as_view()),
     path('address/cities/most-popular/', get_top_cities),
+    path('send-private-message/', CreatePrivateMessageView.as_view()),
+    path('private-conversations/', PrivateConversationsListView.as_view()),
+    path('private-conversation/messages/',
+         PrivateMessageViewSet.as_view({'get': 'list'}), name='get_private_messages'),
 ]

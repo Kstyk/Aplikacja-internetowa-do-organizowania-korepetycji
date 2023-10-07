@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Role, UserDetails, Address
+from .models import User, Role, UserDetails, Address, PrivateMessage
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.admin import UserAdmin
 from django import forms
@@ -73,7 +73,13 @@ class CustomAddressAdmin(admin.ModelAdmin):
     get_city_name.short_description = "Miasto"
 
 
+class CustomPrivateMessageAdmin(admin.ModelAdmin):
+    model = PrivateMessage
+    list_display = ("from_user", "to_user", "content", "timestamp")
+
+
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Role)
 admin.site.register(UserDetails, CustomUserDetailsAdmin)
 admin.site.register(Address, CustomAddressAdmin)
+admin.site.register(PrivateMessage, CustomPrivateMessageAdmin)

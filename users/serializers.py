@@ -1,5 +1,5 @@
 from rest_framework import serializers, fields
-from .models import Role, Address, UserDetails
+from .models import Role, Address, UserDetails, PrivateMessage
 from django.contrib.auth import get_user_model
 from rest_framework.validators import UniqueValidator
 from classes.models import Language
@@ -220,3 +220,49 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 class PasswordResetRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()
+
+
+class CreatePrivateMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PrivateMessage
+        fields = (
+            "to_user",
+            "content",
+        )
+
+    def validate(self, data):
+        from_user = self.context['request'].user
+        to_user = data.get('to_user')
+
+        if from_user == to_user:
+            raise serializers.ValidationError({"error":
+                                               "Nie można wysyłać wiadomości do siebie."})
+
+        return data
+
+
+class UserPrivateMessageSerializer(serializers.ModelSerializer):
+    role = RoleSerializer()
+    profile_image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'email', 'first_name',
+                  'last_name', 'role', 'profile_image')
+
+    def get_profile_image(self, obj):
+        print(obj)
+        return obj.userdetails.profile_image.url
+
+
+class PrivateMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PrivateMessage
+        fields = (
+            "id",
+            "from_user",
+            "to_user",
+            "content",
+            "timestamp",
+            "read"
+        )

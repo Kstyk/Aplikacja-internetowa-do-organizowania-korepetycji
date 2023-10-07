@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from users.permissions import IsStudent, IsOwnerProfile
-from .models import Role, User, UserDetails, PasswordResetRequest
-from .serializers import CreateUserSerializer, RoleSerializer, UserSerializer, CreateOrUpdateUserDetailsSerializer, UserProfileSerializer, UpdateUserSerializer, VoivodeshipSerializer, CitySerializer, MostPopularCitySerializer, ChangePasswordSerializer, PasswordResetRequestSerializer
+from .models import Role, User, UserDetails, PasswordResetRequest, PrivateMessage
+from .serializers import *
 from django.contrib.auth import get_user_model
 from cities_light.models import City, Region
 from django.db.models import Count,  OuterRef, Exists, Subquery
@@ -18,7 +18,10 @@ from django.utils import timezone
 import uuid
 from django.conf import settings
 from django.core.exceptions import ValidationError as ValidationResetPasswordError
-
+from django.db.models import Q
+from rest_framework.mixins import ListModelMixin
+from rest_framework.viewsets import GenericViewSet
+from .paginators import PrivateMessagePagination
 # Create your views here.
 
 User = get_user_model()
@@ -273,3 +276,53 @@ class ResetPasswordView(APIView):
             return Response({'success': 'Hasło zostało pomyślnie zmienione.'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Hasła nie są identyczne.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreatePrivateMessageView(generics.CreateAPIView):
+    serializer_class = CreatePrivateMessageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            serializer.save(from_user=self.request.user)
+
+
+class PrivateConversationsListView(generics.ListAPIView):
+    serializer_class = UserPrivateMessageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        messages = PrivateMessage.objects.filter(
+            Q(from_user=user) | Q(to_user=user)
+        )
+
+        users = set()
+        for message in messages:
+            if message.from_user != user:
+                users.add(message.from_user)
+            if message.to_user != user:
+                users.add(message.to_user)
+
+        return users
+
+
+class PrivateMessageViewSet(ListModelMixin, GenericViewSet):
+    serializer_class = PrivateMessageSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = PrivateMessagePagination
+
+    def get_queryset(self):
+        user_id = self.request.query_params.get('user_id')
+
+        if user_id is not None:
+            user = User.objects.get(pk=user_id)
+
+            queryset = (
+                PrivateMessage.objects.filter(
+                    Q(from_user=user) | Q(to_user=user))
+                .order_by("-timestamp")
+            )
+            return queryset
+        else:
+            return []

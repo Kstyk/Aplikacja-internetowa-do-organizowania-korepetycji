@@ -113,6 +113,7 @@ class MessageViewSet(ListModelMixin, GenericViewSet):
 
     def get_queryset(self):
         room_id = self.request.query_params.get('room_id')
+
         room = get_object_or_404(Room, room_id=room_id)
 
         if self.request.user not in room.users.all():

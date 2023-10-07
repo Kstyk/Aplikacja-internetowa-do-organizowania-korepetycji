@@ -129,3 +129,16 @@ class PasswordResetRequest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.UUIDField(default=uuid.uuid4, unique=True)
     created_at = models.DateTimeField(default=timezone.now)
+
+
+class PrivateMessage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    from_user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="private_messages_from_me", null=True, blank=True
+    )
+    to_user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="private_messages_to_me", null=True, blank=True
+    )
+    content = models.CharField(max_length=8192, blank=False, null=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
