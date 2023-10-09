@@ -229,6 +229,8 @@ class CreatePrivateMessageSerializer(serializers.ModelSerializer):
             "to_user",
             "content",
         )
+        extra_kwargs = {'content': {'error_messages': {
+            'blank': 'Treść wiadomości nie może być pusta.'}}}
 
     def validate(self, data):
         from_user = self.context['request'].user
@@ -237,7 +239,6 @@ class CreatePrivateMessageSerializer(serializers.ModelSerializer):
         if from_user == to_user:
             raise serializers.ValidationError({"error":
                                                "Nie można wysyłać wiadomości do siebie."})
-
         return data
 
 
