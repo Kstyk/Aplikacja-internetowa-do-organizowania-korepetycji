@@ -9,6 +9,7 @@ import parse from 'html-react-parser'
 import { Link } from 'react-router-dom'
 import OpinionCard from '../components/ClassesComponents/OpinionCard'
 import showAlertError from '../components/messages/SwalAlertError'
+import SendPrivateMessage from '../components/PrivateMessagesComponents/SendPrivateMessage'
 
 const TeacherPage = () => {
   const { teacherId } = useParams()
@@ -24,6 +25,7 @@ const TeacherPage = () => {
   const [opinionPage, setOpinionPage] = useState(1)
   const [averageRating, setAverageRating] = useState(null)
   const [amountOfOpinions, setAmountOfOpinions] = useState(0)
+  const [isOpened, setIsOpened] = useState(false)
 
   const fetchProfile = async () => {
     await api
@@ -41,6 +43,7 @@ const TeacherPage = () => {
           'Błąd',
           'Wystąpił błąd przy pobieraniu danych z serwera.'
         )
+        nav('/')
       })
   }
 
@@ -55,7 +58,8 @@ const TeacherPage = () => {
       .catch((err) => {
         showAlertError(
           'Błąd',
-          'Wystąpił błąd przy pobieraniu danych z serwera.'
+          'Wystąpił błąd przy pobieraniu danych z serwera.',
+          () => nav('/')
         )
       })
   }
@@ -144,15 +148,15 @@ const TeacherPage = () => {
                 </div>
                 <button
                   className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400"
-                  onClickCapture={() =>
-                    window.open(
-                      'mailto:email@example.com?subject=Subject&body=Body%20goes%20here'
-                    )
-                  }
+                  onClick={() => setIsOpened(!isOpened)}
                 >
                   Wyślij wiadomość
                 </button>
-
+                <SendPrivateMessage
+                  toUser={profile}
+                  opened={isOpened}
+                  setIsOpened={setIsOpened}
+                />
                 <section className="infos flex w-full flex-col pt-4">
                   <div className="mb-4 border-b-[1px] border-base-100"></div>
                   <ul className="w-full">

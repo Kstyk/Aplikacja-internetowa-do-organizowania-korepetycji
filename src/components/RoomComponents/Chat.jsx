@@ -223,12 +223,12 @@ const Chat = ({ archivized }) => {
     checkMediaDevices()
     window.videocall.showModal()
 
-    // const peer = new Peer({
-    //   host: "localhost",
-    //   port: 9000,
-    //   path: "/myapp",
-    // });
-    const peer = new Peer()
+    const peer = new Peer({
+      host: 'localhost',
+      port: 9000,
+      path: '/',
+    })
+    // const peer = new Peer()
     peer.on('open', (id) => {
       setPeerId(id)
     })
