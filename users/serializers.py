@@ -252,8 +252,13 @@ class UserPrivateMessageSerializer(serializers.ModelSerializer):
                   'last_name', 'role', 'profile_image')
 
     def get_profile_image(self, obj):
-        print(obj)
-        return obj.userdetails.profile_image.url
+        if obj.userdetails:
+            if obj.userdetails.profile_image:
+                return obj.userdetails.profile_image.url
+            else:
+                return None
+        else:
+            return None
 
 
 class PrivateMessageSerializer(serializers.ModelSerializer):
