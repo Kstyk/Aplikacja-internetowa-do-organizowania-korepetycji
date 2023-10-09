@@ -52,12 +52,15 @@ class RoomSerializer(serializers.ModelSerializer):
         return next_classes_data
 
     def get_unread_messages_count(self, obj):
-        logged_user = self.context.get('request').user
+        if self.context.get('request') is not None:
+            logged_user = self.context.get('request').user
 
-        messages_count = Message.objects.filter(
-            room__room_id=obj.room_id, read=False, to_user=logged_user)
+            messages_count = Message.objects.filter(
+                room__room_id=obj.room_id, read=False, to_user=logged_user)
 
-        return messages_count.count()
+            return messages_count.count()
+        else:
+            return 0
 
 
 class MessageSerializer(serializers.ModelSerializer):
