@@ -81,6 +81,11 @@ const Navbar = () => {
                   className="dropdown-content menu menu-sm z-[1] mt-3 w-52 rounded-none bg-base-100 p-2 shadow"
                 >
                   <li className="custom-border-dropdown h-fit">
+                    <Link to="/skrzynka-odbiorcza" className="rounded-none">
+                      Skrzynka odbiorcza
+                    </Link>
+                  </li>
+                  <li className="custom-border-dropdown h-fit">
                     <Link to="/profil-ucznia" className="rounded-none">
                       Profil
                     </Link>
@@ -183,6 +188,11 @@ const Navbar = () => {
                   tabIndex={0}
                   className="dropdown-content menu menu-sm z-[1] mt-3 w-52 rounded-none bg-base-100 p-2 shadow"
                 >
+                  <li className="custom-border-dropdown h-fit">
+                    <Link to="/skrzynka-odbiorcza" className="rounded-none">
+                      Skrzynka odbiorcza
+                    </Link>
+                  </li>
                   <li>
                     <details open>
                       <summary className="uppercase hover:bg-transparent">

@@ -36,6 +36,7 @@ import TeacherSchedulePage from './pages/TeacherSchedulePage'
 import StudentSchedulePage from './pages/StudentSchedulePage'
 import AddedOpinionsPage from './pages/AddedOpinionsPage'
 import TeacherPurchaseHistoryPage from './pages/TeacherPurchaseHistoryPage'
+import InboxPage from './pages/InboxPage'
 function App() {
   return (
     <div
@@ -210,6 +211,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <ChangeAvatarPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/skrzynka-odbiorcza"
+                element={
+                  <PrivateRoute>
+                    <InboxPage />
                   </PrivateRoute>
                 }
               />
