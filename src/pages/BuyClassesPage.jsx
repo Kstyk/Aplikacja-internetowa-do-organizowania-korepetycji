@@ -92,6 +92,7 @@ const BuyClassesPage = () => {
         )
       })
       .catch((err) => {
+        console.log(err)
         if (err.response.status == 400) {
           showAlertError('Błąd', err.response.data.error[0])
         } else if (err.response.status == 403) {

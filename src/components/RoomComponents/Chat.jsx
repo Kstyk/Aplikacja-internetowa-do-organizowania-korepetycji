@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState, useId } from 'react'
 import AuthContext from '../../context/AuthContext'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import DetectRTC from 'detectrtc'
 import { useNavigate, useParams } from 'react-router-dom'
 import Message from './Message'
 import ChatLoader from './ChatLoader'
@@ -239,23 +238,19 @@ const Chat = ({ archivized }) => {
         navigator.getUserMedia ||
         navigator.webkitGetUserMedia ||
         navigator.mozGetUserMedia
-      if (getUserMedia) {
-        getUserMedia({ video: true, audio: true }, (mediaStream) => {
-          currentUserVideoRef.current.srcObject = mediaStream
-          currentUserVideoRef.current.onloadedmetadata = () => {
-            currentUserVideoRef.current.play()
+      getUserMedia({ video: true, audio: true }, (mediaStream) => {
+        currentUserVideoRef.current.srcObject = mediaStream
+        currentUserVideoRef.current.onloadedmetadata = () => {
+          currentUserVideoRef.current.play()
+        }
+        call.answer(mediaStream)
+        call.on('stream', function (remoteStream) {
+          remoteVideoRef.current.srcObject = remoteStream
+          remoteVideoRef.current.onloadedmetadata = () => {
+            remoteVideoRef.current.play()
           }
-          call.answer(mediaStream)
-          call.on('stream', function (remoteStream) {
-            remoteVideoRef.current.srcObject = remoteStream
-            remoteVideoRef.current.onloadedmetadata = () => {
-              remoteVideoRef.current.play()
-            }
-          })
         })
-      } else {
-        console.log('no cam')
-      }
+      })
     })
 
     peer.on('close', () => {
@@ -271,34 +266,31 @@ const Chat = ({ archivized }) => {
       navigator.webkitGetUserMedia ||
       navigator.mozGetUserMedia
 
-    if (getUserMedia) {
-      console.log(DetectRTC.hasMicrophone)
-      getUserMedia({ video: true, audio: true }, (mediaStream) => {
-        currentUserVideoRef.current.srcObject = mediaStream
-        currentUserVideoRef.current.onloadedmetadata = () => {
-          currentUserVideoRef.current.play()
-        }
+    getUserMedia({ video: true, audio: true }, (mediaStream) => {
+      currentUserVideoRef.current.srcObject = mediaStream
+      currentUserVideoRef.current.onloadedmetadata = () => {
+        currentUserVideoRef.current.play()
+      }
 
-        const call = peerInstance.current.call(remotePeerId, mediaStream, {
-          metadata: {
-            callerPeerId: peerId,
-          },
-        })
-
-        call.on(
-          'stream',
-          (remoteStream) => {
-            remoteVideoRef.current.srcObject = remoteStream
-            remoteVideoRef.current.onloadedmetadata = () => {
-              remoteVideoRef.current.play()
-            }
-          },
-          function (err) {
-            showAlertError('Błąd', 'Błąd przy strumieniowaniu obrazu.')
-          }
-        )
+      const call = peerInstance.current.call(remotePeerId, mediaStream, {
+        metadata: {
+          callerPeerId: peerId,
+        },
       })
-    }
+
+      call.on(
+        'stream',
+        (remoteStream) => {
+          remoteVideoRef.current.srcObject = remoteStream
+          remoteVideoRef.current.onloadedmetadata = () => {
+            remoteVideoRef.current.play()
+          }
+        },
+        function (err) {
+          showAlertError('Błąd', 'Błąd przy strumieniowaniu obrazu.')
+        }
+      )
+    })
   }
 
   const rejectVideoCall = async () => {
