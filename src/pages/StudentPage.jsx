@@ -4,6 +4,7 @@ import useAxios from '../utils/useAxios'
 import guest from '../assets/guest.png'
 import LoadingComponent from '../components/LoadingComponent'
 import { useNavigate } from 'react-router-dom'
+import SendPrivateMessage from '../components/PrivateMessagesComponents/SendPrivateMessage'
 import {
   AiOutlinePhone,
   AiOutlineMail,
@@ -19,6 +20,7 @@ const StudentPage = () => {
 
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [isOpened, setIsOpened] = useState(false)
 
   const fetchProfile = async () => {
     setLoading(true)
@@ -70,14 +72,28 @@ const StudentPage = () => {
               </div>
             </div>
 
-            <div className="profile mt-10 flex w-full flex-col items-center justify-center gap-y-5">
-              <div className="mb-2 w-full border-b-[1px] border-base-100"></div>
-              <section className="flex w-6/12 flex-col items-center justify-center max-phone:w-full max-phone:items-start max-phone:justify-start">
+            <div className="profile mt-5 flex w-full flex-col items-center justify-center gap-y-5">
+              <div className="w-full border-b-[1px] border-base-100"></div>
+              <section className="flex w-full flex-col items-center justify-center max-phone:w-full max-phone:items-start max-phone:justify-start">
+                <button
+                  className="btn-outline no-animation btn h-10 !min-h-0 w-6/12 rounded-sm border-base-400 py-0 hover:bg-base-400"
+                  onClick={() => setIsOpened(!isOpened)}
+                >
+                  Wyślij wiadomość
+                </button>
+                <SendPrivateMessage
+                  toUser={profile}
+                  opened={isOpened}
+                  setIsOpened={setIsOpened}
+                />
+                <div className="my-5 w-full border-b-[1px] border-base-100"></div>
+
                 <div className="contact mx-auto">
                   <label className="block text-center text-lg font-bold uppercase tracking-wide text-gray-700">
                     Dane kontaktowe
                   </label>
                 </div>
+
                 <div className="flex w-full flex-row justify-center gap-x-3">
                   <AiOutlineMail className="h-6 w-6 text-base-400" />
 
