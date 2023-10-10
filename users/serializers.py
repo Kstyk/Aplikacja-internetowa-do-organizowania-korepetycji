@@ -262,6 +262,9 @@ class UserPrivateMessageSerializer(serializers.ModelSerializer):
 
 
 class PrivateMessageSerializer(serializers.ModelSerializer):
+    from_user = UserPrivateMessageSerializer()
+    to_user = UserPrivateMessageSerializer()
+
     class Meta:
         model = PrivateMessage
         fields = (
