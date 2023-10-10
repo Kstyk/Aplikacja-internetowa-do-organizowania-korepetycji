@@ -74,16 +74,6 @@ const ProfilePage = () => {
                     />
                   </div>
                 </div>
-                <button
-                  className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400"
-                  onClickCapture={() =>
-                    window.open(
-                      'mailto:email@example.com?subject=Subject&body=Body%20goes%20here'
-                    )
-                  }
-                >
-                  Wyślij wiadomość
-                </button>
 
                 <section className="infos flex w-full flex-col pt-4">
                   <div className="mb-4 border-b-[1px] border-base-100"></div>
