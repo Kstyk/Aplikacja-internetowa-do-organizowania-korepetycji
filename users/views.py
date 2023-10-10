@@ -310,6 +310,7 @@ class PrivateConversationsListView(generics.ListAPIView):
 class PrivateMessageViewSet(ListModelMixin, GenericViewSet):
     serializer_class = PrivateMessageSerializer
     permission_classes = [IsAuthenticated]
+    queryset = PrivateMessage.objects.none()
     pagination_class = PrivateMessagePagination
 
     def get_queryset(self):
