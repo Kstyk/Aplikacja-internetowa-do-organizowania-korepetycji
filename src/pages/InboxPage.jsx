@@ -3,6 +3,9 @@ import useAxios from '../utils/useAxios'
 import { Link } from 'react-router-dom'
 import LoadingComponent from '../components/LoadingComponent'
 import ConversationUserCard from '../components/PrivateMessagesComponents/ConversationUserCard'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import ChatLoader from '../components/RoomComponents/ChatLoader'
+import PrivateMessage from '../components/PrivateMessagesComponents/PrivateMessage'
 
 const InboxPage = () => {
   const api = useAxios()
@@ -10,6 +13,7 @@ const InboxPage = () => {
   const [loadingConversation, setLoadingConversation] = useState(false)
   const [conversationsUsers, setConversationsUsers] = useState([])
   const [selectedUser, setSelectedUser] = useState(null)
+  const [messages, setMessages] = useState([])
 
   const fetchConversationUsers = async () => {
     setLoadingConversations(true)
@@ -35,10 +39,13 @@ const InboxPage = () => {
           `/api/users/private-conversation/messages/?user_id=${selectedUser?.id}`
         )
         .then((res) => {
+          setMessages(res.data.results)
+          setLoadingConversation(false)
           console.log(res)
         })
         .catch((err) => {
           console.log(err)
+          setLoadingConversation(false)
         })
     }
   }
@@ -59,6 +66,10 @@ const InboxPage = () => {
         <div className="left flex h-full w-3/12 flex-col gap-y-1 overflow-y-auto break-words border-r-2">
           {loadingConversations ? (
             <LoadingComponent />
+          ) : conversationsUsers.length == 0 ? (
+            <span className="mt-5 p-2 text-center text-sm italic">
+              Brak rozpoczętych konwersacji.
+            </span>
           ) : (
             conversationsUsers.map((user) => (
               <ConversationUserCard
@@ -69,7 +80,25 @@ const InboxPage = () => {
             ))
           )}
         </div>
-        <div className="right h-full w-9/12"></div>
+        <div className="right h-full w-9/12">
+          {loadingConversation ? (
+            <LoadingComponent />
+          ) : (
+            <InfiniteScroll
+              dataLength={messages.length}
+              next={fetchMessages}
+              className="flex flex-col-reverse"
+              inverse={true}
+              hasMore={false}
+              loader={<ChatLoader />}
+              scrollableTarget="right"
+            >
+              {messages.map((message) => (
+                <PrivateMessage key={message.id} message={message} />
+              ))}
+            </InfiniteScroll>
+          )}
+        </div>
       </div>
     </div>
   )
