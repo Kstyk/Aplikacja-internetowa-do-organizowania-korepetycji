@@ -30,10 +30,9 @@ const Chat = ({ archivized }) => {
   const [messageHistory, setMessageHistory] = useState([])
   const [page, setPage] = useState(2)
   const [hasMoreMessages, setHasMoreMessages] = useState(false)
-  const nav = useNavigate()
 
   const { roomId } = useParams()
-  const { user, authTokens } = useContext(AuthContext)
+  const { user } = useContext(AuthContext)
   const { sendNotification } = useContext(NotificationContext)
   const [secondUserProfile, setSecondUserProfile] = useState(null)
 
@@ -455,7 +454,7 @@ const Chat = ({ archivized }) => {
             )}
           </div>
           {archivized ? (
-            <div className="right- fixed bottom-0 mx-auto flex w-full flex-row items-center border-t-2 bg-white p-5 phone:w-11/12 md:w-10/12 lg:w-8/12">
+            <div className="right fixed bottom-0 mx-auto flex w-full flex-row items-center border-t-2 bg-white p-5 phone:w-11/12 md:w-10/12 lg:w-8/12">
               <div className="flex h-10 w-full items-center justify-center italic text-gray-600">
                 <span>Historia czatu</span>
               </div>

@@ -11,15 +11,6 @@ export function classNames(...classes) {
 
 const PrivateMessage = ({ message }) => {
   const { user } = useContext(AuthContext)
-  const [fromUser, setFromUser] = useState(null)
-  const [toUser, setToUser] = useState(null)
-
-  useEffect(() => {
-    if (message != null) {
-      setFromUser(message?.from_user)
-      setToUser(message?.to_user)
-    }
-  }, [message])
 
   dayjs.locale('pl')
   const URL_REGEX =
@@ -43,16 +34,12 @@ const PrivateMessage = ({ message }) => {
         <div className="w-10 rounded-full ring-primary ring-offset-2 ring-offset-base-100 transition-all duration-200 hover:ring">
           <img
             title={
-              user?.email != message.to_user.email
+              user?.email == message.from_user.email
                 ? user.email
                 : message.from_user.email
             }
             src={
-              user?.email != message.to_user.email
-                ? user?.image
-                  ? `${backendUrl}${user.image}`
-                  : guest
-                : message?.from_user?.profile_image
+              message?.from_user?.profile_image != null
                 ? `${backendUrl}${message?.from_user?.profile_image}`
                 : guest
             }
@@ -66,7 +53,9 @@ const PrivateMessage = ({ message }) => {
       </div>
       <div
         className={`chat-bubble max-w-[60%] break-words text-black hover:bg-opacity-80  ${
-          user?.email === message.to_user.email ? `bg-base-300` : `bg-base-200`
+          user?.email !== message.from_user.email
+            ? `bg-base-300`
+            : `bg-base-200`
         }`}
       >
         {message.content.match(URL_REGEX) ? (
