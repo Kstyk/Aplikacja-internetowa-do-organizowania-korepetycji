@@ -1,15 +1,32 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
+import { NotificationContext } from '../context/NotificationContext'
 import './Navbar.scss'
 import transparent_logo from '../assets/transparent_logo.png'
 import guest from '../assets/guest.png'
 import { backendUrl } from '../variables/backendUrl'
 import { AiOutlineHome } from 'react-icons/ai'
+import useAxios from '../utils/useAxios'
 
 const Navbar = () => {
-  let { user, logoutUser } = useContext(AuthContext)
+  const api = useAxios()
+  const { user, logoutUser } = useContext(AuthContext)
+  const { countunreadallprivatemessages, setCountunreadallprivatemessages } =
+    useContext(NotificationContext)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
+
+  const unreadCountMessages = async () => {
+    await api.get(`/api/users/unread-messages-count/`).then((res) => {
+      setCountunreadallprivatemessages(res.data.unread_count)
+    })
+  }
+
+  useEffect(() => {
+    if (user != null) {
+      unreadCountMessages()
+    }
+  }, [])
 
   return (
     <>
@@ -81,8 +98,16 @@ const Navbar = () => {
                   className="dropdown-content menu menu-sm z-[1] mt-3 w-52 rounded-none bg-base-100 p-2 shadow"
                 >
                   <li className="custom-border-dropdown h-fit">
-                    <Link to="/skrzynka-odbiorcza" className="rounded-none">
-                      Skrzynka odbiorcza
+                    <Link
+                      to="/skrzynka-odbiorcza"
+                      className={`w-full rounded-none ${
+                        countunreadallprivatemessages > 0 && 'font-bold'
+                      }`}
+                    >
+                      <span>Skrzynka odbiorcza</span>
+                      <span className="badge badge-primary">
+                        {countunreadallprivatemessages}
+                      </span>
                     </Link>
                   </li>
                   <li className="custom-border-dropdown h-fit">
@@ -189,8 +214,16 @@ const Navbar = () => {
                   className="dropdown-content menu menu-sm z-[1] mt-3 w-52 rounded-none bg-base-100 p-2 shadow"
                 >
                   <li className="custom-border-dropdown h-fit">
-                    <Link to="/skrzynka-odbiorcza" className="rounded-none">
-                      Skrzynka odbiorcza
+                    <Link
+                      to="/skrzynka-odbiorcza"
+                      className={`w-full rounded-none ${
+                        countunreadallprivatemessages > 0 && 'font-bold'
+                      }`}
+                    >
+                      <span>Skrzynka odbiorcza</span>
+                      <span className="badge badge-primary">
+                        {countunreadallprivatemessages}
+                      </span>
                     </Link>
                   </li>
                   <li>
@@ -341,6 +374,19 @@ const Navbar = () => {
               <>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <Link
+                    to="/skrzynka-odbiorcza"
+                    className={`flex h-8 w-full items-center pl-5 text-sm uppercase ${
+                      countunreadallprivatemessages > 0 && 'font-bold'
+                    }`}
+                  >
+                    <span className="mr-3">Skrzynka odbiorcza</span>
+                    <span className="badge badge-primary">
+                      {countunreadallprivatemessages}
+                    </span>
+                  </Link>
+                </li>
+                <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                  <Link
                     to="/szukaj-zajec"
                     className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                   >
@@ -441,6 +487,19 @@ const Navbar = () => {
             )}
             {user?.role == 'Teacher' && (
               <>
+                <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                  <Link
+                    to="/skrzynka-odbiorcza"
+                    className={`flex h-8 w-full items-center pl-5 text-sm uppercase ${
+                      countunreadallprivatemessages > 0 && 'font-bold'
+                    }`}
+                  >
+                    <span className="mr-3">Skrzynka odbiorcza</span>
+                    <span className="badge badge-primary">
+                      {countunreadallprivatemessages}
+                    </span>
+                  </Link>
+                </li>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <Link
                     to="/my-rooms"

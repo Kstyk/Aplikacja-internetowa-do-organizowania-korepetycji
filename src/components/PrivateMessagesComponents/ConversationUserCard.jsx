@@ -1,14 +1,25 @@
 import React from 'react'
 import { backendUrl } from '../../variables/backendUrl'
 import guest from '../../assets/guest.png'
-import { Link } from 'react-router-dom'
-const ConversationUserCard = ({ user, setSelectedUser }) => {
+
+const ConversationUserCard = ({ user, setSelectedUser, selectedUser }) => {
   return (
     <div
       onClick={() => setSelectedUser(user)}
-      className="flex w-full cursor-pointer flex-row items-center justify-center gap-x-2 rounded-md border-b-[1px] p-2 transition-all duration-200 hover:bg-gray-100 phone:justify-start"
+      className={`flex w-full cursor-pointer flex-row items-center justify-center gap-x-2 border-b-[1px] px-2 py-3 transition-all duration-200 first:rounded-tl-md hover:bg-gray-100 phone:justify-start ${
+        selectedUser?.id == user?.id && 'bg-base-100'
+      }`}
     >
-      <div className="avatar w-full phone:w-4/12">
+      <div
+        className={`avatar w-full phone:w-4/12 ${
+          user?.unread_messages_count > 0 && 'indicator'
+        }`}
+      >
+        {user?.unread_messages_count > 0 && (
+          <span className="badge badge-primary indicator-item">
+            {user?.unread_messages_count}
+          </span>
+        )}
         <div className="mx-auto w-12 rounded-full ring-primary ring-offset-2 ring-offset-base-100 transition-all duration-200 hover:ring">
           <img
             src={
@@ -19,7 +30,11 @@ const ConversationUserCard = ({ user, setSelectedUser }) => {
           />
         </div>
       </div>
-      <div className="name hidden w-8/12 flex-col break-words text-sm uppercase phone:flex">
+      <div
+        className={`name hidden w-8/12 flex-col break-words text-sm uppercase phone:flex ${
+          user?.unread_messages_count > 0 && 'font-bold'
+        }`}
+      >
         <span className="truncate">{user?.first_name}</span>
         <span className="truncate">{user?.last_name}</span>
       </div>

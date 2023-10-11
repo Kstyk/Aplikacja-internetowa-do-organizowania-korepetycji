@@ -17,6 +17,12 @@ export const NotificationContextProvider = ({ children }) => {
   const [roomToUpdate, setRoomToUpdate] = useState(null)
   const [countUnreadMessages, setCountUnreadMessages] = useState()
 
+  const [fromUserPrivateMessages, setFromUserPrivateMessages] = useState(null)
+  const [countUnreadPrivateMessages, setCountUnreadPrivateMessages] = useState()
+  const [toggleUpdateUnread, setToggleUpdateUnread] = useState(false)
+  const [countunreadallprivatemessages, setCountunreadallprivatemessages] =
+    useState()
+
   const CustomToastWithLink = (fisrt_name, last_name, room_id) => (
     <div className="flex flex-col items-center">
       <span>
@@ -62,8 +68,17 @@ export const NotificationContextProvider = ({ children }) => {
             setCountUnreadMessages(data.unread_messages)
             setRoomToUpdate(data.room_id)
             break
+          case 'updateunreadprivatemessagescount':
+            setCountunreadallprivatemessages(data.unread_all_messages)
+            setCountUnreadPrivateMessages(data.unread_messages)
+            setFromUserPrivateMessages(data.from_user)
+            break
+          case 'unread_private_messages_count_updated':
+            setCountunreadallprivatemessages(data.unread_all_messages)
+            setToggleUpdateUnread(!toggleUpdateUnread)
+            break
           default:
-            bash.error('Unknown message type!')
+            console.log(data)
             break
         }
       },
@@ -85,6 +100,11 @@ export const NotificationContextProvider = ({ children }) => {
         sendNotification: sendJsonMessage,
         roomToUpdate: roomToUpdate,
         countUnreadMessages: countUnreadMessages,
+        countUnreadPrivateMessages: countUnreadPrivateMessages,
+        fromUserPrivateMessages: fromUserPrivateMessages,
+        toggleUpdateUnread: toggleUpdateUnread,
+        countunreadallprivatemessages: countunreadallprivatemessages,
+        setCountunreadallprivatemessages: setCountunreadallprivatemessages,
       }}
     >
       {children}

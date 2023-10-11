@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { NotificationContext } from '../context/NotificationContext'
+import AuthContext from '../context/AuthContext'
 import useAxios from '../utils/useAxios'
-import { Link } from 'react-router-dom'
 import LoadingComponent from '../components/LoadingComponent'
 import ConversationUserCard from '../components/PrivateMessagesComponents/ConversationUserCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -13,14 +14,44 @@ import showAlertError from '../components/messages/SwalAlertError'
 const InboxPage = () => {
   const api = useAxios()
   const [loadingConversations, setLoadingConversations] = useState(false)
-  const [loadingConversation, setLoadingConversation] = useState(false)
   const [conversationsUsers, setConversationsUsers] = useState([])
   const [selectedUser, setSelectedUser] = useState(null)
   const [messages, setMessages] = useState([])
   const [hasMoreMessages, setHasMoreMessages] = useState(false)
   const [page, setPage] = useState(1)
+  const {
+    sendNotification,
+    fromUserPrivateMessages,
+    countUnreadPrivateMessages,
+    toggleUpdateUnread,
+  } = useContext(NotificationContext)
+  const { user } = useContext(AuthContext)
 
   const [message, setMessage] = useState(null)
+
+  useEffect(() => {
+    if (fromUserPrivateMessages != null) {
+      fetchUnreadPrivateMessagesUpdate()
+    }
+  }, [countUnreadPrivateMessages])
+
+  useEffect(() => {
+    fetchUnreadPrivateMessagesUpdate()
+  }, [toggleUpdateUnread])
+
+  const fetchUnreadPrivateMessagesUpdate = async () => {
+    await api
+      .get(`/api/users/private-conversations/`)
+      .then((res) => {
+        setConversationsUsers(res.data)
+      })
+      .catch((err) => {
+        showAlertError(
+          'Błąd',
+          'Występił błąd przy pobieraniu rozpoczętych konwersacji.'
+        )
+      })
+  }
 
   const fetchConversationUsers = async () => {
     setLoadingConversations(true)
@@ -32,23 +63,40 @@ const InboxPage = () => {
       })
       .catch((err) => {
         setLoadingConversations(false)
+        showAlertError(
+          'Błąd',
+          'Występił błąd przy pobieraniu rozpoczętych konwersacji.'
+        )
       })
   }
 
-  const fetchMessages = async () => {
+  const fetchMessages = async (defaultPage = null) => {
+    if (defaultPage != null) {
+      setMessages([])
+    }
     if (selectedUser != null) {
+      sendNotification({
+        type: 'read_private_messages',
+        token: user.token,
+        userId: selectedUser?.id,
+      })
+
       await api
         .get(
-          `/api/users/private-conversation/messages/?user_id=${selectedUser?.id}&page=${page}`
+          `/api/users/private-conversation/messages/?user_id=${
+            selectedUser?.id
+          }&page=${defaultPage != null ? defaultPage : page}`
         )
         .then((res) => {
           setHasMoreMessages(res.data.next !== null)
-          setPage(page + 1)
+          setPage(defaultPage != null ? 2 : page + 1)
           setMessages((prev) => prev.concat(res.data.results))
-          console.log(res.data)
         })
         .catch((err) => {
-          console.log(err)
+          showAlertError(
+            'Błąd',
+            'Występił błąd przy wiadomości wybranej konwersacji.'
+          )
         })
     }
   }
@@ -80,10 +128,13 @@ const InboxPage = () => {
       .post(`/api/users/send-private-message/`, data)
       .then((res) => {
         setPage(1)
-        console.log(res)
-        setMessages([])
-        fetchMessages()
+        fetchMessages(1)
         setMessage('')
+        sendNotification({
+          type: 'update_unread_private_messages_count',
+          token: user.token,
+          userId: selectedUser?.id,
+        })
       })
       .catch((err) => {
         if (err.response.status == 400) {
@@ -122,7 +173,7 @@ const InboxPage = () => {
       <div className="absolute left-0 right-0 top-[70px] h-[200px] bg-base-300"></div>
 
       <div className="card mx-auto mb-10 flex h-[80vh] flex-row rounded-md bg-white shadow-xl">
-        <div className="left flex h-full w-3/12 flex-col gap-y-1 overflow-y-auto break-words border-r-2">
+        <div className="left flex h-full w-3/12 flex-col overflow-y-auto break-words border-r-2">
           {loadingConversations ? (
             <LoadingComponent />
           ) : conversationsUsers.length == 0 ? (
@@ -135,15 +186,21 @@ const InboxPage = () => {
                 key={user?.id}
                 user={user}
                 setSelectedUser={handleChangeSelectedUser}
+                selectedUser={selectedUser}
               />
             ))
           )}
         </div>
-        <div className="right h-full w-9/12">
+        <div className="right h-full w-9/12 phone:pt-2">
           {selectedUser != null ? (
             <>
+              <div className="flex h-[10%] items-center break-words border-b-2 px-2 phone:hidden">
+                <h1 className="break-words text-xl font-bold uppercase tracking-wider">
+                  {selectedUser?.first_name} {selectedUser?.last_name}
+                </h1>
+              </div>
               <div
-                className="chat-scroll flex h-5/6 flex-col-reverse overflow-y-auto border-b-2 pb-2"
+                className="chat-scroll flex h-[80%] flex-col-reverse overflow-y-auto border-b-2 phone:h-[90%] "
                 id="chat-scroll"
               >
                 <InfiniteScroll
@@ -160,7 +217,7 @@ const InboxPage = () => {
                   ))}
                 </InfiniteScroll>
               </div>
-              <div className="flex h-1/6 w-full items-center px-5">
+              <div className="flex h-[10%] w-full items-center px-5">
                 <div className="flex h-12 w-full items-center justify-between border-b-2">
                   <input
                     type="text"
