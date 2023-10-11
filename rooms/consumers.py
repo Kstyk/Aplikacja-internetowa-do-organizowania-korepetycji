@@ -11,7 +11,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import TokenError, AccessToken
 from users.serializers import UserSerializer
 from channels.generic.websocket import JsonWebsocketConsumer
-
+from users.models import PrivateMessage
 
 User = get_user_model()
 
@@ -214,8 +214,52 @@ class NotificationConsumer(JsonWebsocketConsumer):
                 )
                 return super().receive_json(content, **kwargs)
 
+        # Private Messages - skrzynka odbiorcza
+
+        if message_type == "read_private_messages":
+            user = User.objects.get(pk=content['userId'])
+            messages_to_me = PrivateMessage.objects.filter(
+                to_user=self.user, from_user=user)
+            messages_to_me.update(read=True)
+
+            unread_all_messages = PrivateMessage.objects.filter(
+                to_user=self.user, read=False).count()
+
+            self.send_json({
+                "type": "unread_private_messages_count_updated",
+                "unread_messages": 0,
+                "unread_all_messages": unread_all_messages
+            })
+
+        if message_type == "update_unread_private_messages_count":
+            user = User.objects.get(pk=content['userId'])
+            unread_messages = PrivateMessage.objects.filter(
+                to_user=user, read=False, from_user=self.user).count()
+            unread_all_messages = PrivateMessage.objects.filter(
+                to_user=user, read=False).count()
+
+            notification_group_name = f"{user.id}__notifications"
+            async_to_sync(self.channel_layer.group_send)(
+                notification_group_name,
+                {
+                    "type": "updateunreadprivatemessagescount",
+                    'sender_channel_name': self.channel_name,
+                    'from_user': self.user.id,
+                    'unread_messages': unread_messages,
+                    'unread_all_messages': unread_all_messages
+                }
+            )
+
+            return super().receive_json(content, **kwargs)
+
     def incomingcall(self, event):
         self.send_json(event)
 
     def updateunreadcount(self, event):
+        self.send_json(event)
+
+    def updateunreadprivatemessagescount(self, event):
+        self.send_json(event)
+
+    def unread_private_messages_count_updated(self, event):
         self.send_json(event)

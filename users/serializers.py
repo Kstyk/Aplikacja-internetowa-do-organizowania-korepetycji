@@ -245,11 +245,12 @@ class CreatePrivateMessageSerializer(serializers.ModelSerializer):
 class UserPrivateMessageSerializer(serializers.ModelSerializer):
     role = RoleSerializer()
     profile_image = serializers.SerializerMethodField()
+    unread_messages_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ('id', 'email', 'first_name',
-                  'last_name', 'role', 'profile_image')
+                  'last_name', 'role', 'profile_image', 'unread_messages_count')
 
     def get_profile_image(self, obj):
         if obj.userdetails:
@@ -259,6 +260,17 @@ class UserPrivateMessageSerializer(serializers.ModelSerializer):
                 return None
         else:
             return None
+
+    def get_unread_messages_count(self, obj):
+        if self.context.get('request') is not None:
+            logged_user = self.context.get('request').user
+
+            messages_count = PrivateMessage.objects.filter(
+                from_user_id=obj.id, read=False, to_user=logged_user)
+
+            return messages_count.count()
+        else:
+            return 0
 
 
 class PrivateMessageSerializer(serializers.ModelSerializer):

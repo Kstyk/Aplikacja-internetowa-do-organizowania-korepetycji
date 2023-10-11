@@ -306,6 +306,10 @@ class PrivateConversationsListView(generics.ListAPIView):
 
         return users
 
+    def get_serializer(self, *args, **kwargs):
+        kwargs['context'] = {'request': self.request}
+        return self.serializer_class(*args, **kwargs)
+
 
 class PrivateMessageViewSet(ListModelMixin, GenericViewSet):
     serializer_class = PrivateMessageSerializer
@@ -321,9 +325,20 @@ class PrivateMessageViewSet(ListModelMixin, GenericViewSet):
 
             queryset = (
                 PrivateMessage.objects.filter(
-                    Q(from_user=user) | Q(to_user=user))
+                    Q(Q(from_user=user) & Q(to_user=self.request.user)) | Q(Q(to_user=user) & Q(from_user=self.request.user)))
                 .order_by("-timestamp")
             )
             return queryset
         else:
             return []
+
+
+class UnreadPrivateMessagesCountView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        unread_count = PrivateMessage.objects.filter(
+            to_user=user, read=False).count()
+
+        return Response({'unread_count': unread_count})
