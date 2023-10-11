@@ -56,7 +56,7 @@ const ProfilePage = () => {
         <section className="mb-10 mt-10 w-full shadow-xl">
           <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
           <div className="card z-30 mb-5 flex flex-row items-center justify-between rounded-md border-[1px] border-base-200 bg-white py-4 text-center shadow-xl max-md:text-xl max-phone:text-lg md:text-2xl">
-            <h1 className="w-full text-center text-xl font-bold uppercase tracking-wider text-gray-700">
+            <h1 className="w-full break-words px-2 text-center text-xl font-bold uppercase tracking-wider text-gray-700">
               {profile?.user?.first_name} {profile?.user?.last_name}
             </h1>
           </div>
@@ -173,8 +173,8 @@ const ProfilePage = () => {
               </div>
               <div className="content w-8/12 px-4 max-phone:order-2 max-phone:mb-3 max-phone:w-full max-phone:pb-3 sm:w-9/12">
                 <div className="header flex flex-row">
-                  <div className="left w-8/12">
-                    <h1 className="text-xl font-bold uppercase tracking-wider text-gray-700">
+                  <div className="left w-full">
+                    <h1 className="w-full break-words text-xl font-bold uppercase tracking-wider text-gray-700">
                       {profile?.user.first_name} {profile?.user.last_name}
                     </h1>
                   </div>
