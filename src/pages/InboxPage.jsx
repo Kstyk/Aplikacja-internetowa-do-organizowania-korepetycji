@@ -12,6 +12,8 @@ import { BiMessageSquareDetail } from 'react-icons/bi'
 import showAlertError from '../components/messages/SwalAlertError'
 
 const InboxPage = () => {
+  document.title = "Skryznka odbiorcza"
+
   const api = useAxios()
   const [loadingConversations, setLoadingConversations] = useState(false)
   const [conversationsUsers, setConversationsUsers] = useState([])

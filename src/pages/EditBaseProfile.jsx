@@ -9,6 +9,8 @@ import showSuccessAlert from '../components/messages/SwalAlertSuccess'
 import showAlertError from '../components/messages/SwalAlertError'
 
 const EditBaseProfile = () => {
+  document.title = 'Edytuj dane podstawowe'
+
   const { user } = useContext(AuthContext)
   const [backendErrors, setBackendErrors] = useState({})
   const [baseUser, setBaseUser] = useState(null)

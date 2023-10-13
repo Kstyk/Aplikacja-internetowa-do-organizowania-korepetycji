@@ -7,6 +7,8 @@ import { timeslots } from '../variables/Timeslots'
 import { days } from '../variables/Days'
 
 const ModifyTimeslotsPage = () => {
+  document.title = 'Edytuj harmonogram zajęć'
+
   const [timeSlotsTeacher, setTimeSlotsTeacher] = useState([])
   const api = useAxios()
 

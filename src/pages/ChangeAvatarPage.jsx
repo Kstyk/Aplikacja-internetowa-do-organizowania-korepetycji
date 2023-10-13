@@ -7,6 +7,8 @@ import showSuccessAlert from '../components/messages/SwalAlertSuccess'
 import { useNavigate } from 'react-router-dom'
 
 const ChangeAvatarPage = () => {
+  document.title = "Zmień avatar"
+  
   const [loading, setLoading] = useState(true)
 
   const [currentAvatar, setCurrentAvatar] = useState()

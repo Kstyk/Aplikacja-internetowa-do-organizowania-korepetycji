@@ -12,6 +12,8 @@ import showAlertError from '../components/messages/SwalAlertError'
 import SendPrivateMessage from '../components/PrivateMessagesComponents/SendPrivateMessage'
 
 const TeacherPage = () => {
+  document.title = 'Profil nauczyciela'
+
   const { teacherId } = useParams()
   const api = useAxios()
   const nav = useNavigate()

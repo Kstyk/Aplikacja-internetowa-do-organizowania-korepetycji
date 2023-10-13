@@ -6,6 +6,8 @@ import OpinionCard from '../components/ClassesComponents/OpinionCard'
 import showAlertError from '../components/messages/SwalAlertError'
 
 const ReceivedOpinions = () => {
+  document.title = 'Otrzymane opinie'
+
   const api = useAxios()
   const [loading, setLoading] = useState(true)
   const [opinions, setOpinions] = useState([])

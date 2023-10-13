@@ -15,6 +15,10 @@ import Swal from 'sweetalert2'
 import RateTeacher from '../ClassesComponents/RateTeacher'
 
 const Room = () => {
+  const [name, setName] = useState()
+
+  document.title = `Pokój - ${name}`
+
   const { roomId } = useParams()
   const { user, authTokens } = useContext(AuthContext)
   const { selectedTab, setSelectedTab, setRoom } = useContext(RoomContext)
@@ -22,7 +26,6 @@ const Room = () => {
   let api = useAxios()
   const nav = useNavigate()
 
-  const [name, setName] = useState()
   const [teacher, setTeacher] = useState()
   const [isArchivized, setIsArchivized] = useState()
   const [loading, setLoading] = useState(true)

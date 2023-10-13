@@ -7,6 +7,8 @@ import books from '../assets/books.jpg'
 import showAlertError from '../components/messages/SwalAlertError'
 
 const HomePage = () => {
+  document.title = 'korki.PL - strona główna'
+
   const api = useAxios()
 
   const [languages, setLanguages] = useState([])

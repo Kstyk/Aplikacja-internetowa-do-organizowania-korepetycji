@@ -10,6 +10,8 @@ import Pagination from '../components/Pagination'
 import showAlertError from '../components/messages/SwalAlertError'
 
 const SearchClassesPage = () => {
+  document.title = 'Szukaj zajęć'
+
   const { languageSlug, citySlug, searchText } = useParams()
   const location = useLocation()
   const params = new URLSearchParams(location.search)

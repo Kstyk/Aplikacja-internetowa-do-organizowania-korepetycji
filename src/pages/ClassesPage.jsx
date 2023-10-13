@@ -12,6 +12,7 @@ import OpinionCard from '../components/ClassesComponents/OpinionCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
 const ClassesPage = () => {
+  document.title = 'Podgląd zajęć'
   const api = useAxios()
 
   const [classes, setClasses] = useState(null)

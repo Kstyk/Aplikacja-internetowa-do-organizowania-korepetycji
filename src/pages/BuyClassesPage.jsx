@@ -12,6 +12,8 @@ import Select from 'react-select'
 import { useForm, Controller } from 'react-hook-form'
 
 const BuyClassesPage = () => {
+  document.title = 'Zakup zajęcia'
+
   const api = useAxios()
   const nav = useNavigate()
 

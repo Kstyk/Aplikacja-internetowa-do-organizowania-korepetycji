@@ -6,6 +6,8 @@ import showSuccessAlert from '../components/messages/SwalAlertSuccess'
 import { BiShow } from 'react-icons/bi'
 
 const ChangePasswordPage = () => {
+  document.title = 'Zmień hasło'
+  
   const api = useAxios()
 
   const [backendErrors, setBackendErrors] = useState({})

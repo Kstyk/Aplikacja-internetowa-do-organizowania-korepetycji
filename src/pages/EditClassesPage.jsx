@@ -11,6 +11,8 @@ import showAlertError from '../components/messages/SwalAlertError'
 import LoadingComponent from '../components/LoadingComponent'
 
 const EditClassesPage = () => {
+  document.title = 'Edytuj zajęcia'
+
   const nav = useNavigate()
   const api = useAxios()
   const location = useLocation()

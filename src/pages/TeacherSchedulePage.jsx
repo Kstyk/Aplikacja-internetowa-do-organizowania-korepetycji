@@ -4,6 +4,8 @@ import { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
 
 const TeacherSchedulePage = () => {
+  document.title = 'Twój plan zajęć'
+
   const { user } = useContext(AuthContext)
   return (
     <>

@@ -14,6 +14,8 @@ import {
 } from 'react-icons/ai'
 
 const StudentProfilePage = () => {
+  document.title = 'Twój profil'
+
   const api = useAxios()
   const { user } = useContext(AuthContext)
 

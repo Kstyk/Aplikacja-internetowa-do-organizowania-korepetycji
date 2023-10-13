@@ -10,11 +10,12 @@ import { Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 
 const ProfilePage = () => {
+  document.title = 'Twój profil'
+
   const { user } = useContext(AuthContext)
   const api = useAxios()
 
   const [profile, setProfile] = useState(null)
-  const [classes, setClasses] = useState([])
   const [loading, setLoading] = useState(true)
 
   const fetchProfile = async () => {
@@ -22,17 +23,6 @@ const ProfilePage = () => {
       .get(`/api/users/profile/${user?.user_id}`)
       .then((res) => {
         setProfile(res.data)
-      })
-      .catch((err) => {})
-  }
-
-  const fetchClassesTeacher = async () => {
-    let baseurl = `/api/classes/?page_size=10&page=1&teacher=${user?.user_id}`
-
-    await api
-      .get(baseurl)
-      .then((res) => {
-        setClasses(res.data.classes)
       })
       .catch((err) => {})
   }

@@ -10,6 +10,8 @@ import showAlertError from '../components/messages/SwalAlertError'
 import { NotificationContext } from '../context/NotificationContext'
 
 const StartedRoomsPage = () => {
+  document.title = 'Twoje pokoje'
+
   const api = useAxios()
   const [rooms, setRooms] = useState([])
   const [archivizedRooms, setArchivizedRooms] = useState([])

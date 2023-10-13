@@ -3,9 +3,10 @@ import AuthContext from '../context/AuthContext'
 import ErrorMessage from '../components/messages/ErrorMessage'
 import transparent_logo from '../assets/transparent_logo.png'
 import { Link } from 'react-router-dom'
-// import "../styles/button.css";
 
 const LoginPage = () => {
+document.title ="Logowanie"
+
   let { loginUser, error, setError } = useContext(AuthContext)
 
   return (

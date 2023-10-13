@@ -10,6 +10,7 @@ import AuthContext from '../context/AuthContext'
 import showAlertError from '../components/messages/SwalAlertError'
 
 const EditMoreInfosPage = () => {
+  document.title = "Edytuj dane profilowe"
   const { user } = useContext(AuthContext)
   const [loading, setLoading] = useState(true)
   const api = useAxios()

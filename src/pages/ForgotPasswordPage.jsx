@@ -6,6 +6,8 @@ import showAlertError from '../components/messages/SwalAlertError'
 import LoadingComponent from '../components/LoadingComponent'
 
 const ForgotPasswordPage = () => {
+  document.title = 'Resetowanie hasła'
+
   const api = useAxios()
   const [loading, setLoading] = useState(false)
   const [isSended, setIsSended] = useState(false)

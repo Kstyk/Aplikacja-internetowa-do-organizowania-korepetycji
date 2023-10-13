@@ -6,6 +6,8 @@ import { FiExternalLink, FiEdit } from 'react-icons/fi'
 import showAlertError from '../components/messages/SwalAlertError'
 
 const ListOfTeachersClassesPage = () => {
+  document.title = 'Lista zajęć'
+
   const api = useAxios()
   const [classes, setClasses] = useState([])
   const [loading, setLoading] = useState(true)

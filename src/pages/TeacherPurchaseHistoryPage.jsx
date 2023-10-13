@@ -6,6 +6,8 @@ import PurchaseTeacherHistoryTable from '../components/PurchaseHistorysComponent
 import Pagination from '../components/Pagination'
 
 const TeacherPurchaseHistoryPage = () => {
+  document.title = 'Historia zakupionych zajęć'
+
   const [loading, setLoading] = useState(true)
   const [totalPages, setTotalPages] = useState(0)
   const [totalResults, setTotalResults] = useState(0)

@@ -7,6 +7,8 @@ import OpinionStudentViewCard from '../components/ClassesComponents/OpinionStude
 import LoadingComponent from '../components/LoadingComponent'
 
 const AddedOpinionsPage = () => {
+  document.title = 'Dodane opinie'
+
   const api = useAxios()
   const [loading, setLoading] = useState(true)
   const [opinions, setOpinions] = useState([])

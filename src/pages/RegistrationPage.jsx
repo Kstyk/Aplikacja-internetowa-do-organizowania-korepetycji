@@ -1,5 +1,4 @@
-import React, { useContext, useEffect } from 'react'
-import AuthContext from '../context/AuthContext'
+import React, { useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import axios from 'axios'
 import Select from 'react-select'
@@ -12,8 +11,9 @@ import { backendUrl } from '../variables/backendUrl'
 import showSuccessAlert from '../components/messages/SwalAlertSuccess'
 
 const RegistrationPage = () => {
+  document.title = "Rejestracja"
+
   const api = useAxios()
-  const { loginUser } = useContext(AuthContext)
   const [roles, setRoles] = useState([])
   const [backendErrors, setBackendErrors] = useState({})
   const nav = useNavigate()

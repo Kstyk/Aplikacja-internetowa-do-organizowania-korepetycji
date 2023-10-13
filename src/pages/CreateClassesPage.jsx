@@ -11,6 +11,8 @@ import showSuccessAlert from '../components/messages/SwalAlertSuccess'
 import showAlertError from '../components/messages/SwalAlertError'
 
 const CreateClassesPage = () => {
+  document.title = 'Stwórz nowe zajęcia'
+
   const api = useAxios()
   const nav = useNavigate()
 

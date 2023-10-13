@@ -14,6 +14,8 @@ import {
 } from 'react-icons/ai'
 
 const StudentPage = () => {
+  document.title = 'Profil studenta'
+
   const api = useAxios()
   const nav = useNavigate()
   const { studentId } = useParams()

@@ -10,6 +10,8 @@ import showSuccessAlert from '../components/messages/SwalAlertSuccess'
 import { useNavigate } from 'react-router-dom'
 
 const ResetPasswordPage = () => {
+  document.title = 'Resetowanie hasła'
+
   const api = useAxios()
   const nav = useNavigate()
   const { token } = useParams()

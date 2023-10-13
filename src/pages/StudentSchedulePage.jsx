@@ -3,6 +3,8 @@ import AuthContext from '../context/AuthContext'
 import StudentSchedule from '../components/schedules/StudentSchedule'
 
 const StudentSchedulePage = () => {
+  document.title = 'Twój plan zajeć'
+
   const { user } = useContext(AuthContext)
   return (
     <>
