@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import jwtDecode from 'jwt-decode'
+import { backendUrl } from '../variables/backendUrl'
 
 const AuthContext = createContext()
 
@@ -27,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     setError(null)
     let response = await axios
       .post(
-        'http://127.0.0.1:8000/api/auth/token/',
+        `${backendUrl}/api/auth/token/`,
         {
           email: e.target.email.value,
           password: e.target.password.value,
