@@ -73,7 +73,7 @@ const ClassesCard = (props) => {
                     src={
                       classes?.teacher?.profile_image == null
                         ? guest
-                        : `${backendUrl}${classes?.teacher?.profile_image}`
+                        : `${classes?.teacher?.profile_image}`
                     }
                   />
                 </div>

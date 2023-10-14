@@ -18,7 +18,7 @@ const OpinionCard = ({ opinion }) => {
               <img
                 src={
                   opinion?.student_profile_image
-                    ? `${backendUrl}${opinion?.student_profile_image}`
+                    ? `${opinion?.student_profile_image}`
                     : guest
                 }
               />

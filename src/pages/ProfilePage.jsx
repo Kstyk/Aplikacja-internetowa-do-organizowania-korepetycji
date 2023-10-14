@@ -29,7 +29,6 @@ const ProfilePage = () => {
 
   const fetchAll = async () => {
     setLoading(true)
-    await fetchClassesTeacher()
     await fetchProfile()
     setLoading(false)
   }

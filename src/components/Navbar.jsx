@@ -87,7 +87,7 @@ const Navbar = () => {
                     <img
                       src={
                         user?.image != null && user?.image != ''
-                          ? `${backendUrl}${user?.image}`
+                          ? `${user?.image}`
                           : guest
                       }
                     />
@@ -203,7 +203,7 @@ const Navbar = () => {
                     <img
                       src={
                         user?.image != null && user?.image != ''
-                          ? `${backendUrl}${user?.image}`
+                          ? `${user?.image}`
                           : guest
                       }
                     />

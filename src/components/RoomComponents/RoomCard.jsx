@@ -31,11 +31,7 @@ const RoomCard = ({ room, user }) => {
           <React.Fragment key={u?.user?.id}>
             <figure className="aspect-square w-4/12">
               <img
-                src={
-                  u?.profile_image == null
-                    ? guest
-                    : `http://127.0.0.1:8000${u?.profile_image}`
-                }
+                src={u?.profile_image == null ? guest : `${u?.profile_image}`}
                 alt="Shoes"
                 className="rounded-xl"
               />
