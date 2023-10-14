@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/760d83fb-a109-4837-8116-210311bbf929/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/korepetycje-backend",
+    "appService.deploySubpath": "."
+}

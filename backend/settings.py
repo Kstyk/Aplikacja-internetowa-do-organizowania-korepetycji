@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
-from .settings_local import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, DATABASES, SECRET_KEY
+from .settings_local import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, DATABASES, SECRET_KEY, AZURE_ACCOUNT_NAME
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,9 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://*.azurewebsites.net']
 
 
 # Application definition
@@ -40,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',
     'corsheaders',
     'authentication',
     'rest_framework',
@@ -196,8 +199,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-MEDIA_ROOT = BASE_DIR/'media'
-MEDIA_URL = '/media/'
 
 CITIES_LIGHT_TRANSLATION_LANGUAGES = ['pl']
 CITIES_LIGHT_INCLUDE_COUNTRIES = ['PL']
@@ -214,3 +215,18 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_USE_SSL = False
+
+
+DEFAULT_FILE_STORAGE = 'backend.custom_azure.AzureMediaStorage'
+
+MEDIA_LOCATION = "media"
+
+AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
+MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+STATICFILES_STORAGE = 'backend.custom_azure.AzureStaticStorage'
+
+STATIC_LOCATION = "static"
+STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
