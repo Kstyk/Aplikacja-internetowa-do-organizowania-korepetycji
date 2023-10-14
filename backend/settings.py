@@ -14,6 +14,8 @@ from datetime import timedelta
 from pathlib import Path
 from .settings_local import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, DATABASES, SECRET_KEY, AZURE_ACCOUNT_NAME
 import os
+from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

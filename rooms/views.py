@@ -23,8 +23,8 @@ from classes.models import Schedule
 from classes.serializers import ScheduleSerializer
 from datetime import datetime
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_exempt
-
+from azure.storage.blob import BlobServiceClient
+from backend.settings_local import AZURE_CONNECTION_STRING
 import zipfile
 import io
 
@@ -160,13 +160,27 @@ def get_files_in_room(request, room_id):
 @permission_classes([IsAuthenticated, IsInRoom])
 def download_file(request, file_id, room_id):
     file_obj = get_object_or_404(File, id=file_id)
+    blob_service_client = BlobServiceClient.from_connection_string(
+        AZURE_CONNECTION_STRING)
 
-    with open(file_obj.file_path.path, 'rb') as file:
+    container_client = blob_service_client.get_container_client(
+        'media')
+
+    blob_name = file_obj.file_path  # Assuming file_path contains the relative blob path
+
+    try:
+        blob_client = container_client.get_blob_client(f"{blob_name}")
+        blob_data = blob_client.download_blob()
+        content = blob_data.readall()
+
         response = HttpResponse(
-            file.read(), content_type='application/octet-stream')
+            content, content_type='application/octet-stream')
         response['Content-Disposition'] = f'attachment; filename="{file_obj.file_name}"'
 
-    return response
+        return response
+
+    except Exception as e:
+        return Response(f"Error: {str(e)}", status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', 'POST'])
@@ -176,12 +190,27 @@ def download_files(request, room_id):
         files = request.data.get('files')
         in_memory_zip = io.BytesIO()
 
-        with zipfile.ZipFile(in_memory_zip, 'w') as zip:
-            for file in files:
-                file_obj = get_object_or_404(File, id=file['id'])
+        blob_service_client = BlobServiceClient.from_connection_string(
+            AZURE_CONNECTION_STRING)
 
-                with open(file_obj.file_path.path, 'rb') as file_opened:
-                    zip.writestr(file_obj.file_name, file_opened.read())
+        container_client = blob_service_client.get_container_client(
+            'media')
+
+        with zipfile.ZipFile(in_memory_zip, 'w') as zip:
+            for file_data in files:
+                file_id = file_data['id']
+
+                file_obj = get_object_or_404(File, id=file_id)
+
+                blob_name = file_obj.file_path
+                blob_client = container_client.get_blob_client(f"{blob_name}")
+
+                blob_data = blob_client.download_blob()
+
+                content = blob_data.readall()
+
+                # Add the file to the zip archive
+                zip.writestr(file_obj.file_name, content)
 
         response = HttpResponse(
             in_memory_zip.getvalue(), content_type='application/zip')
@@ -196,13 +225,27 @@ def download_files(request, room_id):
 @permission_classes([IsAuthenticated, IsInRoom])
 def show_file(request, file_id):
     file_obj = get_object_or_404(File, id=file_id)
+    blob_service_client = BlobServiceClient.from_connection_string(
+        AZURE_CONNECTION_STRING)
 
-    with open(file_obj.file_path.path, 'rb') as file:
+    container_client = blob_service_client.get_container_client(
+        'media')
+
+    blob_name = file_obj.file_path  # Assuming file_path contains the relative blob path
+
+    try:
+        blob_client = container_client.get_blob_client(f"{blob_name}")
+        blob_data = blob_client.download_blob()
+        content = blob_data.readall()
+
         response = HttpResponse(
-            file.read(), content_type='application/octet-stream')
+            content, content_type='application/octet-stream')
         response['Content-Disposition'] = f'attachment; filename="{file_obj.file_name}"'
 
-    return response
+        return response
+
+    except Exception as e:
+        return Response(f"Error: {str(e)}", status=status.HTTP_400_BAD_REQUEST)
 
 
 class FileUploadView(APIView):

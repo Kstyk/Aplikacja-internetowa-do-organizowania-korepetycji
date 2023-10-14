@@ -1,3 +1,5 @@
+from backend.settings_local import AZURE_CONNECTION_STRING
+from azure.storage.blob import BlobServiceClient
 from rest_framework import serializers
 from .models import Room, Message, File
 from classes.models import Schedule
@@ -99,7 +101,14 @@ class FileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_mimetype(self, obj):
-        content_type, _ = mimetypes.guess_type(obj.file_path.path)
+        blob_service_client = BlobServiceClient.from_connection_string(
+            AZURE_CONNECTION_STRING)
+        container_client = blob_service_client.get_container_client('media')
+        blob_client = container_client.get_blob_client(f"{obj.file_path}")
+        # Fetch blob properties to access the content type
+        blob_properties = blob_client.get_blob_properties()
+
+        content_type = blob_properties['content_settings']['content_type']
         return content_type
 
 
