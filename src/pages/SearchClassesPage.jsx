@@ -346,7 +346,6 @@ const SearchClassesPage = () => {
   return (
     <div>
       <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
-
       <div className="card mx-auto mb-10 mt-10 h-full rounded-md bg-base-100 px-5 py-5 shadow-xl">
         <div className="input-group">
           <input
@@ -546,47 +545,49 @@ const SearchClassesPage = () => {
           </div>
         </div>
       </div>
-      {loading ? (
-        <div className="bg-white">
-          <LoadingComponent />
-        </div>
-      ) : (
-        <section className="mb-10">
-          <div className="card mx-auto mb-10 mt-10 h-full gap-y-3 rounded-md bg-base-100 px-5 py-5 shadow-xl">
-            {classes == null && (
-              <h1 className="text-lg">
-                Brak wyników dopasowanych do podanych kryteriów.
-              </h1>
-            )}
-            {classes != null && (
-              <>
-                <div className="flex w-full justify-end">
-                  <span className="text-xs text-gray-400">
-                    Znaleziono {totalResults}{' '}
-                    {totalResults == 1
-                      ? 'wynik'
-                      : totalResults < 5
-                      ? 'wyniki'
-                      : 'wyników'}{' '}
-                    (strona {currentPage} z {totalPages})
-                  </span>
-                </div>
-                {classes?.map((classes) => (
-                  <ClassesCard key={classes.id} classes={classes} />
-                ))}
-              </>
-            )}
-          </div>
-          {totalPages > 1 && (
-            <Pagination
-              totalResults={totalResults}
-              totalPages={totalPages}
-              currentPage={currentPage}
-              search={searchTutors}
-            />
+      <section className="mb-10">
+        <div className="card mx-auto mb-10 mt-10 h-full gap-y-3 rounded-md bg-base-100 px-5 py-5 shadow-xl">
+          {loading ? (
+            <div className="bg-transparent">
+              <LoadingComponent />
+            </div>
+          ) : (
+            <>
+              {classes == null && (
+                <h1 className="text-lg">
+                  Brak wyników dopasowanych do podanych kryteriów.
+                </h1>
+              )}
+              {classes != null && (
+                <>
+                  <div className="flex w-full justify-end">
+                    <span className="text-xs text-gray-400">
+                      Znaleziono {totalResults}{' '}
+                      {totalResults == 1
+                        ? 'wynik'
+                        : totalResults < 5
+                        ? 'wyniki'
+                        : 'wyników'}{' '}
+                      (strona {currentPage} z {totalPages})
+                    </span>
+                  </div>
+                  {classes?.map((classes) => (
+                    <ClassesCard key={classes.id} classes={classes} />
+                  ))}
+                </>
+              )}
+            </>
           )}
-        </section>
-      )}
+        </div>
+        {totalPages > 1 && (
+          <Pagination
+            totalResults={totalResults}
+            totalPages={totalPages}
+            currentPage={currentPage}
+            search={searchTutors}
+          />
+        )}
+      </section>
     </div>
   )
 }
