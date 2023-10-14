@@ -3,6 +3,8 @@ import useAxios from '../../utils/useAxios'
 import LoadingComponent from '../LoadingComponent'
 import { ToastContainer, toast } from 'react-toastify'
 import FileTable from './FileTable'
+import showAlertError from '../messages/SwalAlertError'
+
 import './input.scss'
 
 const Files = ({ roomId }) => {
@@ -26,17 +28,7 @@ const Files = ({ roomId }) => {
       })
       .catch((err) => {
         if (err.response.status == 403) {
-          toast.error('Nie masz dostępu do tego pokoju.', {
-            position: 'bottom-center',
-            autoClose: 3000,
-            hideProgressBar: true,
-            className: 'bg-base-200',
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'colored',
-          })
+          showAlertError('Błąd', 'Błąd pobierania listy plików z serwera.')
         }
       })
     setLoading(false)
