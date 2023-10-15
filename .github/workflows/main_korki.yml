@@ -26,18 +26,20 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
-          
+
       - name: Zip Release
         uses: TheDoctor0/zip-release@0.7.1
-        with:  
+        with:
           filename: release.zip
           path: ./dist/*
 
-      - name: Upload artifact for deployment job
+      - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: node-app
-          path: .
+          name: dist-without-markdown
+          path: |
+            dist
+            !dist/**/*.md
 
   deploy:
     runs-on: ubuntu-latest
