@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import useAxios from '../utils/useAxios'
 import { useState } from 'react'
@@ -16,7 +16,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
 
-  const fetchLanguages = async () => {
+  const fetchLanguages = useCallback(async () => {
     setLoading(true)
     await api
       .get(`/api/classes/languages/most-popular/`)
@@ -29,9 +29,9 @@ const HomePage = () => {
           'Wystąpił błąd przy pobieraniu danych z serwera.'
         )
       })
-  }
+  }, [api])
 
-  const fetchCities = async () => {
+  const fetchCities = useCallback(async () => {
     await api
       .get(`/api/users/address/cities/most-popular/`)
       .then((res) => {
@@ -45,7 +45,7 @@ const HomePage = () => {
           'Wystąpił błąd przy pobieraniu danych z serwera.'
         )
       })
-  }
+  }, [api])
 
   useEffect(() => {
     fetchLanguages()
