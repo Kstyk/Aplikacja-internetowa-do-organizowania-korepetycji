@@ -38,7 +38,7 @@ export const NotificationContextProvider = ({ children }) => {
   )
   const { readyState, sendJsonMessage } = useWebSocket(
     user
-      ? `ws://korepetycje-backend.azurewebsites.net/notifications/?token=${authTokens?.access}`
+      ? `wss://korepetycje-backend.azurewebsites.net/notifications/?token=${authTokens?.access}`
       : null,
     {
       onOpen: () => {},
