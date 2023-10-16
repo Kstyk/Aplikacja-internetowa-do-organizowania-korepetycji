@@ -5,9 +5,10 @@ import transparent_logo from '../assets/transparent_logo.png'
 import { Link } from 'react-router-dom'
 
 const LoginPage = () => {
-document.title ="Logowanie"
+  document.title = 'Logowanie'
 
-  let { loginUser, error, setError } = useContext(AuthContext)
+  let { loginUser, error, setError, waitingForResponse } =
+    useContext(AuthContext)
 
   return (
     <div>
@@ -54,9 +55,13 @@ document.title ="Logowanie"
           <div className="border-b-[1px] border-base-200"></div>
           <button
             type="submit"
-            className="btn-outline no-animation btn my-4 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 max-phone:mx-auto"
+            className="btn-outline no-animation btn my-4 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 text-base-400 hover:bg-base-400 hover:text-white max-phone:mx-auto"
           >
-            Zaloguj
+            {waitingForResponse ? (
+              <span className="loading loading-spinner "></span>
+            ) : (
+              'Zaloguj'
+            )}
           </button>
           <div className="border-b-[1px] border-base-200"></div>
           <span className="mt-2 text-center text-sm tracking-wider">

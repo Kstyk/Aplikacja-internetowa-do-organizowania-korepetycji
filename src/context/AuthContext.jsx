@@ -22,8 +22,10 @@ export const AuthProvider = ({ children }) => {
   const nav = useNavigate()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [waitingForResponse, setWaitingForResponse] = useState(false)
 
   let loginUser = async (e) => {
+    setWaitingForResponse(true)
     e.preventDefault()
     setError(null)
     let response = await axios
@@ -44,9 +46,11 @@ export const AuthProvider = ({ children }) => {
         setUser(jwtDecode(res.data.access))
         localStorage.setItem('authTokens', JSON.stringify(res.data))
         nav('/profil')
+        setWaitingForResponse(false)
       })
       .catch((err) => {
         setError(err.response.data.error)
+        setWaitingForResponse(false)
       })
   }
 
@@ -67,6 +71,7 @@ export const AuthProvider = ({ children }) => {
     logoutUser: logoutUser,
     error: error,
     setError: setError,
+    waitingForResponse: waitingForResponse,
   }
 
   useEffect(() => {

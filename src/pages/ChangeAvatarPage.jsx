@@ -7,9 +7,13 @@ import showSuccessAlert from '../components/messages/SwalAlertSuccess'
 import { useNavigate } from 'react-router-dom'
 
 const ChangeAvatarPage = () => {
-  document.title = "Zmień avatar"
-  
+  document.title = 'Zmień avatar'
+
   const [loading, setLoading] = useState(true)
+  const [waitingForResponseChangeAvatar, setWaitingForResponseChangeAvatar] =
+    useState(false)
+  const [waitingForResponseDeleteAvatar, setWaitingForResponseDeleteAvatar] =
+    useState(false)
 
   const [currentAvatar, setCurrentAvatar] = useState()
 
@@ -44,6 +48,7 @@ const ChangeAvatarPage = () => {
   })
 
   const onSubmit = (data) => {
+    setWaitingForResponseChangeAvatar(true)
     if (data.profile_image != '') {
       data.profile_image = data.profile_image[0]
     }
@@ -60,16 +65,19 @@ const ChangeAvatarPage = () => {
             nav('/profil')
           }
         )
+        setWaitingForResponseChangeAvatar(false)
       })
       .catch((err) => {
         showAlertError(
           'Błąd',
           'Wystąpił błąd przy zmianie avataru. Sprawdź, czy typ przesyłanego pliku przez Ciebie jest typu graficznego.'
         )
+        setWaitingForResponseChangeAvatar(false)
       })
   }
 
   const onSubmit2 = (data) => {
+    setWaitingForResponseDeleteAvatar(true)
     data.profile_image = ''
 
     api
@@ -77,17 +85,17 @@ const ChangeAvatarPage = () => {
         headers: { 'content-type': 'multipart/form-data' },
       })
       .then((res) => {
-        console.log(res.data)
-
         showSuccessAlert('Sukces!', 'Pomyślnie usunąłeś swój avatar.', () => {
           nav('/profil')
         })
+        setWaitingForResponseDeleteAvatar(false)
       })
       .catch((err) => {
         showAlertError(
           'Błąd',
           'Wystąpił błąd przy usuwaniu Twojego avatara. Przepraszamy za utrudnienia.'
         )
+        setWaitingForResponseDeleteAvatar(false)
       })
   }
 
@@ -135,7 +143,11 @@ const ChangeAvatarPage = () => {
                   {...register('profile_image')}
                 />
                 <button className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-6/12 rounded-sm border-base-400 py-0 hover:bg-base-400 max-md:w-full max-phone:mx-auto">
-                  Usuń avatar
+                  {waitingForResponseDeleteAvatar ? (
+                    <span className="loading loading-spinner "></span>
+                  ) : (
+                    'Zmień avatar'
+                  )}
                 </button>
               </form>
               <div className="container mx-auto px-5 py-5">
@@ -167,7 +179,11 @@ const ChangeAvatarPage = () => {
                   {...register('profile_image')}
                 />
                 <button className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-6/12 rounded-sm border-base-400 py-0 hover:bg-base-400 max-md:w-full max-phone:mx-auto">
-                  Zmień avatar
+                  {waitingForResponseChangeAvatar ? (
+                    <span className="loading loading-spinner "></span>
+                  ) : (
+                    'Zmień avatar'
+                  )}
                 </button>
               </form>
             </div>

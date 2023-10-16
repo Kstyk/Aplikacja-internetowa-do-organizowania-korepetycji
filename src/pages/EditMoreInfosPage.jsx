@@ -10,7 +10,7 @@ import AuthContext from '../context/AuthContext'
 import showAlertError from '../components/messages/SwalAlertError'
 
 const EditMoreInfosPage = () => {
-  document.title = "Edytuj dane profilowe"
+  document.title = 'Edytuj dane profilowe'
   const { user } = useContext(AuthContext)
   const [loading, setLoading] = useState(true)
   const api = useAxios()
@@ -24,6 +24,7 @@ const EditMoreInfosPage = () => {
   const [loadingCity, setLoadingCity] = useState(false)
   const [voivodeships, setVoivodeships] = useState([])
   const [languages, setLanguages] = useState([])
+  const [waitingForResponse, setWaitingForResponse] = useState(false)
 
   const nav = useNavigate()
   const customSelectStyle = {
@@ -199,6 +200,7 @@ const EditMoreInfosPage = () => {
   }, [])
 
   const onSubmit = (data) => {
+    setWaitingForResponse(true)
     data.place_of_classes.map((place, i) => {
       data.place_of_classes[i] = place.value
     })
@@ -249,9 +251,11 @@ const EditMoreInfosPage = () => {
             user?.role == 'Teacher' ? nav('/profil') : nav('/profil-ucznia')
           }
         )
+        setWaitingForResponse(false)
       })
       .catch((err) => {
         setBackendErrors(JSON.parse(err.request.response))
+        setWaitingForResponse(false)
       })
   }
 
@@ -772,7 +776,11 @@ const EditMoreInfosPage = () => {
                   </div>
                 )}
                 <button className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-6/12 rounded-sm border-base-400 py-0 hover:bg-base-400 max-md:w-5/12 max-phone:mx-auto max-phone:w-full">
-                  Edytuj profil
+                  {waitingForResponse ? (
+                    <span className="loading loading-spinner "></span>
+                  ) : (
+                    'Edytuj profil'
+                  )}
                 </button>
               </form>
             </div>

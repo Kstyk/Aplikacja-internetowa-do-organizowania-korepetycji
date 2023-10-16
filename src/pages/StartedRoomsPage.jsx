@@ -74,19 +74,19 @@ const StartedRoomsPage = () => {
 
   return (
     <>
-      {loading ? (
-        <LoadingComponent message="Ładowanie pokoi..." />
-      ) : (
-        <div className="w-full">
-          <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
+      <div className="w-full">
+        <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
 
-          <div className="card mx-auto mb-10 mt-10 h-full rounded-md bg-white px-5 py-5 shadow-xl max-lg:w-full">
-            <div className="m-auto h-full w-full">
-              <h1 className="text-center text-xl font-bold uppercase tracking-wider text-gray-700">
-                Twoje pokoje
-              </h1>
+        <div className="card mx-auto mb-10 mt-10 h-full rounded-md bg-white px-5 py-5 shadow-xl max-lg:w-full">
+          <div className="m-auto h-full w-full">
+            <h1 className="text-center text-xl font-bold uppercase tracking-wider text-gray-700">
+              Twoje pokoje
+            </h1>
 
-              <div className="my-4 border-b-[1px] border-base-100"></div>
+            <div className="my-4 border-b-[1px] border-base-100"></div>
+            {loading ? (
+              <LoadingComponent message="Ładowanie pokoi..." />
+            ) : (
               <div className="mb-10 flex w-full items-center justify-center">
                 {rooms.length == 0 && (
                   <div className="h-full">
@@ -115,18 +115,21 @@ const StartedRoomsPage = () => {
                   ))}
                 </div>
               </div>
+            )}
+            <h1 className="flex flex-row items-center justify-center gap-x-2 text-center text-xl font-bold uppercase tracking-wider text-gray-700">
+              <div
+                className="tooltip"
+                data-tip="Pokoje, w których zostałeś sam - druga osoba opuściła pokój."
+              >
+                <AiOutlineQuestionCircle />
+              </div>
+              <span>Zarchiwizowane pokoje</span>
+            </h1>
 
-              <h1 className="flex flex-row items-center justify-center gap-x-2 text-center text-xl font-bold uppercase tracking-wider text-gray-700">
-                <div
-                  className="tooltip"
-                  data-tip="Pokoje, w których zostałeś sam - druga osoba opuściła pokój."
-                >
-                  <AiOutlineQuestionCircle />
-                </div>
-                <span>Zarchiwizowane pokoje</span>
-              </h1>
-
-              <div className="my-4 border-b-[1px] border-base-100"></div>
+            <div className="my-4 border-b-[1px] border-base-100"></div>
+            {loading ? (
+              <LoadingComponent message="Ładowanie pokoi..." />
+            ) : (
               <div className="mb-10 flex w-full justify-center">
                 {archivizedRooms?.length == 0 && (
                   <div className="h-full">
@@ -149,10 +152,10 @@ const StartedRoomsPage = () => {
                   ))}
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
-      )}{' '}
+      </div>
     </>
   )
 }

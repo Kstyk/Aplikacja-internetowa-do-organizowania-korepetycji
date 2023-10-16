@@ -11,11 +11,11 @@ import showAlertError from '../components/messages/SwalAlertError'
 const EditBaseProfile = () => {
   document.title = 'Edytuj dane podstawowe'
 
-  const { user } = useContext(AuthContext)
   const [backendErrors, setBackendErrors] = useState({})
   const [baseUser, setBaseUser] = useState(null)
   const [roles, setRoles] = useState([])
   const [loading, setLoading] = useState(true)
+  const [waitingForResponse, setWaitingForResponse] = useState(false)
 
   const nav = useNavigate()
   const api = useAxios()
@@ -72,6 +72,7 @@ const EditBaseProfile = () => {
   }
 
   const onSubmit = (data) => {
+    setWaitingForResponse(true)
     api
       .put(`/api/users/edit/`, data)
       .then((res) => {
@@ -84,9 +85,11 @@ const EditBaseProfile = () => {
             }
           )
         }
+        setWaitingForResponse(false)
       })
       .catch((err) => {
         setBackendErrors(JSON.parse(err.request.response))
+        setWaitingForResponse(false)
       })
   }
 
@@ -213,8 +216,12 @@ const EditBaseProfile = () => {
                     />
                   </div>
                 </section>
-                <button className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-6/12 rounded-sm border-base-400 py-0 hover:bg-base-400 max-md:w-5/12 max-phone:mx-auto max-phone:w-full">
-                  Edytuj
+                <button className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-6/12 rounded-sm border-base-400 py-0 text-base-400 hover:bg-base-400 hover:text-white max-md:w-5/12 max-phone:mx-auto max-phone:w-full">
+                  {waitingForResponse ? (
+                    <span className="loading loading-spinner "></span>
+                  ) : (
+                    'Edytuj'
+                  )}
                 </button>
               </form>
             </div>
