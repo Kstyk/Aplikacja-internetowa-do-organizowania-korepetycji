@@ -52,7 +52,7 @@ const Chat = ({ archivized }) => {
   const [showChat, setShowChat] = useState(false)
 
   const { readyState, sendJsonMessage } = useWebSocket(
-    user ? `ws://127.0.0.1:8000/chats/${roomId}/` : null,
+    user ? `ws://korepetycje-backend.azurewebsites.net/chats/${roomId}/` : null,
     {
       queryParams: {
         userId: user ? user.user_id : '',
