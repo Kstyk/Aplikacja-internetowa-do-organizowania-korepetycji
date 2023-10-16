@@ -7,10 +7,12 @@ import { BiShow } from 'react-icons/bi'
 
 const ChangePasswordPage = () => {
   document.title = 'Zmień hasło'
-  
+
   const api = useAxios()
 
   const [backendErrors, setBackendErrors] = useState({})
+  const [waitingForResponse, setWaitingForResponse] = useState(false)
+
   const nav = useNavigate()
   const {
     register,
@@ -43,6 +45,7 @@ const ChangePasswordPage = () => {
   }
 
   const onSubmit = (data) => {
+    setWaitingForResponse(true)
     api
       .post(`/api/users/change-password/`, data)
       .then((res) => {
@@ -53,9 +56,11 @@ const ChangePasswordPage = () => {
             nav('/profil')
           }
         )
+        setWaitingForResponse(false)
       })
       .catch((err) => {
         setBackendErrors(err.response.data)
+        setWaitingForResponse(false)
       })
   }
 
@@ -199,7 +204,11 @@ const ChangePasswordPage = () => {
               </div>
             </div>
             <button className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-6/12 rounded-sm border-base-400 py-0 hover:bg-base-400 max-md:w-5/12 max-phone:mx-auto max-phone:w-full">
-              Zmień hasło
+              {waitingForResponse ? (
+                <span className="loading loading-spinner "></span>
+              ) : (
+                'Zmień hasło'
+              )}
             </button>
           </form>
         </div>

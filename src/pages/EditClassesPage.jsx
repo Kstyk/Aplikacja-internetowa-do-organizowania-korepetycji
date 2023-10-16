@@ -25,6 +25,7 @@ const EditClassesPage = () => {
   const [isStationary, setIsStationary] = useState(false)
   const [descriptionHtml, setDescriptionHtml] = useState(classes?.description)
   const [languages, setLanguages] = useState([])
+  const [waitingForResponse, setWaitingForResponse] = useState(false)
 
   const customSelectStyle = {
     control: (base) => ({
@@ -105,6 +106,7 @@ const EditClassesPage = () => {
   }
 
   const onSubmit = (formData) => {
+    setWaitingForResponse(true)
     formData?.place_of_classes?.map(
       (place, i) => (formData.place_of_classes[i] = place.value)
     )
@@ -125,6 +127,7 @@ const EditClassesPage = () => {
         showSuccessAlert('Sukces!', res?.data?.success, () => {
           nav('/zajecia')
         })
+        setWaitingForResponse(false)
       })
       .catch((err) => {
         if (err.response.status == 404 || err.response.status == 403) {
@@ -132,6 +135,7 @@ const EditClassesPage = () => {
         } else {
           setBackendErrors(JSON.parse(err.request.response))
         }
+        setWaitingForResponse(false)
       })
   }
 
@@ -449,7 +453,11 @@ const EditClassesPage = () => {
                   </div>
                 </div>
                 <button className="btn-outline no-animation btn mb-2 mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 md:w-6/12">
-                  Edytuj zajęcia
+                  {waitingForResponse ? (
+                    <span className="loading loading-spinner "></span>
+                  ) : (
+                    'Edytuj zajęcia'
+                  )}
                 </button>
               </form>
             </div>

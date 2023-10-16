@@ -22,6 +22,7 @@ const CreateClassesPage = () => {
   const [isStationary, setIsStationary] = useState(false)
   const [descriptionHtml, setDescriptionHtml] = useState(null)
   const [languages, setLanguages] = useState([])
+  const [waitingForResponse, setWaitingForResponse] = useState(false)
 
   const customSelectStyle = {
     control: (base) => ({
@@ -65,6 +66,7 @@ const CreateClassesPage = () => {
   }
 
   const onSubmit = (formData) => {
+    setWaitingForResponse(true)
     formData?.place_of_classes?.map(
       (place, i) => (formData.place_of_classes[i] = place.value)
     )
@@ -88,9 +90,11 @@ const CreateClassesPage = () => {
       .then((res) => {
         showSuccessAlert('Sukces!', res?.data?.success)
         nav('/zajecia')
+        setWaitingForResponse(false)
       })
       .catch((err) => {
         setBackendErrors(JSON.parse(err.request.response))
+        setWaitingForResponse(false)
       })
   }
 
@@ -399,7 +403,11 @@ const CreateClassesPage = () => {
             </div>
           </div>
           <button className="btn-outline no-animation btn mb-2 mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 md:w-6/12">
-            Dodaj zajęcia
+            {waitingForResponse ? (
+              <span className="loading loading-spinner "></span>
+            ) : (
+              'Dodaj zajęcia'
+            )}
           </button>
         </form>
       </div>
