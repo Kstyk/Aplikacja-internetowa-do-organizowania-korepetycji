@@ -40,10 +40,10 @@ const Message = ({ message, secondUser }) => {
             src={
               user?.email != message.to_user.email
                 ? user?.image
-                  ? `${backendUrl}${user.image}`
+                  ? `${user.image}`
                   : guest
                 : secondUser?.profile_image
-                ? `${backendUrl}${secondUser.profile_image}`
+                ? `${secondUser.profile_image}`
                 : guest
             }
           />

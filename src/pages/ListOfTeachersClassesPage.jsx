@@ -34,16 +34,16 @@ const ListOfTeachersClassesPage = () => {
   return (
     <div className="pt-10">
       <div className="absolute left-0 right-0 top-[70px] h-[200px] bg-base-300 max-phone:hidden"></div>
-      {loading ? (
-        <LoadingComponent message="Ładowanie informacji o plikach..." />
-      ) : (
-        <>
-          <div className="card mx-auto mb-10 min-h-[40vh] w-full rounded-md bg-white px-5 py-5 shadow-xl">
-            <h1 className="text-center text-xl font-bold uppercase tracking-wider text-gray-700">
-              Lista Twoich zajęć
-            </h1>
-            <div className="my-4 border-b-[1px] border-base-100"></div>
-            <div className="container mx-auto mb-10 text-gray-100">
+      <>
+        <div className="card mx-auto mb-10 min-h-[40vh] w-full rounded-md bg-white px-5 py-5 shadow-xl">
+          <h1 className="text-center text-xl font-bold uppercase tracking-wider text-gray-700">
+            Lista Twoich zajęć
+          </h1>
+          <div className="my-4 border-b-[1px] border-base-100"></div>
+          <div className="container mx-auto mb-10">
+            {loading ? (
+              <LoadingComponent message="Ładowanie informacji o zajęciach..." />
+            ) : (
               <div className="flex flex-col text-xs">
                 <div className="flex items-center justify-center border-b border-gray-700 border-opacity-60 bg-transparent text-left text-gray-700">
                   <div className="flex-1 cursor-pointer px-2 py-3 transition-all duration-300 hover:font-bold sm:p-3">
@@ -108,10 +108,10 @@ const ListOfTeachersClassesPage = () => {
                   </div>
                 ))}
               </div>
-            </div>{' '}
-          </div>
-        </>
-      )}
+            )}
+          </div>{' '}
+        </div>
+      </>
     </div>
   )
 }

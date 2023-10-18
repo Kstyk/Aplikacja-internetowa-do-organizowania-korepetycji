@@ -17,6 +17,7 @@ const ClassesPage = () => {
 
   const [classes, setClasses] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [loadingOpinions, setLoadingOpinions] = useState(true)
 
   const [opinions, setOpinions] = useState([])
   const [hasMoreOpinions, setHasMoreOpinions] = useState(false)
@@ -32,6 +33,7 @@ const ClassesPage = () => {
       .get(`/api/classes/${classesId}`)
       .then((res) => {
         setClasses(res.data)
+        setLoading(false)
       })
       .catch((err) => {
         showAlertError(
@@ -43,22 +45,23 @@ const ClassesPage = () => {
   }
 
   const fetchOpinions = async () => {
+    setLoadingOpinions(true)
     await api
       .get(`/api/classes/${classes?.teacher?.user?.id}/opinions?page_size=10`)
       .then((res) => {
-        setLoading(false)
         setOpinions(res.data.results)
         setHasMoreOpinions(res.data.next !== null)
         setOpinionPage(opinionPage + 1)
         setAverageRating(res.data.average_rating)
         setAmountOfOpinions(res.data.count)
+        setLoadingOpinions(false)
       })
       .catch((err) => {
         showAlertError(
           'Błąd',
           'Wystąpił błąd przy pobieraniu danych z serwera.'
         )
-        setLoading(false)
+        setLoadingOpinions(false)
       })
   }
 
@@ -94,26 +97,31 @@ const ClassesPage = () => {
 
   return (
     <>
-      {loading ? (
-        <LoadingComponent message="Ładowanie informacji o zajęciach..." />
-      ) : (
-        <section className="mb-10 mt-10 w-full max-md:px-3 max-sm:px-0">
-          <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
+      <section className="mb-10 mt-10 w-full max-md:px-3 max-sm:px-0">
+        <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
 
-          <div className="card z-30 mb-5 flex flex-col items-center justify-between rounded-md border-[1px] border-base-200 bg-white p-4 text-center shadow-xl max-md:text-xl max-phone:text-lg phone:flex-row md:text-2xl">
-            <h1 className="w-full text-center text-xl font-bold uppercase tracking-wider text-gray-700">
-              {classes?.name}
-            </h1>
-            <Link
-              className={`btn-outline no-animation btn mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 phone:w-4/12 ${
-                classes?.able_to_buy ? '' : 'btn-disabled'
-              }`}
-              to={`/zajecia/${classes?.id}/kup`}
-            >
-              Zakup zajęcia
-            </Link>
-          </div>
-
+        <div className="card z-30 mb-5 flex flex-col items-center justify-between rounded-md border-[1px] border-base-200 bg-white p-4 text-center shadow-xl  phone:flex-row ">
+          {loading ? (
+            <LoadingComponent message="Ładowanie informacji o zajęciach..." />
+          ) : (
+            <>
+              <h1 className="w-full text-center text-xl font-bold uppercase tracking-wider text-gray-700 max-md:text-xl max-phone:text-lg md:text-2xl">
+                {classes?.name}
+              </h1>
+              <Link
+                className={`btn-outline no-animation btn mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 phone:w-4/12 ${
+                  classes?.able_to_buy ? '' : 'btn-disabled'
+                }`}
+                to={`/zajecia/${classes?.id}/kup`}
+              >
+                Zakup zajęcia
+              </Link>
+            </>
+          )}
+        </div>
+        {loading ? (
+          ''
+        ) : (
           <div className="flex max-md:flex-col md:min-h-[50vh] md:flex-row md:gap-x-2">
             <div className="card  flex rounded-md border-[1px] border-base-200 bg-white py-4 shadow-xl max-md:w-full max-phone:flex-col phone:flex-row md:w-9/12">
               <div className="profile ml-3 flex w-4/12 flex-col items-center justify-start border-r-[1px] border-base-300 max-phone:order-2 max-phone:w-full max-phone:pr-6 phone:pr-3">
@@ -294,13 +302,16 @@ const ClassesPage = () => {
               </div>
             </div>
           </div>
+        )}
 
-          {opinions?.length > 0 && (
-            <div className="card mt-2 flex flex-col rounded-md border-[1px] border-base-200 bg-white p-5 shadow-xl max-md:w-full md:w-full">
-              <h1 className="mb-2 block w-full border-b-[1px] border-base-100 text-xl font-bold uppercase tracking-wide text-gray-700">
-                Opinie o nauczycielu
-              </h1>
-
+        <div className="card mt-2 flex flex-col rounded-md border-[1px] border-base-200 bg-white p-5 shadow-xl max-md:w-full md:w-full">
+          <h1 className="mb-2 block w-full border-b-[1px] border-base-100 text-xl font-bold uppercase tracking-wide text-gray-700">
+            Opinie o nauczycielu
+          </h1>
+          {loadingOpinions ? (
+            <LoadingComponent message="Ładowanie opinii..." />
+          ) : opinions?.length > 0 ? (
+            <>
               {opinions?.map((opinion) => (
                 <OpinionCard
                   opinion={opinion}
@@ -308,6 +319,7 @@ const ClassesPage = () => {
                   page={opinionPage}
                 />
               ))}
+
               {hasMoreOpinions && (
                 <div className="px-5 max-phone:px-0">
                   <button
@@ -318,10 +330,12 @@ const ClassesPage = () => {
                   </button>
                 </div>
               )}
-            </div>
+            </>
+          ) : (
+            <span className="text-right">Brak opinii</span>
           )}
-        </section>
-      )}
+        </div>
+      </section>
     </>
   )
 }

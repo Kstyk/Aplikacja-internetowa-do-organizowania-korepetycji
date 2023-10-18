@@ -10,10 +10,13 @@ import { timeslots } from '../../variables/Timeslots'
 import CustomToolbarNoButtons from './CustomToolbarNoButtons'
 import AuthContext from '../../context/AuthContext'
 import showAlertError from '../messages/SwalAlertError'
+import LoadingComponent from '../LoadingComponent'
 
 const SelectSlotsTeacherSchedule = ({
   timeSlotsTeacher,
   setTimeSlotsTeacher,
+  loading,
+  setLoading,
 }) => {
   const { user } = useContext(AuthContext)
   dayjs.locale('pl')
@@ -38,16 +41,19 @@ const SelectSlotsTeacherSchedule = ({
   }, [user])
 
   const fetchTeacherTimeslots = async () => {
+    setLoading(true)
     await api
       .get(`/api/classes/${user?.user_id}/timeslots/`)
       .then((res) => {
         setTimeSlotsTeacher(res.data)
+        setLoading(false)
       })
       .catch((err) => {
         showAlertError(
           'Błąd',
           'Wystąpił błąd przy pobieraniu danych z serwera.'
         )
+        setLoading(false)
       })
   }
 

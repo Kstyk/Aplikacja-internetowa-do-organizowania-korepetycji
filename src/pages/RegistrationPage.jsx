@@ -11,11 +11,13 @@ import { backendUrl } from '../variables/backendUrl'
 import showSuccessAlert from '../components/messages/SwalAlertSuccess'
 
 const RegistrationPage = () => {
-  document.title = "Rejestracja"
+  document.title = 'Rejestracja'
 
   const api = useAxios()
   const [roles, setRoles] = useState([])
   const [backendErrors, setBackendErrors] = useState({})
+  const [waitingForResponse, setWaitingForResponse] = useState(false)
+
   const nav = useNavigate()
   const {
     register,
@@ -52,6 +54,7 @@ const RegistrationPage = () => {
   const selectOptions = roles
 
   const onSubmit = (data) => {
+    setWaitingForResponse(true)
     let role = data.role.value
 
     data.role = role
@@ -70,9 +73,11 @@ const RegistrationPage = () => {
             nav('/logowanie')
           }
         )
+        setWaitingForResponse(false)
       })
       .catch((err) => {
         setBackendErrors(JSON.parse(err.request.response))
+        setWaitingForResponse(false)
       })
   }
 
@@ -251,7 +256,11 @@ const RegistrationPage = () => {
           </div>
           <hr />
           <button className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 max-phone:mx-auto">
-            Zarejestruj
+            {waitingForResponse ? (
+              <span className="loading loading-spinner "></span>
+            ) : (
+              'Zarejestruj'
+            )}
           </button>
         </form>
       </div>

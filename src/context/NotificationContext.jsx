@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { toast } from 'react-toastify'
 import { Link } from 'react-router-dom'
@@ -38,7 +38,8 @@ export const NotificationContextProvider = ({ children }) => {
   )
   const { readyState, sendJsonMessage } = useWebSocket(
     user
-      ? `wss://korepetycje-backend.azurewebsites.net/notifications/?token=${authTokens?.access}`
+      ? // ? `wss://korepetycje-backend.azurewebsites.net/notifications/?token=${authTokens?.access}`
+        `ws://127.0.0.1:8000/notifications/?token=${authTokens?.access}`
       : null,
     {
       onOpen: () => {},
@@ -92,6 +93,19 @@ export const NotificationContextProvider = ({ children }) => {
     [ReadyState.CLOSED]: 'Closed',
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState]
+
+  useEffect(() => {
+    if (connectionStatus === 'Connecting') {
+      console.log('handhsake')
+    }
+    if (connectionStatus === 'Closed') {
+      console.log('close')
+
+      if (connectionStatus === 'Open') {
+        console.log('opened')
+      }
+    }
+  }, [connectionStatus])
 
   return (
     <NotificationContext.Provider

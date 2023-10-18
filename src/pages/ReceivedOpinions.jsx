@@ -4,6 +4,7 @@ import useAxios from '../utils/useAxios'
 import { useState } from 'react'
 import OpinionCard from '../components/ClassesComponents/OpinionCard'
 import showAlertError from '../components/messages/SwalAlertError'
+import LoadingComponent from '../components/LoadingComponent'
 
 const ReceivedOpinions = () => {
   document.title = 'Otrzymane opinie'
@@ -17,6 +18,7 @@ const ReceivedOpinions = () => {
   const [amountOfOpinions, setAmountOfOpinions] = useState(0)
 
   const fetchOpinions = async () => {
+    setLoading(true)
     await api
       .get(`/api/classes/my-opinions?page_size=10&page=1`)
       .then((res) => {
@@ -68,47 +70,53 @@ const ReceivedOpinions = () => {
             Otrzymane opinie
           </h1>
           <div className="my-4 border-b-[1px] border-base-100"></div>
-          <div>
-            {amountOfOpinions != 0 ? (
-              <>
-                <h2 className="text-center text-xl">
-                  Otrzymałeś {amountOfOpinions}{' '}
-                  {amountOfOpinions == 1 && 'opinię'}{' '}
-                  {amountOfOpinions == 2 && 'opinie'}
-                  {amountOfOpinions == 3 && 'opinie'}
-                  {amountOfOpinions == 4 && 'opinie'}
-                  {amountOfOpinions > 4 && 'opinii'}
-                </h2>
-                <h3 className="text-center text-lg">
-                  Średnia ocena: {averageRating}
-                </h3>
-              </>
-            ) : (
-              <h2 className="text-center text-xl">
-                Nie otrzymałeś jeszcze żadnej opinii.
-              </h2>
-            )}
-          </div>
-          <div className="my-4 border-b-[1px] border-base-100"></div>
-
-          {opinions?.length > 0 && (
+          {loading ? (
+            <LoadingComponent message="Ładowanie danych o harmonogramie" />
+          ) : (
             <>
-              {opinions?.map((opinion) => (
-                <OpinionCard
-                  opinion={opinion}
-                  key={opinion.id}
-                  page={opinionPage}
-                />
-              ))}
-              {hasMoreOpinions && (
-                <div className="px-5 max-phone:px-0">
-                  <button
-                    className={`btn-outline no-animation btn mt-2 h-10 !min-h-0 w-full rounded-none border-base-400 py-0 hover:bg-base-400 md:w-4/12`}
-                    onClick={() => loadMoreOpinions()}
-                  >
-                    Załaduj więcej...
-                  </button>
-                </div>
+              <div>
+                {amountOfOpinions != 0 ? (
+                  <>
+                    <h2 className="text-center text-xl">
+                      Otrzymałeś {amountOfOpinions}{' '}
+                      {amountOfOpinions == 1 && 'opinię'}{' '}
+                      {amountOfOpinions == 2 && 'opinie'}
+                      {amountOfOpinions == 3 && 'opinie'}
+                      {amountOfOpinions == 4 && 'opinie'}
+                      {amountOfOpinions > 4 && 'opinii'}
+                    </h2>
+                    <h3 className="text-center text-lg">
+                      Średnia ocena: {averageRating}
+                    </h3>
+                  </>
+                ) : (
+                  <h2 className="text-center text-xl">
+                    Nie otrzymałeś jeszcze żadnej opinii.
+                  </h2>
+                )}
+              </div>
+              <div className="my-4 border-b-[1px] border-base-100"></div>
+
+              {opinions?.length > 0 && (
+                <>
+                  {opinions?.map((opinion) => (
+                    <OpinionCard
+                      opinion={opinion}
+                      key={opinion.id}
+                      page={opinionPage}
+                    />
+                  ))}
+                  {hasMoreOpinions && (
+                    <div className="px-5 max-phone:px-0">
+                      <button
+                        className={`btn-outline no-animation btn mt-2 h-10 !min-h-0 w-full rounded-none border-base-400 py-0 hover:bg-base-400 md:w-4/12`}
+                        onClick={() => loadMoreOpinions()}
+                      >
+                        Załaduj więcej...
+                      </button>
+                    </div>
+                  )}
+                </>
               )}
             </>
           )}

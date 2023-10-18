@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import SelectSlotsTeacherSchedule from '../components/schedules/SelectSlotsTeacherSchedule'
 import useAxios from '../utils/useAxios'
 import showAlertError from '../components/messages/SwalAlertError'
 import showSuccessAlert from '../components/messages/SwalAlertSuccess'
 import { timeslots } from '../variables/Timeslots'
 import { days } from '../variables/Days'
+import LoadingComponent from '../components/LoadingComponent'
 
 const ModifyTimeslotsPage = () => {
   document.title = 'Edytuj harmonogram zajęć'
 
   const [timeSlotsTeacher, setTimeSlotsTeacher] = useState([])
+  const [loading, setLoading] = useState(true)
   const api = useAxios()
 
   const editSchedule = () => {
@@ -32,52 +34,60 @@ const ModifyTimeslotsPage = () => {
           Ustal swój harmonogram
         </h1>
         <div className="my-4 border-b-[1px] border-base-100"></div>
-        <h2 className="text-center text-lg">Wybrane terminy:</h2>
-        <section className="mb-3">
-          {timeSlotsTeacher.map((slot) => (
-            <div
-              key={slot.day_of_week + '-' + slot.timeslot_index}
-              className="border-b-[1px] border-base-300 py-2 text-center text-xs uppercase tracking-wide"
-            >
-              {days.find((day) => day.id === slot.day_of_week) ? (
-                <span className="mr-2">
-                  {days.find((day) => day.id === slot.day_of_week).name},
-                </span>
-              ) : null}
-              {timeslots.find(
-                (timeslot) => timeslot.timeslot === slot.timeslot_index
-              ) ? (
-                <span>
-                  {
-                    timeslots.find(
-                      (timeslot) => timeslot.timeslot === slot.timeslot_index
-                    ).start
-                  }{' '}
-                  -{' '}
-                  {
-                    timeslots.find(
-                      (timeslot) => timeslot.timeslot === slot.timeslot_index
-                    ).end
-                  }
-                </span>
-              ) : null}
+        {loading ? (
+          <LoadingComponent message="Ładowanie danych o harmonogramie" />
+        ) : (
+          <>
+            <h2 className="text-center text-lg">Wybrane terminy:</h2>
+            <section className="mb-3">
+              {timeSlotsTeacher.map((slot) => (
+                <div
+                  key={slot.day_of_week + '-' + slot.timeslot_index}
+                  className="border-b-[1px] border-base-300 py-2 text-center text-xs uppercase tracking-wide"
+                >
+                  {days.find((day) => day.id === slot.day_of_week) ? (
+                    <span className="mr-2">
+                      {days.find((day) => day.id === slot.day_of_week).name},
+                    </span>
+                  ) : null}
+                  {timeslots.find(
+                    (timeslot) => timeslot.timeslot === slot.timeslot_index
+                  ) ? (
+                    <span>
+                      {
+                        timeslots.find(
+                          (timeslot) =>
+                            timeslot.timeslot === slot.timeslot_index
+                        ).start
+                      }{' '}
+                      -{' '}
+                      {
+                        timeslots.find(
+                          (timeslot) =>
+                            timeslot.timeslot === slot.timeslot_index
+                        ).end
+                      }
+                    </span>
+                  ) : null}
+                </div>
+              ))}
+            </section>
+
+            <div className="flex w-full justify-center">
+              <button
+                onClick={() => editSchedule()}
+                className="btn-outline no-animation btn mb-2 mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 md:w-6/12 lg:w-3/12"
+              >
+                Edytuj harmonogram
+              </button>
             </div>
-          ))}
-        </section>
-
-        <div className="flex w-full justify-center">
-          <button
-            onClick={() => editSchedule()}
-            className="btn-outline no-animation btn mb-2 mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 md:w-6/12 lg:w-3/12"
-          >
-            Edytuj harmonogram
-          </button>
-        </div>
-        <div className="my-4 border-b-[1px] border-base-100"></div>
-
+            <div className="my-4 border-b-[1px] border-base-100"></div>
+          </>
+        )}
         <SelectSlotsTeacherSchedule
           timeSlotsTeacher={timeSlotsTeacher}
           setTimeSlotsTeacher={setTimeSlotsTeacher}
+          setLoading={setLoading}
         />
       </div>
     </div>

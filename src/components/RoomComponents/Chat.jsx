@@ -53,8 +53,9 @@ const Chat = ({ archivized }) => {
 
   const { readyState, sendJsonMessage } = useWebSocket(
     user
-      ? `wss://korepetycje-backend.azurewebsites.net/chats/${roomId}/`
-      : null,
+      ? `ws://127.0.0.1:8000/chats/${roomId}/`
+      : // `wss://korepetycje-backend.azurewebsites.net/chats/${roomId}/`
+        null,
     {
       queryParams: {
         userId: user ? user.user_id : '',

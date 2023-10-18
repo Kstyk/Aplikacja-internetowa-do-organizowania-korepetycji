@@ -9,9 +9,10 @@ import { timeslots } from '../../variables/Timeslots'
 import CustomToolbar from './CustomToolbar'
 import { Link } from 'react-router-dom'
 import './schedule.scss'
+import LoadingComponent from '../LoadingComponent'
 
 const TeacherSchedule = ({ teacherId }) => {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [eventArray, setEventArray] = useState([])
   const [slotInfo, setSlotInfo] = useState(null)
   dayjs.locale('pl')
@@ -22,16 +23,19 @@ const TeacherSchedule = ({ teacherId }) => {
   const api = useAxios()
 
   const fetchSchedule = async () => {
+    setLoading(true)
     await api
       .get(`/api/classes/${teacherId}/schedule`)
       .then((res) => {
         setEvents(res.data)
+        setLoading(false)
       })
       .catch((err) => {
         showAlertError(
           'Błąd',
           'Wystąpił błąd przy pobieraniu danych z serwera.'
         )
+        setLoading(false)
       })
   }
 
@@ -198,26 +202,30 @@ const TeacherSchedule = ({ teacherId }) => {
           </div>
         </form>
       </dialog>
-      <Calendar
-        date={date}
-        localizer={localizer}
-        events={eventArray}
-        defaultView="week"
-        min={minTime}
-        max={maxTime}
-        views={{ week: true }}
-        startAccessor="start"
-        endAccessor="end"
-        tooltipAccessor={null}
-        timeslots={1}
-        step={60}
-        formats={formats}
-        eventPropGetter={eventStyleGetter}
-        selectable="ignoreEvents"
-        components={{ toolbar: CustomToolbar }}
-        onNavigate={onNavigate}
-        onSelectEvent={onSelectEvent}
-      />
+      {loading ? (
+        <LoadingComponent message="Ładowanie harmonogramu" />
+      ) : (
+        <Calendar
+          date={date}
+          localizer={localizer}
+          events={eventArray}
+          defaultView="week"
+          min={minTime}
+          max={maxTime}
+          views={{ week: true }}
+          startAccessor="start"
+          endAccessor="end"
+          tooltipAccessor={null}
+          timeslots={1}
+          step={60}
+          formats={formats}
+          eventPropGetter={eventStyleGetter}
+          selectable="ignoreEvents"
+          components={{ toolbar: CustomToolbar }}
+          onNavigate={onNavigate}
+          onSelectEvent={onSelectEvent}
+        />
+      )}
     </>
   )
 }
