@@ -65,7 +65,7 @@ const OpinionStudentViewCard = ({ opinion, fetchOpinions }) => {
               <img
                 src={
                   opinion?.teacher_profile_image
-                    ? `${backendUrl}${opinion?.teacher_profile_image}`
+                    ? `${opinion?.teacher_profile_image}`
                     : guest
                 }
               />

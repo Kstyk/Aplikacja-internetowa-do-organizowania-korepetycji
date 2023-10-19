@@ -108,90 +108,98 @@ const Room = () => {
   }, [])
 
   return (
-    <>
-      {loading ? (
-        <LoadingComponent />
-      ) : (
-        <>
-          <div className="absolute left-0 right-0 top-[70px] h-[300px] bg-base-300 max-phone:hidden"></div>
+    <div>
+      <>
+        <div className="absolute left-0 right-0 top-[70px] h-[300px] bg-base-300 max-phone:hidden"></div>
 
-          <div className="tab-bordered relative mt-5 flex w-full flex-row justify-between gap-x-5 rounded-t-md bg-white p-5 pb-0 sm:mt-10">
-            <h1 className="text-base font-bold uppercase tracking-wide text-gray-700 phone:text-lg sm:text-xl">
-              {name}
-            </h1>
-            <section className="flex justify-end gap-x-5">
-              {user?.role == 'Student' && (
-                <>
-                  <button
-                    className="text-xs uppercase text-gray-500 hover:underline phone:text-sm"
-                    onClick={() => setIsOpened(!isOpened)}
-                  >
-                    Oceń nauczyciela
-                  </button>
-                  <RateTeacher
-                    teacher={teacher}
-                    student={user}
-                    opened={isOpened}
-                    setIsOpened={setIsOpened}
-                  />
-                </>
-              )}
-              <button
-                onClick={() => leaveTheRoom()}
-                className="text-xs uppercase text-gray-500 hover:underline phone:text-sm"
-              >
-                Opuść pokój
-              </button>
-            </section>
-          </div>
-          <div className="tabs relative h-[100%] bg-white p-5 shadow-xl max-sm:pl-0 phone:rounded-b-md">
-            <div
-              className={`tab-bordered tab text-sm font-bold uppercase tracking-wide hover:text-[#00000080]  phone:text-base ${
-                selectedTab == 1
-                  ? 'border-b-gray-700 !text-gray-700 transition-all duration-300'
-                  : 'text-[#00000080]'
-              }`}
-              onClick={() => {
-                setSelectedTab(1)
-              }}
-            >
-              Czat
-            </div>
-            <div
-              className={`tab-bordered tab text-sm font-bold uppercase tracking-wide hover:text-[#00000080]  phone:text-base ${
-                selectedTab == 2
-                  ? 'border-b-gray-700 !text-gray-700 transition-all duration-300'
-                  : 'text-[#00000080]'
-              }`}
-              onClick={() => {
-                setSelectedTab(2)
-              }}
-            >
-              Pliki
-            </div>
-            <div
-              className={`tab-bordered tab text-sm font-bold uppercase tracking-wide hover:text-[#00000080]  phone:text-base ${
-                selectedTab == 3
-                  ? 'border-b-gray-700 !text-gray-700 transition-all duration-300'
-                  : 'text-[#00000080]'
-              }`}
-              onClick={() => {
-                setSelectedTab(3)
-              }}
-            >
-              Terminarz
-            </div>
-          </div>
-          {selectedTab == 1 && (
-            <div className="relative w-full">
-              <Chat archivized={isArchivized} />
-            </div>
+        <div className="tab-bordered relative mt-5 flex w-full flex-row justify-between gap-x-5 rounded-t-md bg-white p-5 pb-0 sm:mt-10">
+          {loading ? (
+            <LoadingComponent message="Ładowanie pokoju" />
+          ) : (
+            <>
+              <h1 className="text-base font-bold uppercase tracking-wide text-gray-700 phone:text-lg sm:text-xl">
+                {name}
+              </h1>
+              <section className="flex justify-end gap-x-5">
+                {user?.role == 'Student' && (
+                  <>
+                    <button
+                      className="text-xs uppercase text-gray-500 hover:underline phone:text-sm"
+                      onClick={() => setIsOpened(!isOpened)}
+                    >
+                      Oceń nauczyciela
+                    </button>
+                    <RateTeacher
+                      teacher={teacher}
+                      student={user}
+                      opened={isOpened}
+                      setIsOpened={setIsOpened}
+                    />
+                  </>
+                )}
+                <button
+                  onClick={() => leaveTheRoom()}
+                  className="text-xs uppercase text-gray-500 hover:underline phone:text-sm"
+                >
+                  Opuść pokój
+                </button>
+              </section>
+            </>
           )}
-          {selectedTab == 2 && <Files roomId={roomId} />}
-          {selectedTab == 3 && <RoomPageSchedule roomId={roomId} />}
-        </>
-      )}
-    </>
+        </div>
+        {loading ? (
+          ''
+        ) : (
+          <>
+            <div className="tabs relative h-[100%] bg-white p-5 shadow-xl max-sm:pl-0 phone:rounded-b-md">
+              <div
+                className={`tab-bordered tab text-sm font-bold uppercase tracking-wide hover:text-[#00000080]  phone:text-base ${
+                  selectedTab == 1
+                    ? 'border-b-gray-700 !text-gray-700 transition-all duration-300'
+                    : 'text-[#00000080]'
+                }`}
+                onClick={() => {
+                  setSelectedTab(1)
+                }}
+              >
+                Czat
+              </div>
+              <div
+                className={`tab-bordered tab text-sm font-bold uppercase tracking-wide hover:text-[#00000080]  phone:text-base ${
+                  selectedTab == 2
+                    ? 'border-b-gray-700 !text-gray-700 transition-all duration-300'
+                    : 'text-[#00000080]'
+                }`}
+                onClick={() => {
+                  setSelectedTab(2)
+                }}
+              >
+                Pliki
+              </div>
+              <div
+                className={`tab-bordered tab text-sm font-bold uppercase tracking-wide hover:text-[#00000080]  phone:text-base ${
+                  selectedTab == 3
+                    ? 'border-b-gray-700 !text-gray-700 transition-all duration-300'
+                    : 'text-[#00000080]'
+                }`}
+                onClick={() => {
+                  setSelectedTab(3)
+                }}
+              >
+                Terminarz
+              </div>
+            </div>
+            {selectedTab == 1 && (
+              <div className="relative w-full">
+                <Chat archivized={isArchivized} />
+              </div>
+            )}
+            {selectedTab == 2 && <Files roomId={roomId} />}
+            {selectedTab == 3 && <RoomPageSchedule roomId={roomId} />}
+          </>
+        )}
+      </>
+    </div>
   )
 }
 

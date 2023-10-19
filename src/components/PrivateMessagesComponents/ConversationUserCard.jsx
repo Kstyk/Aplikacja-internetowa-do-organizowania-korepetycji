@@ -22,11 +22,7 @@ const ConversationUserCard = ({ user, setSelectedUser, selectedUser }) => {
         )}
         <div className="mx-auto w-12 rounded-full ring-primary ring-offset-2 ring-offset-base-100 transition-all duration-200 hover:ring">
           <img
-            src={
-              user?.profile_image != null
-                ? `${backendUrl}${user?.profile_image}`
-                : guest
-            }
+            src={user?.profile_image != null ? `${user?.profile_image}` : guest}
           />
         </div>
       </div>

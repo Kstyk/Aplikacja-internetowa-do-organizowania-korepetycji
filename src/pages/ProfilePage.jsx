@@ -39,16 +39,20 @@ const ProfilePage = () => {
 
   return (
     <>
-      {loading ? (
-        <LoadingComponent message="Ładowanie informacji o nauczycielu..." />
-      ) : (
-        <section className="mb-10 mt-10 w-full shadow-xl">
-          <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
-          <div className="card z-30 mb-5 flex flex-row items-center justify-between rounded-md border-[1px] border-base-200 bg-white py-4 text-center shadow-xl max-md:text-xl max-phone:text-lg md:text-2xl">
-            <h1 className="w-full break-words px-2 text-center text-xl font-bold uppercase tracking-wider text-gray-700">
+      <section className="mb-10 mt-10 w-full shadow-xl">
+        <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
+        <div className="card z-30 mb-5 flex flex-row items-center justify-between rounded-md border-[1px] border-base-200 bg-white py-4 text-center shadow-xl">
+          {loading ? (
+            <LoadingComponent message="Ładowanie informacji o nauczycielu..." />
+          ) : (
+            <h1 className="w-full break-words px-2 text-center text-xl font-bold uppercase tracking-wider text-gray-700 max-md:text-xl max-phone:text-lg md:text-2xl">
               {profile?.user?.first_name} {profile?.user?.last_name}
             </h1>
-          </div>
+          )}
+        </div>
+        {loading ? (
+          ''
+        ) : (
           <div className="flex max-md:flex-col md:flex-row md:gap-x-2">
             <div className="card flex rounded-md border-[1px] border-base-200 bg-white py-5 max-md:w-full max-phone:flex-col phone:flex-row phone:pb-10 md:w-full ">
               <div className="profile ml-3 flex w-4/12 flex-col items-center justify-start border-r-[1px] border-base-300 max-phone:order-1 max-phone:w-full max-phone:pr-6 phone:pr-3 sm:w-3/12">
@@ -223,8 +227,8 @@ const ProfilePage = () => {
               </div>
             </div>
           </div>
-        </section>
-      )}
+        )}
+      </section>
     </>
   )
 }

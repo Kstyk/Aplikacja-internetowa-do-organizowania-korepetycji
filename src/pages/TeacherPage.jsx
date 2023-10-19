@@ -124,16 +124,20 @@ const TeacherPage = () => {
 
   return (
     <>
-      {loading ? (
-        <LoadingComponent message="Ładowanie informacji o nauczycielu..." />
-      ) : (
-        <section className="mb-10 mt-10 w-full">
-          <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
-          <div className="card z-30 mb-5 flex flex-row items-center justify-between rounded-md border-[1px] border-base-200 bg-white p-4 text-center shadow-xl max-md:text-xl max-phone:text-lg md:text-2xl">
-            <h1 className="w-full text-center">
+      <section className="mb-10 mt-10 w-full">
+        <div className="absolute left-0 right-0 top-[70px] h-[500px] bg-base-300 max-phone:hidden"></div>
+        <div className="card z-30 mb-5 flex flex-row items-center justify-between rounded-md border-[1px] border-base-200 bg-white p-4 text-center shadow-xl">
+          {loading ? (
+            <LoadingComponent message="Ładowanie informacji o nauczycielu..." />
+          ) : (
+            <h1 className="w-full break-words px-2 text-center text-xl font-bold uppercase tracking-wider text-gray-700 max-md:text-xl max-phone:text-lg md:text-2xl">
               {profile?.user?.first_name} {profile?.user?.last_name}
             </h1>
-          </div>
+          )}
+        </div>
+        {loading ? (
+          ''
+        ) : (
           <div className="flex max-md:flex-col md:flex-row md:gap-x-2 ">
             <div className="card flex rounded-md border-[1px] border-base-200 bg-white py-4 shadow-xl max-md:w-full max-phone:flex-col phone:flex-row md:w-full ">
               <div className="profile ml-3 flex w-4/12 flex-col items-center justify-start border-r-[1px] border-base-300 max-phone:order-1 max-phone:w-full max-phone:pr-6 phone:pr-3 sm:w-3/12">
@@ -375,34 +379,34 @@ const TeacherPage = () => {
               </div>
             </div>
           </div>
+        )}
 
-          {opinions?.length > 0 && (
-            <div className="card mt-2 flex flex-col rounded-md border-[1px] border-base-200 bg-white p-5 shadow-xl max-md:w-full md:w-full">
-              <h1 className="mb-2 block w-full border-b-[1px] border-base-100 text-xl font-bold uppercase tracking-wide text-gray-700">
-                Opinie o nauczycielu
-              </h1>
+        {opinions?.length > 0 && (
+          <div className="card mt-2 flex flex-col rounded-md border-[1px] border-base-200 bg-white p-5 shadow-xl max-md:w-full md:w-full">
+            <h1 className="mb-2 block w-full border-b-[1px] border-base-100 text-xl font-bold uppercase tracking-wide text-gray-700">
+              Opinie o nauczycielu
+            </h1>
 
-              {opinions?.map((opinion) => (
-                <OpinionCard
-                  opinion={opinion}
-                  key={opinion.id}
-                  page={opinionPage}
-                />
-              ))}
-              {hasMoreOpinions && (
-                <div className="px-5 max-phone:px-0">
-                  <button
-                    className={`btn-outline no-animation btn mt-2 h-10 !min-h-0 w-full rounded-none border-base-400 py-0 hover:bg-base-400 md:w-4/12`}
-                    onClick={() => loadMoreOpinions()}
-                  >
-                    Załaduj więcej...
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-        </section>
-      )}
+            {opinions?.map((opinion) => (
+              <OpinionCard
+                opinion={opinion}
+                key={opinion.id}
+                page={opinionPage}
+              />
+            ))}
+            {hasMoreOpinions && (
+              <div className="px-5 max-phone:px-0">
+                <button
+                  className={`btn-outline no-animation btn mt-2 h-10 !min-h-0 w-full rounded-none border-base-400 py-0 hover:bg-base-400 md:w-4/12`}
+                  onClick={() => loadMoreOpinions()}
+                >
+                  Załaduj więcej...
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </section>
     </>
   )
 }

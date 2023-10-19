@@ -12,7 +12,7 @@ import { BiMessageSquareDetail } from 'react-icons/bi'
 import showAlertError from '../components/messages/SwalAlertError'
 
 const InboxPage = () => {
-  document.title = "Skryznka odbiorcza"
+  document.title = 'Skryznka odbiorcza'
 
   const api = useAxios()
   const [loadingConversations, setLoadingConversations] = useState(false)
@@ -177,7 +177,9 @@ const InboxPage = () => {
       <div className="card mx-auto mb-10 flex h-[80vh] flex-row rounded-md bg-white shadow-xl">
         <div className="left flex h-full w-3/12 flex-col overflow-y-auto break-words border-r-2">
           {loadingConversations ? (
-            <LoadingComponent />
+            <div className="p-2 text-center text-sm">
+              <LoadingComponent message="Ładowanie konwersacji" />
+            </div>
           ) : conversationsUsers.length == 0 ? (
             <span className="mt-5 p-2 text-center text-sm italic">
               Brak rozpoczętych konwersacji.

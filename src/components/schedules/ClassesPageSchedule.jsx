@@ -8,9 +8,10 @@ import useAxios from '../../utils/useAxios'
 import { timeslots } from '../../variables/Timeslots'
 import CustomToolbar from './CustomToolbar'
 import Swal from 'sweetalert2'
+import LoadingComponent from '../LoadingComponent'
 
 const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [timeSlotsTeacher, setTimeSlotsTeacher] = useState([])
   const [eventArray, setEventArray] = useState([])
   dayjs.locale('pl')
@@ -291,35 +292,39 @@ const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
 
   return (
     <div>
-      <Calendar
-        date={date}
-        localizer={localizer}
-        events={eventArray}
-        defaultView="week"
-        min={minTime}
-        max={maxTime}
-        views={{ week: true }}
-        startAccessor="start"
-        endAccessor="end"
-        tooltipAccessor={null}
-        timeslots={1}
-        step={60}
-        formats={formats}
-        slotPropGetter={slotPropGetter}
-        eventPropGetter={eventStyleGetter}
-        onSelectSlot={onSelectSlot}
-        selectable="ignoreEvents"
-        onNavigate={onNavigate}
-        components={{
-          toolbar: (props) => (
-            <CustomToolbar
-              {...props}
-              isMaxDateReached={maxDateReached}
-              isMinDateReached={minDateReached}
-            />
-          ),
-        }}
-      />
+      {loading ? (
+        <LoadingComponent message="Ładowanie harmonogramu..." />
+      ) : (
+        <Calendar
+          date={date}
+          localizer={localizer}
+          events={eventArray}
+          defaultView="week"
+          min={minTime}
+          max={maxTime}
+          views={{ week: true }}
+          startAccessor="start"
+          endAccessor="end"
+          tooltipAccessor={null}
+          timeslots={1}
+          step={60}
+          formats={formats}
+          slotPropGetter={slotPropGetter}
+          eventPropGetter={eventStyleGetter}
+          onSelectSlot={onSelectSlot}
+          selectable="ignoreEvents"
+          onNavigate={onNavigate}
+          components={{
+            toolbar: (props) => (
+              <CustomToolbar
+                {...props}
+                isMaxDateReached={maxDateReached}
+                isMinDateReached={minDateReached}
+              />
+            ),
+          }}
+        />
+      )}
     </div>
   )
 }

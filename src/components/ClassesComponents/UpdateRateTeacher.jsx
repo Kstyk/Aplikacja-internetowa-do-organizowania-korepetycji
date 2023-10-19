@@ -9,6 +9,7 @@ import { AiOutlineClose } from 'react-icons/ai'
 const UpdateRateTeacher = ({ opinion, opened, setIsOpened, fetchOpinions }) => {
   const api = useAxios()
   Modal.setAppElement('#root')
+  const [waitingForResponse, setWaitingForResponse] = useState(false)
 
   useEffect(() => {
     if (opened) {
@@ -49,6 +50,7 @@ const UpdateRateTeacher = ({ opinion, opened, setIsOpened, fetchOpinions }) => {
   })
 
   const onSubmit = (data) => {
+    setWaitingForResponse(true)
     if (data.rate == null) {
       data.rate = opinion?.rate
     }
@@ -67,6 +69,7 @@ const UpdateRateTeacher = ({ opinion, opened, setIsOpened, fetchOpinions }) => {
             fetchOpinions()
           }
         )
+        setWaitingForResponse(false)
       })
       .catch((err) => {
         closeModal()
@@ -116,6 +119,7 @@ const UpdateRateTeacher = ({ opinion, opened, setIsOpened, fetchOpinions }) => {
         } else {
           showAlertError('Błąd', 'Nieudana edycja opinii.')
         }
+        setWaitingForResponse(false)
       })
   }
 
@@ -179,7 +183,11 @@ const UpdateRateTeacher = ({ opinion, opened, setIsOpened, fetchOpinions }) => {
             type="submit"
             className="btn-outline no-animation btn mb-2 mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 md:w-5/12 xl:w-4/12"
           >
-            Edytuj opinię
+            {waitingForResponse ? (
+              <span className="loading loading-spinner "></span>
+            ) : (
+              'Edytuj opinię'
+            )}
           </button>
         </form>
       </Modal>

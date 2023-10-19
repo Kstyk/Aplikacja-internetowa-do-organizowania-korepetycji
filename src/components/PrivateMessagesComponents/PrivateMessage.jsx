@@ -40,7 +40,7 @@ const PrivateMessage = ({ message }) => {
             }
             src={
               message?.from_user?.profile_image != null
-                ? `${backendUrl}${message?.from_user?.profile_image}`
+                ? `${message?.from_user?.profile_image}`
                 : guest
             }
           />

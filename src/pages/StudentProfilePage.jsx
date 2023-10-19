@@ -44,16 +44,20 @@ const StudentProfilePage = () => {
 
   return (
     <>
-      {loading ? (
-        <LoadingComponent message="Ładowanie informacji o nauczycielu..." />
-      ) : (
-        <section className="mx-auto mb-10 mt-10 w-6/12 max-md:w-10/12 max-phone:w-full">
-          <div className="mx-phone:hidden absolute left-0 right-0 top-[70px] h-[500px] bg-base-300"></div>
-          <div className="card z-30 mb-5 flex flex-row items-center justify-between rounded-md border-[1px] border-base-200 bg-white p-4 text-center shadow-xl max-md:text-xl max-phone:text-lg md:text-2xl">
-            <h1 className="w-full text-center text-xl font-bold uppercase tracking-wider text-gray-700">
+      <section className="mx-auto mb-10 mt-10 w-6/12 max-md:w-10/12 max-phone:w-full">
+        <div className="mx-phone:hidden absolute left-0 right-0 top-[70px] h-[500px] bg-base-300"></div>
+        <div className="card z-30 mb-5 flex flex-row items-center justify-between rounded-md border-[1px] border-base-200 bg-white p-4 text-center shadow-xl ">
+          {loading ? (
+            <LoadingComponent message="Ładowanie profilu" />
+          ) : (
+            <h1 className="w-full text-center text-xl font-bold uppercase tracking-wider text-gray-700 max-md:text-xl max-phone:text-lg md:text-2xl">
               {profile?.user?.first_name} {profile?.user?.last_name}
             </h1>
-          </div>
+          )}
+        </div>
+        {loading ? (
+          ''
+        ) : (
           <div className="card  flex items-center justify-center rounded-md border-[1px] border-base-200 bg-white py-4 shadow-xl max-md:w-full md:w-full">
             <div className="avatar flex justify-center">
               <div className="w-5/12 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100 max-md:w-8/12">
@@ -148,8 +152,8 @@ const StudentProfilePage = () => {
               )}
             </div>
           </div>
-        </section>
-      )}
+        )}
+      </section>
     </>
   )
 }

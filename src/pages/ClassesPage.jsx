@@ -9,12 +9,13 @@ import { MdOutlineLocationOn } from 'react-icons/md'
 import parse from 'html-react-parser'
 import showAlertError from '../components/messages/SwalAlertError'
 import OpinionCard from '../components/ClassesComponents/OpinionCard'
-import InfiniteScroll from 'react-infinite-scroll-component'
+import { useNavigate } from 'react-router-dom'
+import SendPrivateMessage from '../components/PrivateMessagesComponents/SendPrivateMessage'
 
 const ClassesPage = () => {
   document.title = 'Podgląd zajęć'
   const api = useAxios()
-
+  const nav = useNavigate()
   const [classes, setClasses] = useState(null)
   const [loading, setLoading] = useState(true)
   const [loadingOpinions, setLoadingOpinions] = useState(true)
@@ -24,6 +25,7 @@ const ClassesPage = () => {
   const [opinionPage, setOpinionPage] = useState(1)
   const [averageRating, setAverageRating] = useState(null)
   const [amountOfOpinions, setAmountOfOpinions] = useState(0)
+  const [isOpened, setIsOpened] = useState(false)
 
   const { classesId } = useParams()
 
@@ -40,12 +42,12 @@ const ClassesPage = () => {
           'Błąd',
           'Wystąpił błąd przy pobieraniu danych z serwera.'
         )
+        nav('/')
         setLoading(false)
       })
   }
 
   const fetchOpinions = async () => {
-    setLoadingOpinions(true)
     await api
       .get(`/api/classes/${classes?.teacher?.user?.id}/opinions?page_size=10`)
       .then((res) => {
@@ -138,14 +140,15 @@ const ClassesPage = () => {
                 </div>
                 <button
                   className="btn-outline no-animation btn mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400"
-                  onClickCapture={() =>
-                    window.open(
-                      'mailto:email@example.com?subject=Subject&body=Body%20goes%20here'
-                    )
-                  }
+                  onClick={() => setIsOpened(!isOpened)}
                 >
                   Wyślij wiadomość
                 </button>
+                <SendPrivateMessage
+                  toUser={classes?.teacher}
+                  opened={isOpened}
+                  setIsOpened={setIsOpened}
+                />
 
                 <section className="infos flex w-full flex-col pt-4">
                   <div className="mb-4 border-b-[1px] border-base-100"></div>

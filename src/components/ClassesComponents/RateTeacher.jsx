@@ -10,6 +10,7 @@ import { AiOutlineClose } from 'react-icons/ai'
 const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
   const api = useAxios()
   const [classes, setClasses] = useState([])
+  const [waitingForResponse, setWaitingForResponse] = useState(false)
 
   const customSelectStyle = {
     control: (base) => ({
@@ -86,6 +87,7 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
   }
 
   const onSubmit = (data) => {
+    setWaitingForResponse(true)
     if (data.rate == null) {
       data.rate = 5
     }
@@ -102,6 +104,7 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
           'Sukces!',
           'Pomyślnie dodałeś ocenę nauczycielowi. Możesz ją zobaczyć w zakładce "Wystawione Opinie".'
         )
+        setWaitingForResponse(false)
       })
       .catch((err) => {
         closeModal()
@@ -151,6 +154,7 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
         } else {
           showAlertError('Błąd', 'Nieudane dodanie opinii.')
         }
+        setWaitingForResponse(false)
       })
   }
 
@@ -240,7 +244,11 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
             type="submit"
             className="btn-outline no-animation btn mb-2 mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 md:w-5/12 xl:w-4/12"
           >
-            Dodaj opinię
+            {waitingForResponse ? (
+              <span className="loading loading-spinner "></span>
+            ) : (
+              'Dodaj opinię'
+            )}
           </button>
         </form>
       </Modal>

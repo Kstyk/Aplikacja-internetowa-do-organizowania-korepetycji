@@ -5,20 +5,22 @@ import RoomSchedule from '../schedules/RoomSchedule'
 import dayjs from 'dayjs'
 
 const RoomPageSchedule = ({ roomId }) => {
-  const [loading, setLoading] = useState()
+  const [loading, setLoading] = useState(true)
   const [schedule, setSchedule] = useState([])
   const [nextSchedule, setNextSchedule] = useState(null)
 
   const api = useAxios()
   const fetchSchedule = async () => {
+    setLoading(true)
     await api
       .get(`api/rooms/${roomId}/schedules/`)
       .then((res) => {
+        setLoading(false)
         setSchedule(res.data.schedules)
         setNextSchedule(res.data.next_schedule)
       })
       .catch((err) => {
-        console.log(err)
+        setLoading(false)
       })
   }
 
@@ -29,10 +31,12 @@ const RoomPageSchedule = ({ roomId }) => {
   return (
     <div className="mt-10">
       {loading ? (
-        <LoadingComponent message="Ładowanie..." />
+        <div className="relative rounded-md bg-white py-5 shadow-xl">
+          <LoadingComponent message="Ładowanie harmonogramu" />
+        </div>
       ) : (
         <>
-          <div className="card mb-5 rounded-none bg-white p-4 shadow-xl">
+          <div className="card mb-5 rounded-md bg-white p-4 shadow-xl">
             <h2 className="mb-3 border-b-[1px] text-xl font-bold uppercase tracking-wide text-gray-700">
               Najbliższe zajęcia
             </h2>

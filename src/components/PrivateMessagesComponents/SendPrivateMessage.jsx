@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import useAxios from '../../utils/useAxios'
 import showAlertError from '../messages/SwalAlertError'
@@ -9,6 +9,7 @@ import { AiOutlineClose } from 'react-icons/ai'
 const SendPrivateMessage = ({ toUser, opened, setIsOpened }) => {
   Modal.setAppElement('#root')
   const api = useAxios()
+  const [waitingForResponse, setWaitingForResponse] = useState(false)
 
   useEffect(() => {
     if (opened) {
@@ -44,9 +45,8 @@ const SendPrivateMessage = ({ toUser, opened, setIsOpened }) => {
     mode: 'all',
   })
 
-  const addRate = {}
-
   const onSubmit = (data) => {
+    setWaitingForResponse(true)
     data.to_user = toUser?.user?.id
 
     api
@@ -54,6 +54,7 @@ const SendPrivateMessage = ({ toUser, opened, setIsOpened }) => {
       .then((res) => {
         closeModal()
         showSuccessAlert('Sukces!', 'Udało się wysłać wiadomość.')
+        setWaitingForResponse(false)
       })
       .catch((err) => {
         closeModal()
@@ -85,6 +86,7 @@ const SendPrivateMessage = ({ toUser, opened, setIsOpened }) => {
         } else {
           showAlertError('Błąd', 'Nieudane wysłanie wiadomości prywatnej.')
         }
+        setWaitingForResponse(false)
       })
   }
 
@@ -131,7 +133,11 @@ const SendPrivateMessage = ({ toUser, opened, setIsOpened }) => {
             type="submit"
             className="btn-outline no-animation btn mb-2 mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 md:w-5/12 xl:w-4/12"
           >
-            Wyślij wiadomość
+            {waitingForResponse ? (
+              <span className="loading loading-spinner "></span>
+            ) : (
+              'Wyślij wiadomość'
+            )}
           </button>
         </form>
       </Modal>

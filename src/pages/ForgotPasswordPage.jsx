@@ -45,7 +45,9 @@ const ForgotPasswordPage = () => {
           Zresetuj hasło do swojego konta
         </h2>
         {loading ? (
-          <LoadingComponent message="Oczekiwanie na odpowiedź serwera..." />
+          <div className="mt-2">
+            <LoadingComponent message="Oczekiwanie na odpowiedź serwera..." />
+          </div>
         ) : isSended ? (
           <div className="mx-auto mt-3 w-6/12 text-center">
             Wysłaliśmy link do resetu hasła na podany przez Ciebie email.

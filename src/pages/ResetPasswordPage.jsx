@@ -106,7 +106,9 @@ const ResetPasswordPage = () => {
           Zresetuj hasło do swojego konta
         </h2>
         {loading ? (
-          <LoadingComponent message="Zmienianie hasła..." />
+          <div className="mt-2">
+            <LoadingComponent message="Zmienianie hasła..." />
+          </div>
         ) : (
           <>
             <form
