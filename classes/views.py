@@ -44,7 +44,7 @@ def get_all_classes(request):
     classes = Class.objects.filter(able_to_buy=True)
 
     # sortowanie
-    sort_by = request.GET.get('sort_by')  # Column name for sorting
+    sort_by = request.GET.get('sort_by', 'name')  # Column name for sorting
     sort_direction = request.GET.get('sort_direction', 'DESC')
 
     if teacher_id is not None:
@@ -74,27 +74,28 @@ def get_all_classes(request):
         else:
             pass
 
-    if sort_direction == 'DESC':
-        if sort_by == 'name':
-            classes = classes.order_by(F(sort_by).desc())
-        if sort_by == 'price_for_lesson':
-            classes = classes.order_by(F(sort_by).desc())
-        if sort_by == 'average_rating':
-            classes = classes.annotate(
-                average_rate=Avg('teacher__rated_teacher__rate'))
-            classes = classes.order_by('-average_rate')
+    if sort_direction is not None:
+        if sort_direction == 'DESC':
+            if sort_by == 'name':
+                classes = classes.order_by(F(sort_by).desc())
+            if sort_by == 'price_for_lesson':
+                classes = classes.order_by(F(sort_by).desc())
+            if sort_by == 'average_rating':
+                classes = classes.annotate(
+                    average_rate=Avg('teacher__rated_teacher__rate'))
+                classes = classes.order_by('-average_rate')
 
-    elif sort_direction == 'ASC':
-        if sort_by == 'name':
-            classes = classes.order_by(F(sort_by).asc())
-        if sort_by == 'price_for_lesson':
-            classes = classes.order_by(F(sort_by).asc())
-        if sort_by == 'average_rating':
-            classes = classes.annotate(
-                average_rate=Avg('teacher__rated_teacher__rate'))
-            classes = classes.order_by('average_rate')
-    else:
-        pass
+        elif sort_direction == 'ASC':
+            if sort_by == 'name':
+                classes = classes.order_by(F(sort_by).asc())
+            if sort_by == 'price_for_lesson':
+                classes = classes.order_by(F(sort_by).asc())
+            if sort_by == 'average_rating':
+                classes = classes.annotate(
+                    average_rate=Avg('teacher__rated_teacher__rate'))
+                classes = classes.order_by('average_rate')
+        else:
+            pass
 
     if len(classes) > 0:
 
