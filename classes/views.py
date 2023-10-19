@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.core.mail import send_mail
 from .models import Class, Language, Schedule, Timeslot, PurchaseHistory, Opinion
 from rooms.models import Room
 from rest_framework.permissions import IsAuthenticated
@@ -303,6 +305,21 @@ def purchase_classes(request):
             )
 
             purchase.save()
+
+            send_mail(
+                'Zakupiono twoje zajęcia',
+                f'''
+                Cześć, {classes.teacher.first_name}
+
+                Student {student.first_name} {student.last_name} zakupił twoje zajęcia: {classes.name}.
+
+                Link do utworzonego pokoju zajęć: http://localhost:5173/pokoj/{purchase.room.room_id}/
+                
+                Pozdrawiamy, zespół korki.PL''',
+                settings.EMAIL_HOST_USER,
+                [classes.teacher.email],
+                fail_silently=False,
+            )
 
     except ValidationError as e:
         return Response({'error': e.detail}, status=status.HTTP_400_BAD_REQUEST)

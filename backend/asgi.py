@@ -22,6 +22,7 @@ sys.path.append(str(ROOT_DIR / "backend"))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 
 application = ProtocolTypeRouter({
+    "https": get_asgi_application(),
     "http": get_asgi_application(),
     "websocket": URLRouter([
         path('chats/<room_id>/', ChatConsumer.as_asgi(),

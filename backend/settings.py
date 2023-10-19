@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
-from .settings_local import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, DATABASES, SECRET_KEY, AZURE_ACCOUNT_NAME
+from .settings_local import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, DATABASES, SECRET_KEY, AZURE_ACCOUNT_NAME, CHANNEL_LAYERS
 import os
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
@@ -190,17 +190,6 @@ AUTH_USER_MODEL = "users.User"
 CORS_ALLOW_ALL_ORIGINS = True
 
 ASGI_APPLICATION = "backend.asgi.application"
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
-            # "hosts": [("redis://:EeWd2DciDmI7nsDs4kLJTh9N8tY7qSHjxAzCaIIPxto=@korepetycje-redis.redis.cache.windows.net:6379/0")],
-        },
-    },
-}
-
 
 CITIES_LIGHT_TRANSLATION_LANGUAGES = ['pl']
 CITIES_LIGHT_INCLUDE_COUNTRIES = ['PL']

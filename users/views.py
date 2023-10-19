@@ -242,7 +242,12 @@ class PasswordResetRequestView(APIView):
             reset_link = f'http://localhost:5173/resetuj-haslo/{token}/'
             send_mail(
                 'Korepetycje Online',
-                f'Kliknij w ten link, by móc zresetować hasło: {reset_link}',
+                f'''
+                Uwaga! Jeśli to nie ty zażądałeś resetu hasła, zignoruj tę wiadomość.
+                
+                Kliknij w ten link, by móc zresetować hasło: {reset_link}
+                
+                Pozdrawiamy, zespół korki.PL''',
                 settings.EMAIL_HOST_USER,
                 [email],
                 fail_silently=False,
