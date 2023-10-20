@@ -187,6 +187,14 @@ class TimeSlotsCreateView(generics.ListCreateAPIView):
         return Response(serializer.data)
 
 
+class TimeslotsTeacherView(generics.ListAPIView):
+    serializer_class = TimeslotSerializer
+
+    def get_queryset(self):
+        teacher_id = self.kwargs.get('teacher_id')
+        return Timeslot.objects.filter(teacher_id=teacher_id)
+
+
 class ScheduleTeacherView(generics.ListAPIView):
     serializer_class = ScheduleSerializer
 
@@ -201,14 +209,6 @@ class ScheduleStudentView(generics.ListAPIView):
     def get_queryset(self):
         student_id = self.kwargs.get('student_id')
         return Schedule.objects.filter(student_id=student_id)
-
-
-class TimeslotsTeacherView(generics.ListAPIView):
-    serializer_class = TimeslotSerializer
-
-    def get_queryset(self):
-        teacher_id = self.kwargs.get('teacher_id')
-        return Timeslot.objects.filter(teacher_id=teacher_id)
 
 
 @api_view(['GET'])
