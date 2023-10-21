@@ -1,6 +1,5 @@
 from rest_framework import status
-from rest_framework.test import APITestCase, force_authenticate
-from rest_framework.test import APIClient
+from rest_framework.test import APITestCase
 from classes.models import Language, Class
 from users.models import User, Role
 from classes.serializers import *
