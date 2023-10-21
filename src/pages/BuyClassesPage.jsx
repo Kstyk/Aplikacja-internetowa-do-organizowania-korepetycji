@@ -97,6 +97,7 @@ const BuyClassesPage = () => {
         setWaitingForResponse(false)
       })
       .catch((err) => {
+        console.log(err)
         setWaitingForResponse(false)
         if (err.response.status == 400) {
           showAlertError('Błąd', err.response.data.error[0])

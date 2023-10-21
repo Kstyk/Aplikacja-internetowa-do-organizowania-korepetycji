@@ -46,6 +46,9 @@ const Chat = ({ archivized }) => {
   const currentUserVideoRef = useRef(null)
   const peerInstance = useRef(null)
 
+  const [microphoneConnected, setMicrophoneConnected] = useState()
+  const [cameraConnected, setCameraConnected] = useState()
+
   const [audioEnabled, setAudioEnabled] = useState(true)
   const [isCameraOn, setIsCameraOn] = useState(true)
   const [isScreenSharing, setIsScreenSharing] = useState(false)
@@ -133,7 +136,12 @@ const Chat = ({ archivized }) => {
   }
 
   useEffect(() => {
+    console.log(user.email + ' rerender, ' + audioEnabled)
+  }, [audioEnabled])
+
+  useEffect(() => {
     fetchSecondUserInRoom()
+    checkMediaDevices()
   }, [])
 
   useEffect(() => {
@@ -163,7 +171,6 @@ const Chat = ({ archivized }) => {
   }
 
   function openModal() {
-    checkMediaDevices()
     window.videocall.showModal()
 
     startVideoCall()
@@ -206,15 +213,16 @@ const Chat = ({ archivized }) => {
           device.deviceId != '' &&
           device.deviceId != null
       )
-      console.log(devices)
-      // Tutaj możesz podjąć odpowiednie działania w zależności od wyników
-      // TODO
       if (!hasMicrophone) {
-        console.log('brak mikro')
+        setMicrophoneConnected(false)
+      } else {
+        setMicrophoneConnected(true)
       }
 
       if (!hasCamera) {
-        console.log('brak kamery')
+        setCameraConnected(false)
+      } else {
+        setCameraConnected(true)
       }
     } catch (error) {
       console.error('Error checking media devices:', error)
@@ -240,19 +248,30 @@ const Chat = ({ archivized }) => {
         navigator.getUserMedia ||
         navigator.webkitGetUserMedia ||
         navigator.mozGetUserMedia
-      getUserMedia({ video: true, audio: true }, (mediaStream) => {
-        currentUserVideoRef.current.srcObject = mediaStream
-        currentUserVideoRef.current.onloadedmetadata = () => {
-          currentUserVideoRef.current.play()
-        }
-        call.answer(mediaStream)
-        call.on('stream', function (remoteStream) {
-          remoteVideoRef.current.srcObject = remoteStream
-          remoteVideoRef.current.onloadedmetadata = () => {
-            remoteVideoRef.current.play()
+      getUserMedia(
+        { video: true, audio: microphoneConnected },
+        (mediaStream) => {
+          currentUserVideoRef.current.srcObject = mediaStream
+          console.log(mediaStream)
+
+          currentUserVideoRef.current.onloadedmetadata = () => {
+            currentUserVideoRef.current.play()
           }
-        })
-      })
+          call.answer(mediaStream)
+          const audioTracks =
+            currentUserVideoRef.current.srcObject.getAudioTracks()
+          audioTracks.forEach((track) => {
+            console.log(user.email + ' , ' + track.enabled)
+          })
+
+          call.on('stream', function (remoteStream) {
+            remoteVideoRef.current.srcObject = remoteStream
+            remoteVideoRef.current.onloadedmetadata = () => {
+              remoteVideoRef.current.play()
+            }
+          })
+        }
+      )
     })
 
     peer.on('close', () => {
@@ -268,7 +287,7 @@ const Chat = ({ archivized }) => {
       navigator.webkitGetUserMedia ||
       navigator.mozGetUserMedia
 
-    getUserMedia({ video: true, audio: true }, (mediaStream) => {
+    getUserMedia({ video: true, audio: microphoneConnected }, (mediaStream) => {
       currentUserVideoRef.current.srcObject = mediaStream
       currentUserVideoRef.current.onloadedmetadata = () => {
         currentUserVideoRef.current.play()
@@ -354,9 +373,13 @@ const Chat = ({ archivized }) => {
     const stream = await navigator.mediaDevices.getDisplayMedia({
       video: true,
     })
-    const audio = await navigator.mediaDevices.getUserMedia({ audio: true })
 
-    return new MediaStream([audio.getTracks()[0], stream.getTracks()[0]])
+    if (microphoneConnected) {
+      const audio = await navigator.mediaDevices.getUserMedia({
+        audio: microphoneConnected,
+      })
+      return new MediaStream([audio.getTracks()[0], stream.getTracks()[0]])
+    } else return new MediaStream([stream.getTracks()[0]])
   }
 
   const toggleScreenSharing = async () => {
@@ -364,7 +387,6 @@ const Chat = ({ archivized }) => {
       stopScreenSharing()
     } else {
       const stream = await getScreenshareWithMicrophone()
-      setAudioEnabled(true)
 
       currentUserVideoRef.current.srcObject = stream
       let videoTrack = currentUserVideoRef.current.srcObject.getTracks()[0]
@@ -372,6 +394,11 @@ const Chat = ({ archivized }) => {
       videoTrack.onended = () => {
         stopScreenSharing()
       }
+
+      const audioTracks = currentUserVideoRef.current.srcObject.getAudioTracks()
+      audioTracks.forEach((track) => {
+        track.enabled = audioEnabled
+      })
 
       const call = peerInstance.current.call(remotePeerIdValue, stream)
       call.on('stream', (remoteStream) => {
@@ -397,13 +424,17 @@ const Chat = ({ archivized }) => {
     navigator.mediaDevices
       .getUserMedia({
         video: true,
-        audio: true,
+        audio: microphoneConnected,
       })
       .then((stream) => {
         currentUserVideoRef.current.srcObject = stream
 
         const call = peerInstance.current.call(remotePeerIdValue, stream)
-
+        const audioTracks =
+          currentUserVideoRef.current.srcObject.getAudioTracks()
+        audioTracks.forEach((track) => {
+          track.enabled = audioEnabled
+        })
         call.on('stream', (remoteStream) => {
           remoteVideoRef.current.pause()
           remoteVideoRef.current.srcObject = remoteStream
@@ -576,8 +607,16 @@ const Chat = ({ archivized }) => {
           </div>
           <div
             onClick={() => toggleAudio()}
-            className="tooltip tooltip-bottom flex h-1/4 items-center justify-center rounded-full p-2 hover:bg-slate-700"
-            data-tip={audioEnabled ? 'Mikrofon włączony' : 'Mikrofon wyłączony'}
+            className={`tooltip tooltip-bottom flex h-1/4 items-center justify-center rounded-full p-2 hover:bg-slate-700 ${
+              !microphoneConnected && 'text-slate-600'
+            }`}
+            data-tip={
+              microphoneConnected
+                ? audioEnabled
+                  ? 'Mikrofon włączony'
+                  : 'Mikrofon wyłączony'
+                : 'Brak podłączonego mirkofonu'
+            }
           >
             {audioEnabled ? (
               <BiMicrophone className="h-7 w-7 phone:h-8 phone:w-8" />
