@@ -5,7 +5,6 @@ import { NotificationContext } from '../context/NotificationContext'
 import './Navbar.scss'
 import transparent_logo from '../assets/transparent_logo.png'
 import guest from '../assets/guest.png'
-import { backendUrl } from '../variables/backendUrl'
 import { AiOutlineHome } from 'react-icons/ai'
 import useAxios from '../utils/useAxios'
 
@@ -108,6 +107,16 @@ const Navbar = () => {
                       <span className="badge badge-primary">
                         {countunreadallprivatemessages}
                       </span>
+                    </Link>
+                  </li>
+                  <li className="custom-border-dropdown h-fit">
+                    <Link
+                      to="/wyslane-zapytania"
+                      className={`w-full rounded-none ${
+                        countunreadallprivatemessages > 0 && 'font-bold'
+                      }`}
+                    >
+                      <span>Wysłane zapytania</span>
                     </Link>
                   </li>
                   <li className="custom-border-dropdown h-fit">
@@ -383,6 +392,14 @@ const Navbar = () => {
                     <span className="badge badge-primary">
                       {countunreadallprivatemessages}
                     </span>
+                  </Link>
+                </li>
+                <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                  <Link
+                    to="/wyslane-zapytania"
+                    className={`flex h-8 w-full items-center pl-5 text-sm uppercase`}
+                  >
+                    <span>Wysłane zapytania</span>
                   </Link>
                 </li>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>

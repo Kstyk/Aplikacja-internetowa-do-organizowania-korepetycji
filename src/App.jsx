@@ -37,6 +37,9 @@ import StudentSchedulePage from './pages/StudentSchedulePage'
 import AddedOpinionsPage from './pages/AddedOpinionsPage'
 import TeacherPurchaseHistoryPage from './pages/TeacherPurchaseHistoryPage'
 import InboxPage from './pages/InboxPage'
+import AskAboutClassesPage from './pages/AskAboutClassesPage'
+import SendedQuestionsAboutClassesPage from './pages/SendedQuestionsAboutClassesPage'
+
 function App() {
   return (
     <div
@@ -178,6 +181,22 @@ function App() {
                   element={
                     <PrivateRoute>
                       <AddedOpinionsPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/zajecia/:classesId/zapytaj"
+                  element={
+                    <PrivateRoute>
+                      <AskAboutClassesPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/wyslane-zapytania"
+                  element={
+                    <PrivateRoute>
+                      <SendedQuestionsAboutClassesPage />
                     </PrivateRoute>
                   }
                 />

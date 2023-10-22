@@ -107,17 +107,27 @@ const ClassesPage = () => {
             <LoadingComponent message="Ładowanie informacji o zajęciach..." />
           ) : (
             <>
-              <h1 className="w-full text-center text-xl font-bold uppercase tracking-wider text-gray-700 max-md:text-xl max-phone:text-lg md:text-2xl">
+              <h1 className="w-full break-words text-center text-xl font-bold uppercase tracking-wider text-gray-700 max-md:text-xl max-phone:text-lg phone:w-5/12 md:text-2xl">
                 {classes?.name}
               </h1>
-              <Link
-                className={`btn-outline no-animation btn mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 phone:w-4/12 ${
-                  classes?.able_to_buy ? '' : 'btn-disabled'
-                }`}
-                to={`/zajecia/${classes?.id}/kup`}
-              >
-                Zakup zajęcia
-              </Link>
+              <div className="flex w-full flex-row justify-end gap-x-1 phone:w-7/12">
+                <Link
+                  to={`/zajecia/${classes?.id}/zapytaj`}
+                  className={`btn-outline no-animation btn mt-2 h-10 !min-h-0 w-6/12 rounded-sm border-base-400 py-0 hover:bg-base-400 phone:w-5/12 ${
+                    classes?.able_to_buy ? '' : 'btn-disabled'
+                  }`}
+                >
+                  Zapyaj o dostępność
+                </Link>
+                <Link
+                  className={`btn-outline no-animation btn mt-2 h-10 !min-h-0 w-6/12 rounded-sm border-base-400 py-0 hover:bg-base-400 phone:w-5/12 ${
+                    classes?.able_to_buy ? '' : 'btn-disabled'
+                  }`}
+                  to={`/zajecia/${classes?.id}/kup`}
+                >
+                  Zakup zajęcia
+                </Link>
+              </div>
             </>
           )}
         </div>
