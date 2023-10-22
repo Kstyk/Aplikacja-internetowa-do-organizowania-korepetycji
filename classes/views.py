@@ -509,3 +509,31 @@ class ClassesBoughtByStudentToRateView(APIView):
             unique_list, many=True)
 
         return Response(serializer.data)
+
+
+class AskClassesCreateView(generics.CreateAPIView):
+    serializer_class = AskClassesCreateSerializer
+    permission_classes = [IsAuthenticated, IsStudent]
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        data['student'] = request.user.id
+
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+
+        self.perform_create(serializer)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class SendedQuestionsListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated, IsStudent]
+    serializer_class = AskClassesListSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        queryset = AskClasses.objects.filter(
+            student=user).order_by('-sended_at')
+        return queryset

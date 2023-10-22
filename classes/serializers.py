@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Class, Language, Schedule, Timeslot, PurchaseHistory, Opinion
-from users.serializers import UserSerializer, UserProfileSerializer
+from .models import Class, Language, Schedule, Timeslot, PurchaseHistory, Opinion, AskClasses
+from users.serializers import UserSerializer, UserProfileSerializer, AddressSerializer
 from rooms.serializers import RoomSerializer
 from .validators import validate_teacher_role
 from django.core.validators import MinValueValidator
@@ -8,6 +8,7 @@ from users.models import User, UserDetails
 from django.db.models import Avg
 from users.serializers import CitySerializer
 from cities_light.models import City
+from users.models import Address
 
 
 class LanguageSerializer(serializers.ModelSerializer):
@@ -243,3 +244,39 @@ class UpdateOpinionSerializer(serializers.ModelSerializer):
                                                "Możesz dodać tylko jedną opinię dla tego nauczyciela dotyczącą tych zajęć."})
 
         return data
+
+
+class CreateOrUpdateAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = '__all__'
+
+
+class AskClassesListSerializer(serializers.ModelSerializer):
+    classes = ClassSerializer()
+    student = UserSerializer()
+    address = AddressSerializer()
+
+    class Meta:
+        model = AskClasses
+        fields = '__all__'
+
+
+class AskClassesCreateSerializer(serializers.ModelSerializer):
+    address = CreateOrUpdateAddressSerializer(required=True)
+
+    class Meta:
+        model = AskClasses
+        fields = ['address', 'student_message', 'student', 'classes']
+
+    def create(self, validated_data):
+        address_data = validated_data.pop('address', None)
+        askclasses = AskClasses.objects.create(**validated_data)
+
+        address = Address.objects.create(
+            askclasses=askclasses, **address_data)
+        askclasses.address = address
+
+        askclasses.save()
+
+        return askclasses

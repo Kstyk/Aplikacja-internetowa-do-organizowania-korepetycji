@@ -144,3 +144,18 @@ class Opinion(models.Model):
 
     def __str__(self):
         return '{}, {} - {}'.format(self.classes_rated.name, self.student, self.rate)
+
+
+class AskClasses(models.Model):
+    student = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, validators=[validate_student_role])
+    classes = models.ForeignKey(
+        Class, on_delete=models.CASCADE
+    )
+    address = models.ForeignKey(
+        "users.Address", on_delete=models.CASCADE, null=True, blank=True
+    )
+    sended_at = models.DateTimeField(auto_now_add=True)
+    student_message = models.TextField(null=False, blank=False)
+    accepted = models.BooleanField(null=True, blank=True)
+    teacher_message = models.TextField(null=True, blank=True)
