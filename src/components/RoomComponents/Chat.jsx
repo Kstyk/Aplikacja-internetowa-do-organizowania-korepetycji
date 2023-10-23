@@ -136,10 +136,6 @@ const Chat = ({ archivized }) => {
   }
 
   useEffect(() => {
-    console.log(user.email + ' rerender, ' + audioEnabled)
-  }, [audioEnabled])
-
-  useEffect(() => {
     fetchSecondUserInRoom()
     checkMediaDevices()
   }, [])

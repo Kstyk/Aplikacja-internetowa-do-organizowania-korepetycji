@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import useAxios from '../../utils/useAxios'
 import showAlertError from '../messages/SwalAlertError'
 import showSuccessAlert from '../messages/SwalAlertSuccess'
 import Modal from 'react-modal'
 import { AiOutlineClose } from 'react-icons/ai'
+import { NotificationContext } from '../../context/NotificationContext'
+import AuthContext from '../../context/AuthContext'
 
 const SendPrivateMessage = ({ toUser, opened, setIsOpened }) => {
   Modal.setAppElement('#root')
   const api = useAxios()
   const [waitingForResponse, setWaitingForResponse] = useState(false)
+  const { sendNotification } = useContext(NotificationContext)
+  const { user } = useContext(AuthContext)
 
   useEffect(() => {
     if (opened) {
@@ -55,6 +59,11 @@ const SendPrivateMessage = ({ toUser, opened, setIsOpened }) => {
         closeModal()
         showSuccessAlert('Sukces!', 'Udało się wysłać wiadomość.')
         setWaitingForResponse(false)
+        sendNotification({
+          type: 'update_unread_private_messages_count',
+          token: user.token,
+          userId: toUser?.user?.id,
+        })
       })
       .catch((err) => {
         closeModal()
