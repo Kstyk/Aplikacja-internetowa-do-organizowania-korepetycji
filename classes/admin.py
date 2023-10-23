@@ -19,7 +19,6 @@ class LanguageAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Class)
-admin.site.register(Class)
 admin.site.register(Language, LanguageAdmin)
 admin.site.register(Schedule, ScheduleAdmin)
 admin.site.register(Timeslot)

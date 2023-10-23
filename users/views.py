@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -97,13 +98,13 @@ class UserDetailsUpdateView(generics.UpdateAPIView):
     def get_object(self):
         user = self.request.user
         userdetails = UserDetails.objects.filter(user=user).first()
+
         return userdetails
 
     def put(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(
             instance, data=request.data, partial=True)
-
         if serializer.is_valid():
             serializer.save()
 
@@ -121,8 +122,8 @@ class UserProfileView(generics.RetrieveAPIView):
 
         try:
             return self.queryset.get(user__id=user_id)
-        except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        except UserDetails.DoesNotExist:
+            raise Http404
 
 
 class LoggeUserProfileView(generics.RetrieveAPIView):
@@ -136,7 +137,7 @@ class LoggeUserProfileView(generics.RetrieveAPIView):
         try:
             return self.queryset.get(user__id=user.id)
         except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            raise Http404
 
 
 class VoivodeshipListView(generics.ListAPIView):
@@ -208,8 +209,8 @@ class ChangePasswordView(APIView):
             try:
                 validate_password(new_password, user=user)
             except Exception as e:
-                return Response({"new_password": e}, status=status.HTTP_400_BAD_REQUEST)
 
+                return Response({"new_password": e}, status=status.HTTP_400_BAD_REQUEST)
             try:
                 if not check_password(old_password, user.password):
                     raise ValidationError(

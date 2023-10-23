@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
 from users.models import User, Role
+from cities_light.models import City, Region
 from users.serializers import *
 from django import setup
 import os
@@ -98,6 +99,9 @@ class UserUpdateViewTest(APITestCase):
         }
         self.user = User.objects.create(**data)
 
+        self.userdetails = UserDetails.objects.create(
+            user=self.user, place_of_classes=[])
+
     def test_user_update_view(self):
         self.client.force_authenticate(self.user)
 
@@ -108,5 +112,133 @@ class UserUpdateViewTest(APITestCase):
 
         response = self.client.put(
             f'/api/users/edit/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_userdetails_update_view(self):
+        self.client.force_authenticate(self.user)
+
+        data = {
+            "user": self.user.id,
+            "place_of_classes": [],
+            "year_of_birth": 1994
+        }
+
+        response = self.client.put(
+            f'/api/users/profile/edit-informations/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["year_of_birth"], 1994)
+
+    def test_userdetails_update_view_invalid_data(self):
+        self.client.force_authenticate(self.user)
+
+        data = {
+            "user": self.user.id,
+            "place_of_classes": [],
+            "year_of_birth": -45
+        }
+
+        response = self.client.put(
+            f'/api/users/profile/edit-informations/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class ProfileViewsTest(APITestCase):
+    def setUp(self):
+        self.role_teacher = Role.objects.create(name="Teacher")
+        data = {
+            "email": "hhh@o2.pl",
+            "password": "12345678",
+            "first_name": "Hubert",
+            "last_name": "Hołownia",
+            "role": self.role_teacher
+        }
+        self.user = User.objects.create(**data)
+        data2 = {
+            "email": "hhh2@o2.pl",
+            "password": "123456782",
+            "first_name": "Hubert",
+            "last_name": "Hołownia",
+            "role": self.role_teacher
+        }
+        self.user2 = User.objects.create(**data2)
+
+        self.userdetails = UserDetails.objects.create(
+            user=self.user, place_of_classes=[])
+
+    def test_base_user_view(self):
+        self.client.force_authenticate(self.user)
+
+        expected_data = UserSerializer(self.user).data
+
+        response = self.client.get(
+            '/api/users/profile/base-user/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_data)
+
+    def test_user_profile_view(self):
+        user_id = self.user.id
+
+        expected_data = UserProfileSerializer(self.userdetails).data
+
+        response = self.client.get(
+            f'/api/users/profile/{user_id}/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_data)
+
+    def test_user_profile_view_not_found(self):
+        user_id = 99999
+
+        response = self.client.get(
+            f'/api/users/profile/{user_id}/')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_logged_user_profile_view(self):
+        self.client.force_authenticate(self.user)
+
+        expected_data = UserProfileSerializer(self.userdetails).data
+
+        response = self.client.get(
+            f'/api/users/profile/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_data)
+
+    def test_logged_user_profile_view_not_found(self):
+        self.client.force_authenticate(self.user2)
+
+        response = self.client.get(
+            f'/api/users/profile/')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class ChangePasswordViewTest(APITestCase):
+    def setUp(self):
+        self.role_teacher = Role.objects.create(name="Teacher")
+        data = {
+            "email": "hhasdasdadsadasdh@o2.pl",
+            "password": "12345678",
+            "first_name": "Hubert",
+            "last_name": "Hołownia",
+            "role": self.role_teacher
+        }
+        self.user = User.objects.create(**data)
+
+    def test_change_password_view(self):
+        self.client.force_authenticate(self.user)
+        data = {
+            "old_password": "123456789",
+            "new_password": "mk45ujGf389",
+            "confirm_new_password": "mk45ujGf389"
+        }
+
+        response = self.client.post(
+            f'/api/users/change-password/', data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
