@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework import status, generics
 from django.db.models import Q, F
 from django.db import transaction
-from .paginators import ClassPagination, PurchaseHistoryPagination, OpinionPagination
+from .paginators import ClassPagination, PurchaseHistoryPagination, OpinionPagination, AskClassesPagination
 from users.permissions import IsStudent, IsTeacher
 from django.db.models import Count
 from cities_light.models import City, Region
@@ -542,6 +542,7 @@ class ResponseAskClassesView(generics.UpdateAPIView):
 class SendedQuestionsListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsStudent]
     serializer_class = AskClassesListSerializer
+    pagination_class = AskClassesPagination
 
     def get_queryset(self):
         user = self.request.user
@@ -554,6 +555,7 @@ class SendedQuestionsListView(generics.ListAPIView):
 class ReceivedQuestionsListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsTeacher]
     serializer_class = AskClassesListSerializer
+    pagination_class = AskClassesPagination
 
     def get_queryset(self):
         user = self.request.user
