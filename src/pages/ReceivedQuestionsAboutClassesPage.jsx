@@ -3,20 +3,36 @@ import LoadingComponent from '../components/LoadingComponent'
 import useAxios from '../utils/useAxios'
 import showAlertError from '../components/messages/SwalAlertError'
 import ReceivedQuestionCard from '../components/ClassesQuestionsComponents/ReceivedQuestionCard'
+import Pagination from '../components/Pagination'
 
 const ReceivedQuestionsAboutClassesPage = () => {
   document.title = 'Otrzymane zapytania'
 
   const api = useAxios()
   const [loading, setLoading] = useState(true)
+  const [loadingNextPage, setLoadingNextPage] = useState(false)
   const [questions, setQuestions] = useState([])
+
+  const [totalPages, setTotalPages] = useState(0)
+  const [totalResults, setTotalResults] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
 
   const fetchQuestions = async () => {
     setLoading(true)
     await api
-      .get(`/api/classes/received-questions/`)
+      .get(`/api/classes/received-questions/?page=1&page_size=10`)
       .then((res) => {
-        setQuestions(res.data)
+        if (res.data.results == null) {
+          setQuestions(null)
+          setTotalPages(0)
+          setTotalResults(0)
+          setCurrentPage(1)
+        } else {
+          setQuestions(res.data.results)
+          setTotalPages(res.data.num_pages)
+          setTotalResults(res.data.count)
+          setCurrentPage(res.data.current_page)
+        }
       })
       .catch((err) =>
         showAlertError(
@@ -25,6 +41,32 @@ const ReceivedQuestionsAboutClassesPage = () => {
         )
       )
     setLoading(false)
+  }
+
+  const fetchPageQuestions = async (page) => {
+    setLoadingNextPage(true)
+    await api
+      .get(`/api/classes/received-questions/?page=${page}&page_size=10`)
+      .then((res) => {
+        if (res.data.results == null) {
+          setQuestions(null)
+          setTotalPages(0)
+          setTotalResults(0)
+          setCurrentPage(1)
+        } else {
+          setQuestions(res.data.results)
+          setTotalPages(res.data.num_pages)
+          setTotalResults(res.data.count)
+          setCurrentPage(res.data.current_page)
+        }
+      })
+      .catch((err) =>
+        showAlertError(
+          'Błąd',
+          'Wystąpił błąd przy pobieraniu danych z serwera.'
+        )
+      )
+    setLoadingNextPage(false)
   }
 
   useEffect(() => {
@@ -45,16 +87,34 @@ const ReceivedQuestionsAboutClassesPage = () => {
             {loading ? (
               <LoadingComponent message="Pobieranie zapytań..." />
             ) : (
-              <div className="flex w-full flex-col gap-y-8 pb-5">
-                {questions?.length > 0
-                  ? questions?.map((q) => (
-                      <ReceivedQuestionCard
-                        key={q?.id}
-                        question={q}
-                        fetchQuestions={fetchQuestions}
-                      />
-                    ))
-                  : 'Brak otrzymanych zapytań.'}
+              <div className="w-full">
+                <div>
+                  {loadingNextPage ? (
+                    <LoadingComponent message="Ładowanie następnej strony..." />
+                  ) : (
+                    <div className="flex w-full flex-col gap-y-8 pb-5">
+                      {questions?.length > 0
+                        ? questions?.map((q) => (
+                            <ReceivedQuestionCard
+                              key={q?.id}
+                              question={q}
+                              fetchQuestions={fetchQuestions}
+                            />
+                          ))
+                        : 'Brak otrzymanych zapytań.'}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {totalPages > 1 && (
+                    <Pagination
+                      totalResults={totalResults}
+                      totalPages={totalPages}
+                      currentPage={currentPage}
+                      search={fetchPageQuestions}
+                    />
+                  )}
+                </div>
               </div>
             )}
           </div>
