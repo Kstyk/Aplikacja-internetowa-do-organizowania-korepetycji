@@ -1,6 +1,5 @@
 import React from 'react'
 import guest from '../../assets/guest.png'
-import { backendUrl } from '../../variables/backendUrl'
 import dayjs from 'dayjs'
 import { BiSolidQuoteLeft, BiSolidQuoteRight } from 'react-icons/bi'
 import { Link } from 'react-router-dom'

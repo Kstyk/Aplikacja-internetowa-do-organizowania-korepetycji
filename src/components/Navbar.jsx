@@ -112,9 +112,7 @@ const Navbar = () => {
                   <li className="custom-border-dropdown h-fit">
                     <Link
                       to="/wyslane-zapytania"
-                      className={`w-full rounded-none ${
-                        countunreadallprivatemessages > 0 && 'font-bold'
-                      }`}
+                      className={`w-full rounded-none`}
                     >
                       <span>Wysłane zapytania</span>
                     </Link>
@@ -233,6 +231,14 @@ const Navbar = () => {
                       <span className="badge badge-primary">
                         {countunreadallprivatemessages}
                       </span>
+                    </Link>
+                  </li>
+                  <li className="custom-border-dropdown h-fit">
+                    <Link
+                      to="/otrzymane-zapytania"
+                      className={`w-full rounded-none`}
+                    >
+                      <span>Otrzymane zapytania</span>
                     </Link>
                   </li>
                   <li>
@@ -515,6 +521,14 @@ const Navbar = () => {
                     <span className="badge badge-primary">
                       {countunreadallprivatemessages}
                     </span>
+                  </Link>
+                </li>
+                <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                  <Link
+                    to="/otrzymane-zapytania"
+                    className={`flex h-8 w-full items-center pl-5 text-sm uppercase`}
+                  >
+                    <span>Otrzymane zapytania</span>
                   </Link>
                 </li>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>

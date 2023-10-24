@@ -39,6 +39,7 @@ import TeacherPurchaseHistoryPage from './pages/TeacherPurchaseHistoryPage'
 import InboxPage from './pages/InboxPage'
 import AskAboutClassesPage from './pages/AskAboutClassesPage'
 import SendedQuestionsAboutClassesPage from './pages/SendedQuestionsAboutClassesPage'
+import ReceivedQuestionsAboutClassesPage from './pages/ReceivedQuestionsAboutClassesPage'
 
 function App() {
   return (
@@ -147,6 +148,14 @@ function App() {
                   element={
                     <PrivateRoute>
                       <TeacherSchedulePage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/otrzymane-zapytania"
+                  element={
+                    <PrivateRoute>
+                      <ReceivedQuestionsAboutClassesPage />
                     </PrivateRoute>
                   }
                 />
