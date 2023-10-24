@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import get_all_classes, get_languages, get_top_languages, ClassCreateView, TimeSlotsCreateView, ScheduleTeacherView, ScheduleStudentView, ClassesByIdView, TimeslotsTeacherView, purchase_classes, PurchaseHistoryList, TeacherOpinionsList, ReceivedOpinionsList, CreateOpinionView, TeacherClassesView, AddedOpinionsList, TeacherPurchaseHistoryList, ClassesBoughtByStudentToRateView, UpdateOpinionView, DeleteOpinionView, AskClassesCreateView, SendedQuestionsListView
+from .views import *
 urlpatterns = [
     path('', get_all_classes, name="get_all_classes"),
     path('languages/', get_languages, name="get_languages"),
@@ -30,5 +30,7 @@ urlpatterns = [
     path('delete-opinion/<int:pk>/',
          DeleteOpinionView.as_view(), name='delete-opinion'),
     path('ask-about/', AskClassesCreateView.as_view()),
+    path('response-ask/', ResponseAskClassesView.as_view()),
     path('sended-questions/', SendedQuestionsListView.as_view()),
+    path('received-questions/', ReceivedQuestionsListView.as_view()),
 ]

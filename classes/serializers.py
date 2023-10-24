@@ -256,10 +256,22 @@ class AskClassesListSerializer(serializers.ModelSerializer):
     classes = ClassSerializer()
     student = UserSerializer()
     address = AddressSerializer()
+    student_profile_image = serializers.SerializerMethodField()
 
     class Meta:
         model = AskClasses
         fields = '__all__'
+
+    def get_student_profile_image(self, obj):
+        user_profile = UserDetails.objects.get(user=obj.student)
+
+        if user_profile:
+            if user_profile.profile_image:
+                return user_profile.profile_image.url
+            else:
+                return None
+        else:
+            return None
 
 
 class AskClassesCreateSerializer(serializers.ModelSerializer):
@@ -280,3 +292,21 @@ class AskClassesCreateSerializer(serializers.ModelSerializer):
         askclasses.save()
 
         return askclasses
+
+
+class ResponseAskClassesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AskClasses
+        fields = ['id', 'teacher_message', 'accepted']
+
+    def validate_teacher_message(self, value):
+        if value is None or value.strip() == "":
+            raise serializers.ValidationError(
+                "Musisz napisać wiadomość argumentującą daną odpowiedź.")
+        return value
+
+    def validate_accepted(self, value):
+        if value is None:
+            raise serializers.ValidationError(
+                "Musisz określić status zapytania.")
+        return value

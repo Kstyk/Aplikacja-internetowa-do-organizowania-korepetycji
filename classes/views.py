@@ -527,6 +527,18 @@ class AskClassesCreateView(generics.CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+class ResponseAskClassesView(generics.UpdateAPIView):
+    serializer_class = ResponseAskClassesSerializer
+    permission_classes = [IsAuthenticated, IsTeacher]
+
+    def get_object(self):
+        data = self.request.data
+
+        obj = AskClasses.objects.get(id=data["id"])
+
+        return obj
+
+
 class SendedQuestionsListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsStudent]
     serializer_class = AskClassesListSerializer
@@ -536,4 +548,17 @@ class SendedQuestionsListView(generics.ListAPIView):
 
         queryset = AskClasses.objects.filter(
             student=user).order_by('-sended_at')
+        return queryset
+
+
+class ReceivedQuestionsListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated, IsTeacher]
+    serializer_class = AskClassesListSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        queryset = AskClasses.objects.filter(
+            classes__teacher=user).order_by('-sended_at')
+
         return queryset
