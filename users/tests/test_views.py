@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
-from users.models import User, Role
+from users.models import User, Role, PasswordResetRequest, PrivateMessage
 from cities_light.models import City, Region
 from users.serializers import *
 from django import setup
@@ -228,9 +228,22 @@ class ChangePasswordViewTest(APITestCase):
             "last_name": "Hołownia",
             "role": self.role_teacher
         }
-        self.user = User.objects.create(**data)
+        self.user = User.objects.create_user(**data)
 
     def test_change_password_view(self):
+        self.client.force_authenticate(self.user)
+        data = {
+            "old_password": "12345678",
+            "new_password": "mk45ujGf389",
+            "confirm_new_password": "mk45ujGf389"
+        }
+
+        response = self.client.post(
+            f'/api/users/change-password/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_change_password_view_invalid_old_password(self):
         self.client.force_authenticate(self.user)
         data = {
             "old_password": "123456789",
@@ -241,4 +254,196 @@ class ChangePasswordViewTest(APITestCase):
         response = self.client.post(
             f'/api/users/change-password/', data, format='json')
 
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_change_password_view_not_equal_new_passwords(self):
+        self.client.force_authenticate(self.user)
+        data = {
+            "old_password": "12345678",
+            "new_password": "mk45ujGf389g",
+            "confirm_new_password": "mk45ujGf389"
+        }
+
+        response = self.client.post(
+            f'/api/users/change-password/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_change_password_view_invalid_new_password(self):
+        self.client.force_authenticate(self.user)
+        data = {
+            "old_password": "12345678",
+            "new_password": "11111111",
+            "confirm_new_password": "11111111"
+        }
+
+        response = self.client.post(
+            f'/api/users/change-password/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class PasswordResetRequestViewTest(APITestCase):
+    def setUp(self):
+        self.role_teacher = Role.objects.create(name="Teacher")
+        data = {
+            "email": "hhasdasdadsadasdh@o2.pl",
+            "password": "12345678",
+            "first_name": "Hubert",
+            "last_name": "Hołownia",
+            "role": self.role_teacher
+        }
+        self.user = User.objects.create_user(**data)
+
+    def test_password_request(self):
+        data = {"email": "hhasdasdadsadasdh@o2.pl"}
+
+        response = self.client.post(
+            f'/api/users/reset-password-request/', data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_password_request_Wrong_email(self):
+        data = {"email": "hhasdasdadsadasdh@o2.com"}
+
+        response = self.client.post(
+            f'/api/users/reset-password-request/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_password_request_invalid_serializer(self):
+        data = {"email": "hhasdasdadsadasdh"}
+
+        response = self.client.post(
+            f'/api/users/reset-password-request/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class ResetPasswordViewTest(APITestCase):
+    def setUp(self):
+
+        self.role_teacher = Role.objects.create(name="Teacher")
+        data = {
+            "email": "hhasdasdadsadasdh@o2.pl",
+            "password": "12345678",
+            "first_name": "Hubert",
+            "last_name": "Hołownia",
+            "role": self.role_teacher
+        }
+        self.user = User.objects.create_user(**data)
+
+        self.reset_request = PasswordResetRequest.objects.create(
+            user=self.user)
+
+    def test_reset_passowrd_view(self):
+        data = {
+            "token": self.reset_request.token,
+            "new_password": "987654321q",
+            "confirm_password": "987654321q"
+        }
+
+        response = self.client.post(
+            f'/api/users/reset-password/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_reset_passowrd_view_different_password(self):
+        data = {
+            "token": self.reset_request.token,
+            "new_password": "987654321q2",
+            "confirm_password": "987654321q"
+        }
+
+        response = self.client.post(
+            f'/api/users/reset-password/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_reset_passowrd_view_expired_token(self):
+        data = {
+            "token": "a7eebb6f-36f4-4d8d-91d8-ecc2e130d4c9",
+            "new_password": "987654321q",
+            "confirm_password": "987654321q"
+        }
+
+        response = self.client.post(
+            f'/api/users/reset-password/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_reset_passowrd_view_invalid_token(self):
+        data = {
+            "token": "a7eebb6f-36f4-ecc2e130d4c9",
+            "new_password": "987654321q",
+            "confirm_password": "987654321q"
+        }
+
+        response = self.client.post(
+            f'/api/users/reset-password/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class PrivateMessageViews(APITestCase):
+    def setUp(self):
+        self.role_teacher = Role.objects.create(name="Teacher")
+        self.teacher = User.objects.create_user(
+            email='abc@o2.pl', password='12345678', first_name="Adam", last_name="Kowal", role=self.role_teacher)
+
+        self.teacher_ud = UserDetails.objects.create(user=self.teacher)
+
+        self.role_student = Role.objects.create(name="Student")
+        self.student = User.objects.create_user(
+            email='abc2@o2.pl', password='123456789', first_name="Adam2", last_name="Kowal2", role=self.role_student)
+        self.student_ud = UserDetails.objects.create(user=self.student)
+
+        self.private_message = PrivateMessage.objects.create(
+            from_user=self.student, to_user=self.teacher, content="abcd")
+        self.private_message = PrivateMessage.objects.create(
+            from_user=self.teacher, to_user=self.student, content="abcd")
+
+    def test_create_private_message_view(self):
+        self.client.force_authenticate(self.teacher)
+
+        data = {
+            "to_user": self.student.id,
+            "content": "abc"
+        }
+
+        response = self.client.post(
+            f'/api/users/send-private-message/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_private_conversations_list_view(self):
+        self.client.force_authenticate(self.student)
+
+        response = self.client.get(
+            f'/api/users/private-conversations/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_private_message_viewset(self):
+        self.client.force_authenticate(self.student)
+        response = self.client.get(
+            f'/api/users/private-conversation/messages/?user_id={self.teacher.id}')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_private_message_viewset_none_userid(self):
+        self.client.force_authenticate(self.student)
+        response = self.client.get(
+            f'/api/users/private-conversation/messages/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['results'], [])
+
+    def test_unread_messages_count_view(self):
+        self.client.force_authenticate(self.student)
+        response = self.client.get(
+            f'/api/users/unread-messages-count/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['unread_count'], 1)
