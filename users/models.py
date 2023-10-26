@@ -84,8 +84,25 @@ class Address(models.Model):
     street = models.CharField(max_length=50, null=True, blank=True)
     building_number = models.CharField(max_length=10, null=True, blank=True)
 
-    # def __str__(self) -> str:
-    #     return f"{self.voivodeship.name} - {self.city.name} - {self.postal_code} {self.street}, {self.building_number}"
+    def __str__(self) -> str:
+        address_parts = []
+
+        if self.voivodeship:
+            address_parts.append(self.voivodeship.name)
+
+        if self.city:
+            address_parts.append(self.city.name)
+
+        if self.postal_code:
+            address_parts.append(self.postal_code)
+
+        if self.street:
+            address_parts.append(self.street)
+
+        if self.building_number:
+            address_parts.append(self.building_number)
+
+        return ' - '.join(address_parts)
 
 
 STATIONARY = 'stationary'
