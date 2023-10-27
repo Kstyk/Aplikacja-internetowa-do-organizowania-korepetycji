@@ -22,12 +22,7 @@ const HomePage = () => {
       .then((res) => {
         setLanguages(res.data)
       })
-      .catch((err) => {
-        showAlertError(
-          'Błąd',
-          'Wystąpił błąd przy pobieraniu danych z serwera.'
-        )
-      })
+      .catch((err) => {})
   }
 
   const fetchCities = async () => {
@@ -36,12 +31,7 @@ const HomePage = () => {
       .then((res) => {
         setCities(res.data)
       })
-      .catch((err) => {
-        showAlertError(
-          'Błąd',
-          'Wystąpił błąd przy pobieraniu danych z serwera.'
-        )
-      })
+      .catch((err) => {})
   }
   const fetchAll = async () => {
     setLoading(true)

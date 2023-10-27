@@ -16,11 +16,13 @@ const InboxPage = () => {
 
   const api = useAxios()
   const [loadingConversations, setLoadingConversations] = useState(false)
+  const [loadingMessages, setLoadingMessages] = useState(false)
   const [conversationsUsers, setConversationsUsers] = useState([])
   const [selectedUser, setSelectedUser] = useState(null)
   const [messages, setMessages] = useState([])
   const [hasMoreMessages, setHasMoreMessages] = useState(false)
   const [page, setPage] = useState(1)
+
   const {
     sendNotification,
     fromUserPrivateMessages,
@@ -82,7 +84,38 @@ const InboxPage = () => {
         token: user.token,
         userId: selectedUser?.id,
       })
+      setLoadingMessages(true)
+      await api
+        .get(
+          `/api/users/private-conversation/messages/?user_id=${
+            selectedUser?.id
+          }&page=${defaultPage != null ? defaultPage : page}`
+        )
+        .then((res) => {
+          setHasMoreMessages(res.data.next !== null)
+          setPage(defaultPage != null ? 2 : page + 1)
+          setMessages((prev) => prev.concat(res.data.results))
+        })
+        .catch((err) => {
+          showAlertError(
+            'Błąd',
+            'Występił błąd przy wiadomości wybranej konwersacji.'
+          )
+        })
+      setLoadingMessages(false)
+    }
+  }
 
+  const fetchAfterSendMessages = async (defaultPage = null) => {
+    if (defaultPage != null) {
+      setMessages([])
+    }
+    if (selectedUser != null) {
+      sendNotification({
+        type: 'read_private_messages',
+        token: user.token,
+        userId: selectedUser?.id,
+      })
       await api
         .get(
           `/api/users/private-conversation/messages/?user_id=${
@@ -130,7 +163,6 @@ const InboxPage = () => {
       .post(`/api/users/send-private-message/`, data)
       .then((res) => {
         setPage(1)
-        fetchMessages(1)
         setMessage('')
         sendNotification({
           type: 'update_unread_private_messages_count',
@@ -168,6 +200,7 @@ const InboxPage = () => {
           showAlertError('Błąd', 'Nieudane wysłanie wiadomości prywatnej.')
         }
       })
+    fetchMessages(1)
   }
 
   return (
@@ -203,24 +236,30 @@ const InboxPage = () => {
                   {selectedUser?.first_name} {selectedUser?.last_name}
                 </h1>
               </div>
-              <div
-                className="chat-scroll flex h-[80%] flex-col-reverse overflow-y-auto border-b-2 phone:h-[90%] "
-                id="chat-scroll"
-              >
-                <InfiniteScroll
-                  dataLength={messages.length}
-                  next={fetchMessages}
-                  className="flex flex-col-reverse"
-                  inverse={true}
-                  hasMore={hasMoreMessages}
-                  loader={<ChatLoader />}
-                  scrollableTarget="chat-scroll"
+              {loadingMessages ? (
+                <div className="h-[80%] p-2 text-center text-sm phone:h-[90%]">
+                  <LoadingComponent message="Ładowanie wiadomości" />
+                </div>
+              ) : (
+                <div
+                  className="chat-scroll flex h-[80%] flex-col-reverse overflow-y-auto border-b-2 phone:h-[90%]"
+                  id="chat-scroll"
                 >
-                  {messages.map((message) => (
-                    <PrivateMessage key={message.id} message={message} />
-                  ))}
-                </InfiniteScroll>
-              </div>
+                  <InfiniteScroll
+                    dataLength={messages.length}
+                    next={fetchMessages}
+                    className="flex flex-col-reverse"
+                    inverse={true}
+                    hasMore={hasMoreMessages}
+                    loader={<ChatLoader />}
+                    scrollableTarget="chat-scroll"
+                  >
+                    {messages.map((message) => (
+                      <PrivateMessage key={message.id} message={message} />
+                    ))}
+                  </InfiniteScroll>
+                </div>
+              )}
               <div className="flex h-[10%] w-full items-center px-5">
                 <div className="flex h-12 w-full items-center justify-between border-b-2">
                   <input
@@ -231,6 +270,7 @@ const InboxPage = () => {
                     value={message || ''}
                     className="h-full w-11/12 pl-3 outline-none"
                   />
+
                   <button
                     className="tooltip ml-2 h-10 px-3 py-1"
                     data-tip="Wyślij wiadomość"
