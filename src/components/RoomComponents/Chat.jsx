@@ -48,6 +48,7 @@ const Chat = ({ archivized }) => {
 
   const [microphoneConnected, setMicrophoneConnected] = useState()
   const [cameraConnected, setCameraConnected] = useState()
+  const [waitingForResponse, setWaitingForResponse] = useState(false)
 
   const [audioEnabled, setAudioEnabled] = useState(true)
   const [isCameraOn, setIsCameraOn] = useState(true)
@@ -73,6 +74,7 @@ const Chat = ({ archivized }) => {
         switch (data.type) {
           case 'chat_message_echo':
             setMessageHistory((prev) => [data.message, ...prev])
+            setWaitingForResponse(false)
             break
           case 'last_20_messages':
             setMessageHistory(data.messages)
@@ -163,6 +165,7 @@ const Chat = ({ archivized }) => {
         roomId: roomId,
       })
       setMessage('')
+      setWaitingForResponse(true)
     }
   }
 
@@ -500,13 +503,17 @@ const Chat = ({ archivized }) => {
                   value={message}
                   className="h-full w-11/12 pl-3 outline-none"
                 />
-                <button
-                  className="tooltip ml-2 h-10 px-3 py-1"
-                  data-tip="Wyślij wiadomość"
-                  onClick={handleSubmit}
-                >
-                  <AiOutlineSend className="h-5 w-5 phone:h-6 phone:w-6" />
-                </button>
+                {waitingForResponse ? (
+                  <span className="loading loading-spinner loading-sm h-5 phone:h-6 phone:w-6"></span>
+                ) : (
+                  <button
+                    className="tooltip ml-2 h-10 px-3 py-1"
+                    data-tip="Wyślij wiadomość"
+                    onClick={handleSubmit}
+                  >
+                    <AiOutlineSend className="h-5 w-5 phone:h-6 phone:w-6" />
+                  </button>
+                )}
               </div>
 
               <>
@@ -697,13 +704,17 @@ const Chat = ({ archivized }) => {
                       value={message}
                       className="h-full w-11/12 pl-3 outline-none"
                     />
-                    <button
-                      className="tooltip ml-2 h-10 px-3 py-1"
-                      data-tip="Wyślij wiadomość"
-                      onClick={handleSubmit}
-                    >
-                      <AiOutlineSend className="h-5 w-5 phone:h-6 phone:w-6" />
-                    </button>
+                    {waitingForResponse ? (
+                      <span className="loading loading-spinner loading-sm h-5 phone:h-6 phone:w-6"></span>
+                    ) : (
+                      <button
+                        className="tooltip ml-2 h-10 px-3 py-1"
+                        data-tip="Wyślij wiadomość"
+                        onClick={handleSubmit}
+                      >
+                        <AiOutlineSend className="h-5 w-5 phone:h-6 phone:w-6" />
+                      </button>
+                    )}
                   </div>
                 </div>
               </>
