@@ -165,6 +165,7 @@ class CityByIdView(generics.RetrieveAPIView):
     lookup_field = 'pk'
 
 
+# TODO do naprawy
 @api_view(['GET'])
 def get_top_cities(request):
     teacher_subquery = Class.objects.filter(

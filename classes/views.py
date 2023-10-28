@@ -229,17 +229,12 @@ def purchase_classes(request):
     student = request.user
     classes_id = request.data.get('classes_id', [])
     place = request.data.get('place_of_classes')
-    city_of_classes = request.data.get('city_of_classes', None)
 
     try:
         with transaction.atomic():  # Rozpoczęcie transakcji
             if len(selected_slots) == 0:
                 raise ValidationError(
                     "Nie wybrałeś żadnego terminu zajęć.")
-
-            if place == "stationary" and city_of_classes is None:
-                raise ValidationError(
-                    "Nie wybrałeś miejsca odbywania zajęć stacjonarnych.")
 
             classes = Class.objects.get(pk=classes_id)
 
@@ -278,7 +273,6 @@ def purchase_classes(request):
                     'student': student.id,
                     'classes': classes.id,
                     'place_of_classes': place,
-                    'city_of_classes': city_of_classes["id"] if city_of_classes is not None else None,
                     'room': new_room.room_id if room.first() is None else room.first().room_id,
                 }
                 # Dodaj do listy poprawnych danych
@@ -298,8 +292,6 @@ def purchase_classes(request):
                 classes=classes,
                 room=new_room if room.first() is None else room.first(),
                 place_of_classes=place,
-                city_of_classes=City.objects.get(
-                    pk=city_of_classes["id"]) if city_of_classes is not None else None,
                 amount_of_lessons=len(selected_slots),
                 start_date=datetime_slots[0],
                 paid_price=len(selected_slots)*classes.price_for_lesson,

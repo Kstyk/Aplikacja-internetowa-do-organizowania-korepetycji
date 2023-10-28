@@ -18,10 +18,12 @@ class Language(models.Model):
         return self.name
 
 
-STATIONARY = 'stationary'
+TEACHER_HOME = 'teacher_home'
+STUDENT_HOME = 'student_home'
 ONLINE = 'online'
 LOCATION_CHOICES = [
-    (STATIONARY, 'Stacjonarnie'),
+    (TEACHER_HOME, 'U nauczyciela'),
+    (STUDENT_HOME, 'U studenta'),
     (ONLINE, 'Online'),
 ]
 
@@ -38,7 +40,8 @@ class Class(models.Model):
     able_to_buy = models.BooleanField(default=True)
     place_of_classes = MultiSelectField(
         choices=LOCATION_CHOICES, null=True, blank=True, max_choices=3, max_length=150)
-    cities_of_classes = models.ManyToManyField(City, blank=True, null=True)
+    address = models.ForeignKey(
+        'users.Address', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name

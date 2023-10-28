@@ -34,7 +34,6 @@ class ClassSerializer(serializers.ModelSerializer):
     teacher = UserProfileSerializer(source='teacher.userdetails')
     average_rate = serializers.SerializerMethodField()
     amount_of_opinions = serializers.SerializerMethodField()
-    cities_of_classes = CitySerializer(many=True)
 
     class Meta:
         model = Class
@@ -62,7 +61,6 @@ class ClassSerializer(serializers.ModelSerializer):
 
 class ClassTeacherViewSerializer(serializers.ModelSerializer):
     language = LanguageSerializer()
-    cities_of_classes = CitySerializer(many=True)
 
     class Meta:
         model = Class
@@ -79,11 +77,7 @@ class CreateClassSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        cities_data = validated_data.pop('cities_of_classes', [])
-
         instance = Class.objects.create(**validated_data)
-
-        instance.cities_of_classes.set(cities_data)
 
         return instance
 
@@ -96,11 +90,9 @@ class UpdateClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = Class
         fields = ['language', 'name', 'price_for_lesson', 'description',
-                  'able_to_buy', 'place_of_classes', 'cities_of_classes']
+                  'able_to_buy', 'place_of_classes']
 
     def update(self, instance, validated_data):
-        cities_data = validated_data.pop('cities_of_classes', [])
-
         instance.name = validated_data.get('name', instance.name)
         instance.language = validated_data.get(
             'language', instance.language)
@@ -114,7 +106,6 @@ class UpdateClassSerializer(serializers.ModelSerializer):
             'able_to_buy', instance.able_to_buy)
         instance.place_of_classes = validated_data.get(
             'place_of_classes', instance.place_of_classes)
-        instance.cities_of_classes.set(cities_data)
 
         instance.save()
         return instance
