@@ -63,17 +63,21 @@ const EditClassesPage = () => {
       setValue('description', classes?.description)
       setDescriptionHtml(classes?.description)
       setValue('language', classes?.language)
-      setValue('cities_of_classes', classes?.cities_of_classes)
 
       let place_of_classes = []
       classes?.place_of_classes?.map((place) => {
-        if (place == 'stationary') {
+        if (place == 'teacher_home') {
           setIsStationary(true)
-          place_of_classes.push({ label: 'Stacjonarnie', value: 'stationary' })
+          place_of_classes.push({
+            label: 'U nauczyciela',
+            value: 'teacher_home',
+          })
         }
 
         place == 'online' &&
           place_of_classes.push({ label: 'Online', value: 'online' })
+        place == 'student_home' &&
+          place_of_classes.push({ label: 'U studenta', value: 'student_home' })
       })
 
       setValue('place_of_classes', place_of_classes)
@@ -86,10 +90,6 @@ const EditClassesPage = () => {
   }, [])
 
   const addClassesOptionValidation = {
-    cities_of_classes: {
-      required:
-        'Musisz wybrać przynajmniej jedno miasto przy zajęciach stacjonarnych.',
-    },
     name: {
       required: 'Nazwa zajęć jest wymagana.',
     },
@@ -109,10 +109,6 @@ const EditClassesPage = () => {
     setWaitingForResponse(true)
     formData?.place_of_classes?.map(
       (place, i) => (formData.place_of_classes[i] = place.value)
-    )
-
-    formData?.cities_of_classes?.map(
-      (city, i) => (formData.cities_of_classes[i] = city.id)
     )
 
     if (descriptionHtml != null && formData.description.length > 0) {
@@ -337,7 +333,8 @@ const EditClassesPage = () => {
                           isClearable
                           isMulti
                           options={[
-                            { label: 'Stacjonarnie', value: 'stationary' },
+                            { label: 'U nauczyciela', value: 'teacher_home' },
+                            { label: 'U studenta', value: 'student_home' },
                             { label: 'Online', value: 'online' },
                           ]}
                           getOptionLabel={(option) => option.label}
@@ -350,7 +347,7 @@ const EditClassesPage = () => {
                           onChange={(selectedOption) => {
                             setIsStationary(
                               selectedOption.find(
-                                (opt) => opt.value == 'stationary'
+                                (opt) => opt.value == 'teacher_home'
                               )
                             )
                             setValue('place_of_classes', selectedOption)
@@ -360,9 +357,9 @@ const EditClassesPage = () => {
                       name={'place_of_classes'}
                     />
                     <small className="text-right text-red-400">
-                      {errors?.city_of_classes &&
-                        errors.city_of_classes.message}
-                      {backendErrors?.city_of_classes?.map((e, i) => (
+                      {errors?.place_of_classes &&
+                        errors.place_of_classes.message}
+                      {backendErrors?.place_of_classes?.map((e, i) => (
                         <span key={i}>
                           {e} <br />
                         </span>
@@ -375,51 +372,10 @@ const EditClassesPage = () => {
                     <div className="float-right flex w-full flex-col">
                       <label
                         className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                        htmlFor="city_of_classes"
+                        htmlFor="address"
                       >
-                        Miasto zajęć stacjonarnych{' '}
+                        Adres
                       </label>
-                      <Controller
-                        name="cities_of_classes"
-                        control={control}
-                        render={({ field }) => (
-                          <Select
-                            className="w-full border-none px-0 text-gray-500 shadow-none"
-                            menuPortalTarget={document.body}
-                            isClearable
-                            isMulti
-                            options={cities}
-                            {...field}
-                            onInputChange={(e) => {
-                              fetchCities(e)
-                            }}
-                            getOptionLabel={(option) =>
-                              option.name + ', ' + option.region_name
-                            }
-                            getOptionValue={(option) => option.id}
-                            placeholder={
-                              <span className="text-gray-400">Miasto</span>
-                            }
-                            noOptionsMessage={({ inputValue }) =>
-                              loadingCity
-                                ? 'Szukanie miast...'
-                                : !inputValue
-                                ? 'Wpisz tekst...'
-                                : 'Nie znaleziono'
-                            }
-                            styles={customSelectStyle}
-                          />
-                        )}
-                      />
-                      <small className="text-right text-red-400">
-                        {errors?.city_of_classes &&
-                          errors.city_of_classes.message}
-                        {backendErrors?.city_of_classes?.map((e, i) => (
-                          <span key={i}>
-                            {e} <br />
-                          </span>
-                        ))}
-                      </small>
                     </div>
                   </div>
                 )}

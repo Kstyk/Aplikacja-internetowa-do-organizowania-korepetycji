@@ -191,7 +191,8 @@ const TeacherPage = () => {
                           >
                             <MdOutlineLocationOn className="h-6 w-6 text-base-400" />
                             <span className="text-sm">
-                              {place == 'stationary' && 'Stacjonarnie'}
+                              {place == 'teacher_home' && 'U nauczyciela'}
+                              {place == 'student_home' && 'U studenta'}
                               {place == 'online' && 'Online'}
                             </span>
                           </li>
@@ -219,29 +220,7 @@ const TeacherPage = () => {
                     </>
                   )}
                   <div className="my-4 border-b-[1px] border-base-100"></div>
-                  {profile?.address != null && (
-                    <div className="text-sm">
-                      <h4 className="flex flex-row items-center gap-x-5">
-                        <AiOutlineHome className="h-6 w-6 text-base-400" />
-                        <span>Adres zamieszkania:</span>
-                      </h4>
-                      <div className="my-2 border-b-[1px] border-base-100"></div>
 
-                      <section className="flex flex-col gap-y-2 pl-5">
-                        <div>
-                          {profile?.address?.postal_code},{' '}
-                          {profile?.address?.city?.name}
-                        </div>
-                        <div>
-                          ul. {profile?.address?.street},{' '}
-                          {profile?.address?.building_number}
-                        </div>
-                        <div>
-                          {profile?.address?.voivodeship?.alternate_names}
-                        </div>
-                      </section>
-                    </div>
-                  )}
                   <div className="my-4 border-b-[1px] border-base-100 phone:hidden"></div>
                 </section>
               </div>

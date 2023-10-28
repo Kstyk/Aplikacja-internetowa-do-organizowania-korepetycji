@@ -8,7 +8,6 @@ import { AiOutlineCalendar } from 'react-icons/ai'
 import { useNavigate } from 'react-router-dom'
 import showAlertError from '../components/messages/SwalAlertError'
 import showSuccessAlert from '../components/messages/SwalAlertSuccess'
-import Select from 'react-select'
 import { useForm, Controller } from 'react-hook-form'
 
 const BuyClassesPage = () => {
@@ -67,10 +66,6 @@ const BuyClassesPage = () => {
 
   const onSubmit = (formData) => {
     setWaitingForResponse(true)
-    if (formData.place_of_classes == 'online') {
-      setValue('city_of_classes', null)
-      formData.city_of_classes = null
-    }
 
     let selected_slots = []
     selected.map((selected) =>
@@ -97,7 +92,6 @@ const BuyClassesPage = () => {
         setWaitingForResponse(false)
       })
       .catch((err) => {
-        console.log(err)
         setWaitingForResponse(false)
         if (err.response.status == 400) {
           showAlertError('Błąd', err.response.data.error[0])
@@ -178,36 +172,12 @@ const BuyClassesPage = () => {
                               {...register('place_of_classes')}
                             />
                             <span className="label-text">
-                              {place == 'stationary' && 'Stacjonarnie'}
+                              {place == 'teacher_home' && 'U nauczyciela'}
                               {place == 'online' && 'Online'}
                             </span>
                           </label>
                         </div>
                       ))}
-                      {placeOfClasses == 'stationary' && (
-                        <Controller
-                          name="city_of_classes"
-                          control={control}
-                          render={({ field }) => (
-                            <Select
-                              className="mt-2 h-10 w-full border-none px-0 text-gray-500 shadow-none"
-                              menuPortalTarget={document.body}
-                              isClearable
-                              options={classes?.cities_of_classes}
-                              getOptionLabel={(option) => option.name}
-                              getOptionValue={(option) => option.id}
-                              {...field}
-                              placeholder={
-                                <span className="text-gray-400">Miasto</span>
-                              }
-                              noOptionsMessage={({ inputValue }) =>
-                                'Nie znaleziono'
-                              }
-                              styles={customSelectStyle}
-                            />
-                          )}
-                        />
-                      )}
                     </div>
                   </div>
                   <div className="card flex w-full flex-col rounded-sm p-4 shadow-md max-lg:w-full max-phone:flex-col ">

@@ -111,11 +111,6 @@ const InboxPage = () => {
       setMessages([])
     }
     if (selectedUser != null) {
-      sendNotification({
-        type: 'read_private_messages',
-        token: user.token,
-        userId: selectedUser?.id,
-      })
       await api
         .get(
           `/api/users/private-conversation/messages/?user_id=${
@@ -247,7 +242,7 @@ const InboxPage = () => {
                 >
                   <InfiniteScroll
                     dataLength={messages.length}
-                    next={fetchMessages}
+                    next={fetchAfterSendMessages}
                     className="flex flex-col-reverse"
                     inverse={true}
                     hasMore={hasMoreMessages}

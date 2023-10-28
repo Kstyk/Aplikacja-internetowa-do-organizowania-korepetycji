@@ -46,10 +46,6 @@ const CreateClassesPage = () => {
   })
 
   const addClassesOptionValidation = {
-    cities_of_classes: {
-      required:
-        'Musisz wybrać przynajmniej jedno miasto przy zajęciach stacjonarnych.',
-    },
     name: {
       required: 'Nazwa zajęć jest wymagana.',
     },
@@ -69,10 +65,6 @@ const CreateClassesPage = () => {
     setWaitingForResponse(true)
     formData?.place_of_classes?.map(
       (place, i) => (formData.place_of_classes[i] = place.value)
-    )
-
-    formData?.cities_of_classes?.map(
-      (city, i) => (formData.cities_of_classes[i] = city.id)
     )
 
     if (
@@ -294,7 +286,8 @@ const CreateClassesPage = () => {
                     isClearable
                     isMulti
                     options={[
-                      { label: 'Stacjonarnie', value: 'stationary' },
+                      { label: 'U nauczyciela', value: 'teacher_home' },
+                      { label: 'U ucznia', value: 'student_home' },
                       { label: 'Online', value: 'online' },
                     ]}
                     getOptionLabel={(option) => option.label}
@@ -306,7 +299,9 @@ const CreateClassesPage = () => {
                     styles={customSelectStyle}
                     onChange={(selectedOption) => {
                       setIsStationary(
-                        selectedOption.find((opt) => opt.value == 'stationary')
+                        selectedOption.find(
+                          (opt) => opt.value == 'teacher_home'
+                        )
                       )
                       setValue('place_of_classes', selectedOption)
                     }}
@@ -315,8 +310,8 @@ const CreateClassesPage = () => {
                 name={'place_of_classes'}
               />
               <small className="text-right text-red-400">
-                {errors?.city_of_classes && errors.city_of_classes.message}
-                {backendErrors?.city_of_classes?.map((e, i) => (
+                {errors?.place_of_classes && errors.place_of_classes.message}
+                {backendErrors?.place_of_classes?.map((e, i) => (
                   <span key={i}>
                     {e} <br />
                   </span>
@@ -329,50 +324,10 @@ const CreateClassesPage = () => {
               <div className="float-right flex w-full flex-col">
                 <label
                   className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                  htmlFor="city_of_classes"
+                  htmlFor="address"
                 >
-                  Miasto zajęć stacjonarnych{' '}
+                  Adres
                 </label>
-                <Controller
-                  name="cities_of_classes"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      className="w-full border-none px-0 text-gray-500 shadow-none"
-                      menuPortalTarget={document.body}
-                      isClearable
-                      isMulti
-                      options={cities}
-                      {...field}
-                      onInputChange={(e) => {
-                        fetchCities(e)
-                      }}
-                      getOptionLabel={(option) =>
-                        option.name + ', ' + option.region_name
-                      }
-                      getOptionValue={(option) => option.id}
-                      placeholder={
-                        <span className="text-gray-400">Miasto</span>
-                      }
-                      noOptionsMessage={({ inputValue }) =>
-                        loadingCity
-                          ? 'Szukanie miast...'
-                          : !inputValue
-                          ? 'Wpisz tekst...'
-                          : 'Nie znaleziono'
-                      }
-                      styles={customSelectStyle}
-                    />
-                  )}
-                />
-                <small className="text-right text-red-400">
-                  {errors?.city_of_classes && errors.city_of_classes.message}
-                  {backendErrors?.city_of_classes?.map((e, i) => (
-                    <span key={i}>
-                      {e} <br />
-                    </span>
-                  ))}
-                </small>
               </div>
             </div>
           )}

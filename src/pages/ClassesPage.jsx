@@ -192,28 +192,10 @@ const ClassesPage = () => {
                           >
                             <MdOutlineLocationOn className="h-6 w-6 text-base-400" />
                             <span className="text-sm">
-                              {place == 'stationary' && 'Stacjonarnie'}
+                              {place == 'teacher_home' && 'U nauczyciela'}
+                              {place == 'student_home' && 'U studenta'}
                               {place == 'online' && 'Online'}
                             </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </>
-                  )}
-                  {classes?.cities_of_classes?.length > 0 && (
-                    <>
-                      <div className="my-4 border-b-[1px] border-base-100"></div>
-                      <h3 className="mb-1 text-sm">
-                        Miasta prowadzenia zajęć:
-                      </h3>
-                      <ul className="w-full">
-                        {classes?.cities_of_classes.map((city, i) => (
-                          <li
-                            key={i}
-                            className="flex flex-row items-center gap-x-5"
-                          >
-                            <MdOutlineLocationOn className="h-6 w-6 text-base-400" />
-                            <span className="text-sm">{city.name}</span>
                           </li>
                         ))}
                       </ul>
