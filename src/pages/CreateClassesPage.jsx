@@ -18,6 +18,8 @@ const CreateClassesPage = () => {
 
   const [loadingCity, setLoadingCity] = useState(false)
   const [cities, setCities] = useState([])
+  const [voivodeships, setVoivodeships] = useState([])
+
   const [backendErrors, setBackendErrors] = useState([])
   const [isStationary, setIsStationary] = useState(false)
   const [descriptionHtml, setDescriptionHtml] = useState(null)
@@ -59,10 +61,39 @@ const CreateClassesPage = () => {
     language: {
       required: 'Język zajęć jest wymagany.',
     },
+    city: {
+      required: 'Miasto jest wymagane.',
+    },
+    voivodeship: {
+      required: 'Województwo jest wymagane.',
+    },
+    postal_code: {
+      required: 'Kod pocztowy jest wymagany.',
+      pattern: {
+        value: /^[0-9]{2}-[0-9]{3}$/,
+        message: 'Nieprawidłowy format kodu pocztowego.',
+      },
+    },
+    street: {
+      maxLength: {
+        value: 50,
+        message: 'Ulica może mieć maksymalnie 50 znaków.',
+      },
+    },
+    building_number: {
+      maxLength: {
+        value: 40,
+        message: 'Numer budynku nie może być dłuższy niż 50 znaków.',
+      },
+    },
   }
 
   const onSubmit = (formData) => {
     setWaitingForResponse(true)
+    formData.address.voivodeship = formData.address.voivodeship.id
+
+    formData.address.city = formData.address.city.id
+
     formData?.place_of_classes?.map(
       (place, i) => (formData.place_of_classes[i] = place.value)
     )
@@ -85,6 +116,7 @@ const CreateClassesPage = () => {
         setWaitingForResponse(false)
       })
       .catch((err) => {
+        console.log(err)
         setBackendErrors(JSON.parse(err.request.response))
         setWaitingForResponse(false)
       })
@@ -100,6 +132,20 @@ const CreateClassesPage = () => {
         showAlertError(
           'Błąd',
           'Wystąpił błąd przy pobieraniu danych z serwera, przepraszamy.'
+        )
+      })
+  }
+
+  const fetchVoivodeships = async () => {
+    await api
+      .get(`/api/users/address/voivodeships/`)
+      .then((res) => {
+        setVoivodeships(res.data)
+      })
+      .catch((err) => {
+        showAlertError(
+          'Błąd',
+          'Wystąpił błąd przy pobieraniu danych z serwera.'
         )
       })
   }
@@ -123,6 +169,7 @@ const CreateClassesPage = () => {
   }
 
   useEffect(() => {
+    fetchVoivodeships()
     fetchLanguages()
   }, [])
 
@@ -320,16 +367,196 @@ const CreateClassesPage = () => {
             </div>
           </div>
           {isStationary && (
-            <div className="items-center">
-              <div className="float-right flex w-full flex-col">
-                <label
-                  className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                  htmlFor="address"
-                >
-                  Adres
-                </label>
+            <>
+              <div className="items-center">
+                <div className="float-right flex w-full flex-col">
+                  <label
+                    className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
+                    htmlFor="address"
+                  >
+                    Adres
+                  </label>
+                  <div className="mb-2 border-b-[1px] border-base-100"></div>
+
+                  <label
+                    className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
+                    htmlFor="city"
+                  >
+                    Miasto{' '}
+                  </label>
+                  <Controller
+                    name="address.city"
+                    control={control}
+                    rules={addClassesOptionValidation.city}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        className="h-10 w-full border-none px-0 text-gray-500 shadow-none"
+                        menuPortalTarget={document.body}
+                        isClearable
+                        options={cities}
+                        onInputChange={(e) => {
+                          fetchCities(e)
+                        }}
+                        getOptionLabel={(option) => option.name}
+                        getOptionValue={(option) => option.id}
+                        placeholder={
+                          <span className="text-gray-400">Miasto</span>
+                        }
+                        noOptionsMessage={({ inputValue }) =>
+                          loadingCity
+                            ? 'Szukanie miast...'
+                            : !inputValue
+                            ? 'Wpisz tekst...'
+                            : 'Nie znaleziono'
+                        }
+                        styles={customSelectStyle}
+                      />
+                    )}
+                  />
+                  <small className="text-right text-red-400">
+                    {errors?.address?.city && errors?.address?.city?.message}
+                    {backendErrors?.address?.city?.map((e, i) => (
+                      <span key={i}>
+                        {e} <br />
+                      </span>
+                    ))}
+                  </small>
+                </div>
               </div>
-            </div>
+              <div className="items-center">
+                <div className="float-right flex w-full flex-col">
+                  <label
+                    className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
+                    htmlFor="voivodeship"
+                  >
+                    Województwo
+                  </label>
+                  <Controller
+                    name="address.voivodeship"
+                    control={control}
+                    rules={addClassesOptionValidation.voivodeship}
+                    render={({ field }) => (
+                      <Select
+                        className="h-10 border-none px-0 text-gray-500 shadow-none"
+                        menuPortalTarget={document.body}
+                        isClearable
+                        {...field}
+                        options={voivodeships}
+                        getOptionLabel={(option) => option.alternate_names}
+                        getOptionValue={(option) => option.slug}
+                        placeholder={
+                          <span className="text-gray-400">Województwo</span>
+                        }
+                        noOptionsMessage={({ inputValue }) =>
+                          !inputValue ? 'Brak województwa' : 'Nie znaleziono'
+                        }
+                        styles={customSelectStyle}
+                      />
+                    )}
+                  />
+                  <small className="text-right text-red-400">
+                    {errors?.address?.voivodeship &&
+                      errors?.address?.voivodeship.message}
+                    {backendErrors?.address?.voivodeship?.map((e, i) => (
+                      <span key={i}>
+                        {e} <br />
+                      </span>
+                    ))}
+                  </small>
+                </div>
+              </div>
+              <div className="items-center">
+                <div className="float-right flex w-full flex-col">
+                  <label
+                    className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
+                    htmlFor="postal_code"
+                  >
+                    Kod pocztowy
+                  </label>
+                  <input
+                    type="text"
+                    className=" relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
+                    name="address.postal_code"
+                    placeholder="Podaj kod pocztowy"
+                    id="postal_code"
+                    {...register(
+                      'address.postal_code',
+                      addClassesOptionValidation.postal_code
+                    )}
+                  />
+                  <small className="text-right text-red-400">
+                    {errors?.address?.postal_code &&
+                      errors?.address?.postal_code.message}
+                    {backendErrors?.address?.postal_code?.map((e, i) => (
+                      <span key={i}>
+                        {e} <br />
+                      </span>
+                    ))}
+                  </small>
+                </div>
+              </div>
+
+              <div className="items-center">
+                <div className="float-right flex w-full flex-col">
+                  <label
+                    className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
+                    htmlFor="street"
+                  >
+                    Ulica
+                  </label>
+                  <input
+                    type="text"
+                    className=" relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
+                    name="address.street"
+                    placeholder="Podaj ulicę"
+                    id="street"
+                    {...register(
+                      'address.street',
+                      addClassesOptionValidation.street
+                    )}
+                  />
+                  <small className="text-right text-red-400">
+                    {errors?.street && errors.street.message}
+                    {backendErrors?.address?.street?.map((e, i) => (
+                      <span key={i}>
+                        {e} <br />
+                      </span>
+                    ))}
+                  </small>
+                </div>
+              </div>
+              <div className="items-center">
+                <div className="float-right flex w-full flex-col">
+                  <label
+                    className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
+                    htmlFor="building_number"
+                  >
+                    Numer budynku
+                  </label>
+                  <input
+                    type="text"
+                    className=" relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
+                    name="address.building_number"
+                    placeholder="Podaj numer budynku"
+                    id="building_number"
+                    {...register(
+                      'address.building_number',
+                      addClassesOptionValidation.building_number
+                    )}
+                  />
+                  <small className="text-right text-red-400">
+                    {errors?.address?.building_number &&
+                      errors?.address?.building_number.message}
+                    {backendErrors?.address?.building_number?.map((e, i) => (
+                      <span key={i}>
+                        {e} <br />
+                      </span>
+                    ))}
+                  </small>
+                </div>
+              </div>
+            </>
           )}
           <div className="items-center">
             <div className="float-right flex w-full flex-col">
