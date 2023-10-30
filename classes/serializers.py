@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Class, Language, Schedule, Timeslot, PurchaseHistory, Opinion, AskClasses
-from users.serializers import UserSerializer, UserProfileSerializer, AddressSerializer
+from users.serializers import UserSerializer, UserProfileSerializer, AddressSerializer, CreateOrUpdateAddressSerializer
 from rooms.serializers import RoomSerializer
 from .validators import validate_teacher_role
 from django.core.validators import MinValueValidator
@@ -9,6 +9,7 @@ from django.db.models import Avg
 from users.serializers import CitySerializer
 from cities_light.models import City
 from users.models import Address
+from django.db import transaction
 
 
 class LanguageSerializer(serializers.ModelSerializer):
@@ -34,6 +35,7 @@ class ClassSerializer(serializers.ModelSerializer):
     teacher = UserProfileSerializer(source='teacher.userdetails')
     average_rate = serializers.SerializerMethodField()
     amount_of_opinions = serializers.SerializerMethodField()
+    address = AddressSerializer()
 
     class Meta:
         model = Class
@@ -68,6 +70,7 @@ class ClassTeacherViewSerializer(serializers.ModelSerializer):
 
 
 class CreateClassSerializer(serializers.ModelSerializer):
+    address = CreateOrUpdateAddressSerializer(required=False)
     place_of_classes = serializers.ListField(
         child=serializers.CharField(max_length=150), allow_empty=False, required=True
     )
@@ -77,9 +80,18 @@ class CreateClassSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        instance = Class.objects.create(**validated_data)
+        with transaction.atomic():
+            address_data = validated_data.pop('address', None)
 
-        return instance
+            instance = Class.objects.create(**validated_data, address=None)
+
+            if address_data is not None:
+                address = Address.objects.create(**address_data)
+                instance.address = address
+
+            instance.save()
+
+            return instance
 
 
 class UpdateClassSerializer(serializers.ModelSerializer):
