@@ -90,9 +90,13 @@ const CreateClassesPage = () => {
 
   const onSubmit = (formData) => {
     setWaitingForResponse(true)
-    formData.address.voivodeship = formData.address.voivodeship.id
+    if (formData?.address?.voivodeship != null) {
+      formData.address.voivodeship = formData.address.voivodeship.id
+    }
 
-    formData.address.city = formData.address.city.id
+    if (formData?.address?.city != null) {
+      formData.address.city = formData.address.city.id
+    }
 
     formData?.place_of_classes?.map(
       (place, i) => (formData.place_of_classes[i] = place.value)
