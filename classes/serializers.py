@@ -63,6 +63,7 @@ class ClassSerializer(serializers.ModelSerializer):
 
 class ClassTeacherViewSerializer(serializers.ModelSerializer):
     language = LanguageSerializer()
+    address = AddressSerializer()
 
     class Meta:
         model = Class
@@ -98,13 +99,16 @@ class UpdateClassSerializer(serializers.ModelSerializer):
     place_of_classes = serializers.ListField(
         child=serializers.CharField(max_length=150), allow_empty=False, required=True
     )
+    address = CreateOrUpdateAddressSerializer(required=False)
 
     class Meta:
         model = Class
         fields = ['language', 'name', 'price_for_lesson', 'description',
-                  'able_to_buy', 'place_of_classes']
+                  'able_to_buy', 'place_of_classes', 'address']
 
     def update(self, instance, validated_data):
+        address_data = validated_data.pop('address', None)
+
         instance.name = validated_data.get('name', instance.name)
         instance.language = validated_data.get(
             'language', instance.language)
@@ -118,6 +122,29 @@ class UpdateClassSerializer(serializers.ModelSerializer):
             'able_to_buy', instance.able_to_buy)
         instance.place_of_classes = validated_data.get(
             'place_of_classes', instance.place_of_classes)
+
+        if address_data is not None:
+            if instance.address is not None:
+                address = instance.address
+                if address_data.get('city', address.city) is not None:
+                    address.city = address_data.get('city', address.city)
+                if address_data.get('voivodeship', address.voivodeship) is not None:
+                    address.voivodeship = address_data.get(
+                        'voivodeship', address.voivodeship)
+                if address_data.get('postal_code', address.postal_code) is not None:
+                    address.postal_code = address_data.get(
+                        'postal_code', address.postal_code)
+                if address_data.get('street', address.street) is not None:
+                    address.street = address_data.get(
+                        'street', address.street)
+                if address_data.get('building_number', address.building_number) is not None:
+                    address.building_number = address_data.get(
+                        'building_number', address.building_number)
+                address.save()
+            else:
+                address = Address.objects.create(**address_data)
+                instance.address = address
+                instance.save()
 
         instance.save()
         return instance
