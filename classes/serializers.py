@@ -123,7 +123,7 @@ class UpdateClassSerializer(serializers.ModelSerializer):
         instance.place_of_classes = validated_data.get(
             'place_of_classes', instance.place_of_classes)
 
-        if address_data is not None:
+        if address_data is not None and 'teacher_home' in instance.place_of_classes:
             if instance.address is not None:
                 address = instance.address
                 if address_data.get('city', address.city) is not None:
@@ -145,6 +145,10 @@ class UpdateClassSerializer(serializers.ModelSerializer):
                 address = Address.objects.create(**address_data)
                 instance.address = address
                 instance.save()
+        else:
+            if instance.address:
+                instance.address.delete()
+            instance.address = None
 
         instance.save()
         return instance
