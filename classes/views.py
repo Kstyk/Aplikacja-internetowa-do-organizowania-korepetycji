@@ -200,7 +200,8 @@ class ScheduleTeacherView(generics.ListAPIView):
 
     def get_queryset(self):
         teacher_id = self.kwargs.get('teacher_id')
-        return Schedule.objects.filter(classes__teacher_id=teacher_id)
+        queryset = Schedule.objects.filter(classes__teacher_id=teacher_id)
+        return queryset
 
 
 class ScheduleStudentView(generics.ListAPIView):
@@ -274,6 +275,7 @@ def purchase_classes(request):
                     'classes': classes.id,
                     'place_of_classes': place,
                     'room': new_room.room_id if room.first() is None else room.first().room_id,
+                    'address': classes.address.id if place == 'teacher_home' else None
                 }
                 # Dodaj do listy poprawnych danych
                 valid_schedules.append(schedule_data)
@@ -295,8 +297,8 @@ def purchase_classes(request):
                 amount_of_lessons=len(selected_slots),
                 start_date=datetime_slots[0],
                 paid_price=len(selected_slots)*classes.price_for_lesson,
+                address=classes.address if place == 'teacher_home' else None
             )
-
             purchase.save()
 
             send_mail(

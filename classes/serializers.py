@@ -156,8 +156,8 @@ class UpdateClassSerializer(serializers.ModelSerializer):
 
 class ScheduleSerializer(serializers.ModelSerializer):
     classes = ClassSerializer()
-    city_of_classes = CitySerializer()
     student = UserSerializer()
+    address = AddressSerializer()
 
     class Meta:
         model = Schedule
@@ -174,7 +174,7 @@ class PurchaseHistorySerializer(serializers.ModelSerializer):
     classes = ClassSerializer()
     room = RoomSerializer()
     student = UserSerializer()
-    city_of_classes = CitySerializer()
+    address = AddressSerializer()
 
     class Meta:
         model = PurchaseHistory
