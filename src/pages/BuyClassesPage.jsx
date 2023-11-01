@@ -29,23 +29,10 @@ const BuyClassesPage = () => {
     register,
     handleSubmit,
     setValue,
-    control,
     formState: { errors },
   } = useForm({
     mode: 'all',
   })
-
-  const customSelectStyle = {
-    control: (base) => ({
-      ...base,
-      boxShadow: 'none',
-      borderRadius: '2px',
-      borderColor: '#BFEAF5',
-      '&:hover': {
-        border: '1px solid #aaabac',
-      },
-    }),
-  }
 
   const fetchClasses = async () => {
     setLoading(true)
@@ -154,30 +141,52 @@ const BuyClassesPage = () => {
                     <div className="max-phone:order-1 max-phone:mb-3">
                       <h3 className="mb-2 font-bold">Wybierz miejsce zajęć:</h3>
 
-                      {classes?.place_of_classes.map((place) => (
-                        <div className="form-control" key={place}>
-                          <label className="label cursor-pointer gap-x-4">
-                            <input
-                              type="radio"
-                              name="place_of_classes"
-                              className="radio checked:bg-base-400"
-                              value={place}
-                              defaultChecked={place == 'online'}
-                              onClick={() => {
-                                setPlaceOfClasses(place)
-                              }}
-                              onChange={() => {
-                                setValue('place_of_classes', place)
-                              }}
-                              {...register('place_of_classes')}
-                            />
-                            <span className="label-text">
-                              {place == 'teacher_home' && 'U nauczyciela'}
-                              {place == 'online' && 'Online'}
-                            </span>
-                          </label>
+                      {classes?.place_of_classes?.map(
+                        (place) =>
+                          place != 'student_home' && (
+                            <div className="form-control" key={place}>
+                              <label className="label cursor-pointer gap-x-4">
+                                <input
+                                  type="radio"
+                                  name="place_of_classes"
+                                  className="radio checked:bg-base-400"
+                                  value={place}
+                                  defaultChecked={place == 'online'}
+                                  onClick={() => {
+                                    setPlaceOfClasses(place)
+                                  }}
+                                  onChange={() => {
+                                    setValue('place_of_classes', place)
+                                  }}
+                                  {...register('place_of_classes')}
+                                />
+                                <span className="label-text">
+                                  {place == 'teacher_home' && 'U nauczyciela'}
+                                  {place == 'online' && 'Online'}
+                                </span>
+                              </label>
+                            </div>
+                          )
+                      )}
+
+                      {placeOfClasses == 'teacher_home' && (
+                        <div className="mt-3 flex flex-col text-sm">
+                          <h4 className=" font-bold tracking-wider">
+                            Adres zajęć
+                          </h4>
+                          <span>
+                            Woj. {classes?.address?.voivodeship?.name}
+                          </span>
+                          <span>
+                            {classes?.address?.postal_code}{' '}
+                            {classes?.address?.city?.name}
+                          </span>
+                          <span>
+                            ul. {classes?.address?.street}{' '}
+                            {classes?.address?.building_number}
+                          </span>
                         </div>
-                      ))}
+                      )}
                     </div>
                   </div>
                   <div className="card flex w-full flex-col rounded-sm p-4 shadow-md max-lg:w-full max-phone:flex-col ">

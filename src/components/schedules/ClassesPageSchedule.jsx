@@ -9,6 +9,7 @@ import { timeslots } from '../../variables/Timeslots'
 import CustomToolbar from './CustomToolbar'
 import Swal from 'sweetalert2'
 import LoadingComponent from '../LoadingComponent'
+import showAlertError from '../../components/messages/SwalAlertError'
 
 const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
   const [loading, setLoading] = useState(true)

@@ -15,7 +15,7 @@ const SendedQuestionCard = ({ question }) => {
       }`}
     >
       <div className="flex w-full flex-row justify-between">
-        <h2 className="text-md w-9/12 text-left uppercase tracking-wider text-gray-700 hover:underline">
+        <h2 className="text-md w-9/12 text-left font-bold uppercase tracking-wider text-gray-700 hover:underline">
           <Link to={`/zajecia/${question?.classes?.id}`}>
             {question?.classes?.name}
           </Link>
@@ -25,8 +25,8 @@ const SendedQuestionCard = ({ question }) => {
         </span>
       </div>
       <div className="my-2 border-b-[1px] border-base-100"></div>
-      <div className="flex flex-row justify-between gap-x-2 text-left">
-        <div className="w-4/12 ">
+      <div className="flex flex-col justify-between gap-x-2 text-left phone:flex-row">
+        <div className="w-full phone:w-4/12 ">
           <h4 className="text-md">Zażądany adres:</h4>
           <div className="mt-2  w-full break-words border-[1px] border-gray-400 bg-gray-100 px-3">
             {question?.address?.postal_code} {question?.address?.city?.name}{' '}
@@ -36,7 +36,7 @@ const SendedQuestionCard = ({ question }) => {
             ul. {question?.address?.street} {question?.address?.building_number}
           </div>
         </div>
-        <div className="w-8/12">
+        <div className="mt-3 w-full phone:mt-0 phone:w-8/12">
           <h4 className="text-md">Treść twojej wiadomości:</h4>
           <div className="relative mt-2 border-[1px] border-gray-400 bg-gray-100 px-8 py-3 ">
             <BiSolidQuoteLeft className="absolute -top-3 left-2 h-5 w-5" />
@@ -77,6 +77,18 @@ const SendedQuestionCard = ({ question }) => {
           </div>
         </div>
       )}
+      <div>
+        {console.log(question)}
+        {question?.accepted == true && (
+          <Link
+            to={`/zajecia/${question?.classes?.id}/zakup-po-zapytaniu`}
+            state={{ address: question?.address }}
+            className="btn-outline no-animation btn mb-2 mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 md:w-5/12 xl:w-4/12"
+          >
+            Zakup
+          </Link>
+        )}
+      </div>
     </div>
   )
 }

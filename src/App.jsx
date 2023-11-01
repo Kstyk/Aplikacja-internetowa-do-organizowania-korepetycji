@@ -40,6 +40,7 @@ import InboxPage from './pages/InboxPage'
 import AskAboutClassesPage from './pages/AskAboutClassesPage'
 import SendedQuestionsAboutClassesPage from './pages/SendedQuestionsAboutClassesPage'
 import ReceivedQuestionsAboutClassesPage from './pages/ReceivedQuestionsAboutClassesPage'
+import BuyClassesPageAfterAsk from './pages/BuyClassesPageAfterAsk'
 
 function App() {
   return (
@@ -202,6 +203,14 @@ function App() {
                   }
                 />
                 <Route
+                  path="/zajecia/:classesId/zakup-po-zapytaniu"
+                  element={<BuyClassesPageAfterAsk />}
+                />
+                <Route
+                  path="/zajecia/:classesId/kup"
+                  element={<BuyClassesPage />}
+                />
+                <Route
                   path="/wyslane-zapytania"
                   element={
                     <PrivateRoute>
@@ -282,10 +291,7 @@ function App() {
                 element={<SearchClassesPage />}
               />
               <Route path="/zajecia/:classesId" element={<ClassesPage />} />
-              <Route
-                path="/zajecia/:classesId/kup"
-                element={<BuyClassesPage />}
-              />
+
               <Route path="/nauczyciel/:teacherId" element={<TeacherPage />} />
               <Route path="/student/:studentId" element={<StudentPage />} />
               <Route path="*" element={<HomePage />} />
