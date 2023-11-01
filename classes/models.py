@@ -56,8 +56,8 @@ class PurchaseHistory(models.Model):
     )
     place_of_classes = models.TextField(
         choices=LOCATION_CHOICES, null=True, blank=True)
-    city_of_classes = models.ForeignKey(
-        City, on_delete=models.SET_NULL, blank=True, null=True)
+    address = models.ForeignKey(
+        'users.Address', on_delete=models.SET_NULL, null=True, blank=True)
     room = models.ForeignKey(
         Room, on_delete=models.SET_NULL, null=True, blank=True
     )
@@ -120,8 +120,8 @@ class Schedule(models.Model):
     )
     place_of_classes = models.TextField(
         choices=LOCATION_CHOICES, null=True, blank=True)
-    city_of_classes = models.ForeignKey(
-        City, on_delete=models.SET_NULL, blank=True, null=True)
+    address = models.ForeignKey(
+        'users.Address', on_delete=models.SET_NULL, null=True, blank=True)
     room = models.ForeignKey(
         Room, on_delete=models.CASCADE, null=True, blank=True
     )
@@ -161,4 +161,5 @@ class AskClasses(models.Model):
     sended_at = models.DateTimeField(auto_now_add=True)
     student_message = models.TextField(null=False, blank=False)
     accepted = models.BooleanField(null=True, blank=True)
+    bought = models.BooleanField(null=False, default=False)
     teacher_message = models.TextField(null=True, blank=True)
