@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router-dom'
 import LoadingComponent from '../components/LoadingComponent'
 import guest from '../assets/guest.png'
 import { AiOutlinePhone, AiOutlineMail } from 'react-icons/ai'
+import { BsDot } from 'react-icons/bs'
 import { MdOutlineLocationOn } from 'react-icons/md'
 import parse from 'html-react-parser'
 import showAlertError from '../components/messages/SwalAlertError'
@@ -199,6 +200,30 @@ const ClassesPage = () => {
                           </li>
                         ))}
                       </ul>
+                    </>
+                  )}
+                  {classes?.place_of_classes?.find(
+                    (e) => e == 'teacher_home'
+                  ) && (
+                    <>
+                      <div className="my-4 border-b-[1px] border-base-100"></div>
+                      <h3 className="mb-1 text-sm">
+                        Adres zajęć stacjonarnych
+                      </h3>
+                      <span className="flex flex-row items-center text-sm">
+                        <BsDot className="h-6 w-6" />
+                        woj. {classes?.address?.voivodeship?.name}
+                      </span>
+                      <span className="flex flex-row items-center text-sm">
+                        <BsDot className="h-6 w-6" />
+                        {classes?.address?.postal_code}{' '}
+                        {classes?.address?.city?.name}
+                      </span>
+                      <span className="flex flex-row items-center text-sm">
+                        <BsDot className="h-6 w-6" />
+                        {classes?.address?.street}{' '}
+                        {classes?.address?.building_number}
+                      </span>
                     </>
                   )}
                   <div className="my-4 border-b-[1px] border-base-100 phone:hidden"></div>
