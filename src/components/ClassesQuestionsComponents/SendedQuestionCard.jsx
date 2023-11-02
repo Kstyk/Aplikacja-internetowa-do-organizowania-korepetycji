@@ -8,10 +8,12 @@ const SendedQuestionCard = ({ question }) => {
     <div
       className={`card rounded-md px-3 py-2 pb-5 shadow-md ${
         question?.accepted == true
-          ? 'shadow-green-200'
+          ? question?.bought
+            ? 'shadow-base-400'
+            : 'shadow-green-500'
           : question?.accepted == false
           ? 'shadow-red-200'
-          : 'shadow-gray-200'
+          : 'shadow-yellow-100'
       }`}
     >
       <div className="flex w-full flex-row justify-between">
@@ -53,14 +55,21 @@ const SendedQuestionCard = ({ question }) => {
           <span
             className={`uppercase ${
               question?.accepted == true
-                ? 'text-green-500'
+                ? question?.bought
+                  ? 'text-green-800'
+                  : 'text-green-500'
                 : question?.accepted == false
                 ? 'text-red-500'
                 : 'text-yellow-500'
             }`}
           >
             {question?.accepted == null && 'Oczekujące'}
-            {question?.accepted == true && 'Zaakceptowane'}
+            {question?.accepted == true &&
+              question?.bought == false &&
+              'Zaakceptowane'}
+            {question?.accepted == true &&
+              question?.bought == true &&
+              'Zakupione'}
             {question?.accepted == false && 'Odrzucone'}
           </span>
         </span>
@@ -78,8 +87,7 @@ const SendedQuestionCard = ({ question }) => {
         </div>
       )}
       <div>
-        {console.log(question)}
-        {question?.accepted == true && (
+        {question?.accepted == true && question?.bought == false && (
           <Link
             to={`/zajecia/${question?.classes?.id}/zakup-po-zapytaniu`}
             state={{ address: question?.address }}

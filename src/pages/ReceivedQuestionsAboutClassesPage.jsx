@@ -95,11 +95,13 @@ const ReceivedQuestionsAboutClassesPage = () => {
                     <div className="flex w-full flex-col gap-y-8 pb-5">
                       {questions?.length > 0
                         ? questions?.map((q) => (
-                            <ReceivedQuestionCard
-                              key={q?.id}
-                              question={q}
-                              fetchQuestions={fetchQuestions}
-                            />
+                            <section key={q?.id}>
+                              <ReceivedQuestionCard
+                                question={q}
+                                fetchQuestions={fetchQuestions}
+                              />
+                              <div className="my-5 border-b-[1px] border-base-200"></div>
+                            </section>
                           ))
                         : 'Brak otrzymanych zapytań.'}
                     </div>

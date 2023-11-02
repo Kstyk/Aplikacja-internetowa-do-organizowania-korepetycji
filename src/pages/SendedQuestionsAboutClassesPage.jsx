@@ -94,9 +94,12 @@ const SendedQuestionsAboutClassesPage = () => {
                   {loadingNextPage ? (
                     <LoadingComponent message="Ładowanie następnej strony..." />
                   ) : (
-                    <div className="flex w-full flex-col gap-y-8 pb-5">
+                    <div className="flex w-full flex-col pb-5">
                       {questions?.map((q) => (
-                        <SendedQuestionCard key={q?.id} question={q} />
+                        <section key={q?.id}>
+                          <SendedQuestionCard question={q} />
+                          <div className="my-5 border-b-[1px] border-base-200"></div>
+                        </section>
                       ))}
                     </div>
                   )}
