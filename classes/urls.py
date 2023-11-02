@@ -14,6 +14,8 @@ urlpatterns = [
     path('<int:teacher_id>/schedule/', ScheduleTeacherView.as_view()),
     path('<int:student_id>/student-schedule/', ScheduleStudentView.as_view()),
     path('purchase_classes/', purchase_classes, name="purchase_classes"),
+    path('purchase_classes_after_ask/', purchase_classes_after_ask,
+         name="purchase_classes_after_ask"),
     path('purchase-classes/history/', PurchaseHistoryList.as_view(),
          name="purchase_classes_history"),
     path('purchase-classes/teacher-history/', TeacherPurchaseHistoryList.as_view(),

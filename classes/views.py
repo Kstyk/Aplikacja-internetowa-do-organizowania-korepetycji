@@ -324,6 +324,125 @@ def purchase_classes(request):
     return Response(purchase_serializer.data, status=status.HTTP_201_CREATED)
 
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsStudent])
+def purchase_classes_after_ask(request):
+    selected_slots = request.data.get('selected_slots', [])
+    student = request.user
+    classes_id = request.data.get('classes_id', [])
+    place = 'student_home'
+    address_id = request.data.get('address_id', None)
+
+    try:
+        with transaction.atomic():  # Rozpoczęcie transakcji
+            if len(selected_slots) == 0:
+                raise ValidationError(
+                    "Nie wybrałeś żadnego terminu zajęć.")
+
+            classes = Class.objects.get(pk=classes_id)
+            address = Address.objects.get(pk=address_id)
+
+            askclasses = AskClasses.objects.get(
+                Q(address=address) & Q(classes=classes) & Q(student=student))
+
+            if askclasses is not None:
+                if askclasses.accepted is False:
+                    raise ValidationError("Niepoprawny adres zajęć.")
+
+                if askclasses.accepted is True and askclasses.bought is True:
+                    raise ValidationError(
+                        "Już zakupiłeś zajęcia pod wskazanym adresem po wczesniejszym zapytaniu.")
+
+            else:
+                raise ValidationError("Niepoprawny adres zajęć.")
+
+            if classes.able_to_buy is False:
+                raise ValidationError(
+                    "Te zajęcia nie są dostępne do zakupu.")
+
+            # Sprawdź, czy istnieje pokój między studentem a nauczycielem w danej klasie
+
+            room = Room.objects.filter(
+                users=request.user).filter(users=classes.teacher)
+
+            if room.count() == 0:
+                room_id = uuid.uuid4().hex[:6].upper()
+                # Tworzenie nowego pokoju
+                name = request.user.first_name + " " + request.user.last_name + \
+                    " - " + classes.teacher.first_name + " " + classes.teacher.last_name
+
+                new_room = Room.objects.create(
+                    room_id=room_id, name=name
+                )
+                new_room.users.add(student, classes.teacher)
+
+            valid_schedules = []
+
+            for slot in selected_slots:
+                exists_classes = Schedule.objects.filter(
+                    date=slot).filter(student=student)
+
+                if exists_classes.exists():
+                    raise ValidationError(
+                        "W jednym z wybranych terminów już masz zaplanowane inne zajęcia.")
+
+                schedule_data = {
+                    'date': slot,
+                    'student': student.id,
+                    'classes': classes.id,
+                    'place_of_classes': place,
+                    'room': new_room.room_id if room.first() is None else room.first().room_id,
+                    'address': address.id
+                }
+                # Dodaj do listy poprawnych danych
+                valid_schedules.append(schedule_data)
+
+            purchase_classes_serializer = PurchaseClassesSerializer(
+                data=valid_schedules, many=True)
+            purchase_classes_serializer.is_valid(raise_exception=True)
+            purchase_classes_serializer.save()
+
+            datetime_slots = [datetime.strptime(
+                slot, "%Y-%m-%dT%H:%M:%S") for slot in selected_slots]
+            datetime_slots.sort()
+
+            purchase = PurchaseHistory(
+                student=student,
+                classes=classes,
+                room=new_room if room.first() is None else room.first(),
+                place_of_classes=place,
+                amount_of_lessons=len(selected_slots),
+                start_date=datetime_slots[0],
+                paid_price=len(selected_slots)*classes.price_for_lesson,
+                address=address
+            )
+            purchase.save()
+
+            send_mail(
+                'Zakupiono twoje zajęcia',
+                f'''
+                Cześć, {classes.teacher.first_name}
+
+                Student {student.first_name} {student.last_name} zakupił twoje zajęcia: {classes.name}.
+
+                Link do utworzonego pokoju zajęć: http://localhost:5173/pokoj/{purchase.room.room_id}/
+                
+                Pozdrawiamy, zespół korki.PL''',
+                settings.EMAIL_HOST_USER,
+                [classes.teacher.email],
+                fail_silently=False,
+            )
+
+    except ValidationError as e:
+        return Response({'error': e.detail}, status=status.HTTP_400_BAD_REQUEST)
+
+    purchase_serializer = PurchaseHistorySerializer(purchase)
+    askclasses.bought = True
+    askclasses.save()
+
+    return Response(purchase_serializer.data, status=status.HTTP_201_CREATED)
+
+
 class PurchaseHistoryList(generics.ListAPIView):
     serializer_class = PurchaseHistorySerializer
     pagination_class = PurchaseHistoryPagination
