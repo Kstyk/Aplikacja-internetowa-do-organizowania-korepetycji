@@ -6,6 +6,7 @@ import Underline from '@tiptap/extension-underline'
 import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
 import Heading from '@tiptap/extension-heading'
+import Youtube from '@tiptap/extension-youtube'
 import Link from '@tiptap/extension-link'
 import { mergeAttributes } from '@tiptap/core'
 import { EditorContent, useEditor } from '@tiptap/react'
@@ -37,6 +38,13 @@ const Editor = forwardRef((props, ref) => {
         openOnClick: false,
         HTMLAttributes: {
           class: 'text-blue-400 underline !break-words',
+        },
+      }),
+      Youtube.configure({
+        nocookie: true,
+        controls: true,
+        HTMLAttributes: {
+          class: 'object-fill',
         },
       }),
       StarterKit.configure({

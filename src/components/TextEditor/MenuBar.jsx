@@ -15,6 +15,7 @@ import {
   LuSuperscript,
   LuLink,
 } from 'react-icons/lu'
+import { ImEmbed } from 'react-icons/im'
 import { BsTextParagraph } from 'react-icons/bs'
 import { AiOutlineUnorderedList, AiOutlineOrderedList } from 'react-icons/ai'
 
@@ -43,6 +44,17 @@ const MenuBar = ({ editorComponent }) => {
       .setLink({ href: url })
       .run()
   }, [editorComponent])
+
+  const addYoutubeVideo = () => {
+    const url = prompt('Wprowadź link do filmu na YouTube')
+
+    if (url) {
+      editorComponent.commands.setYoutubeVideo({
+        src: url,
+        width: '100%',
+      })
+    }
+  }
 
   const buttonClassActive =
     'flex flex-row justify-center min-w-[10%] items-center tooltip normal-case max-[300px]:w-1/6 bg-base-400 text-white active:bg-custom-darkgreen font-bold uppercase text-xs px-2 py-2 shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150'
@@ -183,6 +195,16 @@ const MenuBar = ({ editorComponent }) => {
         }
       >
         <LuLink className="h-4 w-4 font-bold" />
+      </button>
+      <button
+        type="button"
+        data-tip="Wideo"
+        onClick={() => addYoutubeVideo()}
+        className={
+          editorComponent.isActive('youtube') ? buttonClassActive : buttonClass
+        }
+      >
+        <ImEmbed className="h-4 w-4 font-bold" />
       </button>
       <button
         type="button"
