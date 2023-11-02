@@ -112,14 +112,12 @@ class CreateOrUpdateAddressSerializer(serializers.ModelSerializer):
 class CreateOrUpdateUserDetailsSerializer(serializers.ModelSerializer):
     place_of_classes = fields.MultipleChoiceField(
         choices=LOCATION_CHOICES, required=False)
-    address = CreateOrUpdateAddressSerializer(required=False)
 
     class Meta:
         model = UserDetails
         fields = '__all__'
 
     def create(self, validated_data):
-        address_data = validated_data.pop('address', None)
         known_languages_data = validated_data.pop('known_languages', [])
         cities_of_work = validated_data.pop('cities_of_work', [])
 
@@ -133,17 +131,11 @@ class CreateOrUpdateUserDetailsSerializer(serializers.ModelSerializer):
             city = City.objects.get(pk=city_data.id)
             userdetails.cities_of_work.add(city)
 
-        if validated_data.get('address'):
-            address = Address.objects.create(
-                userdetails=userdetails, **address_data)
-            userdetails.address = address
-
         userdetails.save()
 
         return userdetails
 
     def update(self, instance, validated_data):
-        address_data = validated_data.pop('address', None)
 
         fields = validated_data.keys()
         for field in fields:
@@ -154,30 +146,6 @@ class CreateOrUpdateUserDetailsSerializer(serializers.ModelSerializer):
             else:
                 setattr(instance, field, validated_data[field])
 
-        if address_data is not None:
-            if instance.address is not None:
-                address = instance.address
-                if address_data.get('city', address.city) is not None:
-                    address.city = address_data.get('city', address.city)
-                if address_data.get('voivodeship', address.voivodeship) is not None:
-                    address.voivodeship = address_data.get(
-                        'voivodeship', address.voivodeship)
-                if address_data.get('postal_code', address.postal_code) is not None:
-                    address.postal_code = address_data.get(
-                        'postal_code', address.postal_code)
-                if address_data.get('street', address.street) is not None:
-                    address.street = address_data.get(
-                        'street', address.street)
-                if address_data.get('building_number', address.building_number) is not None:
-                    address.building_number = address_data.get(
-                        'building_number', address.building_number)
-                address.save()
-            else:
-                address = Address.objects.create(
-                    userdetails=instance, **address_data)
-                instance.address = address
-                instance.save()
-
         instance.save()
 
         return instance
@@ -185,7 +153,6 @@ class CreateOrUpdateUserDetailsSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
-    address = AddressSerializer()
     cities_of_work = CitySerializer(many=True)
     known_languages = LanguageSerializer(many=True)
 

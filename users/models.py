@@ -135,8 +135,6 @@ class UserDetails(models.Model):
     cities_of_work = models.ManyToManyField(
         City, related_name="cities_of_work", null=True, blank=True)
     experience = models.CharField(null=True, blank=True, max_length=10000)
-    address = models.ForeignKey(
-        Address, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.email} - {self.user.first_name} {self.user.last_name}"
