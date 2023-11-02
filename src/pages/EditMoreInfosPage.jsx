@@ -20,9 +20,7 @@ const EditMoreInfosPage = () => {
   const [experienceHtml, setExperienceHtml] = useState(null)
 
   const [cities, setCities] = useState([])
-  const [addressObjectCreated, setAddressObjectCreated] = useState(false)
   const [loadingCity, setLoadingCity] = useState(false)
-  const [voivodeships, setVoivodeships] = useState([])
   const [languages, setLanguages] = useState([])
   const [waitingForResponse, setWaitingForResponse] = useState(false)
 
@@ -71,31 +69,6 @@ const EditMoreInfosPage = () => {
         message: 'Nieprawidłowy format numeru telefonu.',
       },
     },
-    city: {
-      required: addressObjectCreated ? 'Miasto jest wymagane.' : false,
-    },
-    voivodeship: {
-      required: addressObjectCreated ? 'Województwo jest wymagane.' : false,
-    },
-    postal_code: {
-      required: addressObjectCreated ? 'Kod pocztowy jest wymagany.' : false,
-      pattern: {
-        value: /^[0-9]{2}-[0-9]{3}$/,
-        message: 'Nieprawidłowy format kodu pocztowego.',
-      },
-    },
-    street: {
-      maxLength: {
-        value: 50,
-        message: 'Ulica może mieć maksymalnie 50 znaków.',
-      },
-    },
-    building_number: {
-      maxLength: {
-        value: 40,
-        message: 'Numer budynku nie może być dłuższy niż 50 znaków.',
-      },
-    },
   }
 
   const fetchCities = async (e) => {
@@ -131,20 +104,6 @@ const EditMoreInfosPage = () => {
       })
   }
 
-  const fetchVoivodeships = async () => {
-    await api
-      .get(`/api/users/address/voivodeships/`)
-      .then((res) => {
-        setVoivodeships(res.data)
-      })
-      .catch((err) => {
-        showAlertError(
-          'Błąd',
-          'Wystąpił błąd przy pobieraniu danych z serwera.'
-        )
-      })
-  }
-
   const fetchProfile = async () => {
     await api
       .get(`/api/users/profile/`)
@@ -170,14 +129,6 @@ const EditMoreInfosPage = () => {
         setValue('place_of_classes', places)
         setValue('cities_of_work', res.data.cities_of_work)
         setValue('experience', res.data.experience)
-        setValue('address.voivodeship', res.data.address?.voivodeship)
-        setValue('address.city', res.data.address?.city)
-        setValue('address.postal_code', res.data.address?.postal_code)
-        setValue('address.street', res.data.address?.street)
-        setValue('address.building_number', res.data.address?.building_number)
-        if (res.data.address != null) {
-          setAddressObjectCreated(true)
-        }
       })
       .catch((err) => {
         showAlertError(
@@ -189,7 +140,6 @@ const EditMoreInfosPage = () => {
 
   const fetchAll = async () => {
     setLoading(true)
-    await fetchVoivodeships()
     await fetchLanguages()
     await fetchProfile()
     setLoading(false)
@@ -215,14 +165,6 @@ const EditMoreInfosPage = () => {
 
     if (data.sex != null) {
       data.sex = data.sex.value
-    }
-
-    if (data?.address?.voivodeship != null) {
-      data.address.voivodeship = data.address.voivodeship.id
-    }
-
-    if (data?.address?.city != null) {
-      data.address.city = data.address.city.id
     }
 
     if (descriptionHtml != null && data.description.length > 0) {
@@ -518,194 +460,7 @@ const EditMoreInfosPage = () => {
                     </div>
                   </div>
                 )}
-                <div className="items-center">
-                  <div className="float-right flex w-full flex-col">
-                    <label
-                      htmlFor="description"
-                      className="block text-lg font-bold uppercase tracking-wide text-gray-700"
-                    >
-                      Adres
-                    </label>
-                    <div className="mb-2 border-b-[1px] border-base-100"></div>
 
-                    <label
-                      className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                      htmlFor="city"
-                    >
-                      Miasto{' '}
-                    </label>
-                    <Controller
-                      name="address.city"
-                      control={control}
-                      {...register('address.city', editProfile.city)}
-                      render={({ field }) => (
-                        <Select
-                          className="h-10 w-full border-none px-0 text-gray-500 shadow-none"
-                          menuPortalTarget={document.body}
-                          isClearable
-                          options={cities}
-                          {...field}
-                          onInputChange={(e) => {
-                            fetchCities(e)
-                          }}
-                          getOptionLabel={(option) => option.name}
-                          getOptionValue={(option) => option.id}
-                          placeholder={
-                            <span className="text-gray-400">Miasto</span>
-                          }
-                          noOptionsMessage={({ inputValue }) =>
-                            loadingCity
-                              ? 'Szukanie miast...'
-                              : !inputValue
-                              ? 'Wpisz tekst...'
-                              : 'Nie znaleziono'
-                          }
-                          styles={customSelectStyle}
-                        />
-                      )}
-                    />
-                    <small className="text-right text-red-400">
-                      {errors?.address?.city && errors?.address?.city?.message}
-                      {backendErrors?.address?.city?.map((e, i) => (
-                        <span key={i}>
-                          {e} <br />
-                        </span>
-                      ))}
-                    </small>
-                  </div>
-                </div>
-                <div className="items-center">
-                  <div className="float-right flex w-full flex-col">
-                    <label
-                      className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                      htmlFor="voivodeship"
-                    >
-                      Województwo
-                    </label>
-                    <Controller
-                      name="address.voivodeship"
-                      control={control}
-                      {...register(
-                        'address.voivodeship',
-                        editProfile.voivodeship
-                      )}
-                      render={({ field }) => (
-                        <Select
-                          className="h-10 border-none px-0 text-gray-500 shadow-none"
-                          menuPortalTarget={document.body}
-                          isClearable
-                          {...field}
-                          options={voivodeships}
-                          getOptionLabel={(option) => option.alternate_names}
-                          getOptionValue={(option) => option.slug}
-                          placeholder={
-                            <span className="text-gray-400">Województwo</span>
-                          }
-                          noOptionsMessage={({ inputValue }) =>
-                            !inputValue ? 'Brak województwa' : 'Nie znaleziono'
-                          }
-                          styles={customSelectStyle}
-                        />
-                      )}
-                    />
-                    <small className="text-right text-red-400">
-                      {errors?.address?.voivodeship &&
-                        errors?.address?.voivodeship.message}
-                      {backendErrors?.address?.voivodeship?.map((e, i) => (
-                        <span key={i}>
-                          {e} <br />
-                        </span>
-                      ))}
-                    </small>
-                  </div>
-                </div>
-                <div className="items-center">
-                  <div className="float-right flex w-full flex-col">
-                    <label
-                      className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                      htmlFor="postal_code"
-                    >
-                      Kod pocztowy
-                    </label>
-                    <input
-                      type="text"
-                      className=" relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
-                      name="address.postal_code"
-                      placeholder="Podaj kod pocztowy"
-                      id="postal_code"
-                      {...register(
-                        'address.postal_code',
-                        editProfile.postal_code
-                      )}
-                    />
-                    <small className="text-right text-red-400">
-                      {errors?.address?.postal_code &&
-                        errors?.address?.postal_code.message}
-                      {backendErrors?.address?.postal_code?.map((e, i) => (
-                        <span key={i}>
-                          {e} <br />
-                        </span>
-                      ))}
-                    </small>
-                  </div>
-                </div>
-
-                <div className="items-center">
-                  <div className="float-right flex w-full flex-col">
-                    <label
-                      className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                      htmlFor="street"
-                    >
-                      Ulica
-                    </label>
-                    <input
-                      type="text"
-                      className=" relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
-                      name="address.street"
-                      placeholder="Podaj ulicę"
-                      id="street"
-                      {...register('address.street', editProfile.street)}
-                    />
-                    <small className="text-right text-red-400">
-                      {errors?.street && errors.street.message}
-                      {backendErrors?.address?.street?.map((e, i) => (
-                        <span key={i}>
-                          {e} <br />
-                        </span>
-                      ))}
-                    </small>
-                  </div>
-                </div>
-                <div className="items-center">
-                  <div className="float-right flex w-full flex-col">
-                    <label
-                      className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                      htmlFor="building_number"
-                    >
-                      Numer budynku
-                    </label>
-                    <input
-                      type="text"
-                      className=" relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
-                      name="address.building_number"
-                      placeholder="Podaj numer budynku"
-                      id="building_number"
-                      {...register(
-                        'address.building_number',
-                        editProfile.building_number
-                      )}
-                    />
-                    <small className="text-right text-red-400">
-                      {errors?.address?.building_number &&
-                        errors?.address?.building_number.message}
-                      {backendErrors?.address?.building_number?.map((e, i) => (
-                        <span key={i}>
-                          {e} <br />
-                        </span>
-                      ))}
-                    </small>
-                  </div>
-                </div>
                 {user?.role == 'Teacher' && (
                   <div className="items-center">
                     <div className="float-right flex w-full flex-col">
@@ -716,14 +471,20 @@ const EditMoreInfosPage = () => {
                         O sobie
                       </label>
                       <div className="mb-2 border-b-[1px] border-base-100"></div>
-                      <Editor
-                        fieldValue={getValues('description')}
-                        setValue={setValue}
-                        setValueHtml={setDescriptionHtml}
+                      <Controller
                         name="description"
-                        id="description"
-                        fieldName="description"
+                        control={control}
                         {...register('description', editProfile.description)}
+                        render={({ field }) => (
+                          <Editor
+                            fieldValue={getValues('description')}
+                            setValue={setValue}
+                            setValueHtml={setDescriptionHtml}
+                            name="description"
+                            id="description"
+                            fieldName="description"
+                          />
+                        )}
                       />
 
                       <span className="text-[11px] text-red-400">
@@ -751,14 +512,20 @@ const EditMoreInfosPage = () => {
                       </label>
                       <div className="mb-2 border-b-[1px] border-base-100"></div>
 
-                      <Editor
-                        fieldValue={getValues('experience')}
-                        setValue={setValue}
-                        setValueHtml={setExperienceHtml}
+                      <Controller
                         name="experience"
-                        id="experience"
-                        fieldName="experience"
+                        control={control}
                         {...register('experience', editProfile.experience)}
+                        render={({ field }) => (
+                          <Editor
+                            fieldValue={getValues('experience')}
+                            setValue={setValue}
+                            setValueHtml={setExperienceHtml}
+                            name="experience"
+                            id="experience"
+                            fieldName="experience"
+                          />
+                        )}
                       />
 
                       <span className="text-[11px] text-red-400">

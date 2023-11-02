@@ -91,27 +91,6 @@ const StudentProfilePage = () => {
                     : profile?.phone_number}
                 </div>
               </section>
-              {profile?.address != null && (
-                <div className="contact flex w-full flex-col justify-center">
-                  <label className="block text-center text-lg font-bold uppercase tracking-wide text-gray-700">
-                    Adres
-                  </label>
-                  <div className="flex w-full flex-row justify-center gap-x-5">
-                    <div className="data flex w-9/12 justify-center text-center">
-                      {profile?.address?.postal_code}{' '}
-                      {profile?.address?.city.name}
-                      {profile?.address?.street != null
-                        ? `, ulica ${profile?.address?.street}`
-                        : ''}{' '}
-                      {profile?.address?.building_number != null
-                        ? profile?.address?.building_number
-                        : ''}
-                      <br />
-                      {profile?.address?.voivodeship?.alternate_names}
-                    </div>
-                  </div>
-                </div>
-              )}
 
               {profile?.sex != null && (
                 <div className="sex flex w-full flex-col items-center justify-center">
