@@ -59,10 +59,10 @@ def get_all_classes(request):
     if voivodeship_id is not None:
         voivodeship = Region.objects.get(pk=voivodeship_id)
 
-        classes = classes.filter(cities_of_classes__region=voivodeship)
+        classes = classes.filter(address__voivodeship=voivodeship)
     if city_id is not None:
         city = City.objects.get(pk=city_id)
-        classes = classes.filter(cities_of_classes=city)
+        classes = classes.filter(address__city=city)
 
     if min_price is not None:
         classes = classes.filter(price_for_lesson__gte=min_price)

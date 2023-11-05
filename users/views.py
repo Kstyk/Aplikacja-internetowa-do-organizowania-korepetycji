@@ -165,24 +165,13 @@ class CityByIdView(generics.RetrieveAPIView):
     lookup_field = 'pk'
 
 
-# TODO do naprawy
 @api_view(['GET'])
 def get_top_cities(request):
-    teacher_subquery = Class.objects.filter(
-        cities_of_classes=OuterRef('id')
-    ).values('cities_of_classes').annotate(count=Count('cities_of_classes')).values('count')
+    top_cities = Class.objects.exclude(address__isnull=True).values('address__city').annotate(
+        total_classes=Count('id')).order_by('-total_classes')[:15]
 
-    top_cities = City.objects.annotate(
-        has_tutors=Exists(teacher_subquery.filter(
-            cities_of_classes=OuterRef('id')))
-    ).filter(has_tutors=True).annotate(
-        num_tutors=Subquery(
-            teacher_subquery.filter(
-                cities_of_classes=OuterRef('id')).values('count')
-        )
-    ).values('id', 'num_tutors', 'slug', 'name',
-             'search_names', 'region_id').order_by('-num_tutors')[:20]
-
+    top_cities = [{'city': CitySerializer(City.objects.filter(pk=item['address__city']).first()).data,
+                   'total_classes': item['total_classes']} for item in top_cities]
     return Response(top_cities)
 
 
