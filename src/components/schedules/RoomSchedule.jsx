@@ -9,6 +9,7 @@ import useAxios from '../../utils/useAxios'
 import CustomToolbar from './CustomToolbar'
 import { timeslots } from '../../variables/Timeslots'
 import { Link } from 'react-router-dom'
+import ReactCountryFlag from 'react-country-flag'
 
 const RoomSchedule = ({ schedule }) => {
   const [loading, setLoading] = useState(true)
@@ -78,7 +79,17 @@ const RoomSchedule = ({ schedule }) => {
         id: event.id,
         start: startDate,
         end: endDate,
-        title: 'X',
+        title: (
+          <ReactCountryFlag
+            countryCode={`${event?.classes?.language?.country_code}`}
+            svg
+            style={{
+              width: '2em',
+              height: '2em',
+            }}
+            title={`${event?.classes?.language?.name}`}
+          />
+        ),
         resource: event,
       }
 

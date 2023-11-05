@@ -33,6 +33,7 @@
     "prettier-plugin-tailwindcss": "^0.5.4",
     "react": "^18.2.0",
     "react-big-calendar": "^1.8.1",
+    "react-country-flag": "^3.1.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
     "react-icons": "^4.10.1",

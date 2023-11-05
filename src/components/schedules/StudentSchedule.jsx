@@ -10,6 +10,7 @@ import CustomToolbar from './CustomToolbar'
 import { Link } from 'react-router-dom'
 import './schedule.scss'
 import LoadingComponent from '../LoadingComponent'
+import ReactCountryFlag from 'react-country-flag'
 
 const TeacherSchedule = ({ studentId }) => {
   const [loading, setLoading] = useState(true)
@@ -103,7 +104,17 @@ const TeacherSchedule = ({ studentId }) => {
         id: event.id,
         start: startDate,
         end: endDate,
-        title: 'X',
+        title: (
+          <ReactCountryFlag
+            countryCode={`${event?.classes?.language?.country_code}`}
+            svg
+            style={{
+              width: '2em',
+              height: '2em',
+            }}
+            title={`${event?.classes?.language?.name}`}
+          />
+        ),
         resource: event,
       }
 
