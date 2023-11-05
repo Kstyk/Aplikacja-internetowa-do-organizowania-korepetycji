@@ -44,7 +44,18 @@ const RoomSchedule = ({ schedule }) => {
 
   const eventStyleGetter = useCallback(
     (event, start, end, isSelected) => ({
-      className: 'flex items-center classes-cell text-xs phone:text-sm',
+      className: `flex items-center classes-cell ${
+        event?.resource?.place_of_classes == 'online' &&
+        'bg-blue-200 hover:bg-blue-400'
+      } 
+      ${
+        event?.resource?.place_of_classes == 'teacher_home' &&
+        'bg-green-200 hover:bg-green-400'
+      } 
+      ${
+        event?.resource?.place_of_classes == 'student_home' &&
+        'bg-red-200 hover:bg-red-400'
+      }  text-xs phone:text-sm`,
     }),
     []
   )
@@ -124,13 +135,30 @@ const RoomSchedule = ({ schedule }) => {
             </h2>
             <p className="mt-1 w-full text-center">
               Zajęcia{' '}
-              {slotInfo?.resource?.place_of_classes == 'stationary'
-                ? 'stacjonarne'
-                : 'online'}
-              {slotInfo?.resource?.place_of_classes == 'stationary' &&
-                `, ${slotInfo?.resource?.city_of_classes?.name}`}
+              {slotInfo?.resource?.place_of_classes == 'teacher_home' &&
+                'U Nauczyciela'}
+              {slotInfo?.resource?.place_of_classes == 'student_home' &&
+                'U Studenta'}
+              {slotInfo?.resource?.place_of_classes == 'online' && 'Online'}
             </p>
           </div>
+          {(slotInfo?.resource?.place_of_classes == 'student_home' ||
+            slotInfo?.resource?.place_of_classes == 'teacher_home') && (
+            <div>
+              <h2 className="mx-auto w-fit border-b-2 border-b-base-400 px-3 text-center font-bold uppercase tracking-wider text-gray-700">
+                Adres zajęć zajęć
+              </h2>
+              <p className="mt-1 w-full text-center">
+                woj. {slotInfo?.resource?.address?.voivodeship?.name}
+                <br />
+                {slotInfo?.resource?.address?.postal_code}{' '}
+                {slotInfo?.resource?.address?.city?.name}
+                <br />
+                ulica {slotInfo?.resource?.address?.street}{' '}
+                {slotInfo?.resource?.address?.building_number}
+              </p>
+            </div>
+          )}
           <div>
             <h2 className="mx-auto w-fit border-b-2 border-b-base-400 px-3 text-center font-bold uppercase tracking-wider text-gray-700">
               Data zajęć
@@ -159,27 +187,29 @@ const RoomSchedule = ({ schedule }) => {
           </div>
         </form>
       </dialog>
-      <Calendar
-        localizer={localizer}
-        events={eventArray}
-        defaultView="week"
-        min={
-          new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9)
-        }
-        max={
-          new Date(today.getFullYear(), today.getMonth(), today.getDate(), 19)
-        }
-        views={{ week: true }}
-        startAccessor="start"
-        endAccessor="end"
-        tooltipAccessor="Kliknij po więcej informacji"
-        timeslots={1}
-        step={60}
-        formats={formats}
-        eventPropGetter={eventStyleGetter}
-        onSelectEvent={onSelectEvent}
-        components={{ toolbar: CustomToolbar }}
-      />
+      <div className="card mb-5 rounded-md bg-white p-4 px-2 py-5 shadow-xl">
+        <Calendar
+          localizer={localizer}
+          events={eventArray}
+          defaultView="week"
+          min={
+            new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9)
+          }
+          max={
+            new Date(today.getFullYear(), today.getMonth(), today.getDate(), 19)
+          }
+          views={{ week: true }}
+          startAccessor="start"
+          endAccessor="end"
+          tooltipAccessor="Kliknij po więcej informacji"
+          timeslots={1}
+          step={60}
+          formats={formats}
+          eventPropGetter={eventStyleGetter}
+          onSelectEvent={onSelectEvent}
+          components={{ toolbar: CustomToolbar }}
+        />
+      </div>
     </div>
   )
 }

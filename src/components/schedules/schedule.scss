@@ -28,6 +28,8 @@
   display: none;
 }
 
+
+
 .rbc-events-container {
   margin-right: 0 !important;
 }
@@ -83,6 +85,10 @@
   }
 }
 
+.rbc-day-slot .rbc-event {
+  border:none;
+}
+
 .freeTimeSlot:hover {
   background-color: rgb(208, 242, 248);
   
@@ -131,17 +137,9 @@
     align-items: center;
     overflow: hidden;
     border-radius: 0;
-    border-width: 1px !important;
-    border-color: rgb(211, 211, 211) !important;
-    background-color: rgb(142, 221, 162);
     color:black;
     text-align: center;
     // padding-top: 0;
-
-  
-    &:hover {
-      background-color: rgb(168, 200, 221);
-    }
 
     .rbc-event-content {
         display: flex;
