@@ -140,14 +140,14 @@ const HomePage = () => {
               {cities.length > 0
                 ? cities.map((city) => (
                     <Link
-                      to={`/szukaj-zajec/miasto/${city.slug}?id=${city.id}`}
-                      params={{ citySlug: city.slug }}
-                      key={city.id}
+                      to={`/szukaj-zajec/miasto/${city?.city?.slug}?id=${city?.city?.id}`}
+                      params={{ citySlug: city?.city?.slug }}
+                      key={city?.city?.id}
                       className="no-animation btn flex w-1/3 justify-between rounded-none border-x-0 border-b-0 border-t-[1px] border-base-200 bg-transparent font-normal text-black hover:border-b-[1px] hover:border-t-0 hover:bg-opacity-30 max-md:w-1/2"
                     >
-                      <div>{city.name}</div>
+                      <div>{city?.city?.name}</div>
                       <div className="text-sm text-gray-400">
-                        ({city.num_tutors})
+                        ({city?.total_classes})
                       </div>
                     </Link>
                   ))
