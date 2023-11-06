@@ -13,6 +13,7 @@ from django.db.models import Avg
 class Language(models.Model):
     name = models.CharField(null=False, blank=False, max_length=255)
     slug = AutoSlugField(populate_from='name', null=True)
+    country_code = models.CharField(null=True, blank=True, max_length=3)
 
     def __str__(self):
         return self.name
