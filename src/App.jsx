@@ -63,7 +63,7 @@ function App() {
                 }
               />
               <Route
-                path="/register"
+                path="/rejestracja"
                 element={
                   <AnonymousRoute>
                     <RegistrationPage />{' '}
@@ -260,7 +260,7 @@ function App() {
                 }
               />
               <Route
-                path="/my-rooms"
+                path="/moje-pokoje"
                 element={
                   <PrivateRoute>
                     <StartedRoomsPage />

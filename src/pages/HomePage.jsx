@@ -82,7 +82,7 @@ const HomePage = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               <Link
-                to={`/search-classes/text/${searchQuery}`}
+                to={`/szukaj-zajec/tekst/${searchQuery}`}
                 params={{ searchText: searchQuery }}
                 type="submit"
                 className="btn-square btn !rounded-none border-none bg-base-300"

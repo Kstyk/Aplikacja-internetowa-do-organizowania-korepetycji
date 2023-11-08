@@ -61,7 +61,7 @@ const Navbar = () => {
                 <div className="h-full border-2 border-black"></div>
               </li>
               <li className="custom-border h-fit text-center">
-                <Link to="/my-rooms">Twoje pokoje</Link>
+                <Link to="/moje-pokoje">Twoje pokoje</Link>
               </li>
               <li>
                 <div className="h-full border-2 border-black"></div>
@@ -186,7 +186,7 @@ const Navbar = () => {
           {user?.role == 'Teacher' && (
             <ul className="flex flex-row items-center gap-2 px-1">
               <li className="custom-border h-fit text-center">
-                <Link to="/my-rooms">Twoje pokoje</Link>
+                <Link to="/moje-pokoje">Twoje pokoje</Link>
               </li>
               <li>
                 <div className="h-full border-2 border-black"></div>
@@ -315,7 +315,7 @@ const Navbar = () => {
                 <div className="h-full border-2 border-black"></div>
               </li>
               <li className="custom-border h-fit text-center">
-                <Link to="/register">Zarejestruj</Link>
+                <Link to="/rejestracja">Zarejestruj</Link>
               </li>
             </ul>
           )}
@@ -381,7 +381,7 @@ const Navbar = () => {
                   className="mb-2 flex h-8 w-full items-center pl-5 text-sm uppercase"
                 >
                   {' '}
-                  <Link to="/register">Zarejestruj</Link>
+                  <Link to="/rejestracja">Zarejestruj</Link>
                 </li>
               </>
             )}
@@ -419,7 +419,7 @@ const Navbar = () => {
 
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <Link
-                    to="/my-rooms"
+                    to="/moje-pokoje"
                     className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                   >
                     Twoje pokoje
@@ -533,7 +533,7 @@ const Navbar = () => {
                 </li>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <Link
-                    to="/my-rooms"
+                    to="/moje-pokoje"
                     className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                   >
                     Twoje pokoje

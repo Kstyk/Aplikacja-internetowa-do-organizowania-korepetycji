@@ -23,7 +23,7 @@ const LoginPage = () => {
           <img src={transparent_logo} alt="logo" />
           <p className="mt-5 text-center text-lg">
             Nie masz konta?{' '}
-            <Link to="/register" className="hover:underline">
+            <Link to="/rejestracja" className="hover:underline">
               Zarejestruj się już teraz!
             </Link>
           </p>
