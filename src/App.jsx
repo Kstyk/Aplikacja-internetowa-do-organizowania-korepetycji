@@ -290,6 +290,10 @@ function App() {
                 path="/szukaj-zajec/tekst/:searchText"
                 element={<SearchClassesPage />}
               />
+              <Route
+                path="/szukaj-zajec/miejsce-zajec/:onlineSlug"
+                element={<SearchClassesPage />}
+              />
               <Route path="/zajecia/:classesId" element={<ClassesPage />} />
 
               <Route path="/nauczyciel/:teacherId" element={<TeacherPage />} />

@@ -12,7 +12,7 @@ import showAlertError from '../components/messages/SwalAlertError'
 const SearchClassesPage = () => {
   document.title = 'Szukaj zajęć'
 
-  const { languageSlug, citySlug, searchText } = useParams()
+  const { languageSlug, citySlug, searchText, onlineSlug } = useParams()
   const location = useLocation()
   const params = new URLSearchParams(location.search)
   const cityId = params.get('id')
@@ -112,6 +112,10 @@ const SearchClassesPage = () => {
 
     if (citySlug != null) {
       baseurl += `&city=${cityId}`
+    }
+
+    if (onlineSlug != null) {
+      baseurl += `&able_online=true`
     }
 
     await api

@@ -137,8 +137,19 @@ const HomePage = () => {
             </div>
           ) : (
             <ul className="flex list-none flex-row flex-wrap justify-center">
-              {cities.length > 0
-                ? cities.map((city) => (
+              <Link
+                to={`/szukaj-zajec/miejsce-zajec/online`}
+                params={{ onlineSlug: true }}
+                key="online"
+                className="no-animation btn flex w-1/3 justify-between rounded-none border-x-0 border-b-0 border-t-[1px] border-base-200 bg-transparent font-normal text-black hover:border-b-[1px] hover:border-t-0 hover:bg-opacity-30 max-md:w-1/2"
+              >
+                <div>Online</div>
+                <div className="text-sm text-gray-400">
+                  ({cities?.online_count})
+                </div>
+              </Link>
+              {cities?.cities?.length > 0
+                ? cities?.cities?.map((city) => (
                     <Link
                       to={`/szukaj-zajec/miasto/${city?.city?.slug}?id=${city?.city?.id}`}
                       params={{ citySlug: city?.city?.slug }}
