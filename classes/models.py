@@ -13,7 +13,7 @@ from django.db.models import Avg
 class Language(models.Model):
     name = models.CharField(null=False, blank=False, max_length=255)
     slug = AutoSlugField(populate_from='name', null=True)
-    country_code = models.CharField(null=True, blank=True, max_length=3)
+    country_code = models.CharField(max_length=3, default='')
 
     def __str__(self):
         return self.name
@@ -62,9 +62,8 @@ class PurchaseHistory(models.Model):
     room = models.ForeignKey(
         Room, on_delete=models.SET_NULL, null=True, blank=True
     )
-    start_date = models.DateTimeField(blank=True, null=True)
-    paid_price = models.DecimalField(
-        blank=True, null=True, max_digits=6, decimal_places=2)
+    start_date = models.DateTimeField(null=True, blank=True)
+    paid_price = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     amount_of_lessons = models.PositiveIntegerField(null=False, blank=False)
     purchase_date = models.DateTimeField(auto_now_add=True)
 
