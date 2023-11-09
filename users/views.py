@@ -170,9 +170,18 @@ def get_top_cities(request):
     top_cities = Class.objects.exclude(address__isnull=True).values('address__city').annotate(
         total_classes=Count('id')).order_by('-total_classes')[:15]
 
+    online_count = Class.objects.filter(
+        place_of_classes__contains='online').count()
+
     top_cities = [{'city': CitySerializer(City.objects.filter(pk=item['address__city']).first()).data,
                    'total_classes': item['total_classes']} for item in top_cities]
-    return Response(top_cities)
+
+    data = {
+        'cities': top_cities,
+        'online_count': online_count
+    }
+
+    return Response(data)
 
 
 @api_view(['GET'])
