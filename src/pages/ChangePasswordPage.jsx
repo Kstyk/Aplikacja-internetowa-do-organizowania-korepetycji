@@ -131,7 +131,7 @@ const ChangePasswordPage = () => {
                     )}
                   />
                   <BiShow
-                    className="absolute right-1 top-[20%] h-6 w-6 text-slate-300"
+                    className="absolute right-1 top-[20%] h-6 w-6 cursor-pointer text-slate-300"
                     onClick={() => changeVisibility('old_password')}
                   />
                 </div>
@@ -160,7 +160,7 @@ const ChangePasswordPage = () => {
                     )}
                   />
                   <BiShow
-                    className="absolute right-1 top-[20%] h-6 w-6 text-slate-300"
+                    className="absolute right-1 top-[20%] h-6 w-6 cursor-pointer text-slate-300"
                     onClick={() => changeVisibility('new_password')}
                   />
                 </div>
@@ -188,7 +188,7 @@ const ChangePasswordPage = () => {
                     )}
                   />
                   <BiShow
-                    className="absolute right-1 top-[20%] h-6 w-6 text-slate-300"
+                    className="absolute right-1 top-[20%] h-6 w-6 cursor-pointer text-slate-300"
                     onClick={() => changeVisibility('confirm_new_password')}
                   />
                 </div>

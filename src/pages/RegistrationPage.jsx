@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import useAxios from '../utils/useAxios'
 import { backendUrl } from '../variables/backendUrl'
 import showSuccessAlert from '../components/messages/SwalAlertSuccess'
+import { BiShow } from 'react-icons/bi'
 
 const RegistrationPage = () => {
   document.title = 'Rejestracja'
@@ -96,6 +97,26 @@ const RegistrationPage = () => {
       .catch((err) => {})
   }
 
+  const changeVisibility = (input) => {
+    if (input == 'password') {
+      let inp = document.getElementById('password')
+      if (inp.type === 'password') {
+        inp.type = 'text'
+      } else {
+        inp.type = 'password'
+      }
+    }
+
+    if (input == 'confirm_password') {
+      let inp = document.getElementById('confirm_password')
+      if (inp.type === 'password') {
+        inp.type = 'text'
+      } else {
+        inp.type = 'password'
+      }
+    }
+  }
+
   return (
     <div>
       <div className="absolute left-0 right-0 top-[70px] h-[200px] bg-base-300 max-phone:hidden "></div>
@@ -141,14 +162,20 @@ const RegistrationPage = () => {
           </div>
           <div className="items-center">
             <div className="float-right flex w-full flex-col">
-              <input
-                type="password"
-                className="relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
-                name="password"
-                placeholder="Podaj hasło..."
-                id="password"
-                {...register('password', registerOptions.password)}
-              />
+              <div className="relative w-full">
+                <input
+                  type="password"
+                  className="relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
+                  name="password"
+                  placeholder="Podaj hasło..."
+                  id="password"
+                  {...register('password', registerOptions.password)}
+                />
+                <BiShow
+                  className="absolute right-1 top-[20%] h-6 w-6 text-slate-300 hover:cursor-pointer"
+                  onClick={() => changeVisibility('password')}
+                />
+              </div>
               <small className="text-right text-red-400">
                 {errors?.password && errors.password.message}
                 {backendErrors?.password?.map((e, i) => (
@@ -161,16 +188,22 @@ const RegistrationPage = () => {
           </div>
           <div className="items-center">
             <div className="float-right flex w-full flex-col">
-              <input
-                type="password"
-                className="relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
-                id="confirm_password"
-                placeholder="Powtórz hasło..."
-                {...register(
-                  'confirm_password',
-                  registerOptions.confirm_password
-                )}
-              />
+              <div className="relative w-full">
+                <input
+                  type="password"
+                  className="relative h-10 w-full rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
+                  id="confirm_password"
+                  placeholder="Powtórz hasło..."
+                  {...register(
+                    'confirm_password',
+                    registerOptions.confirm_password
+                  )}
+                />
+                <BiShow
+                  className="absolute right-1 top-[20%] h-6 w-6 text-slate-300 hover:cursor-pointer"
+                  onClick={() => changeVisibility('confirm_password')}
+                />
+              </div>
               <small className="text-right text-red-400">
                 {errors?.confirm_password && errors.confirm_password.message}
               </small>

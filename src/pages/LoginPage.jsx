@@ -3,12 +3,24 @@ import AuthContext from '../context/AuthContext'
 import ErrorMessage from '../components/messages/ErrorMessage'
 import transparent_logo from '../assets/transparent_logo.png'
 import { Link } from 'react-router-dom'
+import { BiShow } from 'react-icons/bi'
 
 const LoginPage = () => {
   document.title = 'Logowanie'
 
   let { loginUser, error, setError, waitingForResponse } =
     useContext(AuthContext)
+
+  const changeVisibility = (input) => {
+    if (input == 'password') {
+      let inp = document.getElementById('password')
+      if (inp.type === 'password') {
+        inp.type = 'text'
+      } else {
+        inp.type = 'password'
+      }
+    }
+  }
 
   return (
     <div>
@@ -44,13 +56,22 @@ const LoginPage = () => {
             />
           </div>
           <div className="mb-4 items-center">
-            <input
-              type="password"
-              className="relative h-10 w-full border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
-              name="password"
-              placeholder="Wprowadź hasło"
-              required
-            />
+            <div className="float-right flex w-full flex-col">
+              <div className="relative w-full">
+                <input
+                  type="password"
+                  id="password"
+                  className="relative h-10 w-full border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
+                  name="password"
+                  placeholder="Wprowadź hasło"
+                  required
+                />
+                <BiShow
+                  className="absolute right-1 top-[20%] h-6 w-6 text-slate-300 hover:cursor-pointer"
+                  onClick={() => changeVisibility('password')}
+                />
+              </div>
+            </div>
           </div>
           <div className="border-b-[1px] border-base-200"></div>
           <button
