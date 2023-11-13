@@ -5,7 +5,7 @@ export default {
     extend: {
       colors: {
         accent: '#254B48',
-        'base-400': '#254B48',
+        'base-400': '#4D4D4D',
       },
       screens: {
         phone: '450px',
@@ -30,6 +30,8 @@ export default {
 
   daisyui: {
     themes: [
+      'corporate',
+
       {
         mytheme: {
           primary: '#91D8E4',

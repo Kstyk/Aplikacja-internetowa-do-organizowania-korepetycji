@@ -169,9 +169,12 @@ const HomePage = () => {
             <h1 className="mb-2 text-center text-3xl">
               Załóż darmowe konto już dziś!
             </h1>
-            <button className="h-15 btn-outline no-animation btn mx-auto mt-2 !min-h-0 w-3/12 rounded-sm border-base-400 py-0 hover:bg-base-400 max-md:w-5/12 max-phone:mx-auto max-phone:w-10/12">
+            <Link
+              to="/rejestracja"
+              className="h-15 btn-outline no-animation btn mx-auto mt-2 !min-h-0 w-3/12 rounded-sm border-base-400 py-0 hover:bg-base-400 max-md:w-5/12 max-phone:mx-auto max-phone:w-10/12"
+            >
               Zarejestruj się
-            </button>
+            </Link>
           </div>
         </div>
       </>

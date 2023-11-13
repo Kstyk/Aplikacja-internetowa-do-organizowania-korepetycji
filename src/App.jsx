@@ -45,7 +45,7 @@ import BuyClassesPageAfterAsk from './pages/BuyClassesPageAfterAsk'
 function App() {
   return (
     <div
-      data-theme="mytheme"
+      data-theme="corporate"
       className="mx-auto flex w-full flex-col sm:w-11/12 md:w-10/12 lg:w-8/12"
     >
       <AuthProvider>
