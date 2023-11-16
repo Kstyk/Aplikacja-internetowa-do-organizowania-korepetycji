@@ -1,3 +1,4 @@
+from django.db.models import Max
 from django.http import Http404
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -8,7 +9,7 @@ from .models import Role, User, UserDetails, PasswordResetRequest, PrivateMessag
 from .serializers import *
 from django.contrib.auth import get_user_model
 from cities_light.models import City, Region
-from django.db.models import Count,  OuterRef, Exists, Subquery
+from django.db.models import Count
 from rest_framework.decorators import api_view
 from classes.models import Class
 from django.contrib.auth.hashers import check_password
@@ -19,7 +20,7 @@ from django.utils import timezone
 import uuid
 from django.conf import settings
 from django.core.exceptions import ValidationError as ValidationResetPasswordError
-from django.db.models import Q
+from django.db.models import Q, Case, When, Value, IntegerField
 from rest_framework.mixins import ListModelMixin
 from rest_framework.viewsets import GenericViewSet
 from .paginators import PrivateMessagePagination
@@ -298,18 +299,34 @@ class PrivateConversationsListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        messages = PrivateMessage.objects.filter(
+        latest_messages = PrivateMessage.objects.filter(
             Q(from_user=user) | Q(to_user=user)
+        ).values('from_user', 'to_user').annotate(latest_message=Max('timestamp'))
+
+        users_last_message = {}
+
+        for message in latest_messages:
+            from_user_id = message['from_user']
+            to_user_id = message['to_user']
+            latest_message_time = message['latest_message']
+
+            if from_user_id != user.id and from_user_id not in users_last_message:
+                users_last_message[from_user_id] = latest_message_time
+
+            if to_user_id != user.id and to_user_id not in users_last_message:
+                users_last_message[to_user_id] = latest_message_time
+
+        # Posortuj słownik względem czasu ostatniej wiadomości
+        sorted_users = sorted(users_last_message.keys(
+        ), key=lambda x: users_last_message[x], reverse=True)
+        conditions = [When(id=user_id, then=pos)
+                      for pos, user_id in enumerate(sorted_users, start=1)]
+        # Zwróć posortowaną listę użytkowników
+        queryset = User.objects.filter(id__in=sorted_users).order_by(
+            Case(*conditions, default=Value(0), output_field=IntegerField())
         )
 
-        users = set()
-        for message in messages:
-            if message.from_user != user:
-                users.add(message.from_user)
-            if message.to_user != user:
-                users.add(message.to_user)
-
-        return users
+        return queryset
 
     def get_serializer(self, *args, **kwargs):
         kwargs['context'] = {'request': self.request}
