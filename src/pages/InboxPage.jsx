@@ -36,14 +36,30 @@ const InboxPage = () => {
   useEffect(() => {
     if (fromUserPrivateMessages != null) {
       fetchUnreadPrivateMessagesUpdate()
+      fetchConversationUsersWithoutLoading()
     }
   }, [countUnreadPrivateMessages])
 
   useEffect(() => {
     fetchUnreadPrivateMessagesUpdate()
+    fetchConversationUsersWithoutLoading()
   }, [toggleUpdateUnread])
 
   const fetchUnreadPrivateMessagesUpdate = async () => {
+    await api
+      .get(`/api/users/private-conversations/`)
+      .then((res) => {
+        setConversationsUsers(res.data)
+      })
+      .catch((err) => {
+        showAlertError(
+          'Błąd',
+          'Występił błąd przy pobieraniu rozpoczętych konwersacji.'
+        )
+      })
+  }
+
+  const fetchConversationUsersWithoutLoading = async () => {
     await api
       .get(`/api/users/private-conversations/`)
       .then((res) => {
@@ -159,11 +175,6 @@ const InboxPage = () => {
       .then((res) => {
         setPage(1)
         setMessage('')
-        sendNotification({
-          type: 'update_unread_private_messages_count',
-          token: user.token,
-          userId: selectedUser?.id,
-        })
       })
       .catch((err) => {
         if (err.response.status == 400) {
@@ -196,6 +207,11 @@ const InboxPage = () => {
         }
       })
     fetchMessages(1)
+    sendNotification({
+      type: 'update_unread_private_messages_count',
+      token: user.token,
+      userId: selectedUser?.id,
+    })
   }
 
   return (
