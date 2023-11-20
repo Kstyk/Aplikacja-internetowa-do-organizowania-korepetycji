@@ -553,7 +553,7 @@ const SearchClassesPage = () => {
         <div className="card mx-auto mb-10 mt-10 h-full gap-y-3 rounded-md bg-base-100 px-5 py-5 shadow-xl">
           {loading ? (
             <div className="bg-transparent">
-              <LoadingComponent />
+              <LoadingComponent message="Wyszukiwanie zajęć..." />
             </div>
           ) : (
             <>

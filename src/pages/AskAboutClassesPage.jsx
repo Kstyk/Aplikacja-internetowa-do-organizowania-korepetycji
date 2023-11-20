@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import LoadingComponent from '../components/LoadingComponent'
 import { useForm, Controller } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import showAlertError from '../components/messages/SwalAlertError'
 import showSuccessAlert from '../components/messages/SwalAlertSuccess'
 import useAxios from '../utils/useAxios'
@@ -11,6 +11,7 @@ const AskAboutClassesPage = () => {
   document.title = 'Zapytaj o dostępność zajęć'
   const api = useAxios()
   const { classesId } = useParams()
+  const nav = useNavigate()
 
   const [loading, setLoading] = useState(false)
   const [classes, setClasses] = useState()
@@ -132,6 +133,7 @@ const AskAboutClassesPage = () => {
   }
 
   const onSubmit = (data) => {
+    setWaitingForResponse(true)
     data.classes = classes?.id
     if (data?.address?.voivodeship != null) {
       data.address.voivodeship = data.address.voivodeship.id
@@ -144,14 +146,16 @@ const AskAboutClassesPage = () => {
     api
       .post(`/api/classes/ask-about/`, data)
       .then((res) => {
+        setWaitingForResponse(false)
         showSuccessAlert(
           'Wysłano zapytanie',
-          'Wysłano zapytania do nauczyciela o miejsce zajęć. Zostaniesz poinformowany mailowo, gdy już nauczyciel podejmie decyzję.'
+          'Wysłano zapytania do nauczyciela o miejsce zajęć. Zostaniesz poinformowany mailowo, gdy już nauczyciel podejmie decyzję.',
+          () => nav('/wyslane-zapytania')
         )
       })
       .catch((err) => {
+        setWaitingForResponse(false)
         setBackendErrors(JSON.parse(err.request.response))
-        console.log(err)
       })
   }
 

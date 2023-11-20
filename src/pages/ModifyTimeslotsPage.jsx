@@ -12,15 +12,19 @@ const ModifyTimeslotsPage = () => {
 
   const [timeSlotsTeacher, setTimeSlotsTeacher] = useState([])
   const [loading, setLoading] = useState(true)
+  const [waitingForResponse, setWaitingForResponse] = useState(false)
   const api = useAxios()
 
   const editSchedule = () => {
+    setWaitingForResponse(true)
     api
       .post(`/api/classes/timeslots/create/`, timeSlotsTeacher)
       .then((res) => {
+        setWaitingForResponse(false)
         showSuccessAlert('Sukces', 'Pomyślnie zedytowałeś swój harmonogram.')
       })
       .catch((err) => {
+        setWaitingForResponse(false)
         showAlertError('Błąd', 'Wystąpił błąd edycji harmonogramu.')
       })
   }
@@ -78,7 +82,11 @@ const ModifyTimeslotsPage = () => {
                 onClick={() => editSchedule()}
                 className="btn-outline no-animation btn mb-2 mt-2 h-10 !min-h-0 w-full rounded-sm border-base-400 py-0 hover:bg-base-400 md:w-6/12 lg:w-3/12"
               >
-                Edytuj harmonogram
+                {waitingForResponse ? (
+                  <span className="loading loading-spinner "></span>
+                ) : (
+                  'Edytuj harmonogram'
+                )}
               </button>
             </div>
             <div className="my-4 border-b-[1px] border-base-100"></div>

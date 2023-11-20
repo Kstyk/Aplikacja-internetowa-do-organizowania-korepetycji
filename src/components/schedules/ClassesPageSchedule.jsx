@@ -6,10 +6,10 @@ import './schedule.scss'
 import { useState } from 'react'
 import useAxios from '../../utils/useAxios'
 import { timeslots } from '../../variables/Timeslots'
-import CustomToolbar from './CustomToolbar'
 import Swal from 'sweetalert2'
 import LoadingComponent from '../LoadingComponent'
 import showAlertError from '../../components/messages/SwalAlertError'
+import CustomToolbarNoLegend from './CustomToolbarNoLegend'
 
 const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
   const [loading, setLoading] = useState(true)
@@ -317,7 +317,7 @@ const ClassesPageSchedule = ({ classes, selected, setSelected }) => {
           onNavigate={onNavigate}
           components={{
             toolbar: (props) => (
-              <CustomToolbar
+              <CustomToolbarNoLegend
                 {...props}
                 isMaxDateReached={maxDateReached}
                 isMinDateReached={minDateReached}
