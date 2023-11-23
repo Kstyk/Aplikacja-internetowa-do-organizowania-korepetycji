@@ -59,7 +59,6 @@ class UserRegistrationView(APIView):
         if user_serializer.is_valid():
             user = user_serializer.save()
 
-            # Tworzenie obiektu UserDetails
             user_details_data = {
                 'user': user.id
             }
@@ -68,7 +67,7 @@ class UserRegistrationView(APIView):
             if user_details_serializer.is_valid():
                 user_details_serializer.save()
             else:
-                user.delete()  # Jeśli UserDetails się nie powiedzie, usuń użytkownika
+                user.delete()
                 return Response(user_details_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             return Response(user_serializer.data, status=status.HTTP_201_CREATED)

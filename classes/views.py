@@ -33,7 +33,6 @@ def get_languages(request):
 def get_all_classes(request):
     # filtrowanie
     search_text = request.GET.get('search_text')
-    difficulty_level = request.GET.get('difficulty_level')
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
     language = request.GET.get('language')
@@ -43,17 +42,11 @@ def get_all_classes(request):
     able_online = request.GET.get('able_online')
     classes = Class.objects.filter(able_to_buy=True)
 
-    # sortowanie
-    sort_by = request.GET.get('sort_by', 'name')  # Column name for sorting
-    sort_direction = request.GET.get('sort_direction', 'DESC')
-
     if teacher_id is not None:
         classes = classes.filter(teacher__id=teacher_id)
     if search_text is not None:
         classes = classes.filter(Q(name__icontains=search_text) | Q(
             description__icontains=search_text))
-    if difficulty_level is not None:
-        classes = classes.filter(difficulty_level=difficulty_level)
     if language is not None:
         classes = classes.filter(language__slug=language)
     if voivodeship_id is not None:
@@ -73,6 +66,10 @@ def get_all_classes(request):
             classes = classes.filter(place_of_classes__contains='online')
         else:
             pass
+
+    # sortowanie
+    sort_by = request.GET.get('sort_by', 'name')
+    sort_direction = request.GET.get('sort_direction', 'DESC')
 
     if sort_direction is not None:
         if sort_direction == 'DESC':
@@ -172,7 +169,7 @@ class TeacherClassesView(generics.ListAPIView):
 
 class TimeSlotsCreateView(generics.ListCreateAPIView):
     serializer_class = CreateTimeSlotsSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsTeacher]
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -263,7 +260,7 @@ def purchase_classes(request):
 
             for slot in selected_slots:
                 exists_classes = Schedule.objects.filter(
-                    date=slot).filter(student=student)
+                    date=slot).filter(Q(student=student))
 
                 if exists_classes.exists():
                     raise ValidationError(

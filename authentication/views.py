@@ -22,7 +22,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        # Add custom claims
         token['email'] = user.email
         token['role'] = user.role.name
 
@@ -30,7 +29,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             token['image'] = user.userdetails.profile_image.url
         except ObjectDoesNotExist:
             token['image'] = None
-            print("Nie ma ten użytkownik userdetails.")
         finally:
             return token
 
