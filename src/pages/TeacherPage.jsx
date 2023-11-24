@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import useAxios from '../utils/useAxios'
 import { useParams, useNavigate } from 'react-router-dom'
-import LoadingComponent from '../components/LoadingComponent'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 import guest from '../assets/guest.png'
-import { AiOutlinePhone, AiOutlineMail, AiOutlineHome } from 'react-icons/ai'
+import { AiOutlinePhone, AiOutlineMail } from 'react-icons/ai'
 import { MdOutlineLocationOn } from 'react-icons/md'
 import parse from 'html-react-parser'
 import { Link } from 'react-router-dom'
 import OpinionCard from '../components/ClassesComponents/OpinionCard'
-import showAlertError from '../components/messages/SwalAlertError'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
 import SendPrivateMessage from '../components/PrivateMessagesComponents/SendPrivateMessage'
 
 const TeacherPage = () => {

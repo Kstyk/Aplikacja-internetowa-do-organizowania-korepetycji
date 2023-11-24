@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
-import ErrorMessage from '../components/messages/ErrorMessage'
+import ErrorMessage from '../components/AlertsComponents/ErrorMessage'
 import transparent_logo from '../assets/transparent_logo.png'
 import { Link } from 'react-router-dom'
 import { BiShow } from 'react-icons/bi'

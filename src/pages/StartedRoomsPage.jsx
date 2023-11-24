@@ -2,11 +2,11 @@ import React, { useEffect, useState, useContext } from 'react'
 import useAxios from '../utils/useAxios'
 import AuthContext from '../context/AuthContext'
 import { Link } from 'react-router-dom'
-import LoadingComponent from '../components/LoadingComponent'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 import RoomCard from '../components/RoomComponents/RoomCard'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import ArchivizedRoomCard from '../components/RoomComponents/ArchivizedRoomCard'
-import showAlertError from '../components/messages/SwalAlertError'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
 import { NotificationContext } from '../context/NotificationContext'
 
 const StartedRoomsPage = () => {

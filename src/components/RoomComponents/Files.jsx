@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import useAxios from '../../utils/useAxios'
-import LoadingComponent from '../LoadingComponent'
+import LoadingComponent from '../GeneralComponents/LoadingComponent'
 import { ToastContainer, toast } from 'react-toastify'
 import FileTable from './FileTable'
-import showAlertError from '../messages/SwalAlertError'
+import showAlertError from '../AlertsComponents/SwalAlertError'
 
 import './input.scss'
 

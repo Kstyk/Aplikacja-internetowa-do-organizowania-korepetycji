@@ -6,9 +6,9 @@ import Select from 'react-select'
 import useAxios from '../utils/useAxios'
 import Editor from '../components/TextEditor/Editor'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
-import showSuccessAlert from '../components/messages/SwalAlertSuccess'
-import showAlertError from '../components/messages/SwalAlertError'
-import LoadingComponent from '../components/LoadingComponent'
+import showSuccessAlert from '../components/AlertsComponents/SwalAlertSuccess'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 
 const EditClassesPage = () => {
   document.title = 'Edytuj zajęcia'

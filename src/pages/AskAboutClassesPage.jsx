@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import LoadingComponent from '../components/LoadingComponent'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 import { useForm, Controller } from 'react-hook-form'
 import { useParams, useNavigate } from 'react-router-dom'
-import showAlertError from '../components/messages/SwalAlertError'
-import showSuccessAlert from '../components/messages/SwalAlertSuccess'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
+import showSuccessAlert from '../components/AlertsComponents/SwalAlertSuccess'
 import useAxios from '../utils/useAxios'
 import Select from 'react-select'
 

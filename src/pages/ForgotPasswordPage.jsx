@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import useAxios from '../utils/useAxios'
 import transparent_logo from '../assets/transparent_logo.png'
-import showAlertError from '../components/messages/SwalAlertError'
-import LoadingComponent from '../components/LoadingComponent'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 
 const ForgotPasswordPage = () => {
   document.title = 'Resetowanie hasła'

@@ -2,8 +2,8 @@ import React, { useContext, useState, useEffect } from 'react'
 import useAxios from '../utils/useAxios'
 import AuthContext from '../context/AuthContext'
 import guest from '../assets/guest.png'
-import LoadingComponent from '../components/LoadingComponent'
-import showAlertError from '../components/messages/SwalAlertError'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
 
 import {
   AiOutlinePhone,

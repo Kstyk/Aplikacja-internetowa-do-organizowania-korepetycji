@@ -1,10 +1,9 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import useAxios from '../utils/useAxios'
 import { useState } from 'react'
-import LoadingComponent from '../components/LoadingComponent'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 import books from '../assets/books.jpg'
-import showAlertError from '../components/messages/SwalAlertError'
 
 const HomePage = () => {
   document.title = 'korki.PL - strona główna'

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import useAxios from '../../utils/useAxios'
-import showAlertError from '../messages/SwalAlertError'
-import showSuccessAlert from '../messages/SwalAlertSuccess'
+import showAlertError from '../AlertsComponents/SwalAlertError'
+import showSuccessAlert from '../AlertsComponents/SwalAlertSuccess'
 import Modal from 'react-modal'
 import { AiOutlineClose } from 'react-icons/ai'
 

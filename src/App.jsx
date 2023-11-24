@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
-import Navbar from './components/Navbar'
+import Navbar from './components/GeneralComponents/Navbar'
 import PrivateRoute from './components/AccessComponents/PrivateRoute'
 import TeacherAllowed from './components/AccessComponents/TeacherAllowed'
 import StudentAllowed from './components/AccessComponents/StudentAllowed'
@@ -41,7 +41,7 @@ import AskAboutClassesPage from './pages/AskAboutClassesPage'
 import SendedQuestionsAboutClassesPage from './pages/SendedQuestionsAboutClassesPage'
 import ReceivedQuestionsAboutClassesPage from './pages/ReceivedQuestionsAboutClassesPage'
 import BuyClassesPageAfterAsk from './pages/BuyClassesPageAfterAsk'
-import Footer from './components/Footer'
+import Footer from './components/GeneralComponents/Footer'
 import { useLocation } from 'react-router-dom'
 
 function App() {

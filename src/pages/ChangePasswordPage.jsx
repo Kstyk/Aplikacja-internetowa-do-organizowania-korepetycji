@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import useAxios from '../utils/useAxios'
 import { useNavigate } from 'react-router-dom'
-import showSuccessAlert from '../components/messages/SwalAlertSuccess'
+import showSuccessAlert from '../components/AlertsComponents/SwalAlertSuccess'
 import { BiShow } from 'react-icons/bi'
 
 const ChangePasswordPage = () => {

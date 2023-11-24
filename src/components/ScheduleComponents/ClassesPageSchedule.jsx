@@ -7,8 +7,8 @@ import { useState } from 'react'
 import useAxios from '../../utils/useAxios'
 import { timeslots } from '../../variables/Timeslots'
 import Swal from 'sweetalert2'
-import LoadingComponent from '../LoadingComponent'
-import showAlertError from '../../components/messages/SwalAlertError'
+import LoadingComponent from '../GeneralComponents/LoadingComponent'
+import showAlertError from '../../components/AlertsComponents/SwalAlertError'
 import CustomToolbarNoLegend from './CustomToolbarNoLegend'
 
 const ClassesPageSchedule = ({ classes, selected, setSelected }) => {

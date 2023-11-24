@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import useAxios from '../utils/useAxios'
-import LoadingComponent from '../components/LoadingComponent'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 import { useForm } from 'react-hook-form'
 import guest from '../assets/guest.png'
-import showSuccessAlert from '../components/messages/SwalAlertSuccess'
+import showSuccessAlert from '../components/AlertsComponents/SwalAlertSuccess'
 import { useNavigate } from 'react-router-dom'
 
 const ChangeAvatarPage = () => {

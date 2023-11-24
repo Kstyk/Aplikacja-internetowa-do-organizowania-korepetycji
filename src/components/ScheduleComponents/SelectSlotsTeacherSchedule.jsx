@@ -9,8 +9,7 @@ import useAxios from '../../utils/useAxios'
 import { timeslots } from '../../variables/Timeslots'
 import CustomToolbarNoButtons from './CustomToolbarNoButtons'
 import AuthContext from '../../context/AuthContext'
-import showAlertError from '../messages/SwalAlertError'
-import LoadingComponent from '../LoadingComponent'
+import showAlertError from '../AlertsComponents/SwalAlertError'
 
 const SelectSlotsTeacherSchedule = ({
   timeSlotsTeacher,

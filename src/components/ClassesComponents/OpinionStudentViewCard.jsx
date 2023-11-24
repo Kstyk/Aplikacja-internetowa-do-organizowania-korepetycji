@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import UpdateRateTeacher from './UpdateRateTeacher'
 import Swal from 'sweetalert2'
-import showAlertError from '../messages/SwalAlertError'
-import showSuccessAlert from '../messages/SwalAlertSuccess'
+import showAlertError from '../AlertsComponents/SwalAlertError'
+import showSuccessAlert from '../AlertsComponents/SwalAlertSuccess'
 import useAxios from '../../utils/useAxios'
 
 const OpinionStudentViewCard = ({ opinion, fetchOpinions }) => {

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import LoadingComponent from '../components/LoadingComponent'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 import useAxios from '../utils/useAxios'
-import showAlertError from '../components/messages/SwalAlertError'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
 import ReceivedQuestionCard from '../components/ClassesQuestionsComponents/ReceivedQuestionCard'
-import Pagination from '../components/Pagination'
+import Pagination from '../components/GeneralComponents/Pagination'
 
 const ReceivedQuestionsAboutClassesPage = () => {
   document.title = 'Otrzymane zapytania'

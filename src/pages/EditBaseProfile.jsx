@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
-import AuthContext from '../context/AuthContext'
-import { useForm, Controller } from 'react-hook-form'
+import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import Select from 'react-select'
 import { useNavigate } from 'react-router-dom'
 import useAxios from '../utils/useAxios'
-import LoadingComponent from '../components/LoadingComponent'
-import showSuccessAlert from '../components/messages/SwalAlertSuccess'
-import showAlertError from '../components/messages/SwalAlertError'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
+import showSuccessAlert from '../components/AlertsComponents/SwalAlertSuccess'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
 
 const EditBaseProfile = () => {
   document.title = 'Edytuj dane podstawowe'

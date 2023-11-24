@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import useAxios from '../utils/useAxios'
 import guest from '../assets/guest.png'
-import LoadingComponent from '../components/LoadingComponent'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 import { useNavigate } from 'react-router-dom'
 import SendPrivateMessage from '../components/PrivateMessagesComponents/SendPrivateMessage'
 import {

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
-import StudentSchedule from '../components/schedules/StudentSchedule'
+import StudentSchedule from '../components/ScheduleComponents/StudentSchedule'
 
 const StudentSchedulePage = () => {
   document.title = 'Twój plan zajeć'

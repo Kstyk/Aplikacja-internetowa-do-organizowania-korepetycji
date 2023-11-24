@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom'
 import Editor from '../components/TextEditor/Editor'
 import { useEffect } from 'react'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
-import showSuccessAlert from '../components/messages/SwalAlertSuccess'
-import showAlertError from '../components/messages/SwalAlertError'
+import showSuccessAlert from '../components/AlertsComponents/SwalAlertSuccess'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
 
 const CreateClassesPage = () => {
   document.title = 'Stwórz nowe zajęcia'

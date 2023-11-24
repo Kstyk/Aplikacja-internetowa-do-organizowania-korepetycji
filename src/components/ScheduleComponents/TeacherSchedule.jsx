@@ -9,7 +9,7 @@ import { timeslots } from '../../variables/Timeslots'
 import CustomToolbar from './CustomToolbar'
 import { Link } from 'react-router-dom'
 import './schedule.scss'
-import LoadingComponent from '../LoadingComponent'
+import LoadingComponent from '../GeneralComponents/LoadingComponent'
 import ReactCountryFlag from 'react-country-flag'
 
 const TeacherSchedule = ({ teacherId }) => {

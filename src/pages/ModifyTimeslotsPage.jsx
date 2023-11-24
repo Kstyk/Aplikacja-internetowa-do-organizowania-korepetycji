@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import SelectSlotsTeacherSchedule from '../components/schedules/SelectSlotsTeacherSchedule'
+import SelectSlotsTeacherSchedule from '../components/ScheduleComponents/SelectSlotsTeacherSchedule'
 import useAxios from '../utils/useAxios'
-import showAlertError from '../components/messages/SwalAlertError'
-import showSuccessAlert from '../components/messages/SwalAlertSuccess'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
+import showSuccessAlert from '../components/AlertsComponents/SwalAlertSuccess'
 import { timeslots } from '../variables/Timeslots'
 import { days } from '../variables/Days'
-import LoadingComponent from '../components/LoadingComponent'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 
 const ModifyTimeslotsPage = () => {
   document.title = 'Edytuj harmonogram zajęć'

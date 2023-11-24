@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import useAxios from '../utils/useAxios'
-import LoadingComponent from '../components/LoadingComponent'
-import Pagination from '../components/Pagination'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
+import Pagination from '../components/GeneralComponents/Pagination'
 import PurchaseHistoryTable from '../components/PurchaseHistorysComponents/PurchaseHistoryTable'
 
 const PurchaseHistoryPage = () => {

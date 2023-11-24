@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import useAxios from '../utils/useAxios'
-import LoadingComponent from '../components/LoadingComponent'
-import showAlertError from '../components/messages/SwalAlertError'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
 import PurchaseTeacherHistoryTable from '../components/PurchaseHistorysComponents/PurchaseTeacherHistoryTable'
-import Pagination from '../components/Pagination'
+import Pagination from '../components/GeneralComponents/Pagination'
 
 const TeacherPurchaseHistoryPage = () => {
   document.title = 'Historia zakupionych zajęć'

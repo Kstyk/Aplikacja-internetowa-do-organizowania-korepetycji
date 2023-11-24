@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react'
-import LoadingComponent from '../components/LoadingComponent'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 import { useForm, Controller } from 'react-hook-form'
 import useAxios from '../utils/useAxios'
 import { useNavigate } from 'react-router-dom'
 import Editor from '../components/TextEditor/Editor'
 import Select from 'react-select'
-import showSuccessAlert from '../components/messages/SwalAlertSuccess'
+import showSuccessAlert from '../components/AlertsComponents/SwalAlertSuccess'
 import AuthContext from '../context/AuthContext'
-import showAlertError from '../components/messages/SwalAlertError'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
 
 const EditMoreInfosPage = () => {
   document.title = 'Edytuj dane profilowe'

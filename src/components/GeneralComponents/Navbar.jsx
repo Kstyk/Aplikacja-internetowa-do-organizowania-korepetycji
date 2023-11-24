@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import AuthContext from '../context/AuthContext'
-import { NotificationContext } from '../context/NotificationContext'
+import AuthContext from '../../context/AuthContext'
+import { NotificationContext } from '../../context/NotificationContext'
 import './Navbar.scss'
-import transparent_logo from '../assets/transparent_logo.png'
-import guest from '../assets/guest.png'
+import transparent_logo from '../../assets/transparent_logo.png'
+import guest from '../../assets/guest.png'
 import { AiOutlineHome } from 'react-icons/ai'
-import useAxios from '../utils/useAxios'
+import useAxios from '../../utils/useAxios'
 
 const Navbar = () => {
   const api = useAxios()

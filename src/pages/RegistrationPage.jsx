@@ -8,7 +8,7 @@ import transparent_logo from '../assets/transparent_logo.png'
 import { Link } from 'react-router-dom'
 import useAxios from '../utils/useAxios'
 import { backendUrl } from '../variables/backendUrl'
-import showSuccessAlert from '../components/messages/SwalAlertSuccess'
+import showSuccessAlert from '../components/AlertsComponents/SwalAlertSuccess'
 import { BiShow } from 'react-icons/bi'
 
 const RegistrationPage = () => {

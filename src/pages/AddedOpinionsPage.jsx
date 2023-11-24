@@ -2,9 +2,9 @@ import React from 'react'
 import { useEffect } from 'react'
 import useAxios from '../utils/useAxios'
 import { useState } from 'react'
-import showAlertError from '../components/messages/SwalAlertError'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
 import OpinionStudentViewCard from '../components/ClassesComponents/OpinionStudentViewCard'
-import LoadingComponent from '../components/LoadingComponent'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 
 const AddedOpinionsPage = () => {
   document.title = 'Dodane opinie'

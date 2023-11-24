@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import useAxios from '../utils/useAxios'
-import LoadingComponent from '../components/LoadingComponent'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 import { Link } from 'react-router-dom'
 import { FiExternalLink, FiEdit } from 'react-icons/fi'
-import showAlertError from '../components/messages/SwalAlertError'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
 
 const ListOfTeachersClassesPage = () => {
   document.title = 'Lista zajęć'

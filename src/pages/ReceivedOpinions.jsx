@@ -3,8 +3,8 @@ import { useEffect } from 'react'
 import useAxios from '../utils/useAxios'
 import { useState } from 'react'
 import OpinionCard from '../components/ClassesComponents/OpinionCard'
-import showAlertError from '../components/messages/SwalAlertError'
-import LoadingComponent from '../components/LoadingComponent'
+import showAlertError from '../components/AlertsComponents/SwalAlertError'
+import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 
 const ReceivedOpinions = () => {
   document.title = 'Otrzymane opinie'

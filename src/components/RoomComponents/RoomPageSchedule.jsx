@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import LoadingComponent from '../LoadingComponent'
+import LoadingComponent from '../GeneralComponents/LoadingComponent'
 import useAxios from '../../utils/useAxios'
-import RoomSchedule from '../schedules/RoomSchedule'
+import RoomSchedule from '../ScheduleComponents/RoomSchedule'
 import dayjs from 'dayjs'
 
 const RoomPageSchedule = ({ roomId }) => {
