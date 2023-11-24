@@ -41,6 +41,7 @@ import AskAboutClassesPage from './pages/AskAboutClassesPage'
 import SendedQuestionsAboutClassesPage from './pages/SendedQuestionsAboutClassesPage'
 import ReceivedQuestionsAboutClassesPage from './pages/ReceivedQuestionsAboutClassesPage'
 import BuyClassesPageAfterAsk from './pages/BuyClassesPageAfterAsk'
+import Footer from './components/Footer'
 
 function App() {
   return (
@@ -311,6 +312,7 @@ function App() {
             draggable
             theme="light"
           />
+          {window.location.pathname.startsWith !== '/pokoj' && <Footer />}
         </NotificationContextProvider>
       </AuthProvider>
     </div>
