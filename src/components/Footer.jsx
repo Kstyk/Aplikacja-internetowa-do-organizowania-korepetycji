@@ -23,7 +23,7 @@ const Footer = () => {
           <a>
             <FaTwitter className="h-7 w-7" />
           </a>
-          <a>
+          <a href="https://github.com/Kstyk">
             <FaGithub className="h-7 w-7" />
           </a>
           <a>

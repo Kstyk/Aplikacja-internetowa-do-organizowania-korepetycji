@@ -165,7 +165,7 @@ const HomePage = () => {
                 : 'Brak obecnie zajęć dostępnych stacjonarnie.'}
             </ul>
           )}
-          <div className="-mx-5 mt-10 flex flex-col justify-center rounded-md bg-gradient-to-b from-base-100 to-base-200 py-20">
+          <div className="-mx-5 mt-10 flex flex-col justify-center rounded-md  py-20">
             <h1 className="mb-2 text-center text-3xl">
               Załóż darmowe konto już dziś!
             </h1>

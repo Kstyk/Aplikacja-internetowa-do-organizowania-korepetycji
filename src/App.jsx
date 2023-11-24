@@ -42,8 +42,10 @@ import SendedQuestionsAboutClassesPage from './pages/SendedQuestionsAboutClasses
 import ReceivedQuestionsAboutClassesPage from './pages/ReceivedQuestionsAboutClassesPage'
 import BuyClassesPageAfterAsk from './pages/BuyClassesPageAfterAsk'
 import Footer from './components/Footer'
+import { useLocation } from 'react-router-dom'
 
 function App() {
+  let location = useLocation()
   return (
     <div
       data-theme="corporate"
@@ -312,7 +314,7 @@ function App() {
             draggable
             theme="light"
           />
-          {window.location.pathname.startsWith !== '/pokoj' && <Footer />}
+          {!location.pathname.startsWith('/pokoj') && <Footer />}
         </NotificationContextProvider>
       </AuthProvider>
     </div>

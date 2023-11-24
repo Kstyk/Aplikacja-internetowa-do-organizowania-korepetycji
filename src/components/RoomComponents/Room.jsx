@@ -15,9 +15,6 @@ import Swal from 'sweetalert2'
 import RateTeacher from '../ClassesComponents/RateTeacher'
 
 const Room = () => {
-  // const el = document.getElementById('footer')
-  // el.remove()
-
   const [name, setName] = useState()
 
   document.title = `Pokój - ${name}`
