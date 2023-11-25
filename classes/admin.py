@@ -18,8 +18,8 @@ class LanguageAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug')
 
 
-admin.site.register(Class)
 admin.site.register(Language, LanguageAdmin)
+admin.site.register(Class)
 admin.site.register(Schedule, ScheduleAdmin)
 admin.site.register(Timeslot)
 admin.site.register(PurchaseHistory)

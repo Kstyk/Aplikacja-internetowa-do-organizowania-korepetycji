@@ -257,7 +257,6 @@ class FileUploadView(APIView):
         owner = request.user
         files_data = request.data.getlist('files[]')
 
-        # Tworzenie listy plików do serializacji
         serialized_data = []
         for file_data in files_data:
             serialized_data.append({
