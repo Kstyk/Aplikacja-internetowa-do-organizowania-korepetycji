@@ -129,11 +129,7 @@ class MessageViewSet(ListModelMixin, GenericViewSet):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsInRoom])
 def get_files_in_room(request, room_id):
-    try:
-        room = Room.objects.get(room_id=room_id)
-
-    except Room.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    room = Room.objects.get(room_id=room_id)
 
     sort_by_param = request.query_params.get('sort-by', 'file_name')
     direction_param = request.query_params.get('direction', 'asc')

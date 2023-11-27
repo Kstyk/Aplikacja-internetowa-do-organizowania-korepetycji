@@ -23,6 +23,9 @@ class RoomAPITestCase(APITestCase):
         self.room = Room.objects.create(room_id='5SF32H', name='Test Room')
         self.room.users.add(self.student, self.teacher)
 
+        self.message1 = Message.objects.create(
+            room=self.room, from_user=self.student, to_user=self.teacher, content="Test")
+
         self.url = f'/api/rooms/{self.room.room_id}/'
 
     def test_get_room_authenticated_user(self):
@@ -92,3 +95,34 @@ class RoomAPITestCase(APITestCase):
             f'/api/rooms/room-users/{self.room.room_id}/')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_message_viewset(self):
+        self.client.force_authenticate(user=self.student)
+
+        response = self.client.get(
+            f'/api/rooms/messages/?room_id={self.room.room_id}')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_message_viewset_access_denied(self):
+        self.room.users.remove(self.student)
+        self.client.force_authenticate(user=self.student)
+
+        response = self.client.get(
+            f'/api/rooms/messages/?room_id={self.room.room_id}')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_files_in_room(self):
+        self.client.force_authenticate(user=self.student)
+
+        response = self.client.get(
+            f'/api/rooms/{self.room.room_id}/files/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_files_in_nonexisting_room(self):
+        self.client.force_authenticate(user=self.student)
+
+        response = self.client.get(
+            f'/api/rooms/FGFGFG/files/')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
