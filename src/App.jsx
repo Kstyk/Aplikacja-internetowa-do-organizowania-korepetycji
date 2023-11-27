@@ -69,7 +69,7 @@ function App() {
                 path="/rejestracja"
                 element={
                   <AnonymousRoute>
-                    <RegistrationPage />{' '}
+                    <RegistrationPage />
                   </AnonymousRoute>
                 }
               />

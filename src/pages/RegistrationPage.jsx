@@ -268,7 +268,6 @@ const RegistrationPage = () => {
                         ...base,
                         boxShadow: 'none',
                         borderRadius: '2px',
-                        borderColor: '#BFEAF5',
                         backgroundColor: 'transparent',
                       }),
                     }}

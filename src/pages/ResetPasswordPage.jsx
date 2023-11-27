@@ -102,8 +102,8 @@ const ResetPasswordPage = () => {
         </div>
         <div className="mb-5 border-b-[1px] border-base-200"></div>
 
-        <h2 className="text-center text-2xl">
-          Zresetuj hasło do swojego konta
+        <h2 className="text-center text-lg font-bold uppercase tracking-wider text-gray-700">
+          Ustaw nowe hasło do swojego konta
         </h2>
         {loading ? (
           <div className="mt-2">
