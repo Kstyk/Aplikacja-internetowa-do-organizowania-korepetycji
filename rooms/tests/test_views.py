@@ -1,8 +1,11 @@
+from datetime import datetime
 from rest_framework import status
 from rest_framework.test import APITestCase
 from users.models import User, Role
 from users.serializers import *
 from rooms.models import *
+from classes.models import *
+from classes.serializers import ScheduleSerializer
 from cities_light.models import City, Region
 from django import setup
 import os
@@ -25,6 +28,13 @@ class RoomAPITestCase(APITestCase):
 
         self.message1 = Message.objects.create(
             room=self.room, from_user=self.student, to_user=self.teacher, content="Test")
+        self.language = Language.objects.create(name='English')
+        self.class1 = Class.objects.create(
+            name='Class 1', teacher=self.teacher, language=self.language, price_for_lesson=50.00)
+        self.schedule1 = Schedule.objects.create(
+            student=self.student, classes=self.class1, place_of_classes='online', room=self.room, date=datetime(year=2023, month=8, day=15))
+        self.schedule2 = Schedule.objects.create(
+            student=self.student, classes=self.class1, place_of_classes='online', room=self.room, date=datetime(year=2024, month=12, day=15))
 
         self.url = f'/api/rooms/{self.room.room_id}/'
 
@@ -126,3 +136,30 @@ class RoomAPITestCase(APITestCase):
         response = self.client.get(
             f'/api/rooms/FGFGFG/files/')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_download_not_existed_room(self):
+        self.client.force_authenticate(user=self.student)
+
+        response = self.client.get(
+            f'/api/rooms/{self.room.room_id}/file/sadasd238e123eh127/download/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_schedules_inr_room_apiview(self):
+        self.client.force_authenticate(user=self.student)
+        response = self.client.get(
+            f'/api/rooms/{self.room.room_id}/schedules/')
+        expected_data = ScheduleSerializer(
+            [self.schedule1, self.schedule2], many=True).data
+
+        self.assertEqual(len(expected_data), len(response.data))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_schedules_inr_room_apiview_next_schedule(self):
+        self.client.force_authenticate(user=self.student)
+        response = self.client.get(
+            f'/api/rooms/{self.room.room_id}/schedules/')
+        expected_data = ScheduleSerializer(self.schedule2).data
+
+        self.assertEqual(expected_data['id'],
+                         response.data['next_schedule']['id'])
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
