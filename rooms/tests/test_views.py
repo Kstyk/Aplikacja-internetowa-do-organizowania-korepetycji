@@ -163,3 +163,30 @@ class RoomAPITestCase(APITestCase):
         self.assertEqual(expected_data['id'],
                          response.data['next_schedule']['id'])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_leave_private_room_api_view(self):
+        self.client.force_authenticate(user=self.student)
+        self.schedule2.delete()
+
+        response = self.client.post(
+            f'/api/rooms/{self.room.room_id}/leave/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_leave_private_room_api_view_unsuccesful(self):
+        self.client.force_authenticate(user=self.student)
+
+        response = self.client.post(
+            f'/api/rooms/{self.room.room_id}/leave/')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_leave_private_room_api_view_delete_room(self):
+        self.client.force_authenticate(user=self.student)
+        self.schedule2.delete()
+        self.room.users.remove(self.teacher)
+
+        response = self.client.post(
+            f'/api/rooms/{self.room.room_id}/leave/')
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
