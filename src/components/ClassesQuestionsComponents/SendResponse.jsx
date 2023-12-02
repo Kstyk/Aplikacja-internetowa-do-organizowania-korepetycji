@@ -86,7 +86,7 @@ const SendResponse = ({ opened, setIsOpened, question, fetchQuestions }) => {
           <AiOutlineClose className="h-6 w-6" />
         </button>
         <h3 className="text-center text-lg font-bold text-gray-800">
-          Wyślij wiadomość prywatną
+          Wyślij odpowiedź na zapytanie
           <br />
         </h3>
 

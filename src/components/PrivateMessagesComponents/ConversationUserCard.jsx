@@ -7,7 +7,7 @@ const ConversationUserCard = ({ user, setSelectedUser, selectedUser }) => {
     <div
       onClick={() => setSelectedUser(user)}
       className={`flex w-full cursor-pointer flex-row items-center justify-center gap-x-2 border-b-[1px] px-2 py-1 transition-all duration-200 first:rounded-tl-md hover:bg-gray-100 max-phone:flex-col phone:justify-start phone:py-3 ${
-        selectedUser?.id == user?.id && 'bg-base-100'
+        selectedUser?.id == user?.id && 'bg-base-200'
       }`}
     >
       <div
@@ -31,7 +31,7 @@ const ConversationUserCard = ({ user, setSelectedUser, selectedUser }) => {
           user?.unread_messages_count > 0 && 'font-bold'
         }`}
       >
-        <span className="truncate">{user?.first_name}</span>
+        <span className="truncate">{user?.first_name}</span>{' '}
         <span className="truncate">{user?.last_name}</span>
       </div>
     </div>

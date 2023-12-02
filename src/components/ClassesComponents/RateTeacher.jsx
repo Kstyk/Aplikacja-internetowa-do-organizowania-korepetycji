@@ -17,7 +17,6 @@ const RateTeacher = ({ teacher, student, opened, setIsOpened }) => {
       ...base,
       boxShadow: 'none',
       borderRadius: '2px',
-      borderColor: '#BFEAF5',
       '&:hover': {
         border: '1px solid #aaabac',
       },

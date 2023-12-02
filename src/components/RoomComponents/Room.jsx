@@ -74,7 +74,7 @@ const Room = () => {
           'btn  rounded-none outline-none border-[1px] text-black w-full',
         cancelButton:
           'btn  rounded-none outline-none border-[1px] text-black w-full',
-        popup: 'rounded-none bg-base-100',
+        popup: 'rounded-md bg-base-100',
       },
       showClass: {
         popup: 'animate__animated animate__zoomIn',
