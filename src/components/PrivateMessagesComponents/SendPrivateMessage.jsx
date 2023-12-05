@@ -92,6 +92,11 @@ const SendPrivateMessage = ({ toUser, opened, setIsOpened }) => {
               err.response.data.error.map((error) => error)
             )
           }
+        } else if (err.response.status == 401) {
+          showAlertError(
+            'Błąd',
+            'Musisz się zalogować, by móc wysłać wiadomość prywatną.'
+          )
         } else {
           showAlertError('Błąd', 'Nieudane wysłanie wiadomości prywatnej.')
         }
