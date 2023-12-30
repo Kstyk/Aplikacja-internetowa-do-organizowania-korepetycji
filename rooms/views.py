@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.conf import settings
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -6,18 +6,15 @@ from django.http import HttpResponse, FileResponse
 from .serializers import RoomSerializer, MessageSerializer, FileSerializer, FileUploadSerializer
 from users.models import User, UserDetails
 from users.serializers import UserSerializer, UserProfileSerializer
-import uuid
 from django.shortcuts import get_object_or_404
 from .paginaters import MessagePagination
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.viewsets import GenericViewSet
 from .exceptions import AccessDeniedForRoom
 from .models import Room, Message, File
-from classes.models import Class
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
-from django.core.files.storage import default_storage
 from .permissions import IsInRoom
 from classes.models import Schedule
 from classes.serializers import ScheduleSerializer
@@ -27,6 +24,7 @@ from azure.storage.blob import BlobServiceClient
 from backend.settings_local import AZURE_CONNECTION_STRING
 import zipfile
 import io
+from django.core.mail import send_mail
 
 
 @api_view(['GET'])
@@ -339,3 +337,41 @@ class LeavePrivateRoomView(APIView):
 
         except Exception as e:
             return Response({'error': e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class CancelScheduleView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Schedule.objects.all()
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        user = self.request.user.id
+        if instance.room.users.filter(id=user).exists():
+            time_until_class_starts = instance.date - timezone.now()
+            if time_until_class_starts.total_seconds() < 24 * 3600:
+                return Response({"error": "Nie można odwołać zajęć mniej niż 24 godziny przed ich rozpoczęciem."},
+                                status=status.HTTP_400_BAD_REQUEST)
+            self.perform_destroy(instance)
+
+            if self.request.user.id == instance.classes.teacher.id:
+                mail_to = instance.student
+            else:
+                mail_to = instance.classes.teacher
+
+            send_mail(
+                'Odwołano zajęcia',
+                f'''
+                Cześć, {mail_to.first_name}
+
+                {self.request.user.first_name} {self.request.user.last_name} odwołał zajęcia z dnia {instance.date}.
+
+                Pozdrawiamy, zespół korki.PL''',
+                settings.EMAIL_HOST_USER,
+                [mail_to.email],
+                fail_silently=False,
+            )
+
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)

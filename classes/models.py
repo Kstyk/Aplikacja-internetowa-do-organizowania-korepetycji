@@ -115,7 +115,6 @@ class Schedule(models.Model):
     student = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, null=True, related_name="student", validators=[validate_student_role]
     )
-    ff = models.TimeField(_(""), auto_now=False, auto_now_add=False)
     classes = models.ForeignKey(
         Class, on_delete=models.CASCADE, related_name="classes"
     )
