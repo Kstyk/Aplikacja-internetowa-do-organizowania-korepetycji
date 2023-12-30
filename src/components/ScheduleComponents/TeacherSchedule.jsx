@@ -11,6 +11,9 @@ import { Link } from 'react-router-dom'
 import './schedule.scss'
 import LoadingComponent from '../GeneralComponents/LoadingComponent'
 import ReactCountryFlag from 'react-country-flag'
+import Swal from 'sweetalert2'
+import showAlertError from '../AlertsComponents/SwalAlertError'
+import showSuccessAlert from '../AlertsComponents/SwalAlertSuccess'
 
 const TeacherSchedule = ({ teacherId }) => {
   const [loading, setLoading] = useState(true)
@@ -130,6 +133,53 @@ const TeacherSchedule = ({ teacherId }) => {
     setLoading(false)
   }
 
+  const cancelClasses = async (id) => {
+    Swal.fire({
+      title: 'Jesteś pewien, że chcesz odwołać te zajęcia?',
+      text: 'W przypadku odwołania zajęć, uczeń dostaje refundację kosztów przy zakupie tych pojedynczych zajęć. Druga osoba zostanie powiadomiona drogą mailową oodwołaniu zajęć',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#6BA5DB',
+      cancelButtonColor: '#EC7A6F',
+      confirmButtonText: 'Odwołaj zajęcia',
+      cancelButtonText: 'Zamknij okno',
+      customClass: {
+        confirmButton:
+          'btn  rounded-none outline-none border-[1px] text-black w-full',
+        cancelButton:
+          'btn  rounded-none outline-none border-[1px] text-black w-full',
+        popup: 'rounded-md bg-base-100',
+      },
+      showClass: {
+        popup: 'animate__animated animate__zoomIn',
+      },
+      hideClass: {
+        popup: 'animate__animated animate__zoomOut',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        api
+          .delete(`api/rooms/schedules/${id}/cancel/`)
+          .then((res) => {
+            showSuccessAlert(
+              'Sukces!',
+              'Pomyślnie odwołano zajęcia w tym terminie. Odśwież stronę, by zaktualizować harmonogram.'
+            )
+          })
+          .catch((err) => {
+            if (err.response.status == 403) {
+              showAlertError(
+                'Błąd',
+                'Nie jesteś uprawniony do wykonania tej akcji.'
+              )
+            } else {
+              showAlertError('Błąd', err.response.data.error)
+            }
+          })
+      }
+    })
+  }
+
   useEffect(() => {
     if (teacherId != null) {
       allFunctions()
@@ -229,6 +279,12 @@ const TeacherSchedule = ({ teacherId }) => {
             </p>
           </div>
           <div className="modal-action mx-auto">
+            <button
+              onClick={() => cancelClasses(slotInfo?.id)}
+              className="btn-outline no-animation btn h-8 min-h-0 rounded-sm hover:bg-base-400 hover:text-white"
+            >
+              Odwołaj zajęcia
+            </button>
             {slotInfo?.resource?.room && (
               <Link
                 to={`/pokoj/${slotInfo?.resource?.room}`}

@@ -59,7 +59,7 @@ const RoomPageSchedule = ({ roomId }) => {
               </>
             )}
           </div>
-          <RoomSchedule schedule={schedule} />
+          <RoomSchedule schedule={schedule} fetchSchedule={fetchSchedule} />
         </>
       )}
     </div>
