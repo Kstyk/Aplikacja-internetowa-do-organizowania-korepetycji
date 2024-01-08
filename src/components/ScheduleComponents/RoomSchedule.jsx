@@ -13,6 +13,7 @@ import ReactCountryFlag from 'react-country-flag'
 import Swal from 'sweetalert2'
 import showAlertError from '../AlertsComponents/SwalAlertError'
 import showSuccessAlert from '../AlertsComponents/SwalAlertSuccess'
+import { useForm, Controller } from 'react-hook-form'
 
 const RoomSchedule = ({ schedule, fetchSchedule }) => {
   const [loading, setLoading] = useState(true)
@@ -25,6 +26,21 @@ const RoomSchedule = ({ schedule, fetchSchedule }) => {
   const today = new Date()
 
   const api = useAxios()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({})
+
+  const cancelOptions = {
+    reason: {
+      required: 'Podanie powodu odwołania jest wymagane.',
+      maxLength: {
+        value: 10000,
+        message: 'Długość wyjaśnienia nie może przekraczać 10 000 znaków.',
+      },
+    },
+  }
 
   let formats = {
     dateFormat: 'dd',
@@ -108,56 +124,40 @@ const RoomSchedule = ({ schedule, fetchSchedule }) => {
     })
   }
 
-  const cancelClasses = async (id) => {
-    Swal.fire({
-      title: 'Jesteś pewien, że chcesz odwołać te zajęcia?',
-      text: 'W przypadku odwołania zajęć, uczeń dostaje refundację kosztów przy zakupie tych pojedynczych zajęć. Druga osoba zostanie powiadomiona drogą mailową oodwołaniu zajęć',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#6BA5DB',
-      cancelButtonColor: '#EC7A6F',
-      confirmButtonText: 'Odwołaj zajęcia',
-      cancelButtonText: 'Zamknij okno',
-      customClass: {
-        confirmButton:
-          'btn  rounded-none outline-none border-[1px] text-black w-full',
-        cancelButton:
-          'btn  rounded-none outline-none border-[1px] text-black w-full',
-        popup: 'rounded-md bg-base-100',
-      },
-      showClass: {
-        popup: 'animate__animated animate__zoomIn',
-      },
-      hideClass: {
-        popup: 'animate__animated animate__zoomOut',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        api
-          .delete(`api/rooms/schedules/${id}/cancel/`)
-          .then((res) => {
-            showSuccessAlert(
-              'Sukces!',
-              'Pomyślnie odwołano zajęcia w tym terminie.',
-              async () => {
-                await fetchSchedule()
-                await allFunctions()
-              }
-            )
-          })
-          .catch((err) => {
-            console.log(err)
-            if (err.response.status == 403) {
-              showAlertError(
-                'Błąd',
-                'Nie jesteś uprawniony do wykonania tej akcji.'
-              )
-            } else {
-              showAlertError('Błąd', err.response.data.error)
-            }
-          })
-      }
-    })
+  const showCancelClassesModal = async (id) => {
+    window.cancel_classes.showModal(id)
+  }
+
+  const cancelClasses = async (data) => {
+    console.log(slotInfo)
+    data = {
+      ...data,
+      room: slotInfo?.resource?.room,
+    }
+    console.log(data)
+
+    api
+      .post(`api/rooms/schedules/${slotInfo?.id}/cancel/`, data)
+      .then((res) => {
+        showSuccessAlert(
+          'Sukces!',
+          'Pomyślnie odwołano zajęcia w tym terminie.',
+          async () => {
+            await fetchSchedule()
+            await allFunctions()
+          }
+        )
+      })
+      .catch((err) => {
+        if (err.response.status == 403) {
+          showAlertError(
+            'Błąd',
+            'Nie jesteś uprawniony do wykonania tej akcji.'
+          )
+        } else {
+          showAlertError('Błąd', err.response.data.error)
+        }
+      })
   }
 
   const allFunctions = async () => {
@@ -248,7 +248,7 @@ const RoomSchedule = ({ schedule, fetchSchedule }) => {
           </div>
           <div className="align-items mx-auto flex flex-row justify-center gap-x-3">
             <button
-              onClick={() => cancelClasses(slotInfo?.id)}
+              onClick={() => showCancelClassesModal(slotInfo?.id)}
               className="btn-outline no-animation btn mt-6 h-8 min-h-0 rounded-sm hover:bg-base-400 hover:text-white"
             >
               Odwołaj zajęcia
@@ -260,6 +260,50 @@ const RoomSchedule = ({ schedule, fetchSchedule }) => {
             </div>
           </div>
         </form>
+      </dialog>
+      <dialog
+        id="cancel_classes"
+        className="modal modal-bottom sm:modal-middle"
+      >
+        <div className="modal-box flex flex-col gap-y-2 !rounded-md">
+          <form
+            method="dialog"
+            onSubmit={handleSubmit(cancelClasses)}
+            className="flex w-full flex-col"
+          >
+            <p className="mb-4 text-center">
+              W przypadku odwołania zajęć, uczeń dostaje refundację kosztów przy
+              zakupie tych pojedynczych zajęć. Druga osoba zostanie powiadomiona
+              drogą mailową oodwołaniu zajęć. Musisz podać powód odwołania
+              zajęć.
+            </p>
+            <textarea
+              className="min-h-16 h-16 rounded-sm border-[1px] border-base-200 bg-transparent px-2 outline-none hover:border-[#aaabac]"
+              type="text"
+              name="reason"
+              id="reason"
+              {...register('reason', cancelOptions.reason)}
+            />
+            <small className="text-right text-red-400">
+              {errors?.reason && errors.reason.message}
+            </small>
+            <div className="modal-action">
+              <button
+                type="submit"
+                className="btn-outline no-animation btn mt-6 h-8 min-h-0 rounded-sm hover:bg-base-400 hover:text-white"
+              >
+                Odwołaj zajęcia
+              </button>
+            </div>
+          </form>
+          <div className="modal-backdrop">
+            <form method="dialog">
+              <button className="btn-outline no-animation btn mt-2 h-8 min-h-0 rounded-sm hover:bg-base-400 hover:text-white">
+                Anuluj
+              </button>
+            </form>
+          </div>
+        </div>
       </dialog>
       <div className="card mb-5 rounded-md bg-white p-4 px-2 py-5 shadow-xl">
         <Calendar
