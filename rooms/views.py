@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.conf import settings
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
@@ -339,32 +340,40 @@ class LeavePrivateRoomView(APIView):
             return Response({'error': e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class CancelScheduleView(generics.DestroyAPIView):
+class CancelScheduleView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Schedule.objects.all()
 
-    def destroy(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         instance = self.get_object()
 
         user = self.request.user.id
+        reason = self.request.data['reason']
+        roomid = self.request.data['room']
+        date = instance.date + timedelta(hours=1)
+        reas = f"Odwołano zajęcia z dnia {date.strftime('%Y-%m-%d, %H:%M')}. Powód: {reason}"
+
         if instance.room.users.filter(id=user).exists():
             time_until_class_starts = instance.date - timezone.now()
             if time_until_class_starts.total_seconds() < 24 * 3600:
                 return Response({"error": "Nie można odwołać zajęć mniej niż 24 godziny przed ich rozpoczęciem."},
                                 status=status.HTTP_400_BAD_REQUEST)
-            self.perform_destroy(instance)
-
-            if self.request.user.id == instance.classes.teacher.id:
-                mail_to = instance.student
+            data = instance
+            instance.delete()
+            if self.request.user.id == data.classes.teacher.id:
+                mail_to = data.student
             else:
-                mail_to = instance.classes.teacher
+                mail_to = data.classes.teacher
+
+            information_cancel = Message.objects.create(
+                content=reas, from_user=self.request.user, to_user=mail_to, room=Room.objects.get(room_id=roomid))
 
             send_mail(
                 'Odwołano zajęcia',
                 f'''
                 Cześć, {mail_to.first_name}
 
-                {self.request.user.first_name} {self.request.user.last_name} odwołał zajęcia z dnia {instance.date}.
+                {self.request.user.first_name} {self.request.user.last_name} odwołał zajęcia z dnia {data.date}.
 
                 Pozdrawiamy, zespół korki.PL''',
                 settings.EMAIL_HOST_USER,

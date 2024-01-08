@@ -1,12 +1,12 @@
-# from rest_framework import status
-# from rest_framework.test import APITestCase
-# from classes.models import Language, Class
-# from users.models import User, Role
-# from classes.serializers import *
-# from django import setup
-# import os
-# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
-# setup()
+from rest_framework import status
+from rest_framework.test import APITestCase
+from classes.models import Language, Class
+from users.models import User, Role
+from classes.serializers import *
+from django import setup
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
+setup()
 
 
 # class GetLanguagesViewTest(APITestCase):
@@ -25,45 +25,45 @@
 #         self.assertEqual(response.data, expected_data)
 
 
-# class GetAllClassesViewTest(APITestCase):
-#     def setUp(self):
-#         self.role = Role.objects.create(name="Teacher")
-#         self.user = User.objects.create_user(
-#             email='abc@o2.pl', password='12345678', first_name="Adam", last_name="Kowal", role=self.role)
-#         self.language = Language.objects.create(name='English')
+class GetAllClassesViewTest(APITestCase):
+    def setUp(self):
+        self.role = Role.objects.create(name="Teacher")
+        self.user = User.objects.create_user(
+            email='abc@o2.pl', password='12345678', first_name="Adam", last_name="Kowal", role=self.role)
+        self.language = Language.objects.create(name='English')
 
-#     def test_get_all_classes_no_filters(self):
-#         class1 = Class.objects.create(
-#             name='Class 1', teacher=self.user, language=self.language, price_for_lesson=50.00)
-#         class2 = Class.objects.create(
-#             name='Class 2', teacher=self.user, language=self.language, price_for_lesson=60.00)
+    def test_get_all_classes_with_filters(self):
+        class1 = Class.objects.create(
+            name='Class 1', teacher=self.user, language=self.language, price_for_lesson=50.00)
+        class2 = Class.objects.create(
+            name='Class 2', teacher=self.user, language=self.language, price_for_lesson=60.00)
 
-#         url = '/api/classes/'
-#         response = self.client.get(url, {'page': 1, 'page_size': 10})
+        url = '/api/classes/'
+        response = self.client.get(
+            url, {'page': 1, 'page_size': 10, 'search_text': 'Class 2', 'min_price': 55.00})
 
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-#         expected_data = ClassSerializer([class2, class1], many=True).data
-#         self.assertEqual(response.data['classes']
-#                          [0]['id'], expected_data[0]['id'])
-#         self.assertEqual(response.data['classes']
-#                          [1]['id'], expected_data[1]['id'])
+        expected_data = ClassSerializer([class2], many=True).data
+        self.assertEqual(response.data['classes']
+                         [0]['name'], expected_data[0]['name'])
 
-#     def test_get_all_classes_with_filters(self):
-#         class1 = Class.objects.create(
-#             name='Class 1', teacher=self.user, language=self.language, price_for_lesson=50.00)
-#         class2 = Class.objects.create(
-#             name='Class 2', teacher=self.user, language=self.language, price_for_lesson=60.00)
+    def test_get_all_classes_no_filters(self):
+        class1 = Class.objects.create(
+            name='Class 1', teacher=self.user, language=self.language, price_for_lesson=50.00)
+        class2 = Class.objects.create(
+            name='Class 2', teacher=self.user, language=self.language, price_for_lesson=60.00)
 
-#         url = '/api/classes/'
-#         response = self.client.get(
-#             url, {'page': 1, 'page_size': 10, 'search_text': 'Class 2', 'min_price': 55.00})
+        url = '/api/classes/'
+        response = self.client.get(url, {'page': 1, 'page_size': 10})
 
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-#         expected_data = ClassSerializer([class2], many=True).data
-#         self.assertEqual(response.data['classes']
-#                          [0]['name'], expected_data[0]['name'])
+        expected_data = ClassSerializer([class2, class1], many=True).data
+        self.assertEqual(response.data['classes']
+                         [0]['id'], expected_data[0]['id'])
+        self.assertEqual(response.data['classes']
+                         [1]['id'], expected_data[1]['id'])
 
 
 # class ClassesByIdViewTest(APITestCase):
