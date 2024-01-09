@@ -79,7 +79,6 @@ export const NotificationContextProvider = ({ children }) => {
             setToggleUpdateUnread(!toggleUpdateUnread)
             break
           default:
-            console.log(data)
             break
         }
       },
@@ -94,18 +93,18 @@ export const NotificationContextProvider = ({ children }) => {
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState]
 
-  useEffect(() => {
-    if (connectionStatus === 'Connecting') {
-      console.log('handhsake')
-    }
-    if (connectionStatus === 'Closed') {
-      console.log('close')
+  // useEffect(() => {
+  //   if (connectionStatus === 'Connecting') {
+  //     console.log('handhsake')
+  //   }
+  //   if (connectionStatus === 'Closed') {
+  //     console.log('close')
 
-      if (connectionStatus === 'Open') {
-        console.log('opened')
-      }
-    }
-  }, [connectionStatus])
+  //     if (connectionStatus === 'Open') {
+  //       console.log('opened')
+  //     }
+  //   }
+  // }, [connectionStatus])
 
   return (
     <NotificationContext.Provider

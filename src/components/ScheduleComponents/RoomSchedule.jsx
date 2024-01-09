@@ -10,10 +10,9 @@ import CustomToolbar from './CustomToolbar'
 import { timeslots } from '../../variables/Timeslots'
 import { Link } from 'react-router-dom'
 import ReactCountryFlag from 'react-country-flag'
-import Swal from 'sweetalert2'
 import showAlertError from '../AlertsComponents/SwalAlertError'
 import showSuccessAlert from '../AlertsComponents/SwalAlertSuccess'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 const RoomSchedule = ({ schedule, fetchSchedule }) => {
   const [loading, setLoading] = useState(true)
@@ -129,16 +128,15 @@ const RoomSchedule = ({ schedule, fetchSchedule }) => {
   }
 
   const cancelClasses = async (data) => {
-    console.log(slotInfo)
     data = {
       ...data,
       room: slotInfo?.resource?.room,
     }
-    console.log(data)
 
     api
       .post(`api/rooms/schedules/${slotInfo?.id}/cancel/`, data)
       .then((res) => {
+        window.cancel_classes.close()
         showSuccessAlert(
           'Sukces!',
           'Pomyślnie odwołano zajęcia w tym terminie.',
@@ -149,6 +147,7 @@ const RoomSchedule = ({ schedule, fetchSchedule }) => {
         )
       })
       .catch((err) => {
+        window.cancel_classes.close()
         if (err.response.status == 403) {
           showAlertError(
             'Błąd',
@@ -287,10 +286,10 @@ const RoomSchedule = ({ schedule, fetchSchedule }) => {
             <small className="text-right text-red-400">
               {errors?.reason && errors.reason.message}
             </small>
-            <div className="modal-action">
+            <div>
               <button
                 type="submit"
-                className="btn-outline no-animation btn mt-6 h-8 min-h-0 rounded-sm hover:bg-base-400 hover:text-white"
+                className="btn-outline no-animation btn mt-6 h-8 min-h-0 w-full rounded-sm hover:bg-base-400 hover:text-white"
               >
                 Odwołaj zajęcia
               </button>
@@ -298,7 +297,7 @@ const RoomSchedule = ({ schedule, fetchSchedule }) => {
           </form>
           <div className="modal-backdrop">
             <form method="dialog">
-              <button className="btn-outline no-animation btn mt-2 h-8 min-h-0 rounded-sm hover:bg-base-400 hover:text-white">
+              <button className="btn-outline no-animation btn mt-2 h-8 min-h-0 w-full rounded-sm hover:bg-base-400 hover:text-white">
                 Anuluj
               </button>
             </form>
