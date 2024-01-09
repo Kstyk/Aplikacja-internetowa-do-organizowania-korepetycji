@@ -99,8 +99,7 @@ const ProfilePage = () => {
                           >
                             <MdOutlineLocationOn className="h-6 w-6 text-base-400" />
                             <span className="text-sm">
-                              {place == 'teacher_home' && 'U nauczyciela'}
-                              {place == 'student_home' && 'U studenta'}
+                              {place == 'stationary' && 'Stacjonarnie'}
                               {place == 'online' && 'Online'}
                             </span>
                           </li>

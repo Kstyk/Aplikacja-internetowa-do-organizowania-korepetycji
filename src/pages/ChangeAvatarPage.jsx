@@ -147,7 +147,7 @@ const ChangeAvatarPage = () => {
                     {waitingForResponseDeleteAvatar ? (
                       <span className="loading loading-spinner "></span>
                     ) : (
-                      'Zmień avatar'
+                      'Usuń avatar'
                     )}
                   </button>
                 </form>
