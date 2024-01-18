@@ -136,16 +136,10 @@ const ClassesCard = (props) => {
                 }}
               />
               {classes?.place_of_classes.map((item) =>
-                item == 'online' ? 'Online' : ''
+                item == 'online' ? ' | Online' : ''
               )}
-              {' | '}
-              {classes?.cities_of_classes?.length > 0
-                ? classes?.cities_of_classes
-                    ?.map((city) => city.name)
-                    .slice(0, 10) // Pobierz maksymalnie 3 miasta
-                    .join(' | ')
-                    .substring(0, 100) // Ogranicz do 100 znaków
-                : ''}
+
+              {classes?.address ? ` | ${classes?.address?.city?.name}` : ''}
             </div>
           </div>
         </div>

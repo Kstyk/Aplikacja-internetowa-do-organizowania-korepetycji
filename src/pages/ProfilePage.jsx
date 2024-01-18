@@ -126,6 +126,9 @@ const ProfilePage = () => {
                   {profile?.cities_of_work?.length > 0 && (
                     <>
                       <div className="my-4 border-b-[1px] border-base-100"></div>
+                      <h3 className="mb-1 text-sm">
+                        Miasta prowadzenia zajęć:
+                      </h3>
                       <ul className="w-full">
                         {profile?.cities_of_work?.map((city, i) => (
                           <li
