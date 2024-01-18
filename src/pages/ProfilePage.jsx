@@ -7,6 +7,7 @@ import { MdOutlineLocationOn } from 'react-icons/md'
 import parse from 'html-react-parser'
 import { Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
+import { NotificationContext } from '../context/NotificationContext'
 
 const ProfilePage = () => {
   document.title = 'Twój profil'
@@ -16,6 +17,21 @@ const ProfilePage = () => {
 
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
+
+  const { countunreadallprivatemessages, setCountunreadallprivatemessages } =
+    useContext(NotificationContext)
+
+  const unreadCountMessages = async () => {
+    await api.get(`/api/users/unread-messages-count/`).then((res) => {
+      setCountunreadallprivatemessages(res.data.unread_count)
+    })
+  }
+
+  useEffect(() => {
+    if (user != null) {
+      unreadCountMessages()
+    }
+  }, [])
 
   const fetchProfile = async () => {
     await api

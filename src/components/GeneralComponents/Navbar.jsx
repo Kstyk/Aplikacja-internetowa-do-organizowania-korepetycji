@@ -11,9 +11,9 @@ import useAxios from '../../utils/useAxios'
 const Navbar = () => {
   const api = useAxios()
   const { user, logoutUser } = useContext(AuthContext)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
   const { countunreadallprivatemessages, setCountunreadallprivatemessages } =
     useContext(NotificationContext)
-  const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   const unreadCountMessages = async () => {
     await api.get(`/api/users/unread-messages-count/`).then((res) => {

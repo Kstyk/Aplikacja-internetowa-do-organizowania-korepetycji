@@ -18,10 +18,11 @@ export const NotificationContextProvider = ({ children }) => {
   const [countUnreadMessages, setCountUnreadMessages] = useState()
 
   const [fromUserPrivateMessages, setFromUserPrivateMessages] = useState(null)
-  const [countUnreadPrivateMessages, setCountUnreadPrivateMessages] = useState()
+  const [countUnreadPrivateMessages, setCountUnreadPrivateMessages] =
+    useState(0)
   const [toggleUpdateUnread, setToggleUpdateUnread] = useState(false)
   const [countunreadallprivatemessages, setCountunreadallprivatemessages] =
-    useState()
+    useState(0)
 
   const CustomToastWithLink = (fisrt_name, last_name, room_id) => (
     <div className="flex flex-col items-center">

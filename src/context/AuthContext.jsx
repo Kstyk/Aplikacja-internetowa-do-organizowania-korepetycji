@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react'
+import { createContext, useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import jwtDecode from 'jwt-decode'
@@ -46,6 +46,7 @@ export const AuthProvider = ({ children }) => {
         setUser(jwtDecode(res.data.access))
         localStorage.setItem('authTokens', JSON.stringify(res.data))
         nav('/profil')
+
         setWaitingForResponse(false)
       })
       .catch((err) => {

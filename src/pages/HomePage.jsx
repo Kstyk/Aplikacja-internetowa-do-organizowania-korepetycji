@@ -1,19 +1,37 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import useAxios from '../utils/useAxios'
 import { useState } from 'react'
 import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
 import books from '../assets/books.jpg'
+import { NotificationContext } from '../context/NotificationContext'
+import AuthContext from '../context/AuthContext'
 
 const HomePage = () => {
   document.title = 'korki.PL - strona główna'
 
   const api = useAxios()
 
+  const { user } = useContext(AuthContext)
   const [languages, setLanguages] = useState([])
   const [cities, setCities] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
+
+  const { countunreadallprivatemessages, setCountunreadallprivatemessages } =
+    useContext(NotificationContext)
+
+  const unreadCountMessages = async () => {
+    await api.get(`/api/users/unread-messages-count/`).then((res) => {
+      setCountunreadallprivatemessages(res.data.unread_count)
+    })
+  }
+
+  useEffect(() => {
+    if (user != null) {
+      unreadCountMessages()
+    }
+  }, [])
 
   const fetchLanguages = async () => {
     await api
