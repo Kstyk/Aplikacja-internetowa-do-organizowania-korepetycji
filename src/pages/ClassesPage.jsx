@@ -12,6 +12,7 @@ import showAlertError from '../components/AlertsComponents/SwalAlertError'
 import OpinionCard from '../components/ClassesComponents/OpinionCard'
 import { useNavigate } from 'react-router-dom'
 import SendPrivateMessage from '../components/PrivateMessagesComponents/SendPrivateMessage'
+import ReactShowMoreText from 'react-show-more-text'
 
 const ClassesPage = () => {
   document.title = 'Podgląd zajęć'
@@ -305,9 +306,19 @@ const ClassesPage = () => {
                   O nuaczycielu
                 </h2>
                 <div className="pt-2 text-sm">
-                  {classes?.teacher?.description
-                    ? parse('' + classes?.teacher?.description + '')
-                    : 'Brak opisu nauczyciela.'}
+                  <ReactShowMoreText
+                    lines={5}
+                    more="Pokaż więcej"
+                    less="Pokaż mniej"
+                    className="content-css"
+                    anchorClass="show-more-less-clickable font-bold block cursor-pointer"
+                    expanded={false}
+                    truncatedEndingComponent={'... '}
+                  >
+                    {classes?.teacher?.description
+                      ? parse('' + classes?.teacher?.description + '')
+                      : 'Brak opisu nauczyciela.'}
+                  </ReactShowMoreText>
                 </div>
               </div>
               <div>
@@ -315,9 +326,19 @@ const ClassesPage = () => {
                   Doświadczenie nauczyciela
                 </h2>
                 <div className="pt-2 text-sm">
-                  {classes?.teacher?.experience
-                    ? parse('' + classes?.teacher?.experience + '')
-                    : 'Brak podanego doświadczenia nauczyciela.'}
+                  <ReactShowMoreText
+                    lines={5}
+                    more="Pokaż więcej"
+                    less="Pokaż mniej"
+                    className="content-css"
+                    anchorClass="show-more-less-clickable font-bold block cursor-pointer"
+                    expanded={false}
+                    truncatedEndingComponent={'... '}
+                  >
+                    {classes?.teacher?.experience
+                      ? parse('' + classes?.teacher?.experience + '')
+                      : 'Brak podanego doświadczenia nauczyciela.'}
+                  </ReactShowMoreText>
                 </div>
               </div>
             </div>

@@ -94,7 +94,9 @@ const ProfilePage = () => {
                     )}
                     <li className="flex flex-row flex-wrap items-center gap-x-5">
                       <AiOutlineMail className="h-6 w-6 text-base-400" />
-                      <span className="text-sm">{profile?.user?.email}</span>
+                      <div className="truncate text-sm">
+                        {profile?.user?.email}
+                      </div>
                     </li>
                   </ul>
                   {profile?.place_of_classes && (
@@ -196,7 +198,7 @@ const ProfilePage = () => {
                           key={i}
                         >
                           <Link
-                            to={`/search-classes/language/${language?.slug}`}
+                            to={`/szukaj-zajec/jezyk/${language?.slug}`}
                             params={{ languageSlug: language?.slug }}
                           >
                             {language?.name}

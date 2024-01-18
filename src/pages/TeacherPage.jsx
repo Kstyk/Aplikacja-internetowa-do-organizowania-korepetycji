@@ -305,7 +305,7 @@ const TeacherPage = () => {
                           key={i}
                         >
                           <Link
-                            to={`/search-classes/language/${language?.slug}`}
+                            to={`/szukaj-zajec/jezyk/${language?.slug}`}
                             params={{ languageSlug: language?.slug }}
                           >
                             {language?.name}
