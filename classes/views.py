@@ -333,6 +333,8 @@ def purchase_classes_after_ask(request):
 
     try:
         with transaction.atomic():  # Rozpoczęcie transakcji
+            if address_id is None:
+                raise ValidationError("Niedozwolona próba zakupu.")
             if len(selected_slots) == 0:
                 raise ValidationError(
                     "Nie wybrałeś żadnego terminu zajęć.")

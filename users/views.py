@@ -168,7 +168,7 @@ class CityByIdView(generics.RetrieveAPIView):
 @api_view(['GET'])
 def get_top_cities(request):
     top_cities = Class.objects.exclude(address__isnull=True).values('address__city').annotate(
-        total_classes=Count('id')).order_by('-total_classes')[:15]
+        total_classes=Count('id')).order_by('-total_classes')[:11]
 
     online_count = Class.objects.filter(
         place_of_classes__contains='online').count()
