@@ -220,6 +220,7 @@ const Chat = ({ archivized }) => {
 
       if (!hasCamera) {
         setCameraConnected(false)
+        console.log(false)
       } else {
         setCameraConnected(true)
       }
@@ -238,9 +239,9 @@ const Chat = ({ archivized }) => {
       path: '/',
     })
     // const peer = new Peer()
-    // peer.on('open', (id) => {
-    //   setPeerId(id)
-    // })
+    peer.on('open', (id) => {
+      setPeerId(id)
+    })
 
     peer.on('call', (call) => {
       var getUserMedia =
@@ -248,10 +249,9 @@ const Chat = ({ archivized }) => {
         navigator.webkitGetUserMedia ||
         navigator.mozGetUserMedia
       getUserMedia(
-        { video: true, audio: microphoneConnected },
+        { video: cameraConnected, audio: microphoneConnected },
         (mediaStream) => {
           currentUserVideoRef.current.srcObject = mediaStream
-          console.log(mediaStream)
 
           currentUserVideoRef.current.onloadedmetadata = () => {
             currentUserVideoRef.current.play()
@@ -259,9 +259,6 @@ const Chat = ({ archivized }) => {
           call.answer(mediaStream)
           const audioTracks =
             currentUserVideoRef.current.srcObject.getAudioTracks()
-          audioTracks.forEach((track) => {
-            console.log(user.email + ' , ' + track.enabled)
-          })
 
           call.on('stream', function (remoteStream) {
             remoteVideoRef.current.srcObject = remoteStream
@@ -286,31 +283,34 @@ const Chat = ({ archivized }) => {
       navigator.webkitGetUserMedia ||
       navigator.mozGetUserMedia
 
-    getUserMedia({ video: true, audio: microphoneConnected }, (mediaStream) => {
-      currentUserVideoRef.current.srcObject = mediaStream
-      currentUserVideoRef.current.onloadedmetadata = () => {
-        currentUserVideoRef.current.play()
-      }
-
-      const call = peerInstance.current.call(remotePeerId, mediaStream, {
-        metadata: {
-          callerPeerId: peerId,
-        },
-      })
-
-      call.on(
-        'stream',
-        (remoteStream) => {
-          remoteVideoRef.current.srcObject = remoteStream
-          remoteVideoRef.current.onloadedmetadata = () => {
-            remoteVideoRef.current.play()
-          }
-        },
-        function (err) {
-          showAlertError('Błąd', 'Błąd przy strumieniowaniu obrazu.')
+    getUserMedia(
+      { video: cameraConnected, audio: microphoneConnected },
+      (mediaStream) => {
+        currentUserVideoRef.current.srcObject = mediaStream
+        currentUserVideoRef.current.onloadedmetadata = () => {
+          currentUserVideoRef.current.play()
         }
-      )
-    })
+
+        const call = peerInstance.current.call(remotePeerId, mediaStream, {
+          metadata: {
+            callerPeerId: peerId,
+          },
+        })
+
+        call.on(
+          'stream',
+          (remoteStream) => {
+            remoteVideoRef.current.srcObject = remoteStream
+            remoteVideoRef.current.onloadedmetadata = () => {
+              remoteVideoRef.current.play()
+            }
+          },
+          function (err) {
+            showAlertError('Błąd', 'Błąd przy strumieniowaniu obrazu.')
+          }
+        )
+      }
+    )
   }
 
   const rejectVideoCall = async () => {
@@ -422,7 +422,7 @@ const Chat = ({ archivized }) => {
     }
     navigator.mediaDevices
       .getUserMedia({
-        video: true,
+        video: cameraConnected,
         audio: microphoneConnected,
       })
       .then((stream) => {

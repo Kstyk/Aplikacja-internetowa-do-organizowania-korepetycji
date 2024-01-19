@@ -88,6 +88,12 @@ const RegistrationPage = () => {
     fetchRoles()
   }, [])
 
+  useEffect(() => {
+    roles?.map((role) =>
+      role.label == 'Teacher' ? (role.label = 'Korepetytor') : ''
+    )
+  }, [roles])
+
   const fetchRoles = async () => {
     await api
       .get('/api/users/roles/')

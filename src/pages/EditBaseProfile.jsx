@@ -63,6 +63,12 @@ const EditBaseProfile = () => {
       })
   }
 
+  useEffect(() => {
+    roles?.map((role) =>
+      role.label == 'Teacher' ? (role.label = 'Korepetytor') : ''
+    )
+  }, [roles])
+
   const fetchAll = async () => {
     setLoading(true)
     await fetchRoles()
@@ -201,7 +207,10 @@ const EditBaseProfile = () => {
                       defaultValue=""
                       value={{
                         value: baseUser?.role?.value,
-                        label: baseUser?.role?.label,
+                        label:
+                          baseUser?.role?.label == 'Teacher'
+                            ? 'Korepetytor'
+                            : 'Student',
                       }}
                       styles={{
                         control: (base) => ({
