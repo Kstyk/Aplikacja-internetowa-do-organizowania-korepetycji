@@ -211,7 +211,7 @@ const RoomSchedule = ({ schedule, fetchSchedule }) => {
             slotInfo?.resource?.place_of_classes == 'teacher_home') && (
             <div>
               <h2 className="mx-auto w-fit border-b-2 border-b-base-400 px-3 text-center font-bold uppercase tracking-wider text-gray-700">
-                Adres zajęć zajęć
+                Adres zajęć
               </h2>
               <p className="mt-1 w-full text-center">
                 woj. {slotInfo?.resource?.address?.voivodeship?.name}

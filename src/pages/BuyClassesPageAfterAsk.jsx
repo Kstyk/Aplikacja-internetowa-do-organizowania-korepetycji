@@ -64,7 +64,8 @@ const BuyClassesPageAfterAsk = () => {
       selected_slots: selected_slots,
       classes_id: classesId,
       place_of_classes: 'student_home',
-      address_id: address.id,
+      address_id: 3,
+      // address_id: address?.id || null,
     }
 
     api

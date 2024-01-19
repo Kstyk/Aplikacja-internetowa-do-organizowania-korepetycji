@@ -50,7 +50,13 @@ const RoomPageSchedule = ({ roomId }) => {
                   )}{' '}
                   -{' '}
                   <span className="font-bold">
-                    {nextSchedule?.place_of_classes}
+                    {nextSchedule?.place_of_classes == 'online' ? 'Online' : ''}
+                    {nextSchedule?.place_of_classes == 'teacher_home'
+                      ? 'U nauczyciela'
+                      : ''}
+                    {nextSchedule?.place_of_classes == 'student_home'
+                      ? 'U studenta'
+                      : ''}
                   </span>
                 </span>
                 <span className="font-bold uppercase">

@@ -6,6 +6,7 @@ import showSuccessAlert from '../components/AlertsComponents/SwalAlertSuccess'
 import { timeslots } from '../variables/Timeslots'
 import { days } from '../variables/Days'
 import LoadingComponent from '../components/GeneralComponents/LoadingComponent'
+import { useNavigate } from 'react-router-dom'
 
 const ModifyTimeslotsPage = () => {
   document.title = 'Edytuj harmonogram zajęć'
@@ -14,6 +15,7 @@ const ModifyTimeslotsPage = () => {
   const [loading, setLoading] = useState(true)
   const [waitingForResponse, setWaitingForResponse] = useState(false)
   const api = useAxios()
+  const nav = useNavigate()
 
   const editSchedule = () => {
     setWaitingForResponse(true)
@@ -21,7 +23,11 @@ const ModifyTimeslotsPage = () => {
       .post(`/api/classes/timeslots/create/`, timeSlotsTeacher)
       .then((res) => {
         setWaitingForResponse(false)
-        showSuccessAlert('Sukces', 'Pomyślnie zedytowałeś swój harmonogram.')
+        showSuccessAlert(
+          'Sukces',
+          'Pomyślnie zedytowałeś swój harmonogram.',
+          () => nav('/profil')
+        )
       })
       .catch((err) => {
         setWaitingForResponse(false)

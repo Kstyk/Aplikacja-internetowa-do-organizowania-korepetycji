@@ -24,7 +24,7 @@ export const days = [
     name: 'Sobota',
   },
   {
-    id: 6,
+    id: 0,
     name: 'Niedziela',
   },
 ]
