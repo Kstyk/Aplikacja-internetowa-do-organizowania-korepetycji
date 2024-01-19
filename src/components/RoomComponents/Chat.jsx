@@ -249,7 +249,7 @@ const Chat = ({ archivized }) => {
         navigator.webkitGetUserMedia ||
         navigator.mozGetUserMedia
       getUserMedia(
-        { video: cameraConnected, audio: microphoneConnected },
+        { video: true, audio: microphoneConnected },
         (mediaStream) => {
           currentUserVideoRef.current.srcObject = mediaStream
 
@@ -283,34 +283,31 @@ const Chat = ({ archivized }) => {
       navigator.webkitGetUserMedia ||
       navigator.mozGetUserMedia
 
-    getUserMedia(
-      { video: cameraConnected, audio: microphoneConnected },
-      (mediaStream) => {
-        currentUserVideoRef.current.srcObject = mediaStream
-        currentUserVideoRef.current.onloadedmetadata = () => {
-          currentUserVideoRef.current.play()
-        }
-
-        const call = peerInstance.current.call(remotePeerId, mediaStream, {
-          metadata: {
-            callerPeerId: peerId,
-          },
-        })
-
-        call.on(
-          'stream',
-          (remoteStream) => {
-            remoteVideoRef.current.srcObject = remoteStream
-            remoteVideoRef.current.onloadedmetadata = () => {
-              remoteVideoRef.current.play()
-            }
-          },
-          function (err) {
-            showAlertError('Błąd', 'Błąd przy strumieniowaniu obrazu.')
-          }
-        )
+    getUserMedia({ video: true, audio: microphoneConnected }, (mediaStream) => {
+      currentUserVideoRef.current.srcObject = mediaStream
+      currentUserVideoRef.current.onloadedmetadata = () => {
+        currentUserVideoRef.current.play()
       }
-    )
+
+      const call = peerInstance.current.call(remotePeerId, mediaStream, {
+        metadata: {
+          callerPeerId: peerId,
+        },
+      })
+
+      call.on(
+        'stream',
+        (remoteStream) => {
+          remoteVideoRef.current.srcObject = remoteStream
+          remoteVideoRef.current.onloadedmetadata = () => {
+            remoteVideoRef.current.play()
+          }
+        },
+        function (err) {
+          showAlertError('Błąd', 'Błąd przy strumieniowaniu obrazu.')
+        }
+      )
+    })
   }
 
   const rejectVideoCall = async () => {
@@ -422,7 +419,7 @@ const Chat = ({ archivized }) => {
     }
     navigator.mediaDevices
       .getUserMedia({
-        video: cameraConnected,
+        video: true,
         audio: microphoneConnected,
       })
       .then((stream) => {
@@ -443,7 +440,9 @@ const Chat = ({ archivized }) => {
           })
         })
       })
-      .catch((error) => {})
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   return (
