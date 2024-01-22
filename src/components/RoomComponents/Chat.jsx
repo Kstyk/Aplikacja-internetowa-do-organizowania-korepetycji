@@ -174,6 +174,7 @@ const Chat = ({ archivized }) => {
 
     startVideoCall()
     if (remotePeerIdValue == '') {
+      setRemotePeerIdValue(localStorage.getItem('remotePeerId'))
       call(localStorage.getItem('remotePeerId'))
     } else {
       call(remotePeerIdValue)
@@ -220,7 +221,6 @@ const Chat = ({ archivized }) => {
 
       if (!hasCamera) {
         setCameraConnected(false)
-        console.log(false)
       } else {
         setCameraConnected(true)
       }
@@ -395,7 +395,6 @@ const Chat = ({ archivized }) => {
       audioTracks.forEach((track) => {
         track.enabled = audioEnabled
       })
-
       const call = peerInstance.current.call(remotePeerIdValue, stream)
       call.on('stream', (remoteStream) => {
         remoteVideoRef.current.pause()
