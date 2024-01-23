@@ -359,7 +359,6 @@ class CancelScheduleView(generics.CreateAPIView):
                 return Response({"error": "Nie można odwołać zajęć mniej niż 24 godziny przed ich rozpoczęciem."},
                                 status=status.HTTP_400_BAD_REQUEST)
             data = instance
-            instance.delete()
             if self.request.user.id == data.classes.teacher.id:
                 mail_to = data.student
             else:
@@ -380,6 +379,7 @@ class CancelScheduleView(generics.CreateAPIView):
                 [mail_to.email],
                 fail_silently=False,
             )
+            instance.delete()
 
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
