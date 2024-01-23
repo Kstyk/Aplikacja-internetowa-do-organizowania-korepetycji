@@ -18,6 +18,7 @@ const RoomSchedule = ({ schedule, fetchSchedule }) => {
   const [loading, setLoading] = useState(true)
   const [eventArray, setEventArray] = useState([])
   const [slotInfo, setSlotInfo] = useState(null)
+  const [loadingDeleteButton, setLoadingDeleteButton] = useState(false)
 
   dayjs.locale('pl')
   const localizer = dayjsLocalizer(dayjs)
@@ -128,6 +129,7 @@ const RoomSchedule = ({ schedule, fetchSchedule }) => {
   }
 
   const cancelClasses = async (data) => {
+    setLoadingDeleteButton(true)
     data = {
       ...data,
       room: slotInfo?.resource?.room,
@@ -136,6 +138,7 @@ const RoomSchedule = ({ schedule, fetchSchedule }) => {
     api
       .post(`api/rooms/schedules/${slotInfo?.id}/cancel/`, data)
       .then((res) => {
+        setLoadingDeleteButton(false)
         window.cancel_classes.close()
         showSuccessAlert(
           'Sukces!',
@@ -147,6 +150,7 @@ const RoomSchedule = ({ schedule, fetchSchedule }) => {
         )
       })
       .catch((err) => {
+        setLoadingDeleteButton(false)
         window.cancel_classes.close()
         if (err.response.status == 403) {
           showAlertError(
@@ -291,7 +295,11 @@ const RoomSchedule = ({ schedule, fetchSchedule }) => {
                 type="submit"
                 className="btn-outline no-animation btn mt-6 h-8 min-h-0 w-full rounded-sm hover:bg-base-400 hover:text-white"
               >
-                Odwołaj zajęcia
+                {loadingDeleteButton ? (
+                  <span className="loading loading-spinner "></span>
+                ) : (
+                  'Odwołaj zajęcia'
+                )}
               </button>
             </div>
           </form>
