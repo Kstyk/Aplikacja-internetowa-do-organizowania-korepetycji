@@ -379,6 +379,7 @@ class CancelScheduleView(generics.CreateAPIView):
                 [mail_to.email],
                 fail_silently=False,
             )
+
             instance.delete()
 
             return Response(status=status.HTTP_204_NO_CONTENT)
