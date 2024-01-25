@@ -14,9 +14,8 @@ const ArchivizedRoomCard = ({ room, user }) => {
             src={
               room?.deleted_user?.profile_image == null
                 ? guest
-                : `http://127.0.0.1:8000${room?.deleted_user?.profile_image}`
+                : `${room?.deleted_user?.profile_image}`
             }
-            alt="Shoes"
             className="rounded-xl"
           />
         </figure>
