@@ -227,10 +227,13 @@ def purchase_classes(request):
     selected_slots = request.data.get('selected_slots', [])
     student = request.user
     classes_id = request.data.get('classes_id', [])
-    place = request.data.get('place_of_classes')
+    place = request.data.get('place_of_classes', None)
 
     try:
         with transaction.atomic():  # Rozpoczęcie transakcji
+            if place is None:
+                raise ValidationError("Nie wybrałeś miejsca zajęć.")
+
             if len(selected_slots) == 0:
                 raise ValidationError(
                     "Nie wybrałeś żadnego terminu zajęć.")
