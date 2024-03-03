@@ -1,0 +1,153 @@
+.rbc-calendar {
+  z-index: 30 !important;
+  margin-bottom: 20px;
+}
+
+.rbc-allday-cell {
+  display: none !important;
+}
+
+.rbc-event-label {
+  display: none;
+}
+
+.rbc-time-view {
+  border-bottom: none !important;  
+  z-index: 30 !important;
+  background-color: white;
+}
+
+
+.rbc-time-gutter .rbc-timeslot-group .rbc-time-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rbc-current-time-indicator {
+  display: none;
+}
+
+
+
+.rbc-events-container {
+  margin-right: 0 !important;
+}
+
+.rbc-timeslot-group {
+  border-radius: none !important;
+}
+
+.rbc-events-container {
+  z-index: 10;
+}
+
+.rbc-time-header-gutter {
+  min-width: none;
+}
+
+.rbc-time-header-content {
+  height:30px;
+}
+
+.rbc-time-header-cell {
+  border-bottom: none;
+  height: 100%;
+}
+
+.rbc-header {
+  border-bottom: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.freeTimeSlot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 0;
+  overflow: hidden;
+  background-color: rgb(250, 250, 250);
+  cursor: pointer;
+  z-index: 20 !important;
+  transition: background-color 0.3s ease;
+  
+  
+}
+
+.rbc-day-slot { 
+  .rbc-time-slot {
+    @media (max-width: 500px)  {
+      font-size: 13px;
+    }
+  }
+}
+
+.rbc-day-slot .rbc-event {
+  border:none;
+}
+
+.freeTimeSlot:hover {
+  background-color: rgb(208, 242, 248);
+  
+}
+
+.freeTimeSlot::after {
+  content: "wolne";
+  color: gray;
+}
+
+.eventCell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 0;
+  overflow: hidden;
+  border-radius: 0;
+  border-width: 0 !important;
+  background-color: rgb(226, 226, 226);
+  color:black;
+  text-align: center;
+  padding-top: 13px;
+}
+
+.rbc-time-gutter > .rbc-timeslot-group > .rbc-time-slot {
+  background-color: transparent !important;
+  cursor: auto;
+  overflow: auto;
+
+  &:after{
+    content: "";
+  }
+  }
+
+.rbc-header {
+  overflow: auto;
+}
+
+.rbc-events-container{
+  width: 100%;
+}
+
+.classes-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 0;
+    color:black;
+    text-align: center;
+    // padding-top: 0;
+
+    .rbc-event-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 0;
+        margin-top: 0;
+    }
+
+}
+

@@ -1,0 +1,8 @@
+.rbc-today {
+    background-color: transparent;
+}
+
+.freeTimeSlot::after {
+    content: "Dostępne";
+    color: gray;
+  }
