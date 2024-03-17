@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'django_cleanup.apps.CleanupConfig',
+    'backend',
     'rooms',
     'classes',
     'multiselectfield',
@@ -134,6 +135,18 @@ TEMPLATES = [
     },
 ]
 
+DATABASES = {
+
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'inzynier',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+
+    }
+}
 # WSGI_APPLICATION = 'backend.wsgi.application'
 
 
