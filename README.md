@@ -16,3 +16,9 @@ Technologies used in project:
     <img src="https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL Badge"/>
   </a>
 </div>
+
+## About the project
+The goal of the project, is to create a platform, where students and teachers can meet together. After buying classes by a student, the room with both - student and teacher - is creating. 
+In that room, users has possibility to use text chat in real time, making video calls, share the screen, upload, download, view files.
+
+In the app there also possibility to buy classes and give classes stationary, at the teacher address or selected by student address.
