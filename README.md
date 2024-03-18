@@ -74,15 +74,15 @@ Below I will show the app looks like by showing the most important features.
 
 ##### Login Page
 
-![alt text](image-2.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/8a2b6a25-cc05-44a9-8450-9de97f5fbaaa)
 
 ##### Registration Page
 
-![alt text](image-1.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/fd516127-0524-4857-8ecc-f358f4bbb946)
 
 ##### Reset Password by providing email
 
-![alt text](image-3.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/ed88e9fb-c77d-4c84-ac30-eb56e174aef1)
 
 <hr />
 
