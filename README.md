@@ -155,6 +155,7 @@ Below I will show the app looks like by showing the most important features.
 They're created after buying the classes by student. If room between teacher and student already exists, there is not created another room.
 
 The number in the blue box in the top right corner of every card means how many messages logged user has not read in that room - for example one unreaded message in room with Anna Kowalska.
+
 ![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/1be97a11-a980-4328-b04d-c66f905c396e)
 
 ##### Real-Time Chat in Room
@@ -174,6 +175,7 @@ The number in the blue box in the top right corner of every card means how many 
 ![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/ecfad178-0e45-4b55-84dd-3204fb6a4346)
 
 Preview the Opinion in the Teacher Profile:
+
 ![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/d4bf53eb-3367-4e6c-8377-045be59de1f4)
 
 ##### Video Call
@@ -181,13 +183,16 @@ Preview the Opinion in the Teacher Profile:
 ![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/5faea0ae-e34c-4354-a123-5750487fea00)
 
 Incoming Notification
+
 ![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/5a69bafc-c663-449a-bd92-cf25ca9d3927)
 ![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/71659b6c-9be4-480f-a23f-2a5eb618aca2)
 
 One user sharing Visual Studio Code, when the other has only turned on video camera.
 
 Sharing user:
+
 ![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/f43629cb-72a8-4d88-a679-793d5b05eb8f)
 
 Receiving user:
+
 ![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/de6b0354-cfeb-4501-a05a-e5ab6eb415ca)
