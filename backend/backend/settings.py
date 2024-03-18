@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
-from .settings_local import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, DATABASES, SECRET_KEY, AZURE_ACCOUNT_NAME, CHANNEL_LAYERS
+from .settings_local import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER,  SECRET_KEY, AZURE_ACCOUNT_NAME, CHANNEL_LAYERS
 import os
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
