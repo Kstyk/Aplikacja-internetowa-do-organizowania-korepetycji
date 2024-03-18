@@ -90,44 +90,44 @@ Below I will show the app looks like by showing the most important features.
 
 ##### Profile View
 
-![alt text](image-4.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/fcb11e38-e9c2-4df2-a949-6cb86b04d498)
 
 ##### Edit Base Profile
 
-![alt text](image-5.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/191758d0-cd47-4571-b47b-9372a271270f)
 
 ##### Edit More Infos
 
-![alt text](image-6.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/96ec49e1-b7ec-4197-80da-a4afed15d706)
 
 ##### Change Avatar
 
-![alt text](image-7.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/2c272bfd-6fac-463f-b549-c4276656ceff)
 
 ##### Change Password
 
-![alt text](image-8.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/209dd7b8-fb8e-478a-9616-846f8d9334f6)
 
 ##### Setting Schedule
 
-![alt text](image-9.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/62af48ee-83ac-498b-846a-e8d8ab2d8900)
 
 ##### Create New Classes
 
-![alt text](image-10.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/6b980714-ab3e-45c9-ae58-08d8aa05f9e1)
 
 ##### List Of Created Classes
 
-![alt text](image-11.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/0969cb76-beb0-4d25-900e-24b307b6a512)
 
 ##### History of Sold Classes
 
-![alt text](image-12.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/fd0fc334-daf5-4860-ab5f-6d6aa29d7e00)
 
 ##### Teacher's Schedule
 
-![alt text](image-13.png)
-![alt text](image-14.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/def9ec00-819e-49f4-98ce-4aea3f2a6a91)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/4f849a88-85d3-441e-bd52-3060e8156b07)
 
 <hr />
 
@@ -135,16 +135,16 @@ Below I will show the app looks like by showing the most important features.
 
 ##### Searching Classes
 
-![alt text](image-15.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/a486f8ed-760e-4c22-ab5f-6f889f093e83)
 
 ##### Classes Info Page
 
-![alt text](image-16.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/4afea901-ec48-411d-bfb4-62671ddd35fa)
 
 ##### Buying Classes
 
-![alt text](image-17.png)
-![alt text](image-18.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/93de7130-a4cf-4eb8-8fd2-76f04bab3102)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/999e8bdf-dacb-472d-bc4b-66c255175431)
 
 <hr />
 
@@ -155,40 +155,39 @@ Below I will show the app looks like by showing the most important features.
 They're created after buying the classes by student. If room between teacher and student already exists, there is not created another room.
 
 The number in the blue box in the top right corner of every card means how many messages logged user has not read in that room - for example one unreaded message in room with Anna Kowalska.
-
-![alt text](image-20.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/1be97a11-a980-4328-b04d-c66f905c396e)
 
 ##### Real-Time Chat in Room
 
-![alt text](image-21.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/2ba1bb54-7764-4672-aca9-bbc38202692f)
 
 ##### Upload, Download and View Files in Room
 
-![alt text](image-22.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/b242acc2-80d1-480f-9fd1-2c3b3c9ec9ce)
 
 ##### Schedule in the Room
 
-![](image-23.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/6874b37b-c627-48f2-b176-5293cdbcacb5)
 
 ##### Adding an Opinion to Teacher
 
-![](image-24.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/ecfad178-0e45-4b55-84dd-3204fb6a4346)
 
 Preview the Opinion in the Teacher Profile:
-![alt text](image-25.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/d4bf53eb-3367-4e6c-8377-045be59de1f4)
 
 ##### Video Call
 
-![alt text](image-26.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/5faea0ae-e34c-4354-a123-5750487fea00)
 
 Incoming Notification
-![alt text](image-27.png)
-![alt text](image-28.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/5a69bafc-c663-449a-bd92-cf25ca9d3927)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/71659b6c-9be4-480f-a23f-2a5eb618aca2)
 
 One user sharing Visual Studio Code, when the other has only turned on video camera.
 
 Sharing user:
-![alt text](image-29.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/f43629cb-72a8-4d88-a679-793d5b05eb8f)
 
 Receiving user:
-![alt text](image-30.png)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/de6b0354-cfeb-4501-a05a-e5ab6eb415ca)
