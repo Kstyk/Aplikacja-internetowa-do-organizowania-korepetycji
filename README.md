@@ -196,3 +196,16 @@ Sharing user:
 Receiving user:
 
 ![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/de6b0354-cfeb-4501-a05a-e5ab6eb415ca)
+
+### Inbox Page - no private room required
+##### Sending First Message
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/22f29eac-1f12-4bd3-b684-704f84c9f93e)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/acf95735-8f2f-4e9b-8200-5ae0c486d37f)
+
+##### Inbox
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/25350067-160e-4a28-a0ab-ce720179db01)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/1d49c828-832b-4283-92f4-dc6815064cc3)
+![image](https://github.com/Kstyk/Web-Application-for-Organizing-Foreign-Language-Tutoring/assets/80002380/e46449d8-ecc0-4a0d-8581-c0d5516f0cc9)
+
+## Summary
+At the end, with creating that project, I learn a lot of new skills. I knew Django earlier, but I used here a lot of new libraries to me. That was my first big project with using React, I can say I enjoy that framework. A lot of useful libraries are also helpful, like a `react-hook-forms` which helps a lot with validating forms. What I would to add to this project? Well, for sure I want to add a module to create tests/exams by a teacher and attaching it to selected student, which could help with improving skills. I'd like to refactor frontend code to use TypeScript. One more feature, which will be a lot easier to implement, is that to not only allowing to create a lesson about foreign languages but also about, let's say, math, chemistry and other subjects. I'm sure that project has still a lot to do, and I will take a closer look to that in the future.
