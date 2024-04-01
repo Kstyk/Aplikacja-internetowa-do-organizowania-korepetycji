@@ -68,7 +68,7 @@ With all features which React gives at the start, I used `react-router-dom` to h
 
 ## Live Application
 
-Below I will show the app looks like by showing the most important features.
+Below I will show how the app looks like by showing the most important features.
 
 ### Auth Features
 
