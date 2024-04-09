@@ -73,7 +73,7 @@ const Navbar = () => {
                 <div className="h-full border-2 border-black"></div>
               </li>
               <li className="custom-border h-fit text-center">
-                <Link to="/profil/dodane-opinie" className="">
+                <Link to="/profil-ucznia/dodane-opinie" className="">
                   Wystawione opinie{' '}
                 </Link>
               </li>
@@ -124,7 +124,7 @@ const Navbar = () => {
                   </li>
                   <li className="custom-border-dropdown h-fit">
                     <Link
-                      to="/profil/historia-zakupow"
+                      to="/profil-ucznia/historia-zakupow"
                       className="rounded-none hover:bg-transparent"
                     >
                       Historia zakupów
@@ -436,10 +436,18 @@ const Navbar = () => {
                 </li>
                 <li onClick={() => setShowMobileMenu((prev) => !prev)}>
                   <Link
-                    to="/profil/dodane-opinie"
+                    to="/profil-ucznia/dodane-opinie"
                     className="flex h-8 w-full items-center pl-5 text-sm uppercase"
                   >
                     Wystawione opinie
+                  </Link>
+                </li>
+                <li onClick={() => setShowMobileMenu((prev) => !prev)}>
+                  <Link
+                    to="/profil-ucznia/historia-zakupow"
+                    className="flex h-8 w-full items-center pl-5 text-sm uppercase"
+                  >
+                    Historia zakupów
                   </Link>
                 </li>
                 <div className="collapse-arrow collapse p-0 uppercase">
