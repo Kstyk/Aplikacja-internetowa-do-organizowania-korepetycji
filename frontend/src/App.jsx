@@ -89,31 +89,43 @@ function App() {
                   </AnonymousRoute>
                 }
               />
+              {/* Only Teacher allowed */}
               <Route element={<TeacherAllowed />}>
-                <Route
-                  path="/profil/zakupione-zajecia"
-                  element={
-                    <PrivateRoute>
-                      <TeacherPurchaseHistoryPage />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/profil"
-                  element={
-                    <PrivateRoute>
-                      <ProfilePage />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/profil/otrzymane-opinie"
-                  element={
-                    <PrivateRoute>
-                      <ReceivedOpinions />
-                    </PrivateRoute>
-                  }
-                />
+                <Route path="/profil">
+                  <Route
+                    exact
+                    path=""
+                    element={
+                      <PrivateRoute>
+                        <ProfilePage />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="zakupione-zajecia"
+                    element={
+                      <PrivateRoute>
+                        <TeacherPurchaseHistoryPage />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="otrzymane-opinie"
+                    element={
+                      <PrivateRoute>
+                        <ReceivedOpinions />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="harmonogram"
+                    element={
+                      <PrivateRoute>
+                        <TeacherSchedulePage />
+                      </PrivateRoute>
+                    }
+                  />
+                </Route>
 
                 <Route
                   path="/plan/edytuj"
@@ -123,38 +135,27 @@ function App() {
                     </PrivateRoute>
                   }
                 />
-                <Route
-                  path="/zajecia"
-                  element={
-                    <PrivateRoute>
-                      <ListOfTeachersClassesPage />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/zajecia/dodaj"
-                  element={
-                    <PrivateRoute>
-                      <CreateClassesPage />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/zajecia/edytuj"
-                  element={
-                    <PrivateRoute>
-                      <EditClassesPage />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/profil/harmonogram"
-                  element={
-                    <PrivateRoute>
-                      <TeacherSchedulePage />
-                    </PrivateRoute>
-                  }
-                />
+
+                <Route path="/zajecia">
+                  <Route path="" element={<ListOfTeachersClassesPage />} />
+                  <Route
+                    path="dodaj"
+                    element={
+                      <PrivateRoute>
+                        <CreateClassesPage />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="edytuj"
+                    element={
+                      <PrivateRoute>
+                        <EditClassesPage />
+                      </PrivateRoute>
+                    }
+                  />
+                </Route>
+
                 <Route
                   path="/otrzymane-zapytania"
                   element={
@@ -164,55 +165,42 @@ function App() {
                   }
                 />
               </Route>
+
+              {/* Only Student allowed */}
               <Route element={<StudentAllowed />}>
-                <Route
-                  path="/profil-ucznia"
-                  element={
-                    <PrivateRoute>
-                      <StudentProfilePage />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/profil/historia-zakupow"
-                  element={
-                    <PrivateRoute>
-                      <PurchaseHistoryPage />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/profil-ucznia/harmonogram"
-                  element={
-                    <PrivateRoute>
-                      <StudentSchedulePage />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/profil/dodane-opinie"
-                  element={
-                    <PrivateRoute>
-                      <AddedOpinionsPage />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/zajecia/:classesId/zapytaj"
-                  element={
-                    <PrivateRoute>
-                      <AskAboutClassesPage />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/zajecia/:classesId/zakup-po-zapytaniu"
-                  element={<BuyClassesPageAfterAsk />}
-                />
-                <Route
-                  path="/zajecia/:classesId/kup"
-                  element={<BuyClassesPage />}
-                />
+                <Route path="/profil-ucznia">
+                  <Route path="" element={<StudentProfilePage />} />
+                  <Route path="harmonogram" element={<StudentSchedulePage />} />
+                  <Route
+                    path="historia-zakupow"
+                    element={<PurchaseHistoryPage />}
+                  />
+                  <Route path="dodane-opinie" element={<AddedOpinionsPage />} />
+                </Route>
+
+                <Route path="/zajecia">
+                  <Route
+                    path=":classesId/kup"
+                    element={
+                      <PrivateRoute>
+                        <BuyClassesPage />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path=":classesId/zapytaj"
+                    element={
+                      <PrivateRoute>
+                        <AskAboutClassesPage />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path=":classesId/zakup-po-zapytaniu"
+                    element={<BuyClassesPageAfterAsk />}
+                  />
+                </Route>
+
                 <Route
                   path="/wyslane-zapytania"
                   element={
@@ -222,38 +210,42 @@ function App() {
                   }
                 />
               </Route>
-              <Route
-                path="/profil/edytuj"
-                element={
-                  <PrivateRoute>
-                    <EditBaseProfile />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/profil/zmien-haslo"
-                element={
-                  <PrivateRoute>
-                    <ChangePasswordPage />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/profil/edytuj-dodatkowe"
-                element={
-                  <PrivateRoute>
-                    <EditMoreInfosPage />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/profil/edytuj-avatar"
-                element={
-                  <PrivateRoute>
-                    <ChangeAvatarPage />
-                  </PrivateRoute>
-                }
-              />
+
+              <Route path="/profil">
+                <Route
+                  path="edytuj"
+                  element={
+                    <PrivateRoute>
+                      <EditBaseProfile />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="zmien-haslo"
+                  element={
+                    <PrivateRoute>
+                      <ChangePasswordPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="edytuj-dodatkowe"
+                  element={
+                    <PrivateRoute>
+                      <EditMoreInfosPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="edytuj-avatar"
+                  element={
+                    <PrivateRoute>
+                      <ChangeAvatarPage />
+                    </PrivateRoute>
+                  }
+                />
+              </Route>
+
               <Route
                 path="/skrzynka-odbiorcza"
                 element={
@@ -280,23 +272,27 @@ function App() {
                   </PrivateRoute>
                 }
               />
-              <Route path="/szukaj-zajec" element={<SearchClassesPage />} />
-              <Route
-                path="/szukaj-zajec/jezyk/:languageSlug"
-                element={<SearchClassesPage />}
-              />
-              <Route
-                path="/szukaj-zajec/miasto/:citySlug"
-                element={<SearchClassesPage />}
-              />
-              <Route
-                path="/szukaj-zajec/tekst/:searchText"
-                element={<SearchClassesPage />}
-              />
-              <Route
-                path="/szukaj-zajec/miejsce-zajec/:onlineSlug"
-                element={<SearchClassesPage />}
-              />
+              <Route path="/szukaj-zajec">
+                <Route path="" element={<SearchClassesPage />} />
+
+                <Route
+                  path="jezyk/:languageSlug"
+                  element={<SearchClassesPage />}
+                />
+                <Route
+                  path="miasto/:citySlug"
+                  element={<SearchClassesPage />}
+                />
+                <Route
+                  path="tekst/:searchText"
+                  element={<SearchClassesPage />}
+                />
+                <Route
+                  path="miejsce-zajec/:onlineSlug"
+                  element={<SearchClassesPage />}
+                />
+              </Route>
+
               <Route path="/zajecia/:classesId" element={<ClassesPage />} />
 
               <Route path="/nauczyciel/:teacherId" element={<TeacherPage />} />
